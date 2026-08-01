@@ -1,14 +1,13 @@
 {
-  "name": "superpowers-dev",
-  "description": "Development marketplace for Superpowers core skills library",
+  "name": "superpowersplus",
+  "description": "Marketplace pessoal do superpowersplus",
   "owner": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "Rodrigo Lopes Paitach"
   },
   "plugins": [
     {
       "name": "superpowers",
-      "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
+      "description": "Superpowers com specs fundamentadas no código real, matriz de cobertura de testes e auditoria final de branch. Fork de obra/superpowers (Jesse Vincent, MIT).",
       "version": "6.2.0",
       "source": "./",
       "author": {
