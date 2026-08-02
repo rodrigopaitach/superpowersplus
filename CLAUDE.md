@@ -27,6 +27,24 @@ These break things silently when violated.
 | **Skills name actions, not tools.** Do not edit skill bodies to fit a harness. | One skill body has to run on every harness |
 | **`evals/` is gitignored and absent from this checkout.** | It is a separate repository. Nothing here depends on it |
 
+## The four review scopes are distinct by design
+
+Each face in the review chain runs something different. They are **not one rule
+written four ways** — unifying them into a common protocol would change the
+reach of three gates at once. Do not harmonize.
+
+| Face | What it actually runs |
+|---|---|
+| `subagent-driven-development/task-reviewer-prompt.md:69` | The **task's** test command, `[TEST_COMMAND]`, reported verbatim |
+| `requesting-code-review/code-reviewer.md:52` | The **project's** suite, with a fallback to the command the dispatch named |
+| `subagent-driven-development/re-review-prompt.md:58` | **Re-runs** what already ran, reporting command, exit code, and counts |
+| `final-branch-audit/SKILL.md:221` | **No tests at all** — re-runs the *searches* against the spec |
+
+The evidence block `**Command:** [verbatim] — **exit:** [code] — **counts:** …`
+appears in `re-review-prompt.md:81` and `code-reviewer.md:85` and must stay
+identical in both. Two occurrences do not justify extraction; at a third,
+extract it.
+
 ## Rebase relationship with Superpowers
 
 The upstream remote stays, and rebasing onto `obra/superpowers` is how their improvements arrive. That has one standing consequence:
