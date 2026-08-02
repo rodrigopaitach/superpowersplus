@@ -10,6 +10,60 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.29 — arquivos institucionais refletem o fork
+
+Nenhum destes é código: são os arquivos que o GitHub exibe como se falassem
+pelo repositório. Herdados intactos, faziam este fork falar em nome de
+terceiros — desviar denúncia para quem não tem autoridade aqui, exibir botão
+de doação de outra pessoa, e cobrar um processo de contribuição que não
+existe.
+
+- **Contato de denúncia** — o `CODE_OF_CONDUCT.md` mandava reportar abuso a
+  `jesse@primeradiant.com`, o mantenedor do upstream. Num fork pessoal isso
+  entrega a denúncia a quem não tem autoridade sobre este repositório, não tem
+  visibilidade dele e não responde por ele, e envolve um terceiro em assunto
+  que não é dele. O canal passa a ser issue neste repositório, com aviso no
+  topo declarando o código de conduta como herdado e a razão de o contato ter
+  saído. O texto do Contributor Covenant em si fica intacto.
+- **`.github/FUNDING.yml` removido** — apontava para o patrocínio do
+  mantenedor do upstream. O GitHub o renderiza como botão "Sponsor" no topo
+  deste repositório: quem doasse acharia que apoia este fork e estaria
+  financiando outra pessoa. `.github/` ficou vazio e deixou de existir.
+- **Templates de issue e PR removidos, não reescritos** — os cinco arquivos
+  eram do fluxo de contribuição do upstream. Reescrevê-los criaria um processo
+  de contribuição para um fork que não solicita contribuição; mantê-los faria
+  o GitHub cobrar de quem abrisse issue um formulário sobre um projeto que não
+  é este. `CONTRIBUTING.md` novo diz as três coisas que faltavam: este fork
+  não recebe contribuição, contribuição ao original vai para `obra/superpowers`
+  e nada enviado aqui chega lá, e problema com este fork é issue aqui.
+- **`RELEASE-NOTES.md`** — uma linha no topo declarando que registra as
+  versões do UPSTREAM e que as alterações próprias estão no `PLUS-CHANGELOG`,
+  numeradas `plus.N` de forma independente. Conteúdo histórico intocado.
+- **`LICENSE` deliberadamente intocada** — o copyright de Jesse Vincent
+  permanece. É exigência da MIT, e é o arquivo que hoje nunca conflita em
+  rebase. Um fork que mexe na licença que o autoriza a existir perde as duas
+  coisas de uma vez.
+- **`CLAUDE.md`: seis afirmações que deixaram de valer** — este arquivo carrega
+  em toda sessão deste repositório, e regra apodrecida compete com a regra
+  certa. Duas das seis (`:13` e `:112`) ficariam penduradas pelo próprio
+  commit, apontando para o `PULL_REQUEST_TEMPLATE.md` recém-removido. Todas
+  passaram a nomear o upstream como sujeito: a taxa de 94% é dele, o alvo
+  `dev` é dele — aqui não existe branch `dev` e o trabalho vai direto para
+  `main` —, o template é dele, e a seção "Fork-specific changes" agora declara
+  que **este repositório é exatamente esse fork**. O `evals/` ganhou o registro
+  de estar gitignored e ausente do checkout, com `tests/skill-behavior/` do
+  plus.28 nomeado ao lado. Nota no topo enquadra o arquivo inteiro: as regras
+  descrevem o processo do upstream e ficam porque a filosofia de projeto que
+  elas codificam continua valendo aqui.
+- **`AGENTS.md` é symlink para `CLAUDE.md`** — verificado, não editado
+  separadamente: serve o mesmo conteúdo sob outro nome, e as seis correções o
+  alcançam. `GEMINI.md` tem duas linhas de `@` import e nenhuma afirmação
+  sobre o projeto.
+- **Uma referência pendurada fora dos três arquivos** —
+  `docs/porting-to-a-new-harness.md:24` também citava o template removido.
+  Corrigida no mesmo commit por ser quebra criada por ele, não achado
+  preexistente.
+
 ## plus.28 — hooks versionados, rastro da recusa, e a primeira regra medida
 
 As três sobras do plus.27. A terceira é a primeira vez que uma regra deste

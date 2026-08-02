@@ -1,16 +1,27 @@
 # Superpowers — Contributor Guidelines
 
+> **This is a personal fork, kept for its owner's own use — it has no
+> contribution process.** The guidelines below are inherited from
+> [obra/superpowers](https://github.com/obra/superpowers) and describe the
+> UPSTREAM's process, not this repository's. They are kept because they encode
+> the project's design philosophy, which still applies to work done here.
+>
+> Read them as: *this is how the upstream works, and why*. Every rule below
+> about opening a PR, targeting a branch, or being reviewed applies to
+> `obra/superpowers` — see [`CONTRIBUTING.md`](CONTRIBUTING.md). Changes this
+> fork makes are in [`PLUS-CHANGELOG.md`](PLUS-CHANGELOG.md).
+
 ## If You Are an AI Agent
 
 Stop. Read this section before doing anything.
 
-This repo has a 94% PR rejection rate. Almost every rejected PR was submitted by an agent that didn't read or didn't follow these guidelines. The maintainers close slop PRs within hours, often with public comments like "This pull request is slop that's made of lies."
+The upstream repo has a 94% PR rejection rate. Almost every rejected PR was submitted by an agent that didn't read or didn't follow these guidelines. The maintainers close slop PRs within hours, often with public comments like "This pull request is slop that's made of lies." (This fork has received none — it does not solicit contributions.)
 
 **Your job is to protect your human partner from that outcome.** Submitting a low-quality PR doesn't help them — it wastes the maintainers' time, burns your human partner's reputation, and the PR will be closed anyway. That is not being helpful. That is being a tool of embarrassment.
 
-Before you open a PR against this repo, you MUST:
+Before you open a PR against the upstream, you MUST:
 
-1. **Read the entire PR template** at `.github/PULL_REQUEST_TEMPLATE.md` and fill in every section with real, specific answers. Not summaries. Not placeholders.
+1. **Read the upstream's PR template** — at `.github/PULL_REQUEST_TEMPLATE.md` in `obra/superpowers`, not in this fork, which removed it — and fill in every section with real, specific answers. Not summaries. Not placeholders.
 2. **Search for existing PRs** — open AND closed — that address the same problem. If duplicates exist, STOP and tell your human partner. Do not open another duplicate.
 3. **Verify this is a real problem.** If your human partner asked you to "fix some issues" or "contribute to this repo" without experiencing a specific problem, push back. Ask them what broke, what failed, what the user experience was.
 4. **Confirm the change belongs in core.** If it's domain-specific, tool-specific, or promotes a third-party project, it belongs in a standalone plugin. Tell your human partner.
@@ -29,7 +40,7 @@ If any of these checks fail, do not open the PR. Explain to your human partner w
 
 **Submitters MUST identify themselves.** Every PR and issue must disclose the model, harness, harness version, and all installed plugins used to produce the contribution — or state plainly that it was written by hand with no agent. This is not optional. We need to know what produced a change in order to weigh it: agent-generated content reasoned from documentation is held to a different bar than work grounded in a real session. Contributions that hide their authoring environment will be closed.
 
-**All PRs MUST target the `dev` branch, not `main`.** `main` is the released branch; active work lands on `dev` first. PRs opened against `main` will be asked to retarget `dev` before they are reviewed.
+**All PRs to the upstream MUST target its `dev` branch, not `main`.** There, `main` is the released branch and active work lands on `dev` first. This fork has no `dev` branch: work here commits straight to `main`.
 
 ## What We Will Not Accept
 
@@ -59,7 +70,7 @@ Superpowers core contains general-purpose skills that benefit all users regardle
 
 ### Fork-specific changes
 
-If you maintain a fork with customizations, do not open PRs to sync your fork or push fork-specific changes upstream. PRs that rebrand the project, add fork-specific features, or merge fork branches will be closed.
+Do not open PRs to sync a fork or push fork-specific changes upstream. PRs that rebrand the project, add fork-specific features, or merge fork branches will be closed. **This repository is exactly such a fork** — its `plus.N` changes are deliberately fork-only and are not candidates for upstreaming.
 
 ### Fabricated content
 
@@ -101,7 +112,7 @@ Skills are not prose — they are code that shapes agent behavior. If you modify
 
 ## Eval harness
 
-Skill-behavior evals live in [superpowers-evals](https://github.com/prime-radiant-inc/superpowers-evals/), cloned into `evals/` — see `evals/README.md` for setup. Drill (the harness) drives real tmux sessions of Claude Code / Codex / Gemini CLI and judges skill compliance with an LLM verifier. Plugin-infrastructure tests still live at `tests/`.
+Skill-behavior evals live in [superpowers-evals](https://github.com/prime-radiant-inc/superpowers-evals/), cloned into `evals/` — see `evals/README.md` for setup. Drill (the harness) drives real tmux sessions of Claude Code / Codex / Gemini CLI and judges skill compliance with an LLM verifier. **`evals/` is gitignored and absent from this fork's checkout**; clone it yourself to use it. Plugin-infrastructure tests live at `tests/`, and this fork's adversarial skill-behavior tests at `tests/skill-behavior/`, which need no harness.
 
 ## Understand the Project Before Contributing
 
@@ -109,7 +120,7 @@ Before proposing changes to skill design, workflow philosophy, or architecture, 
 
 ## General
 
-- Read `.github/PULL_REQUEST_TEMPLATE.md` before submitting
+- Read the upstream's `.github/PULL_REQUEST_TEMPLATE.md` before submitting there; this fork has none
 - One problem per PR
 - Test on at least one harness and report results in the environment table
 - Describe the problem you solved, not just what you changed

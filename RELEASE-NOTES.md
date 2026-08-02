@@ -1,5 +1,11 @@
 # Superpowers Release Notes
 
+> **These are the UPSTREAM's releases**, inherited from
+> [obra/superpowers](https://github.com/obra/superpowers) and left unchanged.
+> The changes this fork makes on top of them are in
+> [`PLUS-CHANGELOG.md`](PLUS-CHANGELOG.md), numbered `plus.N` independently of
+> the versions below.
+
 ## v6.2.0 (2026-07-23)
 
 ### Subagent-Driven Development
