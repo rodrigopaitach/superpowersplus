@@ -18,14 +18,18 @@ Load plan, review critically, execute all tasks, report when complete.
 ### Step 1: Load and Review Plan
 1. Ensure an isolated workspace: use superpowers:using-git-worktrees to create one or verify the existing one
 2. Read plan file
-3. Review critically - identify any questions or concerns about the plan
-4. Check every task carries acceptance criteria verifiable by located
+3. Read the spec the plan cites — the plan is a translation of it, and
+   superpowers:final-branch-audit traces one against the other at the end. A
+   plan citing no spec is an entry blocker: get the path from your human
+   partner before Step 2, never start and sort it out later.
+4. Review critically - identify any questions or concerns about the plan
+5. Check every task carries acceptance criteria verifiable by located
    evidence — one observable behavior each, settled by a `file:line`
    citation, naming its covering test (the format superpowers:writing-plans
    specifies). A task whose criteria no citation could settle is a concern:
    the audit in Step 3 will charge exactly what the plan wrote.
-5. If concerns: Raise them with your human partner before starting
-6. If no concerns: Create todos for the plan items and proceed
+6. If concerns: Raise them with your human partner before starting
+7. If no concerns: Create todos for the plan items and proceed
 
 ### Step 2: Execute Tasks
 

@@ -32,6 +32,10 @@ pediu passa por toda revisão de task, porque cada revisão vê um diff só.
 - **`writing-plans`** — o cabeçalho do plano cita o caminho exato e commitado
   da spec, e cada tarefa nomeia o critério que a motivou. Novo item 5 do
   Self-Review lê nas duas direções.
+- **`executing-plans`** — o Step 1 lia só o plano e chegava na auditoria sem
+  nunca ter aberto a spec. Passa a exigir a leitura da spec citada, e plano sem
+  spec citada vira bloqueio de entrada: pede-se o caminho antes de começar, não
+  se resolve depois.
 
 ## plus.3 — matriz de cobertura e revisor de task que reexecuta a suíte
 
