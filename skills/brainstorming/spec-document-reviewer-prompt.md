@@ -18,7 +18,7 @@ Subagent (general-purpose):
 
     | Category | What to Look For |
     |----------|------------------|
-    | Groundedness | Open EVERY `file:line` cited in the spec. Confirm it exists and does what the spec claims. See below. |
+    | Groundedness | Open EVERY `file:line` cited in the spec, and check every claim about a library, external API, or third-party service against its cited source. Confirm each one exists and says what the spec claims. See below. |
     | Traceability | `## Acceptance Criteria` and `## Implicit Requirements` exist, numbered and addressable, one observable behavior per item. See below. |
     | Completeness | TODOs, placeholders, "TBD", incomplete sections |
     | Consistency | Internal contradictions, conflicting requirements |
@@ -35,6 +35,10 @@ Subagent (general-purpose):
     | Cited path or line does not exist | BLOCKING |
     | Code at that line does not do what the spec says | BLOCKING |
     | Claim about the existing system with no `file:line` citation | BLOCKING |
+    | Claim about a library, external API, or third-party service with no cited source | BLOCKING — same severity as an uncited claim about this repo's code. "Everyone knows this API" is the failure mode, not an exemption |
+    | Cited dependency version does not match what the lockfile pins | BLOCKING — a guarantee that holds at v14 and not at the pinned v9 is a wrong claim with a real citation |
+    | Cited dependency line or doc page does not say what the spec claims | BLOCKING |
+    | Source cited is a blog post, forum answer, or an unattributed "the docs say" | BLOCKING — the two accepted forms are the pinned dependency source and the vendor's own documentation |
     | Item in `## Assumptions to Confirm` that IS verifiable in the code | BLOCKING — not a legitimate assumption. Go verify it yourself; if the code answers it, the spec had to cite it. |
     | Item in `## Assumptions to Confirm` with no search record | BLOCKING — see below |
 
@@ -46,7 +50,22 @@ Subagent (general-purpose):
     Spot-check each assumption: run the search yourself. If the code does answer
     it, the item is blocking under the row above.
 
+    ### Verifying a dependency claim
+
+    1. Read the lockfile yourself and confirm the pinned version — the spec's
+       version line is a claim like any other.
+    2. Cited a path inside the dependency? Open it. Not installed in this
+       checkout? Say so; do not infer the code from the package name.
+    3. Cited a doc URL? Fetch it and read the page for that version. Confirm
+       the vendor's own domain — a mirror or aggregator is not the source.
+    4. Cannot reach any source from this environment: list the claim under
+       **Unverified External Claims**, with what you tried. Never approve it
+       silently and never mark it verified — an unreachable source and a
+       confirmed one look identical in the finished spec, which is exactly
+       what this check exists to separate.
+
     Report each blocking citation as: cited `file:line` → what the spec claims → what the code actually shows.
+    Report each blocking dependency claim as: the claim → the source cited (or missing) → what the pinned version or the official page actually says.
     Report each blocking assumption as: the item → what search was claimed (or missing) → what your own search found.
 
     ## Traceability (blocking)
@@ -90,8 +109,11 @@ Subagent (general-purpose):
     **Issues (if any):**
     - [Section X]: [specific issue] - [why it matters for planning]
 
+    **Unverified External Claims (if any):**
+    - [claim] — source cited: [path or URL] — could not reach it because [reason]
+
     **Recommendations (advisory, do not block approval):**
     - [suggestions for improvement]
 ```
 
-**Reviewer returns:** Status, Issues (if any), Recommendations
+**Reviewer returns:** Status, Issues (if any), Unverified External Claims (if any), Recommendations

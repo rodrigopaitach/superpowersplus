@@ -21,7 +21,7 @@ Every project goes through this process. A todo list, a single-function utility,
 
 You MUST create a task for each of these items and complete them in order:
 
-1. **Investigate the codebase** — MANDATORY before ANY question to the user. Read the real code: files, tests, configs, recent commits. Record every finding as `path/file.ext:line` + the quoted snippet. This recorded output becomes the spec's `## Codebase Findings` section. No investigation output, no questions.
+1. **Investigate the codebase** — MANDATORY before ANY question to the user. Read the real code: files, tests, configs, recent commits. Record every finding as `path/file.ext:line` + the quoted snippet. This recorded output becomes the spec's `## Codebase Findings` section. Claims about a library, external API, or third-party service are grounded the same way, in the order and citation forms below — see "Where a Claim Comes From". No investigation output, no questions.
 2. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
 3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
@@ -35,7 +35,7 @@ You MUST create a task for each of these items and complete them in order:
 
 ```dot
 digraph brainstorming {
-    "Investigate the codebase\n(cite file:line)" [shape=box];
+    "Investigate code + deps\n(cite file:line / pinned source)" [shape=box];
     "Ask clarifying questions" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
@@ -46,7 +46,7 @@ digraph brainstorming {
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
 
-    "Investigate the codebase\n(cite file:line)" -> "Ask clarifying questions";
+    "Investigate code + deps\n(cite file:line / pinned source)" -> "Ask clarifying questions";
     "Ask clarifying questions" -> "Propose 2-3 approaches";
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
@@ -62,6 +62,47 @@ digraph brainstorming {
 ```
 
 **The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+
+## Where a Claim Comes From
+
+Every factual claim the spec makes — about this repository or about anything
+it depends on — is grounded before it is written. Consult in this order and
+stop at the first source that answers:
+
+| Order | Source | What it settles |
+|-------|--------|-----------------|
+| 1 | This repository: code, tests, configs, commits | How the system behaves today |
+| 2 | This project's own docs — `README`, `docs/`, ADRs, `CLAUDE.md`/`AGENTS.md` | Decisions and conventions the code does not state |
+| 3 | The official documentation of the library, API, or service, at the version this project pins | What the dependency guarantees |
+| 4 | The open web | Only what the three above do not answer |
+
+Reaching for a later source because it is faster is how a question about
+this code turns into an answer about software in general.
+
+**Unconfirmed at all four is not a claim.** It goes to
+`## Assumptions to Confirm` with the search you ran — never into the spec as
+an assertion, and never into a design section as background.
+
+### Claims about a dependency
+
+A statement about a library, external API, or third-party service — an
+endpoint name, a field, an error code, webhook behavior, a rate limit, a
+default — carries one of these two, or it is not a claim:
+
+| Form | What it looks like |
+|------|--------------------|
+| The pinned source | `stripe@14.21.0` (pinned at `package-lock.json:1188`) + `node_modules/stripe/src/resources/PaymentIntents.js:41` — the version the lockfile pins, and the line inside that dependency you actually read |
+| The official documentation | `https://docs.stripe.com/api/payment_intents/create`, consulted for that pinned version — the vendor's own docs, with the version or date the page documents |
+
+Your recollection is neither, and neither is a blog post or a forum answer.
+"The API returns 429 with a `Retry-After` header" written from memory reads
+exactly like the same sentence backed by the lockfile: it passes review,
+becomes a task in the plan, and fails at integration, where the cost is
+highest. The version matters as much as the fact — a guarantee that holds at
+v14 and not at the pinned v9 is a wrong claim with a real citation.
+
+Cannot reach the docs and the dependency is not vendored locally? Then it is
+an assumption. Say so in `## Assumptions to Confirm`, with what you tried.
 
 ## The Process
 
@@ -119,6 +160,7 @@ digraph brainstorming {
 | `## Acceptance Criteria` | Numbered and addressable (`AC1`, `AC2`, …), one observable behavior each, stated so a `file:line` citation could settle it. This is the list superpowers:writing-plans traces task by task and superpowers:final-branch-audit charges row by row — a requirement that lives only in prose is a requirement no one can trace, and it goes missing without leaving a mark. |
 | `## Implicit Requirements` | What the dialogue surfaced that nobody asked for as a feature: concurrency, error handling, observability, edge cases, limits, failure modes. Numbered `IR1`, `IR2`, …, written exactly like an acceptance criterion — one observable behavior, settled by a `file:line` citation. Downstream they share one id space with `AC`: superpowers:writing-plans refines each one into task criteria that carry its id in the Test Coverage Matrix, and superpowers:final-branch-audit traces an `IR` exactly like an `AC`. Raised in conversation and left off this list is how they die. None surfaced? Write "None". |
 | `## Codebase Findings` | Every claim about the existing system carries a `path/file.ext:line` citation plus the quoted snippet. No located citation, the claim does not go in the spec. |
+| `## External Dependencies` | Every claim about a library, external API, or third-party service, each carrying one of the two citation forms from "Where a Claim Comes From": the lockfile-pinned version plus the line you read inside the dependency, or the official doc URL for that version. Example: "Retries are the caller's job — `stripe@14.21.0` (`package-lock.json:1188`), `node_modules/stripe/src/RequestSender.js:212` retries only on 5xx." No source, the claim does not go in the spec. If the design touches none, write "None". |
 | `## Assumptions to Confirm` | Everything you could NOT verify in the code. Never mix an assumption into verified facts. Each item records the search you ran (command/pattern + paths inspected) and why it could not be confirmed. Anything the code CAN answer is not an assumption — go verify it and cite it. If there are none, write "None". |
 
 **Spec Review:**

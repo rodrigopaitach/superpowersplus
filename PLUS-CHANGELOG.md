@@ -10,6 +10,37 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.12 — grounding estendido a dependências externas
+
+`## Codebase Findings` exigia `arquivo:linha` para afirmação sobre o código
+do repositório desde o plus.1. Afirmação sobre biblioteca, API externa ou
+serviço de terceiro não tinha exigência nenhuma — era escrita de memória do
+modelo, passava na revisão idêntica a uma afirmação citada, virava tarefa no
+plano e falhava na integração, onde custa mais caro.
+
+- **Ordem de consulta declarada** — nova seção `## Where a Claim Comes From`:
+  código do repositório → docs do próprio projeto → documentação oficial da
+  biblioteca/API na versão fixada → web. Para-se na primeira fonte que
+  responde. O que nenhuma das quatro confirmar não é afirmação: vai para
+  `## Assumptions to Confirm` com a busca feita.
+- **Duas formas de citação, e só elas** — fonte fixada (versão do lockfile +
+  linha lida dentro da dependência) ou documentação oficial do fornecedor
+  para aquela versão. Post de blog, resposta de fórum e lembrança não são
+  fonte. Versão importa tanto quanto o fato: garantia que vale na v14 e não
+  na v9 fixada é afirmação errada com citação real.
+- **`## External Dependencies`** — nova seção obrigatória da spec, com "None"
+  quando o design não toca nenhuma.
+- **Regra do par** — a categoria `Groundedness` do revisor de spec passa a
+  cobrir dependência externa com a mesma severidade: quatro novas linhas
+  bloqueantes (sem fonte, versão que não bate com o lockfile, fonte que não
+  diz o que a spec afirma, fonte que não é oficial) e um procedimento de
+  quatro passos para verificar. Fonte inalcançável no ambiente vira
+  **Unverified External Claims** no relatório — nunca aprovação silenciosa,
+  porque fonte inalcançável e fonte confirmada são indistinguíveis na spec
+  pronta.
+- **Fluxograma** — os dois nós de investigação do Process Flow passam a
+  dizer `Investigate code + deps (cite file:line / pinned source)`.
+
 ## plus.11 — chave da matriz de cobertura alinhada ao critério de tarefa
 
 Varredura de consistência sobre o plus.10. O plus.9 tinha trocado a chave da
