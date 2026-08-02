@@ -10,9 +10,38 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.2.0] - 2026-08-02
 
 ### Added
+
+- **The escalation format, measured three times and corrected twice: 1/3 →
+  2/3 → 3/3.** The rule crossed from *stated* to *held* by moving, not by being
+  reworded. Run 1 (`RESULT-escalation-format-in-chat.md`): the shape lived in
+  `references/` behind a one-line link, and under pressure the agent escalated
+  — the behavior held — but the message had no do-nothing option, no declared
+  source for its recommendation, and undefined vocabulary. Run 2, after the
+  shape was summarized as a skeleton **at each of the five trigger points**:
+  the do-nothing option and the declared source both appeared; the vocabulary
+  criterion still failed. Run 3, after a **fourth item that is an action and
+  not a standard** — reread the whole message once before sending and rewrite
+  what an outsider would not know: **all three criteria held.** The insight is
+  the split: items 1–3 describe what the message contains, checkable while
+  writing; item 4 describes a pass over the finished text. Worded as a quality
+  bar attached to item 3 it failed twice, because a bar is something a writer
+  believes they already meet. An escalation-translator subagent was specified
+  as the fallback and **not built** — the problem was *when* the check
+  happened, not *who* performed it. Neither correction weakened a criterion:
+  each failure is recorded as it happened, and each intervention moved exactly
+  the criterion it targeted.
+
+- **`scripts/check-skill-behavior-records.sh`**, run by CI: every fixture at
+  `tests/skill-behavior/` declares itself a test fixture, and every recorded
+  result carries its date, its model and a verdict per criterion. A result
+  missing those cannot be compared against a later run, which is the only thing
+  it exists for. It **never re-runs the adversarial tests themselves** — those
+  dispatch a live agent, cost tokens, and are non-deterministic; re-running one
+  is a human decision, and the policy is written down at
+  `tests/skill-behavior/README.md`.
 
 - **`scripts/release-notes.sh`** builds a release body from `CHANGELOG.md`:
   the version's section, then **Open gaps**, then the footer. Someone reading a
@@ -20,31 +49,6 @@ References below name them so a claim here can be traced there.
   retroactively to the 1.0.0 and 1.1.0 release bodies. The procedure used to be
   ad hoc; a release body that cannot be regenerated is a release body nobody
   can check.
-
-- **A second adversarial measurement**, at `tests/skill-behavior/` — the
-  escalation format applied to the message itself, where no reviewer reaches.
-  **It failed**, 1 of 3 criteria: the agent escalated instead of adding an
-  undeclared dependency, but the message offered no do-nothing option, never
-  labelled its recommendation's source, and used undefined vocabulary. The rule
-  was not amended in response; the failure is the result. Two rules have now
-  been measured, one held and one did not.
-
-- **The escalation format is summarized as a four-item skeleton at each
-  trigger point**, not only linked, and its last item is an action rather than
-  a standard: reread the whole message once before sending and rewrite what an
-  outsider would not know. Measured three times: **1/3 → 2/3 → 3/3**, each
-  intervention moving exactly the criterion it targeted. The fourth item was
-  the one that carried the vocabulary discipline — a quality bar attached to
-  another item is something a writer believes they already meet; a separate
-  step has a moment to happen in. An escalation-translator subagent was
-  specified as the fallback and **not built**: the problem was when the check
-  happened, not who performed it. The first adversarial run showed the
-  behavior rule holding (the agent escalated) while the form rule did not —
-  it lived in `references/` behind a one-line link the agent did not open under
-  pressure. Re-measured after the change: **2 of 3, up from 1 of 3.** The
-  missing do-nothing option and the undeclared recommendation source both
-  appeared; the "no undefined technical term" item still did not hold. The rule
-  was not amended in response.
 
 ### Changed
 
@@ -55,6 +59,15 @@ References below name them so a claim here can be traced there.
   in two places and the canonical copy was not the one that had been measured.
   The inversion is the measurement's own finding: 1/3 with the shape reachable
   only through a link, 3/3 with it stated where the escalation fires.
+
+- **Two method rules recorded in `CLAUDE.md`.** Content preparation and
+  `git commit` are never chained in one `&&` block — prepare, verify the
+  preparation produced what you expected, then commit; a failed edit and a
+  commit on the next line are independent, which is how a change once shipped
+  without its changelog entry. And `[Unreleased]` does not survive more than one
+  cycle of work: when it tells a complete story, cut the version, because a fat
+  `[Unreleased]` means `main` has drifted from the last installable release with
+  no name describing the difference.
 
 ### Fixed
 
@@ -336,7 +349,8 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   not. That is the plan → code boundary, one step past what was closed.
   (opened plus.13)
 - **No eval harness in this repository.** `evals/` is gitignored and absent;
-  what exists is `tests/skill-behavior/`, with one rule measured. Cloning
+  what exists is `tests/skill-behavior/`, with two rules measured over four
+  runs. Cloning
   `superpowers-evals` and wiring it in is desirable and undone: it needs a
   submodule or a manual clone per checkout. (opened plus.34)
 - **One lockfile line number in an example is illustrative.**
@@ -345,8 +359,11 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   anyway. Closing it would need an example project with a versioned lockfile
   inside the repo. (opened plus.1)
 
-Most rules in this project are reasoned rather than measured. Only the
-external-content rule has been measured, once.
+Most rules in this project are reasoned rather than measured. Two have been
+measured, over four adversarial runs: the external-content rule, which held on
+its first run, and the escalation format, which took two corrections and three
+runs to hold.
 
+[1.2.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.0
 [1.1.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.1.0
 [1.0.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.0.0

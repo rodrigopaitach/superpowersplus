@@ -80,6 +80,14 @@ Semver, from `1.0.0` on. **PATCH** for a fix that does not change how a skill be
 
 Bump with `scripts/bump-version.sh <version>`; the seven files carrying the field are declared in `.version-bump.json`. Never edit them by hand.
 
+**`[Unreleased]` does not survive more than one cycle of work.** When it tells a
+complete story — a measured correction closed, a set of leftovers cleared — cut
+the version. A fat `[Unreleased]` means `main` has drifted from the last
+installable release with no name describing the difference, and the only way to
+know what is on `main` becomes reading the diff. It also loses entries: the
+commit-preparation rule and `check-skill-behavior-records.sh` both shipped
+without a changelog entry and were caught only when the version was cut.
+
 **A release body is generated, never hand-written:** `scripts/release-notes.sh <version>` builds it from `CHANGELOG.md` — the version's section, then Open gaps, then the footer. A body assembled by hand drifts from the changelog it claims to summarize. Publishing is `gh release create` with **both guards**: `--repo rodrigopaitach/superpowersplus` and `--verify-tag`. This checkout has an upstream remote, and `gh` has resolved to the wrong repository before.
 
 ## Changing a skill
