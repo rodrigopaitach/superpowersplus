@@ -10,6 +10,29 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.4 — rastreabilidade spec → tasks na auditoria
+
+A auditoria comparava o plano consigo mesmo. Requisito que se perdeu na
+tradução da spec para o plano não deixa rastro NO plano — e tarefa que ninguém
+pediu passa por toda revisão de task, porque cada revisão vê um diff só.
+
+- **Tabela de rastreabilidade, antes da de tarefas** — `Critério da spec |
+  Tarefa(s) que cobrem | veredito`, nos dois sentidos: critério sem tarefa é
+  `LOST IN TRANSLATION`, tarefa sem critério de origem é `INVENTED SCOPE`. As
+  duas bloqueiam o PASS igual a uma linha `NOT DELIVERED`.
+- **Origem amarrada** — o caminho da spec vem do próprio plano, que é artefato
+  sob auditoria; então o auditor confirma que o arquivo existe e está
+  commitado (`git log -1 -- <spec>`). Plano sem spec citada é bloqueante, e
+  inferir qual documento em `docs/` era o certo está proibido: seria auditar
+  contra baseline que ninguém aprovou.
+- **Roteamento próprio** — falha de rastreabilidade não entra na fix wave como
+  lacuna de entrega: `LOST IN TRANSLATION` é mudança de plano e `INVENTED
+  SCOPE` é decisão de emendar a spec ou remover o trabalho. Ambas vão para o
+  parceiro humano, não para o fixer.
+- **`writing-plans`** — o cabeçalho do plano cita o caminho exato e commitado
+  da spec, e cada tarefa nomeia o critério que a motivou. Novo item 5 do
+  Self-Review lê nas duas direções.
+
 ## plus.3 — matriz de cobertura e revisor de task que reexecuta a suíte
 
 Nada garantia que o teste prometido na spec virasse teste real no código. Pior:

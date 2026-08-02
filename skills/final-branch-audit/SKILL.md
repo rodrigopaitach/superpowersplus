@@ -1,13 +1,13 @@
 ---
 name: final-branch-audit
-description: Use when all plan tasks are done and before finishing a development branch - audits every task one by one and proves each acceptance criterion with located evidence
+description: Use when all plan tasks are done and before finishing a development branch - traces every spec criterion to the plan's tasks, then audits every task one by one and proves each acceptance criterion with located evidence
 ---
 
 # Final Branch Audit
 
-Walk EVERY task in the plan and prove, one at a time, that its acceptance
-criteria were delivered — with `file:line` citations the auditor located
-itself.
+Trace EVERY criterion of the source spec to the plan tasks that cover it,
+then walk EVERY task and prove, one at a time, that its acceptance criteria
+were delivered — with `file:line` citations the auditor located itself.
 
 **This is not a code review.** The code reviewer judges the quality of the
 diff it is handed. The audit answers a different question: *was everything
@@ -30,7 +30,57 @@ There is no "probably done", no "looks implemented", no partial credit.
 - Any time you inherited a branch and need to know what the plan promised
   versus what the branch contains
 
+## The Spec Is the Root, Not the Plan
+
+The plan is an artifact under audit, not the requirement. A spec requirement
+the plan dropped in translation leaves no trace in the plan — checking the
+plan against itself can never find it.
+
+**Where the spec comes from:** the plan cites its source spec path
+(superpowers:writing-plans requires it). Take the path from the plan, then
+confirm it yourself:
+
+| Check | If it fails |
+|-------|-------------|
+| The cited file exists at that path | BLOCKING |
+| It is committed — `git log -1 -- <spec path>` names a commit | BLOCKING: an uncommitted spec is not an auditable artifact |
+
+A plan citing no spec at all is BLOCKING on its own. Do not infer the spec,
+do not guess which document in `docs/` was meant, and do not fall back to
+auditing the plan alone. Report it and say the traceability pass could not
+run.
+
+## The Traceability Table
+
+Produce this FIRST, before the task table. One row per criterion in the
+spec, plus one row per plan task that no spec criterion motivated:
+
+| Spec criterion | Plan task(s) covering it | Verdict |
+|----------------|--------------------------|---------|
+| §2.1 Tokens expire after 15 minutes | Task 3 | TRACED |
+| §2.4 Refresh rotates the token | — | LOST IN TRANSLATION |
+| — | Task 7 (admin export) | INVENTED SCOPE |
+
+| Situation | Verdict |
+|-----------|---------|
+| Spec criterion covered by one or more plan tasks | TRACED |
+| Spec criterion no task covers | **LOST IN TRANSLATION — BLOCKING** |
+| Plan task no spec criterion motivated | **INVENTED SCOPE — BLOCKING** |
+
+Cite the spec criterion by its section or heading, the task by number. Both
+failures block PASS exactly like a NOT DELIVERED row: the first ships less
+than the spec asked for, the second ships work nobody asked for. Neither is
+visible to a task review, which only ever sees one task's diff — and neither
+is visible to the task table below, which asks only whether the plan's own
+tasks landed.
+
+A task delivering a criterion the spec states differently is not INVENTED
+SCOPE — trace it to that criterion and note the divergence in the row.
+
 ## The Audit Table
+
+The second table. Its rows answer "did the plan's tasks land"; the
+traceability table above answers "did the plan ask for the right things".
 
 The auditor's report MUST contain this table, with one row per acceptance
 criterion of every task in the plan — including tasks the plan or the ledger
@@ -98,15 +148,42 @@ Subagent (general-purpose):
     delivered what the plan required. You are read-only: fix nothing, commit
     nothing, never mutate the working tree, the index, HEAD, or branch state.
 
-    **Plan:** [PLAN_FILE_PATH]
+    **Plan (an artifact under audit):** [PLAN_FILE_PATH]
     **Branch range:** [MERGE_BASE]..[HEAD]
     **Ledger (claims under audit, not evidence):** [LEDGER_PATH or "none"]
 
-    ## Your Job
+    The source spec is not passed to you: its path comes from the plan, and
+    confirming that path is part of the audit.
 
-    Every task in the plan. Every acceptance criterion of every task. One row
-    each in the table below — including tasks the plan or ledger calls
-    complete.
+    ## Step 1: Resolve the Spec
+
+    Read the plan and find the source spec path it cites. Confirm the file
+    exists and is committed (`git log -1 -- <spec path>` names a commit).
+
+    A plan citing no spec, a path that does not exist, or a spec that is not
+    committed is a BLOCKING issue: report it, say the traceability pass could
+    not run, and continue with the task table. Never infer which document was
+    meant, and never substitute the plan for the spec.
+
+    Read the spec itself. It is the requirement; the plan is an artifact
+    under audit.
+
+    ## Step 2: Traceability
+
+    One row per criterion in the spec, plus one row per plan task no spec
+    criterion motivated:
+
+    - Spec criterion covered by one or more tasks → TRACED
+    - Spec criterion no task covers → LOST IN TRANSLATION (blocking)
+    - Plan task no spec criterion motivated → INVENTED SCOPE (blocking)
+
+    A task delivering a criterion the spec words differently is TRACED —
+    note the divergence in the row rather than calling it invented.
+
+    ## Step 3: Every Task in the Plan
+
+    Every acceptance criterion of every task. One row each in the task table
+    below — including tasks the plan or ledger calls complete.
 
     Evidence-or-zero: a criterion with no `path/file.ext:line` citation is
     NOT DELIVERED. A citation that does not check out is NOT DELIVERED.
@@ -127,12 +204,28 @@ Subagent (general-purpose):
 
     ## Branch Conformance Audit
 
+    **Spec:** [path cited by the plan] — exists: yes/no, committed: yes/no
     **Verdict:** PASS | FAIL
-    (PASS only when every row is DELIVERED)
+    (PASS only when every traceability row is TRACED AND every task row is
+    DELIVERED)
+
+    ### Traceability
+
+    | Spec criterion | Plan task(s) | Verdict |
+    |----------------|--------------|---------|
+    | ... | Task N / — | TRACED / LOST IN TRANSLATION / INVENTED SCOPE |
+
+    ### Task Delivery
 
     | Task | Criterion | Implementation | Test | Verdict |
     |------|-----------|----------------|------|---------|
     | ... | ... | `path:line` | `path:line` | DELIVERED / NOT DELIVERED |
+
+    ### Traceability Failures (blocking)
+    - LOST IN TRANSLATION — <spec criterion>: no task covers it. Searched:
+      <what you read in the plan to conclude it>.
+    - INVENTED SCOPE — Task N: no spec criterion motivates it. Searched:
+      <what you read in the spec to conclude it>.
 
     ### False Completions (critical)
     - Task N: <criterion> — claimed complete by <plan checkbox / ledger line>,
@@ -154,6 +247,14 @@ The audit's gaps are input to a fix wave, not a report to file away. FAIL
 means the branch is not done, regardless of how clean the code review is.
 Never resolve a gap by editing the plan to stop asking for it.
 
+Traceability failures do not route like delivery gaps:
+
+| Failure | Route |
+|---------|-------|
+| LOST IN TRANSLATION | The plan is incomplete. Adding the missing work is a plan change — take it to your human partner with the spec text beside the plan's silence. |
+| INVENTED SCOPE | Work exists that nobody specified. Your human partner decides: amend the spec to cover it, or remove it. Not the fixer's call. |
+| No spec cited, or the cited spec is missing/uncommitted | Stop and ask. There is nothing to trace against, and inferring a spec fabricates the baseline. |
+
 ## Common Rationalizations
 
 | Excuse | Reality |
@@ -165,3 +266,6 @@ Never resolve a gap by editing the plan to stop asking for it.
 | "The implementation is there, the test is obvious" | Untested is undelivered. Write the row as NOT DELIVERED and let the fix wave add the test. |
 | "This criterion is too vague to audit — I'll assume it passed" | Put it in Unauditable Criteria. An assumed pass is a fabricated row. |
 | "Auditing every task is overkill for a small plan" | The tasks that go missing are never the ones you would have thought to spot-check. |
+| "The plan was written from the spec, so tracing them is redundant" | The plan is the artifact under audit. A requirement lost while writing it leaves no trace in it — that is exactly the gap the traceability table exists to catch. |
+| "The plan doesn't cite a spec, I'll find the obvious one in docs/" | Inferring the spec means auditing against a document nobody approved for this plan. Report the missing citation as blocking. |
+| "Task 7 isn't in the spec but it's clearly needed" | Then the spec needed amending and nobody did it. INVENTED SCOPE is a finding, not a judgment call about usefulness. |

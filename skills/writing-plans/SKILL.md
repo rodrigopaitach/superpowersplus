@@ -60,6 +60,10 @@ independently testable deliverable.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+**Source spec:** `docs/superpowers/specs/YYYY-MM-DD-<feature>.md` — the exact
+path of the approved design this plan implements, committed. Not a title, not
+"the design doc": the path superpowers:final-branch-audit will open.
+
 **Goal:** [One sentence describing what this builds]
 
 **Architecture:** [2-3 sentences about approach]
@@ -90,6 +94,10 @@ names are this repository's own — see the section below before filling it.]
 
 ````markdown
 ### Task N: [Component Name]
+
+**Spec criterion:** [the section or heading of the source spec this task
+exists to deliver — e.g. `§2.4 Refresh rotates the token`. A task with no
+spec criterion is scope you invented while planning.]
 
 **Files:**
 - Create: `exact/path/to/file.py`
@@ -158,6 +166,24 @@ An unauditable criterion is a plan failure, exactly like a placeholder — the
 auditor charges what the plan wrote, and the branch fails on wording you
 controlled.
 
+## Traceability to the Spec
+
+superpowers:final-branch-audit opens the spec and traces it against this
+plan, in both directions. Two rules make that pass possible:
+
+| Rule | Why |
+|------|-----|
+| The header cites the spec's exact committed path | The auditor takes the path from the plan. No citation, and the traceability pass cannot run at all — it is reported as blocking, not skipped. |
+| Every task names the spec criterion it delivers | A task tracing to nothing is INVENTED SCOPE at the audit. A spec criterion no task names is LOST IN TRANSLATION. |
+
+Both failures are found by reading the spec and the plan side by side —
+which is what the auditor does, and what you should do before saving. A
+requirement dropped while planning leaves no trace in the plan itself.
+
+If the work genuinely needs a task the spec does not cover, the spec is
+incomplete: take it back to your human partner rather than smuggling the
+task in. Amending the spec is cheap now and blocking later.
+
 ## Test Coverage Matrix
 
 Derived from the spec: one row per acceptance criterion, naming the kind of
@@ -211,7 +237,9 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 **4. Auditable criteria:** Does every task have acceptance criteria, each one observable, settled by a citation, and naming its covering test? Read each one as the auditor will: could a `file:line` prove or disprove it? If not, rewrite it.
 
-**5. Matrix coverage:** Does every acceptance criterion have a row in the Test Coverage Matrix, and does every row name a test some step actually creates? A row pointing at a test no step writes is a placeholder wearing a table.
+**5. Traceability:** Does the header cite the spec's exact committed path, and does every task name the spec criterion it delivers? Item 1 reads spec → task; this one reads task → spec. A task naming no criterion is scope you invented while planning, and the audit charges it as INVENTED SCOPE. Without the path, the audit cannot run this pass at all.
+
+**6. Matrix coverage:** Does every acceptance criterion have a row in the Test Coverage Matrix, and does every row name a test some step actually creates? A row pointing at a test no step writes is a placeholder wearing a table.
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
