@@ -1219,6 +1219,14 @@ lacuna sem registro volta como descoberta.
   plano; a chamada entregue não é verificada por ninguém. É a fronteira
   plano → código, um degrau adiante da que o plus.13 fechou, e tem o tamanho
   de um pacote próprio.
+- **Sem harness de eval neste repositório** — o `CLAUDE.md` mandava rodar evals
+  e apontava para `evals/`, que é gitignored e não existe neste checkout; o
+  agente tropeçou nisso duas vezes antes de a instrução sair. O que existe é
+  `tests/skill-behavior/`, com uma regra medida (plus.28). Clonar o
+  `superpowers-evals` e ligá-lo ao fluxo é desejável e não foi feito: exigiria
+  submódulo ou clone manual por checkout, e as regras deste projeto continuam
+  majoritariamente raciocinadas em vez de medidas. Registrado aqui para não
+  voltar como descoberta.
 - **Número de linha em lockfile permanece ilustrativo** — `package-lock.json:1188`
   em `brainstorming/SKILL.md:94` não corresponde a lockfile nenhum: este
   repositório é zero-dependency e a linha varia por projeto de qualquer
