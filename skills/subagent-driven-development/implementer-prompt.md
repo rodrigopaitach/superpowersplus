@@ -37,7 +37,7 @@ Subagent (general-purpose):
     6. Report back
 
     **Step 1 is not conditional on the task asking for it.** The Iron Law of
-    superpowers:test-driven-development binds every task here: NO PRODUCTION
+    superpowersplus:test-driven-development binds every task here: NO PRODUCTION
     CODE WITHOUT A FAILING TEST FIRST. Code written before its test gets
     deleted and rewritten from the test, not retrofitted with one
     afterwards. The only exceptions are throwaway prototypes, generated

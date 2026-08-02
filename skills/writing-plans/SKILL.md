@@ -13,7 +13,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
-**Context:** If working in an isolated worktree, it should have been created via the `superpowers:using-git-worktrees` skill at execution time.
+**Context:** If working in an isolated worktree, it should have been created via the `superpowersplus:using-git-worktrees` skill at execution time.
 
 **Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
 - (User preferences for plan location override this default)
@@ -64,11 +64,11 @@ independently testable deliverable.
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowersplus:subagent-driven-development (recommended) or superpowersplus:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Source spec:** `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` —
 the exact path of the approved design this plan implements, committed. Not
-a title, not "the design doc": the path superpowers:final-branch-audit will
+a title, not "the design doc": the path superpowersplus:final-branch-audit will
 open.
 
 **Goal:** [One sentence describing what this builds]
@@ -171,7 +171,7 @@ git commit -m "feat(auth): reject expired tokens"
 
 ## Acceptance Criteria
 
-Every task carries them, and superpowers:final-branch-audit charges them one
+Every task carries them, and superpowersplus:final-branch-audit charges them one
 by one at the end of the branch — one row per criterion, each needing an
 implementation `file:line` and a test `file:line` before it counts as
 delivered. Write them in the form that audit can settle.
@@ -190,7 +190,7 @@ controlled.
 
 ## Traceability to the Spec
 
-superpowers:final-branch-audit opens the spec and traces it against this
+superpowersplus:final-branch-audit opens the spec and traces it against this
 plan, in both directions. Two rules make that pass possible:
 
 | Rule | Why |
@@ -272,7 +272,7 @@ requirements, with the exact values to use verbatim". A signature you
 half-remembered reaches the implementer labeled as fact, and the first thing
 to disagree with it is the running system.
 
-superpowers:brainstorming grounds every claim the spec makes about a
+superpowersplus:brainstorming grounds every claim the spec makes about a
 library, external API, or third-party service in one of two forms: the
 lockfile-pinned version plus the line you read inside the dependency, or the
 vendor's official documentation for that version. A step whose code calls
@@ -322,7 +322,7 @@ here are exactly the ones an author passes by assumption: that the spec
 path resolves, that every criterion has a task, that every task traces
 back, that the matrix names tests the steps actually create. The reviewer
 opens the spec and reads it against your plan — the same pass
-superpowers:final-branch-audit runs at the end of the branch, run now, when
+superpowersplus:final-branch-audit runs at the end of the branch, run now, when
 a gap costs a paragraph instead of a re-plan.
 
 Hand it the plan file path and nothing else: the spec path comes from the
@@ -346,9 +346,9 @@ After the plan review passes, offer execution choice:
 **Which approach?"**
 
 **If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
+- **REQUIRED SUB-SKILL:** Use superpowersplus:subagent-driven-development
 - Fresh subagent per task + two-stage review
 
 **If Inline Execution chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
+- **REQUIRED SUB-SKILL:** Use superpowersplus:executing-plans
 - Batch execution with checkpoints for review

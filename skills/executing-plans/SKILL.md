@@ -11,21 +11,21 @@ Load plan, review critically, execute all tasks, report when complete.
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
-**Note:** Tell your human partner that Superpowers works much better with access to subagents (Claude Code, Codex CLI, Codex App, Copilot CLI, and Gemini CLI all qualify; see the per-platform tool refs in `../using-superpowers/references/`). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
+**Note:** Tell your human partner that Superpowers works much better with access to subagents (Claude Code, Codex CLI, Codex App, Copilot CLI, and Gemini CLI all qualify; see the per-platform tool refs in `../using-superpowers/references/`). If subagents are available, use superpowersplus:subagent-driven-development instead of this skill.
 
 ## The Process
 
 ### Step 1: Load and Review Plan
-1. Ensure an isolated workspace: use superpowers:using-git-worktrees to create one or verify the existing one
+1. Ensure an isolated workspace: use superpowersplus:using-git-worktrees to create one or verify the existing one
 2. Read plan file
 3. Read the spec the plan cites — the plan is a translation of it, and
-   superpowers:final-branch-audit traces one against the other at the end. A
+   superpowersplus:final-branch-audit traces one against the other at the end. A
    plan citing no spec is an entry blocker: get the path from your human
    partner before Step 2, never start and sort it out later.
 4. Review critically - identify any questions or concerns about the plan
 5. Check every task carries acceptance criteria verifiable by located
    evidence — one observable behavior each, settled by a `file:line`
-   citation, naming its covering test (the format superpowers:writing-plans
+   citation, naming its covering test (the format superpowersplus:writing-plans
    specifies). A task whose criteria no citation could settle is a concern:
    the audit in Step 3 will charge exactly what the plan wrote.
 6. If concerns: Raise them with your human partner before starting
@@ -43,7 +43,7 @@ For each task:
 
 After the last task, before finishing: the conformance audit is mandatory.
 
-- **REQUIRED SUB-SKILL:** Use superpowers:final-branch-audit
+- **REQUIRED SUB-SKILL:** Use superpowersplus:final-branch-audit
 - It walks every task and verdicts every acceptance criterion against
   located evidence. Your own todos are claims under audit, not evidence —
   marking a task completed in Step 2 proves nothing to it.
@@ -54,7 +54,7 @@ After the last task, before finishing: the conformance audit is mandatory.
 
 After all tasks complete and verified, and the audit PASSes:
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
-- **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch
+- **REQUIRED SUB-SKILL:** Use superpowersplus:finishing-a-development-branch
 - Follow that skill to verify tests, present options, execute choice
 
 ## When to Stop and Ask for Help

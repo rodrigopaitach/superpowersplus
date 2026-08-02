@@ -24,9 +24,9 @@ There is no "probably done", no "looks implemented", no partial credit.
 ## When to Use
 
 - After the last task of a plan, BEFORE the final code review
-  (superpowers:subagent-driven-development dispatches it there)
+  (superpowersplus:subagent-driven-development dispatches it there)
 - Before presenting merge options
-  (superpowers:finishing-a-development-branch requires it)
+  (superpowersplus:finishing-a-development-branch requires it)
 - Any time you inherited a branch and need to know what the plan promised
   versus what the branch contains
 
@@ -37,7 +37,7 @@ the plan dropped in translation leaves no trace in the plan — checking the
 plan against itself can never find it.
 
 **Where the spec comes from:** the plan cites its source spec path
-(superpowers:writing-plans requires it). Take the path from the plan, then
+(superpowersplus:writing-plans requires it). Take the path from the plan, then
 confirm it yourself:
 
 | Check | If it fails |
@@ -54,7 +54,7 @@ run.
 
 Produce this FIRST, before the task table. One row per item in the spec's
 `## Acceptance Criteria` list **and one per item in its `## Implicit
-Requirements` list** — superpowers:brainstorming requires both sections, so
+Requirements` list** — superpowersplus:brainstorming requires both sections, so
 a spec lacking either is a blocking issue in its own right: report it, then
 trace against the spec's numbered requirement headings instead. The lists
 are what fix the row count; without them, two auditors enumerate two
@@ -110,7 +110,7 @@ NOT DELIVERED here; Task 7 is DELIVERED here and INVENTED SCOPE above —
 working code the spec never asked for is still a finding.
 
 - **Two id spaces, never mixed.** This table is keyed by the plan's
-  task-level labels (`T3.1`, superpowers:writing-plans requires that form);
+  task-level labels (`T3.1`, superpowersplus:writing-plans requires that form);
   the traceability table above is keyed by the spec's ids (`AC1`, `IR2`). A
   row here carrying an `AC` or `IR` id is citing the wrong list.
 - **Implementation** and **Test** are `path/file.ext:line` — a path alone is

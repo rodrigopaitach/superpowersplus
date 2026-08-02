@@ -81,7 +81,7 @@ Re-reviewer: Test Run: `npm test` exit 0 — 6 passed (previous: 5).
 ...
 
 [After all tasks]
-[Dispatch superpowers:final-branch-audit with plan + MERGE_BASE..HEAD + ledger, most capable model]
+[Dispatch superpowersplus:final-branch-audit with plan + MERGE_BASE..HEAD + ledger, most capable model]
 Auditor: PASS — spec docs/superpowers/specs/2026-03-04-feature-design.md
   (exists, committed); traceability 9/9 TRACED (6 AC + 3 IR), no invented scope;
   12/12 criteria DELIVERED, every row cited. No false completions.
@@ -91,5 +91,5 @@ Final reviewer: All requirements met. Deferred minors triaged: none block merge.
 
 [Delete this plan's workspace — the record now lives in git]
 
-Done! Using superpowers:finishing-a-development-branch.
+Done! Using superpowersplus:finishing-a-development-branch.
 ```

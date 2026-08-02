@@ -29,14 +29,14 @@ Tests failing (<N> failures). Must fix before completing:
 
 A green suite proves the code that exists works. It says nothing about the
 work the plan asked for and nobody built. Before any merge option is on the
-table, superpowers:final-branch-audit MUST have run over this branch and
+table, superpowersplus:final-branch-audit MUST have run over this branch and
 returned PASS.
 
 | State | Action |
 |-------|--------|
 | Audit ran, verdict PASS | Continue to Step 3 |
 | Audit ran, verdict FAIL | Stop. Report the NOT DELIVERED rows. The branch is not finished — route the gaps into a fix wave. |
-| No audit was run (e.g. the branch came through superpowers:executing-plans, or by hand) | Run it now: dispatch superpowers:final-branch-audit with the plan file, `git merge-base <base-branch> HEAD`..HEAD, and any ledger. Then apply the rows above. |
+| No audit was run (e.g. the branch came through superpowersplus:executing-plans, or by hand) | Run it now: dispatch superpowersplus:final-branch-audit with the plan file, `git merge-base <base-branch> HEAD`..HEAD, and any ledger. Then apply the rows above. |
 | No plan exists for this branch | Say so explicitly and ask your human partner whether to proceed without the audit. Do not decide this yourself. |
 
 A FALSE COMPLETION finding always stops here, whatever else the audit said.

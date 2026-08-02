@@ -22,7 +22,7 @@ Subagent (general-purpose):
 
     ## The Plan Contract (blocking)
 
-    superpowers:final-branch-audit charges these at the end of the branch,
+    superpowersplus:final-branch-audit charges these at the end of the branch,
     when fixing them costs a re-plan. Each missing item is a blocking issue,
     not a recommendation:
 

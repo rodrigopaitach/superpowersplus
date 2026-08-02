@@ -71,14 +71,14 @@ digraph process {
 
     "Setup: worktree, ledger check, read plan + cited spec, pre-flight review" [shape=box];
     "More tasks remain?" [shape=diamond];
-    "Dispatch conformance audit (superpowers:final-branch-audit)" [shape=box];
+    "Dispatch conformance audit (superpowersplus:final-branch-audit)" [shape=box];
     "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [shape=box];
     "Audit gaps + review findings all addressed?" [shape=diamond];
     "Fix wave iteration I of 3?" [shape=diamond];
     "Fix wave iteration: ONE fix dispatch (audit gaps + findings), one scoped re-review" [shape=box];
     "Adjudicate residuals (FALSE COMPLETION is never parked)" [shape=box];
     "Final gates clean: delete this plan's workspace" [shape=box];
-    "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
+    "Use superpowersplus:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
     "Setup: worktree, ledger check, read plan + cited spec, pre-flight review" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer asks questions?";
@@ -104,8 +104,8 @@ digraph process {
     "Park findings in ledger with rulings" -> "Append completion to ledger, mark todo complete";
     "Append completion to ledger, mark todo complete" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
-    "More tasks remain?" -> "Dispatch conformance audit (superpowers:final-branch-audit)" [label="no"];
-    "Dispatch conformance audit (superpowers:final-branch-audit)" -> "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)";
+    "More tasks remain?" -> "Dispatch conformance audit (superpowersplus:final-branch-audit)" [label="no"];
+    "Dispatch conformance audit (superpowersplus:final-branch-audit)" -> "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)";
     "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" -> "Audit gaps + review findings all addressed?";
     "Audit gaps + review findings all addressed?" -> "Final gates clean: delete this plan's workspace" [label="yes"];
     "Audit gaps + review findings all addressed?" -> "Fix wave iteration I of 3?" [label="no"];
@@ -113,14 +113,14 @@ digraph process {
     "Fix wave iteration I of 3?" -> "Adjudicate residuals (FALSE COMPLETION is never parked)" [label="I = 3 - cap"];
     "Fix wave iteration: ONE fix dispatch (audit gaps + findings), one scoped re-review" -> "Audit gaps + review findings all addressed?";
     "Adjudicate residuals (FALSE COMPLETION is never parked)" -> "Final gates clean: delete this plan's workspace";
-    "Final gates clean: delete this plan's workspace" -> "Use superpowers:finishing-a-development-branch";
+    "Final gates clean: delete this plan's workspace" -> "Use superpowersplus:finishing-a-development-branch";
 }
 ```
 
 ## Setup
 
 Ensure the work happens in an isolated workspace: use
-superpowers:using-git-worktrees to create one or verify the existing one.
+superpowersplus:using-git-worktrees to create one or verify the existing one.
 Never start implementation on a main/master branch without your human
 partner's explicit consent.
 
@@ -435,7 +435,7 @@ whole-branch review's fixes are merged — delete this plan's workspace
 (`rm -rf <workspace>`) — the git history is the record now. Sibling
 directories belong to other plans; leave them alone.
 
-Use superpowers:finishing-a-development-branch.
+Use superpowersplus:finishing-a-development-branch.
 
 ## Common Rationalizations
 
