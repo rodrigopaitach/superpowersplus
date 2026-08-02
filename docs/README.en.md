@@ -87,6 +87,20 @@ Five axes. The detail of each change, entry by entry, is in [`PLUS-CHANGELOG.md`
 - **Task reviewer that re-runs the suite** — the reviewer runs the tests, instead of accepting the implementer's report.
 - **Task-by-task conformance audit** — at the end of the branch, each criterion is traced to the tasks delivering it and given a verdict against located evidence.
 
+## Visual companion telemetry
+
+Brainstorming's visual companion loads the Prime Radiant logo from their site, with the Superpowers version embedded in the URL. Nothing about your project, your prompt, or your agent goes with it — it is a rough usage count, and the credit is the upstream's.
+
+**This fork's guidance is to turn it off:**
+
+```bash
+export SUPERPOWERS_DISABLE_TELEMETRY=1
+```
+
+`DISABLE_TELEMETRY` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` are honored too — this fork does not change that code.
+
+**The code default is still the upstream's: on.** This fork does not ship it disabled and does not modify `skills/brainstorming/scripts/server.cjs`. Turning it off is your action, in your own environment. Inverting the default in the core was evaluated and refused: two upstream tests (`tests/brainstorm-server/branding.test.js:245` and `:261`) assert the logo present by default, and rewriting them to say the opposite would stop them detecting the upstream's own changes.
+
 ## Known gaps
 
 Gaps identified and deliberately left open are recorded in [Pendências conhecidas](../PLUS-CHANGELOG.md#pendências-conhecidas) (in Portuguese), each with the reason it was not closed. A gap with no record comes back as a discovery.

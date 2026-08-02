@@ -10,6 +10,54 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.30 — README reflete o fork e orienta desligar a telemetria
+
+As três sobras do plus.29, todas no `README.md` — o arquivo de maior
+superfície de conflito no rebase, tocado o mínimo: duas remoções, uma
+substituição de corpo de seção e um parágrafo acrescentado. Nenhuma
+reorganização.
+
+- **Contato comercial de terceiro removido** — a seção `## Commercial Services`
+  divulgava `sales@primeradiant.com`. Mesma classe do contato que saiu do
+  `CODE_OF_CONDUCT` no plus.29: canal de terceiro exibido como se este
+  repositório o oferecesse, aqui encaminhando demanda comercial de empresa que
+  não tem relação com o fork. Removida em vez de qualificada — é uma linha a
+  menos para conflitar.
+- **`## Contributing` remete ao `CONTRIBUTING.md`** — o corpo instruía a forkar
+  o upstream, mirar `dev` e preencher o PR template, que o plus.29 removeu
+  daqui. Cabeçalho mantido no lugar, corpo trocado por duas frases apontando
+  para o arquivo que já explica o assunto. Regra duplicada diverge; remissão
+  não.
+- **Inversão da telemetria no núcleo: avaliada e RECUSADA** — a proposta era
+  deixar o companheiro visual desligado por padrão, invertendo
+  `SUPERPOWERS_TELEMETRY_DISABLED` em
+  `skills/brainstorming/scripts/server.cjs:112`. A mudança de código seria de
+  uma linha. O impedimento está nos testes: `branding.test.js:245` e `:261`
+  afirmam, no nome, *"render versioned Prime Radiant logo **by default**"* —
+  exatamente a proposição que a inversão nega. Baseline medido antes de
+  decidir: 7 passando, 0 falhando.
+- **Por que o custo do teste é maior que o do código** — este é o registro que
+  importa para as próximas decisões do fork. Código divergente conflita no
+  rebase e o git avisa. **Teste do upstream reescrito para afirmar o contrário
+  conflita E perde o sinal**: quando o upstream mudar o próprio branding, o
+  teste adaptado não detecta mais a mudança dele — passa a reclamar só da
+  nossa. Um teste que deixou de vigiar o que existia para vigiar o que
+  inventamos custa mais do que a divergência que ele documenta.
+- **Saída pela borda, sem tocar em nada do upstream** — o padrão do código
+  segue o do upstream (**ligado**), e os três documentos passam a orientar
+  `export SUPERPOWERS_DISABLE_TELEMETRY=1`, com `DISABLE_TELEMETRY` e
+  `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` também honrados. Declarado
+  explicitamente nos três que **este fork NÃO vem desligado** e que desligar é
+  ação do usuário no ambiente dele — afirmar o contrário seria a mesma
+  falsidade confortável que o fork inteiro existe para evitar. O crédito e a
+  explicação do upstream ficam onde estavam.
+- **Suíte inteira do `brainstorm-server` como critério** — `ws` não estava
+  instalado no checkout (`node_modules` ausente, ignorado pelo git); instalado
+  para conseguir rodar tudo. Resultado: **123 testes node passando, 0
+  falhando**, mais as duas suítes shell. Os 7 de branding entre eles.
+  `git diff` sobre `skills/brainstorming/scripts/` e `tests/` volta vazio —
+  a prova de que a saída pela borda não tocou nada do upstream.
+
 ## plus.29 — arquivos institucionais refletem o fork
 
 Nenhum destes é código: são os arquivos que o GitHub exibe como se falassem

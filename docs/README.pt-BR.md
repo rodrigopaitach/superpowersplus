@@ -87,6 +87,20 @@ Cinco eixos. O detalhe de cada mudança, entrada por entrada, está em [`PLUS-CH
 - **Revisor de tarefa que reexecuta a suíte** — o revisor roda os testes, em vez de aceitar o relatório de quem implementou.
 - **Auditoria de conformidade tarefa a tarefa** — no fim da branch, cada critério é rastreado até as tarefas que o entregam e vereditado contra evidência localizada.
 
+## Telemetria do companheiro visual
+
+O companheiro visual do brainstorming carrega o logo da Prime Radiant do site deles, com a versão do Superpowers embutida na URL. Não vai nada do seu projeto, do seu prompt nem do seu agente — é uma contagem aproximada de uso, e o crédito é do upstream.
+
+**A orientação deste fork é desligar:**
+
+```bash
+export SUPERPOWERS_DISABLE_TELEMETRY=1
+```
+
+`DISABLE_TELEMETRY` e `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` também são respeitados — este fork não altera esse código.
+
+**O padrão do código continua sendo o do upstream: ligado.** Este fork não vem desligado e não modifica `skills/brainstorming/scripts/server.cjs`. Desligar é ação sua, no seu ambiente. Inverter o padrão no núcleo foi avaliado e recusado: dois testes do upstream (`tests/brainstorm-server/branding.test.js:245` e `:261`) afirmam o logo presente por padrão, e reescrevê-los para dizer o contrário faria com que parassem de detectar mudanças do próprio upstream.
+
 ## Pendências conhecidas
 
 Buracos identificados e deliberadamente não fechados estão registrados em [Pendências conhecidas](../PLUS-CHANGELOG.md#pendências-conhecidas), com o motivo de cada um não ter sido fechado. Lacuna sem registro volta como descoberta.
