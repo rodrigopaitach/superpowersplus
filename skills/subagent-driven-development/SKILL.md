@@ -423,57 +423,10 @@ parked-with-ruling at the cap.
 
 ## Final Review
 
-Two gates run at the end, in this order, and both feed ONE findings list.
-
-### 1. Conformance audit (first)
-
-Dispatch superpowers:final-branch-audit on the most capable available model,
-with the plan file path, the branch range (MERGE_BASE = `git merge-base main
-HEAD`), and this plan's ledger path. It walks every task and verdicts every
-acceptance criterion against located evidence.
-
-It runs BEFORE the code review: a reviewer cannot flag a task nobody
-implemented — absent code produces no diff. An audit FAIL does not skip the
-code review; its gaps and FALSE COMPLETION findings join the review's
-findings in the same fix wave.
-
-### 2. Whole-branch code review
-
-The final whole-branch review gets a package too: run
-`scripts/review-package PLAN_FILE MERGE_BASE HEAD` (MERGE_BASE = the commit the
-branch started from, e.g. `git merge-base main HEAD`) and include the
-printed path in the final review dispatch, so the final reviewer reads
-one file instead of re-deriving the branch diff with git commands. Dispatch
-on the most capable available model (see Model Selection), using
-superpowers:requesting-code-review's
-[code-reviewer.md](../requesting-code-review/code-reviewer.md). Point it at
-the ledger's deferred-minor and parked lines so it can triage which must be
-fixed before merge.
-
-### 3. The fix wave — up to 3 iterations
-
-When the audit or the review returns findings, dispatch ONE fix subagent per
-iteration with the complete list — audit gaps and review findings together,
-never one fixer per finding. Per-finding fixers each rebuild context and
-re-run suites; a real session's final-review fix wave cost more than all its
-tasks combined.
-
-Each iteration ends with exactly one scoped re-review of that iteration's fix
-diff (`scripts/review-package PLAN_FILE FIX_BASE HEAD` over the fix range,
-[re-review-prompt.md](re-review-prompt.md)). When the iteration fixed audit
-gaps, re-run the conformance audit too, scoped to those tasks — a gap is
-closed by evidence, not by a fixer's word.
-
-Three iterations maximum. Append each one to the ledger:
-`Final: fix wave <I>/3 (<X> addressed, <Y> open — <one-liners>; commits <a7>..<b7>)`
-
-Only after the third iteration, adjudicate what is still open as in the task
-loop's breaker: park with rulings, or stop on load-bearing ones. Parking
-before the cap is pre-judging with a different name. **A FALSE COMPLETION
-finding is never parked** — a task the plan claims is done and the branch does
-not contain is load-bearing by definition. Residual load-bearing findings
-surface to your human partner when finishing-a-development-branch presents
-the options.
+Two gates and a fix wave run after the last task. The protocol for all three
+— what to dispatch, in what order, with which inputs, and the caps — is in
+[references/final-review.md](references/final-review.md). Open it when the
+last task's completion line is in the ledger, before dispatching either gate.
 
 ## Finish
 
@@ -501,77 +454,8 @@ Use superpowers:finishing-a-development-branch.
 
 ## Example Workflow
 
-```
-You: I'm using Subagent-Driven Development to execute this plan.
+A full session transcript — setup, a clean task, a task through a fix round,
+and both final gates — is in
+[references/example-workflow.md](references/example-workflow.md). Open it to
+see the loop's shape end to end.
 
-[Setup: worktree verified]
-[Read plan file once: docs/superpowers/plans/feature-plan.md]
-[Resolve workspace: scripts/sdd-workspace docs/superpowers/plans/feature-plan.md — no ledger inside, fresh start]
-[Create todos for all tasks]
-
-Task 1: Hook installation script
-
-[Run task-brief for Task 1; dispatch implementer with brief + report paths + context]
-
-Implementer: "Before I begin - should the hook be installed at user or system level?"
-
-You: "User level (~/.config/superpowers/hooks/)"
-
-Implementer: [Later]
-  - Implemented install-hook command
-  - Added tests, 5/5 passing
-  - Self-review: Found I missed --force flag, added it
-  - Committed
-
-[Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
-Task reviewer: Spec ✅ - all requirements met, nothing extra.
-  Test Evidence: `npm test test/hooks.test.js` exit 0 — 5 passed / 0 failed
-  (base: unknown); 3/3 brief criteria cited to a test file:line.
-  Strengths: Good test coverage, clean. Issues: None. Task quality: Approved.
-
-[Ledger: Task 1: complete (commits a1b2c3d..d4e5f6a, review clean)]
-
-Task 2: Recovery modes
-
-[Run task-brief for Task 2; dispatch implementer with brief + report paths + context]
-
-Implementer: [No questions]
-  - Added verify/repair modes
-  - 8/8 tests passing
-  - Committed
-
-[Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
-Task reviewer: Spec ❌:
-  - Missing: Progress reporting (spec says "report every 100 items")
-  Test Evidence: `npm test test/recovery.test.js` exit 0 — 8 passed / 0 failed
-  (base: 5); criterion "reports every 100 items" — no test, row is `—`.
-  Issues (Important): Magic number (100)
-
-[Fix round 1: resume the implementer with both findings]
-Implementer: Added progress reporting, extracted PROGRESS_INTERVAL constant.
-  Re-ran test/recovery.test.js — 10/10 passing. Fix report appended.
-
-[Run review-package PLAN_FILE FIX_BASE HEAD; dispatch scoped re-review]
-Re-reviewer: Test Run: `npm test test/recovery.test.js` exit 0 — 10 passed
-  (previous: 8). Missing progress reporting — ADDRESSED (src/recovery.js:41).
-  Magic number — ADDRESSED (src/recovery.js:7). New breakage: none.
-  Verdict: all findings addressed.
-
-[Ledger: Task 2: fix round 1/5 (2 addressed, 0 open; commits d4e5f6a..b7c8d9e)]
-[Ledger: Task 2: complete (commits d4e5f6a..b7c8d9e, review clean)]
-
-...
-
-[After all tasks]
-[Dispatch superpowers:final-branch-audit with plan + MERGE_BASE..HEAD + ledger, most capable model]
-Auditor: PASS — spec docs/superpowers/specs/2026-03-04-feature-design.md
-  (exists, committed); traceability 9/9 TRACED, no invented scope;
-  12/12 criteria DELIVERED, every row cited. No false completions.
-
-[Run review-package PLAN_FILE MERGE_BASE HEAD; dispatch final code-reviewer, most capable model]
-Final reviewer: All requirements met. Deferred minors triaged: none block merge.
-
-[Delete this plan's workspace — the record now lives in git]
-
-Done! Using superpowers:finishing-a-development-branch.
-```

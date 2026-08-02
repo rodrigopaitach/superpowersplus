@@ -10,6 +10,29 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.10 — progressive disclosure no skill do controlador
+
+`subagent-driven-development/SKILL.md` estava com 577 linhas, acima das 500
+recomendadas pela documentação oficial de Agent Skills, e fica no contexto do
+controlador durante a execução inteira. Reorganização de carregamento, não
+corte: nenhuma regra saiu, encolheu ou foi fundida.
+
+- **`references/final-review.md`** — o protocolo das duas portas finais e da
+  fix wave, necessário em UMA fase (depois da última tarefa). No SKILL.md
+  ficou o link e a linha dizendo quando abrir. O texto foi movido verbatim;
+  as duas únicas diferenças são os caminhos relativos dos links, que ganham
+  um nível (`../re-review-prompt.md`, `../../requesting-code-review/`).
+- **`references/example-workflow.md`** — a transcrição de sessão inteira,
+  ilustração lida no máximo uma vez. Movida byte a byte.
+- **O que NÃO saiu** — digrafo do processo, Setup, Model Selection, o loop de
+  tarefa completo com a fix loop e o breaker, e a tabela de racionalizações:
+  ou são decididos no início do fluxo, ou consultados em mais de uma fase.
+  Na dúvida, o trecho ficou.
+- **Contagem** — pasta inteira: 1092 → 1112 linhas (as duas referências
+  custam cabeçalho e ponteiro). `SKILL.md`: 577 → 461. Nenhum arquivo de
+  referência passa de 100 linhas, então nenhum precisou de índice, e a
+  referência é de um nível só.
+
 ## plus.7 — obrigação de teste alinhada ao Iron Law do TDD
 
 `implementer-prompt.md` mandava "Write tests (following TDD **if task says
