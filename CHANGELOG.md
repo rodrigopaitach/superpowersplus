@@ -10,7 +10,29 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.1.0] - 2026-08-02
+
+### Added
+
+- **A single escalation format for anything crossing the machine → human
+  boundary** (`skills/using-superpowers/references/escalation-format.md`): the
+  finding as one sentence of practical consequence, 2–4 options each with what
+  it means in practice (always including doing nothing now, with its cost), and
+  a recommendation with its source declared. Gate vocabulary — `LOST IN
+  TRANSLATION`, `INVENTED SCOPE`, severity labels — may ride along in
+  parentheses but never carries the explanation. Generalized from the question
+  form the coverage map already required. Internal reports between machines are
+  explicitly out of scope and unchanged.
+- **The escalation points reference it**: the final audit's three routes, the
+  controller escalating a wrong plan or a hit iteration cap,
+  `executing-plans`' "When to Stop and Ask", and a new library in a plan. The
+  coverage map now points at the shared file for the *form* of a question,
+  keeping only what is specific to the interview, so the two cannot drift.
+- **Checking for end-of-life status is a declared investigation step**, not an
+  optional one, for a central dependency. A version that still works and a
+  version the vendor has stopped supporting look identical from inside the
+  code. The reviewer already blocked a missing finding; the producing side now
+  has the instruction to look.
 
 ### Changed
 
@@ -34,6 +56,11 @@ References below name them so a claim here can be traced there.
 - **Historical changelog carries a single-authority note**: the current state
   of the open gaps lives only in `CHANGELOG.md`, and the descriptions kept
   there record only when each was opened.
+- **Escalation form is charged, without blocking.** The spec and plan
+  reviewers report an escalation recorded with no practical consequence, no
+  options, or no recommendation with a source as a form finding. The decision
+  may have been sound; what is missing is the basis the partner had for taking
+  it — and form does not hold up a document.
 - **`docs/PLUS-CHANGELOG-historico.md` is declared frozen** in `CLAUDE.md` and
   takes no new writing. The live list of open gaps moved here, to
   [Open gaps](#open-gaps) — closing one now updates the maintained document
@@ -242,4 +269,5 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
 Most rules in this project are reasoned rather than measured. Only the
 external-content rule has been measured, once.
 
+[1.1.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.1.0
 [1.0.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.0.0
