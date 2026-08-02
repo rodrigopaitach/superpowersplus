@@ -19,5 +19,10 @@
     "skills": [
       "./skills"
     ]
-  }
+  },
+  "author": {
+    "name": "Rodrigo Lopes Paitach",
+    "email": "rlpaitach@gmail.com"
+  },
+  "repository": "https://github.com/rodrigopaitach/superpowersplus"
 }

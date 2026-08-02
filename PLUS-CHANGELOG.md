@@ -20,6 +20,55 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.34 — namespace próprio, CLAUDE.md deste projeto, autoria correta
+
+**Reversão explícita do item 5 do plus.33.** Aquela entrada determinou manter
+o `name` do plugin como `superpowers`, com base em custo *estimado* de rebase.
+Revertido com base em medição: dos 426 commits do upstream nos últimos 6
+meses, 26 tocaram linhas com `superpowers:` em `skills/` — 6% —, e o `rerere`
+já está ativo para absorver a resolução repetida. A decisão anterior não estava
+errada em raciocínio; estava sem número. É o mesmo defeito que este projeto
+cobra de agentes, cometido por ele mesmo, e a correção veio pela mesma via.
+
+- **56 ocorrências em 20 arquivos, não 131 em 32** — a estimativa do pedido
+  errava por mais de 2×. Substituição por padrão que exige nome de skill em
+  minúsculas depois dos dois-pontos, então prosa, URLs e o caminho
+  `docs/superpowers/` não foram tocados: `git diff` sobre `docs/` voltou vazio,
+  conferido antes de commitar. Depois: prefixo antigo 0, novo 56.
+- **A inércia sem sintoma tinha um ponto só** — `hooks/session-start:27` cravava
+  `superpowers:using-superpowers` no prompt injetado. Renomeado. O
+  `.claude-plugin/marketplace.json` não estava na lista do pedido e precisou
+  entrar: o `name` da entrada do marketplace tem de casar com o do
+  `plugin.json`, ou o `/plugin install superpowersplus@superpowersplus` não
+  resolve. Sete manifestos no total, mais `.pi/extensions/superpowers.ts` e
+  `.opencode/INSTALL.md`.
+- **Dois testes do upstream falham, de propósito** —
+  `tests/codex/test-marketplace-manifest.sh:36` e
+  `tests/kimi/test-plugin-manifest.sh:24` afirmam `name == "superpowers"`.
+  Confirmado por baseline com `git stash` que os dois passavam antes e falham
+  só por causa da renomeação. **Não foram editados**, pela regra do plus.30:
+  teste reescrito para afirmar o contrário conflita no rebase E deixa de
+  detectar mudanças do próprio upstream.
+- **`CLAUDE.md`: de 126 para 50 linhas** — era o processo de contribuição do
+  Superpowers carregado em toda sessão deste repositório: taxa de rejeição de
+  PR, branch `dev` que não existe aqui, templates removidos no plus.29, nove
+  subseções voltadas a contribuidor externo. Pior, mandava rodar um harness de
+  eval que não existe neste checkout, e o agente tropeçou nisso duas vezes.
+  Ficou o que dispara comportamento aqui: evidence-or-zero aplicado ao próprio
+  agente, medir em vez de estimar, as invariantes que quebram em silêncio, e a
+  relação de rebase. O harness de eval virou **pendência registrada**, não
+  instrução vigente — instrução que aponta para artefato inexistente é a regra
+  apodrecida que compete com a certa.
+- **Autoria corrigida nas duas direções** — os manifestos atribuíam o pacote a
+  Jesse Vincent, com o e-mail dele, e apontavam `homepage`/`repository` para o
+  `obra/superpowers`. Com 35 entradas `plus.N` que ele não escreveu, isso
+  apagava a autoria de quem escreveu e o responsabilizava por defeitos que não
+  são dele. `author` passa a Rodrigo Lopes Paitach, `homepage`, `repository` e
+  os dois `websiteURL` apontam para este repositório. **`LICENSE` intocada e
+  o campo `license` preservado por asserção no script**: o copyright de Jesse
+  Vincent permanece, e o crédito à origem segue no `LICENSE`, na `description`
+  de cada manifesto e no topo do README.
+
 ## plus.33 — o projeto passa a se apresentar por si
 
 Até aqui o repositório se apresentava como fork: o README descrevia o
