@@ -10,6 +10,46 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.27 — as três sobras do plus.26, fechadas
+
+O plus.26 deixou três buracos registrados. Nenhum deles era erro do que
+entrou: eram alcance menor do que o problema.
+
+- **A regra de sincronia não tinha quem a cobrasse** — o plus.26 declarou que
+  editar um dos READMEs por idioma exige editar o outro no mesmo commit, e o
+  único verificador era quem executa. Regra assim é decorativa, e é exatamente
+  o defeito que este fork existe para separar: declarada e cobrada tinham a
+  mesma aparência. `scripts/check-docs-sync.sh` compara o staging e falha
+  quando exatamente um dos dois está presente, nomeando qual falta.
+  Verificado nos quatro estados — nenhum, os dois, só o pt-BR, só o en — e
+  `shellcheck --severity=warning` limpo. A ativação (symlink em `.git/hooks`)
+  fica documentada nos dois cabeçalhos e é decisão de cada clone: `.git` não é
+  versionável, então o script versionado é o máximo que o repositório entrega.
+- **O estatuto de dado parava na ponta que verifica** — a regra do plus.26
+  cobria os dois revisores, mas quem busca a página de fornecedor é primeiro
+  quem escreve: o `brainstorming/SKILL.md` manda consultar a doc oficial em
+  "Where a Claim Comes From", e o `coverage-map.md` a usa como fonte de ordem
+  2 para recomendação. Mesma superfície, exposição mais cedo, e sem regra. As
+  duas faces passam a declarar o estatuto **referenciando** a formulação dos
+  revisores em vez de reescrevê-la: regra repetida com outras palavras diverge
+  da original, e as duas passam a competir.
+- **A regra do mínimo não alcançava quem decide o tamanho** — o plus.26 a pôs
+  no `implementer-prompt.md`, que recebe o tamanho já decidido. Se o plano
+  decompôs o critério numa camada nova, o implementador executa, não escolhe.
+  A regra subiu para o `writing-plans/SKILL.md`, na seção `## File Structure`,
+  onde a decomposição é travada: escolher a menor estrutura que atende o
+  critério, e conferir estrutura existente do projeto antes de criar camada,
+  módulo ou abstração nova — com citação `arquivo:linha` da estrutura
+  reutilizada, a mesma forma que todo claim sobre este código já exige.
+- **Camada nova carrega justificativa ligada a critério** — uma linha nomeando
+  o critério que a força. Camada que não nomeia nenhum é escopo inventado pela
+  regra que o plano já cobra, e segue bloqueante ali. No
+  `plan-document-reviewer-prompt.md` a face nova entra como `Simplification`,
+  **advisory e nunca bloqueante** — mesmo estatuto do achado `Minor` no
+  task-reviewer — com a mesma exigência: nomear concretamente a versão menor.
+  "Isto podia ser mais simples" sem substituto não é achado, é opinião com
+  aparência de revisão, e custa uma rodada a quem recebe.
+
 ## plus.26 — sincronia dos idiomas, conteúdo externo como dado, regra do mínimo
 
 Três achados de revisão geral, nenhum deles contradizendo regra: dois eram

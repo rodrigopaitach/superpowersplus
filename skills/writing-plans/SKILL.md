@@ -33,6 +33,11 @@ Before defining tasks, map out which files will be created or modified and what 
 
 This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
 
+**Pick the smallest structure that meets the criterion.** The plan is where the size of the answer is decided — an implementer handed a new layer builds the layer, and every gate downstream passes it, because the gates charge whether the criterion was asked for and tested, never how much was built to meet it.
+
+- Before putting a new layer, module, or abstraction in the plan, check whether structure that already exists in this project meets the criterion. Reusing it means citing it the way every other claim about this codebase is cited — `path/file.ext:line` for the structure you are reusing.
+- A new layer, module, or abstraction carries a one-line justification naming the criterion that forces it. One that names no criterion is invented scope under the rule the plan is already held to.
+
 ## Task Right-Sizing
 
 A task is the smallest unit that carries its own test cycle and is worth a
