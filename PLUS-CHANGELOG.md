@@ -10,6 +10,29 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.18 — face verificadora do caminho realmente entregue pelo pacote
+
+O plus.17 pôs no produtor da spec a regra que o próprio defeito produziu —
+abrir o caminho antes de citá-lo, porque diretório que existe no repositório
+do fornecedor não é sempre um que o pacote publicado entrega. Ela ficou sem
+quem cobrasse.
+
+- **Linha bloqueante nos dois revisores** — citação em forma pinned source
+  cujo caminho não existe no pacote instalado é achado bloqueante, não
+  aproximação aceitável. O revisor abre o caminho; plausibilidade não é
+  verificação. `stripe` é o caso que gerou a regra: `src/*.ts` no GitHub,
+  `cjs/*.js` no `node_modules`.
+- **Procedimento distingue os dois fracassos** — pacote instalado e caminho
+  ausente é a linha bloqueante; dependência não instalada neste checkout é
+  `Unverified External Claims` / `Unverified External Calls`. Antes os dois
+  caíam no mesmo "say so", e o primeiro é erro de citação enquanto o segundo
+  é limite do ambiente.
+- **A face produtora do plano também estava faltando** — `writing-plans`
+  dizia que o passo carrega "the same forms" e nunca mandava abrir o
+  caminho. Acrescentar a linha só ao revisor teria criado a pegadinha que a
+  regra do par existe para evitar, então a regra entrou nas quatro faces:
+  produtor e revisor da spec, produtor e revisor do plano.
+
 ## plus.17 — dependência única nos exemplos de grounding
 
 O plus.16 corrigiu os exemplos do plano e deixou os do brainstorming para

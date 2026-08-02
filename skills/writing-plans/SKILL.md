@@ -283,6 +283,12 @@ integration.
 The citation and the code have to be the same language: a JavaScript source
 cannot ground a Python call, however real the line it points at.
 
+A pinned-source citation names a path you opened in this checkout, never one
+you expect to be there. A directory that exists in the vendor's repository
+is routinely absent from the published tarball — `stripe`'s `src/*.ts` on
+GitHub ships as `cjs/*.js` in `node_modules` — and the reviewer opens what
+you cite.
+
 ```javascript
 // stripe@19.1.0 — https://docs.stripe.com/api/idempotent_requests
 // create(params, options): the idempotency key is a request option,

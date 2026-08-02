@@ -35,6 +35,7 @@ Subagent (general-purpose):
     | A `## Test Coverage Matrix` carrying all five columns — `Criterion`, `Spec criterion`, `Test type`, `Layer`, `Test` — with one row per task criterion, one test each, and every `AC` and `IR` appearing in the Spec criterion column of at least one row | BLOCKING — a criterion with no row is a criterion nobody planned to test, and a dropped column is a dropped obligation: without `Test type` and `Layer` a row states an intention, not a plan. An `IR` (concurrency, error handling, observability, edge cases) is charged on the same terms as an `AC`: named test type, real layer, exact test id |
     | Every matrix row names a test some step actually creates | BLOCKING — a row pointing at a test no step writes is a placeholder wearing a table |
     | Every code step calling a library, external API, or third-party service cites its source: the lockfile-pinned version plus the line inside the dependency, or the vendor's official doc for that version | BLOCKING — the brief hands this code to the implementer as the exact values to use verbatim, so an ungrounded signature ships as fact. A symbol the spec never stated needs its own source, not the spec's general citation |
+    | Every pinned-source citation names a path that exists in the installed package | BLOCKING — open it; never judge it plausible. A directory that exists in the vendor's repository is routinely absent from the published tarball: `stripe`'s `src/*.ts` on GitHub ships as `cjs/*.js` in `node_modules`. A path nobody can open grounds nothing, and the implementer types the signature anyway |
     | Every Tech Stack entry traces to the spec or to a manifest already in the repo, named | BLOCKING — a library first appearing in the plan is a design decision nobody approved |
     | Every criterion, `AC` and `IR`, is observable and settled by a `file:line` citation | BLOCKING — "handles errors well" is a row the auditor can only fail |
 
@@ -42,11 +43,13 @@ Subagent (general-purpose):
 
     Read the lockfile and confirm the pinned version — the plan's version
     line is a claim like any other. Cited a path inside the dependency? Open
-    it and confirm the signature, field, or code the step uses. Cited a doc
-    URL? Fetch it, read it for that version, and confirm the vendor's own
-    domain. A step whose source you cannot reach from this environment goes
-    under **Unverified External Calls** — never approved silently, because
-    an unreachable source and a confirmed one look identical in the plan.
+    it and confirm the signature, field, or code the step uses — installed
+    but the path is not there is the blocking row above, not a near miss.
+    Cited a doc URL? Fetch it, read it for that version, and confirm the
+    vendor's own domain. A step whose source you cannot reach from this
+    environment goes under **Unverified External Calls** — never approved
+    silently, because an unreachable source and a confirmed one look
+    identical in the plan.
 
     The citation and the code must be the same language: a JavaScript
     source cannot ground a Python call, however real the line it points at.

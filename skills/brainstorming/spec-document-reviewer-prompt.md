@@ -37,6 +37,7 @@ Subagent (general-purpose):
     | Claim about the existing system with no `file:line` citation | BLOCKING |
     | Claim about a library, external API, or third-party service with no cited source | BLOCKING — same severity as an uncited claim about this repo's code. "Everyone knows this API" is the failure mode, not an exemption |
     | Cited dependency version does not match what the lockfile pins | BLOCKING — a guarantee that holds at v14 and not at the pinned v9 is a wrong claim with a real citation |
+    | Pinned-source citation whose path does not exist in the installed package | BLOCKING — open the path; never judge it plausible. A directory that exists in the vendor's repository is routinely absent from the published tarball: `stripe`'s `src/*.ts` on GitHub ships as `cjs/*.js` in `node_modules`. A path nobody can open grounds nothing, however well it reads |
     | Cited dependency line or doc page does not say what the spec claims | BLOCKING |
     | Source cited is a blog post, forum answer, or an unattributed "the docs say" | BLOCKING — the two accepted forms are the pinned dependency source and the vendor's own documentation |
     | No `## Codebase Findings`, `## External Dependencies`, or `## Assumptions to Confirm` section | BLOCKING — "None" is how the spec says there are none. An absent section and an empty one must not look alike: the absent one is the spec that never looked, and no later reader can tell the two apart |
@@ -55,8 +56,11 @@ Subagent (general-purpose):
 
     1. Read the lockfile yourself and confirm the pinned version — the spec's
        version line is a claim like any other.
-    2. Cited a path inside the dependency? Open it. Not installed in this
-       checkout? Say so; do not infer the code from the package name.
+    2. Cited a path inside the dependency? Open it. Installed but the path
+       is not there — the published package's layout differs from the
+       vendor's repository — is the blocking row above, not a near miss.
+       Not installed in this checkout at all? Say so; do not infer the code
+       from the package name.
     3. Cited a doc URL? Fetch it and read the page for that version. Confirm
        the vendor's own domain — a mirror or aggregator is not the source.
     4. Cannot reach any source from this environment: list the claim under
