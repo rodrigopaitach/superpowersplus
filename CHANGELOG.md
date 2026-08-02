@@ -23,10 +23,35 @@ References below name them so a claim here can be traced there.
   Superpowers; they now use the text `.claude-plugin` already used, which
   describes this project and credits the origin. One string across five files,
   so they cannot drift apart.
+- **The four review faces are documented as deliberately distinct in scope**
+  (`CLAUDE.md`): the task reviewer runs the *task's* command, the code reviewer
+  the *project's* suite with a fallback, the re-review *re-runs* what already
+  ran, and the final audit runs no tests at all — it re-runs the *searches*. An
+  extraction into a common protocol was specified and abandoned once the map
+  showed four rules rather than one written four ways; unifying them would
+  change the reach of three gates at once.
+- **Historical changelog carries a single-authority note**: the current state
+  of the open gaps lives only in `CHANGELOG.md`, and the descriptions kept
+  there record only when each was opened.
 - **`docs/PLUS-CHANGELOG-historico.md` is declared frozen** in `CLAUDE.md` and
   takes no new writing. The live list of open gaps moved here, to
   [Open gaps](#open-gaps) — closing one now updates the maintained document
   instead of the archived one.
+
+### Added
+
+- **A dependency past end-of-life is a finding, never a migration.** When
+  investigation turns up a central dependency the vendor documents as
+  end-of-life or deprecated, brainstorming verifies it in the vendor's own docs,
+  cites it, and reports it for the partner to decide — it does not migrate,
+  upgrade, or rewrite around it, and does not fold the upgrade into the design
+  as though it were part of the request. Migrating a stack is a project of its
+  own, and its cost belongs to the partner. The spec reviewer blocks a cited
+  EOL dependency with no corresponding item reported, at Groundedness severity.
+- **`scripts/check-frozen-history.sh`**, wired into `githooks/pre-commit`:
+  staging `docs/PLUS-CHANGELOG-historico.md` now fails with instructions to
+  move the change to `CHANGELOG.md`. The declaration that the file is frozen
+  had no verifier, which is the defect this project exists to separate.
 
 ### Fixed
 
