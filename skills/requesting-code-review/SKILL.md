@@ -14,7 +14,9 @@ Dispatch a code reviewer subagent to catch issues before they cascade. The revie
 **Mandatory:**
 - After each task in subagent-driven development
 - After completing major feature
-- Before merge to main
+- Before merge to main — and superpowers:final-branch-audit runs BEFORE this
+  review, not after: a reviewer judges the diff it is handed, and a task
+  nobody implemented produces no diff to judge.
 
 **Optional but valuable:**
 - When stuck (fresh perspective)

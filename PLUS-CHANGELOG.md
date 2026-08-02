@@ -36,6 +36,10 @@ porque código ausente não gera diff.
 - **`writing-plans`** — cada tarefa registra critérios de aceite verificáveis
   por evidência localizada, no formato que a auditoria vai cobrar (um
   comportamento observável por critério, com o teste que o cobre nomeado).
+- **Alinhamento** — `README.md` lista a skill nova no fluxo;
+  `requesting-code-review` declara que a auditoria roda antes do code review;
+  `executing-plans` passa a exigir critérios auditáveis na leitura do plano e
+  a auditoria como Step 3 obrigatório.
 
 ## plus.1 — spec fundamentada em evidência do código
 

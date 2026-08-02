@@ -19,8 +19,13 @@ Load plan, review critically, execute all tasks, report when complete.
 1. Ensure an isolated workspace: use superpowers:using-git-worktrees to create one or verify the existing one
 2. Read plan file
 3. Review critically - identify any questions or concerns about the plan
-4. If concerns: Raise them with your human partner before starting
-5. If no concerns: Create todos for the plan items and proceed
+4. Check every task carries acceptance criteria verifiable by located
+   evidence — one observable behavior each, settled by a `file:line`
+   citation, naming its covering test (the format superpowers:writing-plans
+   specifies). A task whose criteria no citation could settle is a concern:
+   the audit in Step 3 will charge exactly what the plan wrote.
+5. If concerns: Raise them with your human partner before starting
+6. If no concerns: Create todos for the plan items and proceed
 
 ### Step 2: Execute Tasks
 
@@ -30,9 +35,20 @@ For each task:
 3. Run verifications as specified
 4. Mark as completed
 
-### Step 3: Complete Development
+### Step 3: Audit the Branch
 
-After all tasks complete and verified:
+After the last task, before finishing: the conformance audit is mandatory.
+
+- **REQUIRED SUB-SKILL:** Use superpowers:final-branch-audit
+- It walks every task and verdicts every acceptance criterion against
+  located evidence. Your own todos are claims under audit, not evidence —
+  marking a task completed in Step 2 proves nothing to it.
+- Verdict FAIL: the branch is not done. Fix the NOT DELIVERED rows and
+  re-run the audit. Never resolve a gap by editing the plan to stop asking.
+
+### Step 4: Complete Development
+
+After all tasks complete and verified, and the audit PASSes:
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
 - **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch
 - Follow that skill to verify tests, present options, execute choice
@@ -61,4 +77,5 @@ After all tasks complete and verified:
 - Don't skip verifications
 - Reference skills when plan says to
 - Stop when blocked, don't guess
+- A completed todo is not evidence — the audit in Step 3 decides what shipped
 - Never start implementation on main/master branch without explicit user consent

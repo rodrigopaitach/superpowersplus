@@ -207,7 +207,9 @@ The Pi package loads the Superpowers skills and a small extension that injects t
 
 6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
 
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
+7. **final-branch-audit** - Activates when all plan tasks are done, before the final code review. Walks every task and verdicts every acceptance criterion against `file:line` evidence. No citation, not delivered.
+
+8. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests and the audit verdict, presents options (merge/PR/keep/discard), cleans up worktree.
 
 **The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
 
@@ -229,6 +231,7 @@ The Pi package loads the Superpowers skills and a small extension that injects t
 - **dispatching-parallel-agents** - Concurrent subagent workflows
 - **requesting-code-review** - Pre-review checklist
 - **receiving-code-review** - Responding to feedback
+- **final-branch-audit** - Task-by-task conformance audit against located evidence
 - **using-git-worktrees** - Parallel development branches
 - **finishing-a-development-branch** - Merge/PR decision workflow
 - **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
