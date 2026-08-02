@@ -87,6 +87,8 @@ Subagent (general-purpose):
     | Buildability | Could an engineer follow this plan without getting stuck? |
     | Simplification | Could a criterion be met with a smaller structure — something already in this repo, the standard library, or a platform feature — instead of the new layer, module, or abstraction the plan introduces? **Advisory, never blocking**: name the smaller version concretely, since "this could be simpler" with no replacement is not a finding. On a re-review, a suggestion from the previous round that was neither adopted nor answered with a one-line reason on the structure's justification line is itself an advisory finding — the author may keep the larger version, but a refusal nobody recorded reads exactly like a suggestion nobody read. The exception is a new layer whose justification names no criterion — that is invented scope, blocking under the Plan Contract above, not a suggestion |
 
+    | Escalation form | Anything the plan records as taken to the human partner — a new library, a design decision — carries the escalation format (`skills/using-superpowers/references/escalation-format.md`): practical consequence, options with their cost, recommendation with a declared source. Missing any of the three is **advisory, never blocking**: report it as a form finding |
+
     ## Calibration
 
     **Only flag issues that would cause real problems during implementation.**

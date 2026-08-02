@@ -1,5 +1,7 @@
 # superpowersplus — documentação em português
 
+[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest)
+
 > **Este é o texto canônico.** A versão em inglês, [`README.en.md`](README.en.md), é a tradução dele — em qualquer divergência, este arquivo é o que vale.
 >
 > **Editar um exige editar o outro no MESMO commit.** Um commit que altera só um dos dois abre uma divergência que ninguém consegue ver depois: as duas versões continuam plausíveis, e nada indica qual envelheceu.
@@ -123,7 +125,7 @@ export SUPERPOWERS_DISABLE_TELEMETRY=1
 
 ## Pendências conhecidas
 
-Buracos identificados e deliberadamente não fechados estão registrados em [Known gaps](../CHANGELOG.md#open-gaps), com o motivo de cada um não ter sido fechado. Lacuna sem registro volta como descoberta.
+Buracos identificados e deliberadamente não fechados estão registrados em [Open gaps](../CHANGELOG.md#open-gaps), com o motivo de cada um não ter sido fechado. Lacuna sem registro volta como descoberta.
 
 ## Licença e crédito
 

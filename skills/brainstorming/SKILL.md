@@ -91,7 +91,7 @@ stop at the first source that answers:
 |-------|--------|-----------------|
 | 1 | This repository: code, tests, configs, commits | How the system behaves today |
 | 2 | This project's own docs — `README`, `docs/`, ADRs, `CLAUDE.md`/`AGENTS.md` | Decisions and conventions the code does not state |
-| 3 | The official documentation of the library, API, or service, at the version this project pins | What the dependency guarantees |
+| 3 | The official documentation of the library, API, or service, at the version this project pins | What the dependency guarantees — **and, for a central dependency, whether the vendor documents it as end-of-life or deprecated. Check that; it is a declared step, not an optional one.** A version that still works and a version the vendor has stopped supporting look identical from inside the code |
 | 4 | The open web | Only what the three above do not answer |
 
 Reaching for a later source because it is faster is how a question about

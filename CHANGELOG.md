@@ -23,6 +23,7 @@ References below name them so a claim here can be traced there.
   Superpowers; they now use the text `.claude-plugin` already used, which
   describes this project and credits the origin. One string across five files,
   so they cannot drift apart.
+- **Release badge in the README and in both language documents**, resolved dynamically from the GitHub API rather than pinned to a version string that would go stale at the next release (b343a67).
 - **The four review faces are documented as deliberately distinct in scope**
   (`CLAUDE.md`): the task reviewer runs the *task's* command, the code reviewer
   the *project's* suite with a fallback, the re-review *re-runs* what already

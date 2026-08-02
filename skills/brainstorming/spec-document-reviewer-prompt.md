@@ -159,6 +159,17 @@ Subagent (general-purpose):
     category present, every state carrying its reason, every question
     carrying its recommendation and that recommendation's source.
 
+    ## Escalation form (non-blocking)
+
+    Anything the spec records as having been taken to the human partner — a
+    question, a dependency decision, a gap — carries the escalation format
+    (`skills/using-superpowers/references/escalation-format.md`): a practical consequence, options with their cost, and a
+    recommendation with a declared source.
+
+    | Finding | Verdict |
+    |---------|---------|
+    | An escalation recorded with no practical consequence, no options, or no recommendation with a source | NOT BLOCKING — report it as a form finding. The decision may well have been sound; what is missing is the basis the partner had for taking it. Do not hold up the spec over form |
+
     ## Calibration
 
     **Only flag issues that would cause real problems during implementation planning.**

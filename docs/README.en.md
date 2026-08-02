@@ -1,5 +1,7 @@
 # superpowersplus — English documentation
 
+[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest)
+
 > **This is a translation.** The canonical text is the Portuguese one, [`README.pt-BR.md`](README.pt-BR.md) — on any divergence, that file is the one that holds.
 >
 > **Editing one requires editing the other in the SAME commit.** A commit that changes only one of the two opens a divergence nobody can see afterwards: both versions stay plausible, and nothing marks which one went stale.
@@ -123,7 +125,7 @@ export SUPERPOWERS_DISABLE_TELEMETRY=1
 
 ## Known gaps
 
-Gaps identified and deliberately left open are recorded in [Known gaps](../CHANGELOG.md#open-gaps) (in Portuguese), each with the reason it was not closed. A gap with no record comes back as a discovery.
+Gaps identified and deliberately left open are recorded in [Open gaps](../CHANGELOG.md#open-gaps), each with the reason it was not closed. A gap with no record comes back as a discovery.
 
 ## License and credit
 
