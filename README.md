@@ -195,11 +195,11 @@ The Pi package loads the Superpowers skills and a small extension that injects t
 
 ## The Basic Workflow
 
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
+1. **brainstorming** - Activates before writing code. Investigates the real code first, refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves a spec with numbered acceptance criteria, then a reviewer subagent opens every `file:line` it cites and blocks on any claim the code doesn't back.
 
 2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
 
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
+3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps, and the spec criterion it delivers. A reviewer subagent then reads the spec against the plan and blocks on a missing spec path, a task nothing motivated, or a criterion with no test row.
 
 4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
 
