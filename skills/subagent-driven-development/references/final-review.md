@@ -53,4 +53,5 @@ before the cap is pre-judging with a different name. **A FALSE COMPLETION
 finding is never parked** — a task the plan claims is done and the branch does
 not contain is load-bearing by definition. Residual load-bearing findings
 surface to your human partner when finishing-a-development-branch presents
-the options.
+the options — in the escalation format (`../../using-superpowers/references/escalation-format.md`), since that presentation is
+where a person decides.

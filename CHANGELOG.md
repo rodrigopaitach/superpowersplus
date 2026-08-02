@@ -7,7 +7,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 **Upstream base:** [`44c9b2d`](https://github.com/obra/superpowers/commit/44c9b2d) (2026-07-27) — the last [Superpowers](https://github.com/obra/superpowers) commit incorporated. Update this line at every rebase; it replaces the mirrored upstream `version` this project used before `1.0.0`.
 
 The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
-[`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md).
+[`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
 ## [1.1.0] - 2026-08-02
@@ -221,7 +221,7 @@ by entry.
 
 Identified and deliberately left open, each with the reason it was not closed.
 **This is the live list** — closing one updates it here. When each was opened is
-recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas).
+recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas) (in Portuguese).
 
 - **`tests/claude-code/test-subagent-driven-development.sh` is
   non-deterministic and currently fails.** Its "Mentions loading plan"

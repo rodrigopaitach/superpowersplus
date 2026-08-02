@@ -347,7 +347,8 @@ Before the loop starts, two routes leave it immediately:
   never enter the loop.
 - A finding labeled plan-mandated — or any finding that conflicts with
   what the plan's text requires — is the human's decision, like any plan
-  contradiction: present the finding and the plan text, ask which governs.
+  contradiction: present the finding and the plan text in the escalation
+  format (`../using-superpowers/references/escalation-format.md`), and ask which governs.
   Do not dismiss the finding because the plan mandates it, and do not
   dispatch a fix that contradicts the plan without asking.
 Everything else enters the loop. A fix round is one fix dispatch plus one
@@ -401,8 +402,9 @@ the cross-task context the reviewer lacks:
   a ruling that says it's real and deferred.
 - **Real and load-bearing** — a later task builds on it, or it reveals a
   plan defect: STOP. Append `Task <N>: BLOCKED — <reason>` and report to
-  your human partner with the finding, the plan text it collides with, and
-  the fix history. Parking a structural failure lets every dependent task
+  your human partner in the escalation format (`../using-superpowers/references/escalation-format.md`) — the finding, the
+  plan text it collides with, and the fix history are the evidence behind
+  it, not the opening. Parking a structural failure lets every dependent task
   build on it and hands the final review a problem it cannot fix either.
 
 Adjudicate only at the cap. Adjudicating earlier to end a loop is
