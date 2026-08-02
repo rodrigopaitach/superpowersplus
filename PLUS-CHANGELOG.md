@@ -10,6 +10,47 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.24 — regularização de spec antiga e preferência sobre o companheiro visual
+
+Duas consequências do plus.23 e do que ele deixou passar. Nenhuma delas
+contradizia regra: uma era regra nova aplicada retroativamente sem rota de
+saída, a outra era divergência entre o checklist e o fluxograma do mesmo
+arquivo.
+
+- **Spec anterior à exigência tinha bloqueio sem saída** — o plus.23 tornou
+  `## Coverage Map` obrigatória e bloqueante. Nenhuma spec escrita antes dele
+  tem a seção, então todo trabalho antigo que voltasse ao revisor era barrado
+  por regra que não existia quando a spec foi escrita. O achado segue
+  bloqueante — seção ausente e seção vazia-com-motivo continuam não podendo
+  ter a mesma aparência —, mas o relato passou a distinguir a spec que
+  antecede a exigência do autor que omitiu, e a instruir: monte o mapa a
+  partir da spec existente antes de prosseguir. O `SKILL.md` ganhou a
+  contrapartida do lado de quem regulariza: preencher as linhas com o que a
+  spec já contém e marcar `Outstanding` só o que ela não responde. Refazer o
+  levantamento cobraria do parceiro humano decisões que ele já tomou e
+  aprovou uma vez.
+- **Checklist e fluxograma divergiam sobre o companheiro visual** — o passo 3
+  manda oferecê-lo just-in-time; o Process Flow não tinha nó nenhum para ele.
+  Quem seguia o checklist oferecia, quem seguia o fluxograma pulava, e os dois
+  estão no mesmo arquivo. Modelado agora como desvio CONDICIONAL de duas
+  portas, nunca etapa fixa: nó incondicional ensinaria exatamente o oposto do
+  "NOT upfront" que o checklist exige. Verificado no digraph — 15 nós
+  declarados, 15 usados, 20 arestas, zero órfãos e zero não-declarados, e o nó
+  de oferta contornável por dois caminhos distintos.
+- **A oferta não consultava preferência nenhuma** — decidir mostrar em vez de
+  descrever é preferência do parceiro, e há parceiros que nunca querem o
+  companheiro visual. A skill agora procura preferência declarada no
+  `CLAUDE.md` do projeto, na memória do usuário ou na conversa, antes de
+  qualquer oferta. Preferência contra significa nunca oferecer **e nunca
+  mencionar que deixou de oferecer**: anunciar a oferta suprimida é a oferta,
+  e devolve ao parceiro exatamente a interrupção que a preferência existia
+  para evitar.
+- **Qual regra vence, dito de uma vez** — a preferência declarada vence o
+  critério just-in-time, escrito explicitamente no `SKILL.md`. Duas regras
+  aplicáveis ao mesmo momento sem ordem declarada é o modelo escolhendo uma
+  arbitrariamente; o critério decide QUANDO oferecer, só entre quem ainda não
+  respondeu SE.
+
 ## plus.23 — mapa de cobertura com recomendação fundamentada
 
 O `brainstorming/SKILL.md` dizia COMO perguntar — uma por mensagem, múltipla
