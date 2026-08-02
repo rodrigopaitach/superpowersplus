@@ -10,6 +10,55 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.19 — exemplos que ensinavam comportamento impossível
+
+Varredura de exemplos por eixo novo: comparar cada exemplo contra a
+especificação que ele ilustra e contra a própria coerência interna. Exemplo
+errado não contradiz regra nenhuma — ele demonstra mal, e por isso busca por
+palavra-chave nunca o encontrava.
+
+- **Registro misturado no template de tarefa** — o bloco ` ```python ` de
+  `writing-plans` definia `def function(input): return expected` com
+  `expected` não ligado, e o passo seguinte afirmava `Expected: PASS` para um
+  comando que levantaria `NameError`. O bloco se apresentava como Python
+  concreto: tag de linguagem, comando `pytest`, veredito de execução, e
+  `test_specific_behavior` referenciado por outro campo do mesmo template.
+  Registro esquemático existe no arquivo — os campos em prosa usam colchete —
+  e o código não o usava. Todos os demais blocos com tag de linguagem do
+  repositório (`writing-good-tests.md:12`, `defense-in-depth.md:8`,
+  `condition-based-waiting.md:16`, `root-cause-tracing.md:31`,
+  `test-driven-development/SKILL.md:64`) são concretos; este era o único
+  fora do padrão. Substituído por `verify_token` / `test_rejects_expired`,
+  que foi executado antes de entrar. A distinção virou explícita no texto:
+  colchete é vaga, bloco de código é código que roda.
+- **Quatro vocabulários de caminho num exemplo só** — `exact/path/to/file.py`,
+  `tests/exact/path/to/test.py`, `tests/path/test.py` e `src/path/file.py`,
+  este último citado no `git add` e em nenhum outro lugar do exemplo.
+  Colapsados em `src/auth/verify.py` e `tests/auth/test_verify.py`, que são
+  os que a Test Coverage Matrix logo acima já nomeia — o template passou a
+  ser fiado de ponta a ponta.
+- **Tabelas da auditoria mutuamente incoerentes** — `Task 4` tinha linha na
+  tabela de entrega e não aparecia na de rastreabilidade, nem cobrindo
+  critério nem como `INVENTED SCOPE`, embora a regra logo acima exija uma
+  linha por tarefa que nenhum critério motivou. `Task 7`, marcada
+  `INVENTED SCOPE`, não tinha linha de entrega, embora a regra da segunda
+  tabela exija uma linha por critério de toda tarefa do plano. Quem copiava
+  aprendia que uma tarefa pode ser auditada numa tabela e invisível na
+  outra — o buraco exato que a auditoria existe para fechar. Agora toda
+  tarefa aparece nas duas, e `Task 7` entrou como DELIVERED + INVENTED
+  SCOPE: código que funciona e que a spec nunca pediu continua sendo achado.
+- **Sintaxe pytest em arquivo TypeScript** — `e2e/login.spec.ts::refreshes
+  mid-session` usava o node-id do pytest num spec de Playwright. Passou à
+  convenção da própria ferramenta (`>`).
+- **Contagens que não batiam com os itens exibidos** — introduzido por mim no
+  plus.16: a corrida reportava 5 e 8 testes onde a tabela nomeava 3 e 2. Pela
+  regra inversa do TDD, teste sem linha na matriz é escopo inventado, então o
+  exemplo exibia um revisor aprovando o que a regra manda reprovar. As
+  contagens caíram para bater com as linhas e passaram a encadear numa suíte
+  única (3 → 5 → 6), o que também conserta o `(base: 5)` que comparava a
+  contagem de um arquivo de teste com a de outro. A rodada de correção agora
+  fecha a linha `—` de `T2.3`, que antes ficava aberta para sempre.
+
 ## plus.18 — face verificadora do caminho realmente entregue pelo pacote
 
 O plus.17 pôs no produtor da spec a regra que o próprio defeito produziu —

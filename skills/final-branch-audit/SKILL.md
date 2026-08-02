@@ -63,6 +63,7 @@ different sets. Then one row per plan task that no criterion motivated:
 | Spec criterion | Plan task(s) covering it | Verdict |
 |----------------|--------------------------|---------|
 | AC1 Tokens expire after 15 minutes | Task 3 | TRACED |
+| AC2 Rate-limited calls retry with backoff | Task 4 | TRACED |
 | AC4 Refresh rotates the token | — | LOST IN TRANSLATION |
 | IR2 Concurrent refreshes rotate the token once | Task 5 | TRACED |
 | IR3 Refresh failures are logged with the account id | — | LOST IN TRANSLATION |
@@ -102,6 +103,11 @@ marks complete:
 | 3 | T3.1 Rejects expired tokens | `src/auth/verify.ts:88` | `tests/auth/verify.test.ts:41` | DELIVERED |
 | 4 | T4.2 Retries on 429 with backoff | — | — | NOT DELIVERED |
 | 5 | T5.1 Concurrent refreshes rotate the token once | `src/auth/refresh.ts:52` | `tests/integration/test_refresh.py:73` | DELIVERED |
+| 7 | T7.1 Admin export produces a CSV | `src/admin/export.ts:19` | `tests/admin/export.test.ts:8` | DELIVERED |
+
+Every task in one table appears in the other. Task 4 is traced above and
+NOT DELIVERED here; Task 7 is DELIVERED here and INVENTED SCOPE above —
+working code the spec never asked for is still a finding.
 
 - **Two id spaces, never mixed.** This table is keyed by the plan's
   task-level labels (`T3.1`, superpowers:writing-plans requires that form);

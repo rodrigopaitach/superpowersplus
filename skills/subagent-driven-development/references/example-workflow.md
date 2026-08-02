@@ -22,13 +22,13 @@ You: "User level (~/.config/superpowers/hooks/)"
 
 Implementer: [Later]
   - Implemented install-hook command
-  - Added tests, 5/5 passing
+  - Added tests, 3/3 passing
   - Self-review: Found I missed --force flag, added it
   - Committed
 
 [Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
 Task reviewer: Spec ✅ - all requirements met, nothing extra.
-  Test Evidence: `npm test test/hooks.test.js` exit 0 — 5 passed / 0 failed
+  Test Evidence: `npm test` exit 0 — 3 passed / 0 failed
   (base: unknown)
 
   | Criterion | Test file:line | Assertion |
@@ -47,14 +47,14 @@ Task 2: Recovery modes
 
 Implementer: [No questions]
   - Added verify/repair modes
-  - 8/8 tests passing
+  - 2 new tests, 5/5 passing
   - Committed
 
 [Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
 Task reviewer: Spec ❌:
   - Missing: Progress reporting (spec says "report every 100 items")
-  Test Evidence: `npm test test/recovery.test.js` exit 0 — 8 passed / 0 failed
-  (base: 5)
+  Test Evidence: `npm test` exit 0 — 5 passed / 0 failed
+  (base: 3)
 
   | Criterion | Test file:line | Assertion |
   |-----------|----------------|-----------|
@@ -65,13 +65,14 @@ Task reviewer: Spec ❌:
   Issues (Important): Magic number (100)
 
 [Fix round 1: resume the implementer with both findings]
-Implementer: Added progress reporting, extracted PROGRESS_INTERVAL constant.
-  Re-ran test/recovery.test.js — 10/10 passing. Fix report appended.
+Implementer: Added progress reporting with a test, extracted
+  PROGRESS_INTERVAL. Re-ran the suite — 6/6 passing. Fix report appended.
 
 [Run review-package PLAN_FILE FIX_BASE HEAD; dispatch scoped re-review]
-Re-reviewer: Test Run: `npm test test/recovery.test.js` exit 0 — 10 passed
-  (previous: 8). Missing progress reporting — ADDRESSED (src/recovery.js:41).
-  Magic number — ADDRESSED (src/recovery.js:7). New breakage: none.
+Re-reviewer: Test Run: `npm test` exit 0 — 6 passed (previous: 5).
+  Missing progress reporting — ADDRESSED (src/recovery.js:41); T2.3's `—`
+  row is now `test/recovery.test.js:62`. Magic number — ADDRESSED
+  (src/recovery.js:7). New breakage: none.
   Verdict: all findings addressed.
 
 [Ledger: Task 2: fix round 1/5 (2 addressed, 0 open; commits d4e5f6a..b7c8d9e)]

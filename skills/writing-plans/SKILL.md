@@ -93,13 +93,17 @@ the section below before filling it.]
 |-----------|----------------|-----------|-------|------|
 | T3.1 Rejects expired tokens | AC1 | unit | `tests/auth/` | `tests/auth/test_verify.py::test_rejects_expired` |
 | T3.2 Rejected tokens are logged once | AC1 | unit | `tests/auth/` | `tests/auth/test_verify.py::test_logs_one_rejection` |
-| T5.1 Login survives a token refresh | AC3 | e2e | `e2e/` | `e2e/login.spec.ts::refreshes mid-session` |
+| T5.1 Login survives a token refresh | AC3 | e2e | `e2e/` | `e2e/login.spec.ts > refreshes mid-session` |
 | T5.2 Two refreshes in flight rotate the token once | IR2 | integration | `tests/integration/` | `tests/integration/test_refresh.py::test_concurrent_refresh_rotates_once` |
 
 ---
 ```
 
 ## Task Structure
+
+Two registers, and the difference is load-bearing: **bracketed text is a
+slot you fill; a code block is code that runs as shown.** A step whose
+snippet cannot run is a step the implementer debugs instead of executes.
 
 ````markdown
 ### Task N: [Component Name]
@@ -110,9 +114,9 @@ e.g. `AC4 Refresh rotates the token`, `IR2 Concurrent refreshes rotate
 once`. A task with no spec criterion is scope you invented while planning.]
 
 **Files:**
-- Create: `exact/path/to/file.py`
-- Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
+- Create: `src/auth/verify.py`
+- Modify: `src/auth/middleware.py:123-145`
+- Test: `tests/auth/test_verify.py`
 
 **Interfaces:**
 - Consumes: [what this task uses from earlier tasks — exact signatures]
@@ -124,39 +128,38 @@ once`. A task with no spec criterion is scope you invented while planning.]
 the spec's ids and never a task's — the audit reads one table by spec id and
 another by task label, and the same string in both is how it conflates them.]
 - TN.1: [one observable behavior, stated so a `file:line` citation can settle
-  it] — test: `tests/exact/path/to/test.py::test_specific_behavior`
-- TN.2: [next behavior] — test: `tests/exact/path/to/test.py::test_other`
+  it] — test: `tests/auth/test_verify.py::test_rejects_expired`
+- TN.2: [next behavior] — test: `tests/auth/test_verify.py::test_logs_one_rejection`
 
 - [ ] **Step 1: Write the failing test**
 
 ```python
-def test_specific_behavior():
-    result = function(input)
-    assert result == expected
+def test_rejects_expired():
+    assert verify_token(expires_at=0, now=1) is False
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
+Run: `pytest tests/auth/test_verify.py::test_rejects_expired -v`
+Expected: FAIL — `NameError: name 'verify_token' is not defined`
 
 - [ ] **Step 3: Write minimal implementation**
 
 ```python
-def function(input):
-    return expected
+def verify_token(expires_at, now):
+    return expires_at > now
 ```
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `pytest tests/path/test.py::test_name -v`
+Run: `pytest tests/auth/test_verify.py::test_rejects_expired -v`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add tests/path/test.py src/path/file.py
-git commit -m "feat: add specific feature"
+git add tests/auth/test_verify.py src/auth/verify.py
+git commit -m "feat(auth): reject expired tokens"
 ```
 ````
 
