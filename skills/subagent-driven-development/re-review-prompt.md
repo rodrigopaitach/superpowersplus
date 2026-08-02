@@ -1,8 +1,9 @@
 # Scoped Re-Review Prompt Template
 
 Use this template when dispatching a re-review after a fix round. The
-re-reviewer verifies the findings were addressed and checks the fix diff for
-new breakage. It is not a fresh review — the full review already happened.
+re-reviewer re-runs the tests, verifies the findings were addressed, and
+checks the fix diff for new breakage. It is not a fresh review — the full
+review already happened.
 
 **Purpose:** Verify each finding from the previous review was addressed, and
 that the fix itself broke nothing.
@@ -52,21 +53,35 @@ Subagent (general-purpose):
     does not block this task and does not extend the loop. A broad
     whole-branch review happens after all tasks are complete.
 
-    ## Tests
+    ## Tests — Run Them Yourself
 
-    The implementer re-ran the tests covering the amended code and appended
-    the results to the report file. Treat the report as unverified claims:
-    confirm the fix report names the covering tests and shows their output,
-    and verify the claims against the diff. Do not re-run the suite to
-    confirm their report. Run a test only when reading the code raises a
-    specific doubt that no existing run answers — and then a focused test,
-    never a package-wide suite.
+    The implementer appended its fix test run to the report file. That is a
+    claim about a run you did not watch, written by the author of the tests.
+    Re-run them: `[TEST_COMMAND]`. Report the command verbatim, its exit
+    code, and the counts (passed / failed / skipped).
+
+    Compare against `[BASE_TEST_COUNT]`, the count the previous review
+    reported. A count that fell — or any test this fix diff deleted, renamed
+    away, or newly marked skipped, `xfail`, or `.only` — is new breakage:
+    report it under New Breakage in the Fix Diff, whatever the pass line
+    says. A finding "fixed" by deleting the test that caught it is NOT
+    ADDRESSED.
+
+    Stay read-only: run the tests, never checkout, stash, or reset. If you
+    cannot run commands in this environment, say so in your first line and
+    name the command you would have run — never infer a pass from the
+    report.
 
     ## Output Format
 
     Your final message is the report itself: begin directly with the first
     finding's verdict. Every line is a verdict, a finding with file:line,
     or a check you ran — no preamble, no process narration.
+
+    ### Test Run
+
+    **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/failed/
+    skipped] (previous: [BASE_TEST_COUNT])
 
     ### Finding Verdicts
 
@@ -98,9 +113,14 @@ Subagent (general-purpose):
 - `[FINDINGS]` — the Critical/Important findings and spec gaps from the
   previous review, copied verbatim, one per bullet
 - `[REPORT_FILE]` — the implementer's report file (fix reports appended)
+- `[TEST_COMMAND]` — REQUIRED: the same command the task review ran, so the
+  two runs compare; the re-reviewer runs it itself
+- `[BASE_TEST_COUNT]` — the counts the previous review reported. Pass
+  `unknown` when there are none, and expect the delta to come from the diff
 - `[FIX_BASE_SHA]` — the head the previous review saw
 - `[HEAD_SHA]` — current commit
 - `[DIFF_FILE]` — the path `scripts/review-package PLAN_FILE FIX_BASE HEAD` printed
 
-**Re-reviewer returns:** per-finding verdicts (ADDRESSED / NOT ADDRESSED),
-new breakage in the fix diff, out-of-scope observations, and a round verdict.
+**Re-reviewer returns:** its own test run (command, exit code, counts),
+per-finding verdicts (ADDRESSED / NOT ADDRESSED), new breakage in the fix
+diff, out-of-scope observations, and a round verdict.

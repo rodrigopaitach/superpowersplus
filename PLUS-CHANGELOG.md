@@ -38,6 +38,18 @@ teste.
 - **`test-driven-development`** — as mesmas exigências declaradas onde o teste é
   produzido, com o litmus, o mapeamento para a matriz e 4 itens novos no
   checklist de verificação.
+- **Regra apodrecida removida em três lugares** — a mesma instrução vivia
+  espalhada e teria deixado a mudança inerte: `subagent-driven-development`
+  proibia o controlador de pedir reexecução, e o `re-review-prompt` dispensava
+  a suíte depois do fix loop. Os dois agora declaram que o revisor reexecuta e
+  que relato do implementador não é evidência. O re-review também reporta
+  comando, exit code e contagens, e trata achado "corrigido" apagando o teste
+  que o pegou como NOT ADDRESSED.
+- **Placeholders documentados no despacho** — o controlador aprende onde obter
+  `[TEST_COMMAND]` (matriz do plano ou config do runner, confirmado antes de
+  passar) e `[BASE_TEST_COUNT]` (contagem da review anterior; `unknown` quando
+  não houver, nunca preenchido a partir do relatório do implementador, que é
+  justamente o número sob auditoria).
 
 ## plus.2 — auditoria de conformidade tarefa a tarefa na revisão final da branch
 

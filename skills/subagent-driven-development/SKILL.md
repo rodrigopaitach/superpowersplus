@@ -283,7 +283,20 @@ needed.
   dispatch a task reviewer without a diff file.
 - **Reviewer inputs:** the task reviewer gets three paths — the same brief
   file, the report file, and the review package — plus the global
-  constraints that bind the task.
+  constraints that bind the task, the test command, and the base test count.
+- **`[TEST_COMMAND]`:** the command that runs this task's tests, taken from
+  the plan's Test Coverage Matrix or, failing that, the repository's runner
+  config (`package.json` scripts, `Makefile`, `pytest.ini`, the CI
+  workflow). Confirm it exists before passing it — an invented command sends
+  the reviewer chasing a runner error instead of the task. Scope it to the
+  task's tests where the runner allows; the full suite is the fallback.
+- **`[BASE_TEST_COUNT]`:** the test count at BASE, so the reviewer can see
+  whether tests disappeared. You have it from the previous task's review,
+  which reported its counts. No prior run — Task 1, a new suite, a runner
+  that prints no total? Pass `unknown` and say why: the reviewer falls back
+  to reading the diff for tests deleted, renamed away, or newly skipped.
+  Never back-fill it from the implementer's report — that number is part of
+  what is under audit.
 - The global-constraints block you hand the reviewer is its attention
   lens. Copy the binding requirements verbatim from the plan's Global
   Constraints section or the spec: exact values, exact formats, and the
@@ -293,8 +306,10 @@ needed.
   project's spec demands.
 - Do not add open-ended directives like "check all uses" or "run race tests
   if useful" without a concrete, task-specific reason
-- Do not ask a reviewer to re-run tests the implementer already ran on the
-  same code — the implementer's report carries the test evidence
+- The reviewer re-runs the task's tests itself. The implementer's report is
+  a claim about a run nobody else watched, written by the author of the
+  tests being judged — it is not test evidence. Hand the reviewer the test
+  command and the base count, never a "tests already ran" note
 - Do not pre-judge findings for the reviewer — never instruct a reviewer to
   ignore or not flag a specific issue. If you believe a finding would be a
   false positive, let the reviewer raise it and adjudicate it in the review
@@ -354,9 +369,10 @@ whole suite.
 **The re-review is scoped.** Run `scripts/review-package PLAN_FILE FIX_BASE HEAD`
 where FIX_BASE is the head the previous review saw, and dispatch
 [re-review-prompt.md](re-review-prompt.md) with the findings list, the
-brief, the report file, and the printed diff path. The re-reviewer verdicts
-each finding ADDRESSED or NOT ADDRESSED and flags new breakage in the fix
-diff only. New Critical/Important breakage in the fix diff joins the open
+brief, the report file, the printed diff path, and the same test command
+and counts the task review reported — the re-reviewer runs the tests too.
+The re-reviewer verdicts each finding ADDRESSED or NOT ADDRESSED and flags
+new breakage in the fix diff only. New Critical/Important breakage in the fix diff joins the open
 findings list. Out-of-scope observations go to the ledger as deferred
 minors — they never extend the loop.
 
