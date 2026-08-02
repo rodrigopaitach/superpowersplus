@@ -39,6 +39,7 @@ Subagent (general-purpose):
     | Cited dependency version does not match what the lockfile pins | BLOCKING — a guarantee that holds at v14 and not at the pinned v9 is a wrong claim with a real citation |
     | Cited dependency line or doc page does not say what the spec claims | BLOCKING |
     | Source cited is a blog post, forum answer, or an unattributed "the docs say" | BLOCKING — the two accepted forms are the pinned dependency source and the vendor's own documentation |
+    | No `## Codebase Findings`, `## External Dependencies`, or `## Assumptions to Confirm` section | BLOCKING — "None" is how the spec says there are none. An absent section and an empty one must not look alike: the absent one is the spec that never looked, and no later reader can tell the two apart |
     | Item in `## Assumptions to Confirm` that IS verifiable in the code | BLOCKING — not a legitimate assumption. Go verify it yourself; if the code answers it, the spec had to cite it. |
     | Item in `## Assumptions to Confirm` with no search record | BLOCKING — see below |
 

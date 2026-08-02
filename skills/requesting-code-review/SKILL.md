@@ -64,10 +64,13 @@ HEAD_SHA=$(git rev-parse HEAD)
   HEAD_SHA: 3df7661
 
 [Subagent returns]:
+  Test Run: `npm test` (from package.json scripts.test) — exit 0 —
+            18 passed / 0 failed / 0 skipped
   Strengths: Clean architecture, real tests
   Issues:
     Important: Missing progress indicators
     Minor: Magic number (100) for reporting interval
+  Recommendations: Progress reporting for long operations
   Assessment: Ready to proceed
 
 You: [Fix progress indicators]

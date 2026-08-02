@@ -10,6 +10,43 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.15 — exemplos e faces divergentes
+
+Varredura de consistência achou quatro pontos onde a regra existe e a cópia
+dela não acompanhou.
+
+- **Exemplo de retorno do code review sem evidência de teste** — o exemplo
+  de despacho em `requesting-code-review/SKILL.md` mostrava o revisor
+  devolvendo Strengths / Issues / Assessment. O template que ele despacha
+  exige `### Test Run` como primeira seção e `### Recommendations`, e proíbe
+  responder "tests pass" sem ter rodado. O único exemplo que o chamador
+  tinha de um retorno normal não tinha teste nenhum — a mesma correção dos
+  commits `bdf655e` e `0c79b24`, num exemplo que escapou delas.
+- **Autoverificação mais estreita que o litmus** — o implementador só
+  checava casos de borda listados "no brief ou no `IR` que ele nomeia"; o
+  revisor bloqueia quando o brief, **o critério de spec nomeado ou as global
+  constraints** listam casos, e conta `limits` entre os que o `IR` abriga. O
+  implementador passava na própria revisão e levava Critical no review. As
+  duas listas agora são a mesma lista.
+- **Seção ausente e seção vazia tinham a mesma aparência** — brainstorming
+  exige cinco seções, cada uma com instrução de escrever `"None"` quando
+  vazia, mas o revisor de spec só bloqueava a ausência de duas.
+  `## Codebase Findings`, `## External Dependencies` e
+  `## Assumptions to Confirm` podiam simplesmente não existir. Sem a linha,
+  "não checamos nada externo" e "não havia nada externo" são indistinguíveis
+  — que é exatamente o que o plus.12 existe para separar.
+- **Matriz de cobertura sem as cinco colunas** — o Plan Contract cobrava a
+  chave das linhas e a coluna `Spec criterion`, não que `Test type` e
+  `Layer` existissem. Matriz de três colunas passava. Sem elas a linha
+  declara intenção, não plano.
+
+Varredura nova, que nunca tinha sido feita: **todo exemplo que aparece em
+mais de um arquivo, comparado cópia contra cópia.** Divergência entre cópias
+é achado mesmo quando nenhuma delas menciona a regra divergente — foi assim
+que o exemplo do code review apareceu, porque ele não contradizia a regra,
+apenas a omitia, e nenhum grep pela regra o alcançava. Registro do que ficou
+em aberto na seção "Pendências conhecidas".
+
 ## plus.14 — compressão dos exemplos nos prompts carregados por tarefa
 
 `implementer-prompt.md`, `task-reviewer-prompt.md` e `re-review-prompt.md`
@@ -467,3 +504,30 @@ lacuna sem registro volta como descoberta.
   mutação não testa o mecanismo. Adiado até haver uso real do fork — sem
   execuções para calibrar quais mutações valem o custo, a checagem entraria
   como ritual.
+- **Grounding de dependência para no plano** — `lockfile`, `pinned`,
+  `official doc` e `vendor` aparecem em quatro arquivos: os dois da spec
+  (plus.12) e os dois do plano (plus.13). Não aparecem no
+  `implementer-prompt.md`, no `task-reviewer-prompt.md` nem na
+  `final-branch-audit`. A chamada planejada é verificada na revisão do
+  plano; a chamada entregue não é verificada por ninguém. É a fronteira
+  plano → código, um degrau adiante da que o plus.13 fechou, e tem o tamanho
+  de um pacote próprio.
+- **Exemplo da Test Evidence resumido no consumidor** —
+  `task-reviewer-prompt.md` exige tabela de três colunas
+  (`Criterion | Test file:line | Assertion`), uma linha por critério, e diz
+  que omiti-la é o próprio achado. O exemplo em
+  `subagent-driven-development/references/example-workflow.md:31-33`
+  renderiza isso como contagem em prosa ("3/3 brief criteria … cited to a
+  test file:line"), sem contrapartida para a coluna `Assertion` — a coluna
+  que existe para pegar teste que não afirma nada. A linha 49-50 do mesmo
+  exemplo já mostra uma linha `—`, então o exemplo conhece a tabela pela
+  metade.
+- **Exemplo do stripe cita fonte em outra linguagem** — em
+  `writing-plans/SKILL.md:284-291` e `plan-document-reviewer-prompt.md:53-56`
+  o mesmo trecho fundamenta código Python (`stripe.PaymentIntent.create`)
+  numa fonte JavaScript (`node_modules/stripe/src/resources/PaymentIntents.js:41`).
+  Um exemplo cuja única função é demonstrar grounding correto cita uma fonte
+  que não fundamenta o código exibido. As duas cópias também divergem entre
+  si: a do plano diz "the idempotency key goes in options, never in params"
+  e passa `idempotency_key=key` como keyword argument; a do revisor perde o
+  "never in params".

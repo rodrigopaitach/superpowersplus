@@ -101,9 +101,10 @@ Subagent (general-purpose):
     - An assertion that cannot fail (`expect(true)`, or no assertion at all)?
     - Assertions only on mock call counts or mock existence, never on the
       real component's behavior?
-    - A happy-path-only test where the brief — or the `IR` criterion it
-      names, home of edge cases, concurrency and failure modes — lists edge
-      cases?
+    - A happy-path-only test where the brief, the spec criterion it names,
+      or the global constraints list edge cases? An `IR` criterion is where
+      edge cases, concurrency, failure modes and limits live — its listed
+      cases are the requirement.
     - A test mapping to no requirement in the brief? That is invented scope.
     - Did I watch every test fail before writing the code that passes it?
     - Is the test output pristine (no stray warnings or noise)?
