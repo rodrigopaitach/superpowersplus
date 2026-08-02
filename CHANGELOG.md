@@ -40,6 +40,16 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **`scripts/check-docs-sync.sh` and `scripts/check-frozen-history.sh` missed
+  deletions.** Both filtered staged paths with `--diff-filter=ACMR`, which
+  excludes `D` — so `git rm` on one of the bilingual pair, or on the frozen
+  history, passed in silence. The hooks guarded against unsynchronized
+  *editing* and not against deletion, which is the most complete way to
+  desynchronize. Filter is now `ACMRD`, verified across six staging states
+  including deleting one of the pair (blocks) and deleting both (passes).
+- **Release bodies are generated, not hand-written** — recorded in
+  `CLAUDE.md`, together with the two mandatory guards for any outward-facing
+  `gh` call, since `gh` has resolved to the upstream repository before.
 - **The escalation format is referenced where escalation actually fires** in
   `subagent-driven-development` — the plan-mandated conflict, the breaker's
   load-bearing branch, and the residuals surfacing through
