@@ -10,6 +10,37 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.17 — dependência única nos exemplos de grounding
+
+O plus.16 corrigiu os exemplos do plano e deixou os do brainstorming para
+trás: o fork ficou com `stripe@14.21.0` numa skill e `stripe@19.1.0` em
+outra, e os caminhos antigos apontavam para `node_modules/stripe/src/*.js`.
+No `stripe-node`, `src/` é TypeScript (`src/lib.ts`, `src/resources/*.ts`) e
+o pacote publicado entrega `cjs/` — aquele caminho não existe em instalação
+alguma. Citação inverificável num exemplo de citação, o mesmo defeito do
+plus.16.
+
+- **Caminho verificado, não deduzido** — `cjs/resources/PaymentIntents.js`
+  foi confirmado no pacote publicado `stripe@19.1.0` antes de entrar: o
+  arquivo existe e define `create` como `POST /v1/payment_intents`. As duas
+  URLs de doc também foram abertas e conferidas
+  (`/api/payment_intents/create` e `/api/idempotent_requests`).
+- **Regra que o próprio defeito produziu** — a linha da forma "pinned
+  source" agora manda abrir o caminho antes de citá-lo, porque *"a directory
+  that exists in the vendor's repository is not always one the published
+  package ships"*. Era exatamente o buraco: `src/` existe no repositório do
+  fornecedor e não no tarball.
+- **Forma de citação por seção** — o exemplo de `## External Dependencies`
+  passou à forma doc oficial, idêntica à que o plus.16 deixou no plano. A
+  tabela de `### Claims about a dependency` **manteve** as duas formas, uma
+  por linha: ela é a definição das formas, e trocar a linha "pinned source"
+  por uma URL apagaria do fork uma das duas em que plus.12 e plus.13 se
+  apoiam.
+- **Uma versão em todo o fork** — `stripe@19.1.0` nos quatro pontos que
+  citam dependência. Efeito colateral bem-vindo: o exemplo abstrato de
+  divergência de versão ("holds at v14 and not at the pinned v9") deixou de
+  colidir com a versão do exemplo concreto, que antes era 14.21.0.
+
 ## plus.16 — o exemplo de grounding citava fonte de outra linguagem
 
 Achados da varredura de exemplos duplicados do plus.15, corrigidos em vez de
@@ -549,14 +580,10 @@ lacuna sem registro volta como descoberta.
   plano; a chamada entregue não é verificada por ninguém. É a fronteira
   plano → código, um degrau adiante da que o plus.13 fechou, e tem o tamanho
   de um pacote próprio.
-- **Exemplos do stripe no brainstorming não acompanharam o plus.16** —
-  `brainstorming/SKILL.md:94` e `:163` seguem citando `stripe@14.21.0` com
-  `node_modules/stripe/src/resources/PaymentIntents.js:41` e
-  `node_modules/stripe/src/RequestSender.js:212`, enquanto os exemplos do
-  plano passaram a `stripe@19.1.0` com fonte verificada. Duas divergências
-  de uma vez: a versão, que agora difere entre skills do mesmo fork, e o
-  caminho, que aponta para `src/*.js` — no `stripe-node` o diretório `src/`
-  é TypeScript (`src/lib.ts`, `src/resources/*.ts`) e o pacote publicado
-  entrega `cjs/` e `esm/`, então esse caminho provavelmente não existe em
-  instalação nenhuma. Fora do escopo autorizado do plus.16, e é o mesmo
-  defeito: exemplo de citação que a própria regra reprovaria.
+- **Número de linha em lockfile permanece ilustrativo** — `package-lock.json:1188`
+  em `brainstorming/SKILL.md:94` não corresponde a lockfile nenhum: este
+  repositório é zero-dependency e a linha varia por projeto de qualquer
+  forma. É o único componente inverificável que sobrou nos exemplos de
+  citação, e é inerente a ilustrar a forma em vez de um caso real. Fechar
+  isso exigiria um projeto de exemplo com lockfile versionado dentro do
+  repo — custo alto para o que ensina.
