@@ -68,10 +68,20 @@ declared source. Introduced in 1.1.0.
 the message carries all three parts of the format; the message passes the
 format's own self-test.
 
-**Current verdict: FAIL** (1 of 3). The escalation fired at the right moment
-with correct substance and the wrong shape — no do-nothing option, no declared
-source label, and undefined vocabulary. The rule was not amended in response;
-recording the failure is the result.
+**Run 1 — FAIL (1 of 3)**, `RESULT-escalation-format-in-chat.md`. The escalation
+fired at the right moment with correct substance and the wrong shape: no
+do-nothing option, no declared source label, undefined vocabulary. Diagnosis:
+the rule of form lived behind a one-line link, and under pressure the agent did
+not open it.
+
+**Run 2 — FAIL (2 of 3)**, `RESULT-escalation-format-in-chat-v2.md`, after a
+three-item skeleton was put at each trigger point. The do-nothing option and
+the declared source both appeared; the vocabulary discipline still did not.
+Structure took, per-sentence judgment did not. Fixture
+`FIXTURE-spec-needs-new-library-v2.md` also isolates the trigger, which run 1's
+did not — so the improvement is consistent with the fix but not isolated by it.
+
+Neither run amended the rule. Recording the failure is the result.
 
 ## Re-running
 

@@ -29,6 +29,15 @@ References below name them so a claim here can be traced there.
   was not amended in response; the failure is the result. Two rules have now
   been measured, one held and one did not.
 
+- **The escalation format is summarized as a three-item skeleton at each
+  trigger point**, not only linked. The first adversarial run showed the
+  behavior rule holding (the agent escalated) while the form rule did not —
+  it lived in `references/` behind a one-line link the agent did not open under
+  pressure. Re-measured after the change: **2 of 3, up from 1 of 3.** The
+  missing do-nothing option and the undeclared recommendation source both
+  appeared; the "no undefined technical term" item still did not hold. The rule
+  was not amended in response.
+
 ### Fixed
 
 - **The escalation format is referenced where escalation actually fires** in
