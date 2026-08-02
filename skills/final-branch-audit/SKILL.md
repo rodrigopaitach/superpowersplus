@@ -284,6 +284,8 @@ Traceability failures do not route like delivery gaps:
 | INVENTED SCOPE | Work exists that nobody specified. Your human partner decides: amend the spec to cover it, or remove it. Not the fixer's call. |
 | No spec cited, or the cited spec is missing/uncommitted | Stop and ask. There is nothing to trace against, and inferring a spec fabricates the baseline. |
 
+**Present these three to your human partner in the escalation format** — `skills/using-superpowers/references/escalation-format.md`: the consequence first, the options with their cost, and a recommendation with its source. The verdict names above are precise for the audit; they explain nothing to someone who does not read this repository, so they ride along in parentheses.
+
 ## Common Rationalizations
 
 | Excuse | Reality |

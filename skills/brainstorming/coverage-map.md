@@ -60,6 +60,8 @@ When there are more gaps than it makes sense to ask about, order by **impact × 
 - A technical term appears only if it is defined in the same sentence.
 - **Self-test before sending:** could somebody who does not know this project answer it by reading only the question and the recommendation? If not, it is not ready.
 
+This is the general escalation format applied to a clarifying question — the same four parts are defined once in `skills/using-superpowers/references/escalation-format.md`. What is specific to the interview stays here; the form lives there, so the two cannot drift apart.
+
 ## The recommendation, and where it comes from
 
 **Every question ships a recommendation. No exception.** A question without one hands your human partner a technical decision they have no basis to take, which is the exact failure this file exists to prevent.

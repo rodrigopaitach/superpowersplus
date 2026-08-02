@@ -79,7 +79,7 @@ open.
 spec's `## External Dependencies` or its architecture section, or to a
 manifest already in this repo — name which, `package.json:31`. A library
 appearing here for the first time is a design decision nobody approved:
-take it to your human partner instead of writing it in.]
+take it to your human partner instead of writing it in, in the escalation format (`skills/using-superpowers/references/escalation-format.md`).]
 
 ## Global Constraints
 

@@ -65,7 +65,7 @@ After all tasks complete and verified, and the audit PASSes:
 - You don't understand an instruction
 - Verification fails repeatedly
 
-**Ask for clarification rather than guessing.**
+**Ask for clarification rather than guessing.** Put the ask in the escalation format — `skills/using-superpowers/references/escalation-format.md`: what breaks if it is not decided, the options with their cost (including doing nothing now), and your recommendation with its source.
 
 ## When to Revisit Earlier Steps
 
