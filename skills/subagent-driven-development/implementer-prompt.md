@@ -32,12 +32,22 @@ Subagent (general-purpose):
     ## Your Job
 
     Once you're clear on requirements:
-    1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
+    1. Write the failing test first and watch it fail
+    2. Implement exactly what the task specifies — the minimal code that
+       passes
     3. Verify implementation works
     4. Commit your work
     5. Self-review (see below)
     6. Report back
+
+    **Step 1 is not conditional on the task asking for it.** The Iron Law of
+    superpowers:test-driven-development binds every task here: NO PRODUCTION
+    CODE WITHOUT A FAILING TEST FIRST. Code written before its test gets
+    deleted and rewritten from the test, not retrofitted with one
+    afterwards. The only exceptions are throwaway prototypes, generated
+    code, and configuration files — each needs your human partner's
+    permission, so ask for it (NEEDS_CONTEXT) instead of granting yourself
+    one.
 
     Work from: [directory]
 
@@ -105,7 +115,7 @@ Subagent (general-purpose):
     - Any happy-path-only test where the brief lists edge cases?
     - Does every test I wrote map to a requirement in the brief? One that
       maps to nothing is invented scope.
-    - Did I follow TDD if required?
+    - Did I watch every test fail before writing the code that passes it?
     - Is the test output pristine (no stray warnings or noise)?
 
     If you find issues during self-review, fix them now before reporting.
@@ -126,7 +136,9 @@ Subagent (general-purpose):
     Write your full report to [REPORT_FILE]:
     - What you implemented (or what you attempted, if blocked)
     - What you tested and test results
-    - **TDD Evidence** (if TDD was required for this task):
+    - **TDD Evidence** — every task carries it. If your human partner
+      granted one of the three exceptions, name the exception and who
+      granted it instead:
       - RED: command run, relevant failing output before implementation, and why the failure was expected
       - GREEN: command run and relevant passing output after implementation
     - Files changed

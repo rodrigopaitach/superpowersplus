@@ -10,6 +10,29 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.7 — obrigação de teste alinhada ao Iron Law do TDD
+
+`implementer-prompt.md` mandava "Write tests (following TDD **if task says
+to**)" — condicional que contradizia o Iron Law de `test-driven-development`
+("NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST"). Duas regras opostas no
+mesmo repositório: o modelo escolhe a mais barata, e a mais barata era não
+testar quando a task esquecesse de pedir. O prompt é o que o subagente
+implementador realmente lê.
+
+- **Teste deixa de ser condicional** — o passo virou obrigação, com o Iron
+  Law citado literalmente. As exceções são as três já declaradas na skill
+  (protótipo descartável, código gerado, arquivo de configuração) e nenhuma
+  nova; todas exigem permissão do parceiro humano, então o implementador
+  pede via `NEEDS_CONTEXT` em vez de se autoconceder uma.
+- **Ordem da lista corrigida** — "1. Implement … 2. Write tests" descrevia
+  código antes do teste no próprio texto. Agora o teste que falha vem
+  primeiro, e a implementação é o código mínimo que o faz passar.
+- **Autorreview e relatório** — "Did I follow TDD **if required**?" virou
+  "vi cada teste falhar antes de escrever o código que o faz passar", e a
+  seção `TDD Evidence`, que era `(if TDD was required for this task)`, passa
+  a ser exigida em toda tarefa: havendo exceção, o relatório nomeia qual e
+  quem autorizou.
+
 ## plus.6 — contrato do plano cobrado por subagente revisor
 
 O plus.5 armou o `plan-document-reviewer-prompt.md` com o contrato do plano,
