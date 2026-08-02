@@ -1,12 +1,10 @@
 # Scoped Re-Review Prompt Template
 
-Use this template when dispatching a re-review after a fix round. The
-re-reviewer re-runs the tests, verifies the findings were addressed, and
-checks the fix diff for new breakage. It is not a fresh review — the full
-review already happened.
+Use this template when dispatching a re-review after a fix round. It is not
+a fresh review — the full review already happened.
 
-**Purpose:** Verify each finding from the previous review was addressed, and
-that the fix itself broke nothing.
+**Purpose:** verify each finding from the previous review was addressed, the
+tests still pass, and the fix diff broke nothing new.
 
 ```
 Subagent (general-purpose):

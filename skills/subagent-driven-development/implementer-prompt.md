@@ -21,13 +21,9 @@ Subagent (general-purpose):
 
     ## Before You Begin
 
-    If you have questions about:
-    - The requirements or acceptance criteria
-    - The approach or implementation strategy
-    - Dependencies or assumptions
-    - Anything unclear in the task description
-
-    **Ask them now.** Raise any concerns before starting work.
+    Unclear on the requirements, the acceptance criteria, the approach,
+    dependencies, assumptions, or anything else in the task description?
+    **Ask now.** Raise every concern before starting work.
 
     ## Your Job
 
@@ -51,24 +47,25 @@ Subagent (general-purpose):
 
     Work from: [directory]
 
-    **While you work:** If you encounter something unexpected or unclear, **ask questions**.
-    It's always OK to pause and clarify. Don't guess or make assumptions.
+    **While you work:** unexpected or unclear → ask. Pausing to clarify is
+    always OK; never guess.
 
     While iterating, run the focused test for what you're changing; run the
     full suite once before committing, not after every edit.
 
     ## Code Organization
 
-    You reason best about code you can hold in context at once, and your edits are more
-    reliable when files are focused. Keep this in mind:
+    Focused files you can hold in context at once make your edits reliable:
     - Follow the file structure defined in the plan
-    - Each file should have one clear responsibility with a well-defined interface
-    - If a file you're creating is growing beyond the plan's intent, stop and report
-      it as DONE_WITH_CONCERNS — don't split files on your own without plan guidance
-    - If an existing file you're modifying is already large or tangled, work carefully
-      and note it as a concern in your report
-    - In existing codebases, follow established patterns. Improve code you're touching
-      the way a good developer would, but don't restructure things outside your task.
+    - One clear responsibility per file, with a well-defined interface
+    - A file you're creating growing beyond the plan's intent: stop and
+      report DONE_WITH_CONCERNS — never split files on your own without
+      plan guidance
+    - An existing file you're modifying already large or tangled: work
+      carefully, note it as a concern in your report
+    - In existing codebases, follow established patterns. Improve code
+      you're touching the way a good developer would, but don't restructure
+      things outside your task.
 
     ## When You're in Over Your Head
 
@@ -82,41 +79,32 @@ Subagent (general-purpose):
     - The task involves restructuring existing code in ways the plan didn't anticipate
     - You've been reading file after file trying to understand the system without progress
 
-    **How to escalate:** Report back with status BLOCKED or NEEDS_CONTEXT. Describe
-    specifically what you're stuck on, what you've tried, and what kind of help you need.
-    The controller can provide more context, re-dispatch with a more capable model,
-    or break the task into smaller pieces.
+    **How to escalate:** report status BLOCKED or NEEDS_CONTEXT with what
+    you're stuck on, what you tried, and the kind of help you need. The
+    controller can add context, re-dispatch a more capable model, or break
+    the task into smaller pieces.
 
     ## Before Reporting Back: Self-Review
 
     Review your work with fresh eyes. Ask yourself:
 
-    **Completeness:**
-    - Did I fully implement everything in the spec?
-    - Did I miss any requirements?
-    - Are there edge cases I didn't handle?
+    **Completeness:** everything in the spec implemented, no requirement
+    missed, no edge case left unhandled?
 
-    **Quality:**
-    - Is this my best work?
-    - Are names clear and accurate (match what things do, not how they work)?
-    - Is the code clean and maintainable?
+    **Quality:** is this my best work? Names clear and accurate (what things
+    do, not how they work)? Code clean and maintainable?
 
-    **Discipline:**
-    - Did I avoid overbuilding (YAGNI)?
-    - Did I only build what was requested?
-    - Did I follow existing patterns in the codebase?
+    **Discipline:** no overbuilding (YAGNI)? Only what was requested?
+    Existing codebase patterns followed?
 
-    **Testing** — each of these is a blocking finding at review, so find
-    them here first:
-    - Any assertion that cannot fail (`expect(true)`, a test body with no
-      assertion)?
-    - Any test asserting only on mock call counts or mock existence, never
-      on the real component's behavior?
-    - Any happy-path-only test where the brief — or the `IR` criterion it
-      names, which is where edge cases, concurrency and failure modes live —
-      lists edge cases?
-    - Does every test I wrote map to a requirement in the brief? One that
-      maps to nothing is invented scope.
+    **Testing** — each is a blocking finding at review, so find it here first:
+    - An assertion that cannot fail (`expect(true)`, or no assertion at all)?
+    - Assertions only on mock call counts or mock existence, never on the
+      real component's behavior?
+    - A happy-path-only test where the brief — or the `IR` criterion it
+      names, home of edge cases, concurrency and failure modes — lists edge
+      cases?
+    - A test mapping to no requirement in the brief? That is invented scope.
     - Did I watch every test fail before writing the code that passes it?
     - Is the test output pristine (no stray warnings or noise)?
 
@@ -136,20 +124,22 @@ Subagent (general-purpose):
     ## Report Format
 
     Write your full report to [REPORT_FILE]:
-    - What you implemented (or what you attempted, if blocked)
+    - What you implemented (or attempted, if blocked)
     - What you tested and test results
     - **TDD Evidence** — every task carries it. If your human partner
       granted one of the three exceptions, name the exception and who
       granted it instead:
-      - RED: command run, relevant failing output before implementation, and why the failure was expected
-      - GREEN: command run and relevant passing output after implementation
+      - RED: command, the relevant failing output before implementation, why that failure was expected
+      - GREEN: command, the relevant passing output after implementation
     - Files changed
     - Self-review findings (if any)
     - Any issues or concerns
 
     Then report back with ONLY (under 15 lines — the detail lives in the
     report file):
-    - **Status:** DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+    - **Status:** DONE | DONE_WITH_CONCERNS (finished, but doubts about
+      correctness) | BLOCKED (cannot complete) | NEEDS_CONTEXT (information
+      wasn't provided). Never silently produce work you're unsure about.
     - Commits created (short SHA + subject)
     - One-line test summary (e.g. "14/14 passing, output pristine")
     - Your concerns, if any
@@ -157,8 +147,4 @@ Subagent (general-purpose):
 
     If BLOCKED or NEEDS_CONTEXT, put the specifics in the final message
     itself — the controller acts on it directly.
-
-    Use DONE_WITH_CONCERNS if you completed the work but have doubts about correctness.
-    Use BLOCKED if you cannot complete the task. Use NEEDS_CONTEXT if you need
-    information that wasn't provided. Never silently produce work you're unsure about.
 ```

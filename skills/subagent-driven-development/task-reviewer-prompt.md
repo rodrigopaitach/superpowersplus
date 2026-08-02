@@ -46,21 +46,20 @@ Subagent (general-purpose):
     Do not crawl the broader codebase. Inspect code outside the diff only
     to evaluate a concrete risk you can name — one focused check per named
     risk, and name both the risk and what you checked in your report.
-    Cross-cutting changes are legitimate named risks: if the diff changes
-    lock ordering, a function or API contract, or shared mutable state,
-    checking the call sites is the right method.
+    Cross-cutting changes are legitimate named risks — lock ordering, a
+    function or API contract, shared mutable state: check the call sites.
 
     Your review is read-only on this checkout. Do not mutate the working
     tree, the index, HEAD, or branch state in any way.
 
     ## Do Not Trust the Report
 
-    Treat the implementer's report as unverified claims about the code. It
-    may be incomplete, inaccurate, or optimistic. Verify the claims against
-    the diff. Design rationales in the report are claims too: "left it per
-    YAGNI," "kept it simple deliberately," or any other justification is the
-    implementer grading their own work. Judge the code on its merits — a
-    stated rationale never downgrades a finding's severity.
+    Treat the implementer's report as unverified claims about the code: it
+    may be incomplete, inaccurate, or optimistic. Verify every claim against
+    the diff. Design rationales are claims too — "left it per YAGNI" or any
+    other justification is the implementer grading their own work. Judge the
+    code on its merits; a stated rationale never downgrades a finding's
+    severity.
 
     ## Tests — Run Them Yourself
 
@@ -88,12 +87,9 @@ Subagent (general-purpose):
 
     Compare the diff against What Was Requested:
 
-    - **Missing:** requirements they skipped, missed, or claimed without
-      implementing
-    - **Extra:** features that weren't requested, over-engineering, unneeded
-      "nice to haves"
-    - **Misunderstood:** right feature built the wrong way, wrong problem
-      solved
+    - **Missing:** requirements skipped, missed, or claimed but not built
+    - **Extra:** unrequested features, over-engineering, "nice to haves"
+    - **Misunderstood:** right feature built wrong, wrong problem solved
 
     If a requirement cannot be verified from this diff alone (it lives in
     unchanged code or spans tasks), report it as a ⚠️ item instead of
@@ -101,11 +97,8 @@ Subagent (general-purpose):
 
     ## Part 2: Code Quality
 
-    **Code quality:**
-    - Clean separation of concerns?
-    - Proper error handling?
-    - DRY without premature abstraction?
-    - Edge cases handled?
+    **Code quality:** clean separation of concerns? Proper error handling?
+    DRY without premature abstraction? Edge cases handled?
 
     **Tests — the shallow-test litmus. Each row is blocking:**
 
@@ -122,18 +115,14 @@ Subagent (general-purpose):
     requirement in the brief. A test that maps to nothing is invented
     scope — report it as Extra under Part 1.
 
-    **Structure:**
-    - Does each file have one clear responsibility with a well-defined interface?
-    - Are units decomposed so they can be understood and tested independently?
-    - Is the implementation following the file structure from the plan?
-    - Did this change create new files that are already large, or
-      significantly grow existing files? (Don't flag pre-existing file
-      sizes — focus on what this change contributed.)
+    **Structure:** one clear responsibility per file, with a well-defined
+    interface? Units decomposed so they can be understood and tested
+    independently? Implementation following the plan's file structure? New
+    files already large, or existing ones significantly grown by this change
+    (judge what this change contributed, not pre-existing sizes)?
 
-    Your report should point at evidence: file:line references for every
-    finding and for any check you would otherwise answer with a bare
-    "yes." A tight report that cites lines gives the controller everything
-    it needs.
+    Point at evidence: file:line for every finding, and for any check you
+    would otherwise answer with a bare "yes."
 
     Your final message is the report itself: begin directly with the
     spec-compliance verdict. Every line is a verdict, a finding with
@@ -160,11 +149,11 @@ Subagent (general-purpose):
 
     ### Spec Compliance
 
-    - ✅ Spec compliant | ❌ Issues found: [what's missing/extra/misunderstood,
-      with file:line references]
-    - ⚠️ Cannot verify from diff: [requirements you could not verify from the
-      diff alone, and what the controller should check — report alongside the
-      ✅/❌ verdict for everything you could verify]
+    - ✅ Spec compliant | ❌ Issues found: [missing/extra/misunderstood, with
+      file:line]
+    - ⚠️ Cannot verify from diff: [what the diff alone cannot settle, and what
+      the controller should check — reported alongside the ✅/❌ verdict for
+      everything you could verify]
 
     ### Test Evidence
 
@@ -173,15 +162,14 @@ Subagent (general-purpose):
 
     | Criterion | Test file:line | Assertion |
     |-----------|----------------|-----------|
-    | [criterion label + text, verbatim from the brief — `T3.1 …`; `AC`/`IR` are spec ids, not task labels] | `tests/auth/test_verify.py:41` | [what it actually asserts, not the test's name] |
+    | [label + text verbatim from the brief — `T3.1 …`, never `AC`/`IR` (spec ids)] | `test_verify.py:41` | [what it asserts, not the test's name] |
     | [criterion nothing covers] | — | NONE |
 
-    One row per criterion in the brief — including the ones with no test.
-    Same key as the plan's Test Coverage Matrix, which is one row per task
-    criterion: your table and that one line up row for row.
-    A `—` row is a blocking finding, and so is a row whose assertion fails
-    the litmus above. This table is not optional: without it the task does
-    not close, and a report that omits it is itself the finding.
+    One row per criterion in the brief, including those with no test — same
+    key as the plan's Test Coverage Matrix (one row per task criterion), so
+    the two line up row for row. A `—` row is a blocking finding, and so is
+    a row whose assertion fails the litmus above. Omitting the table is
+    itself the finding: without it, the task does not close.
 
     ### Strengths
     [What's well done? Be specific.]
@@ -198,7 +186,6 @@ Subagent (general-purpose):
     ### Assessment
 
     **Task quality:** [Approved | Needs fixes]
-
     **Reasoning:** [1-2 sentence technical assessment]
 ```
 

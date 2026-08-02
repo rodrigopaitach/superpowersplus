@@ -10,6 +10,36 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.14 — compressão dos exemplos nos prompts carregados por tarefa
+
+`implementer-prompt.md`, `task-reviewer-prompt.md` e `re-review-prompt.md`
+são lidos uma vez por tarefa para montar o dispatch: cada linha custa vezes
+N. Compressão de **exemplo**, não de regra — nenhuma seção, coluna, veredito
+ou verificação saiu.
+
+- **Células e texto ilustrativo encolhem, colunas ficam** — a linha de
+  exemplo da Test Evidence perdeu o caminho longo (`tests/auth/test_verify.py:41`
+  → `test_verify.py:41`) e a redundância na célula do critério, mantendo as
+  três regras que ela carrega: verbatim do brief, rótulo `T3.1`, proibição
+  de `AC`/`IR`. Três colunas antes, três depois.
+- **Checklists de pergunta única viram linha única** — `Completeness`,
+  `Quality`, `Discipline` (implementer) e `Code quality`, `Structure`
+  (revisor) tinham uma linha de bullet por pergunta; as mesmas perguntas,
+  todas elas, cabem em duas linhas de prosa por grupo. O litmus de teste
+  raso e os seis checks de Testing continuam como bullets: cada um é um
+  achado bloqueante, e bullet separado é o que faz cada um ser tickado.
+- **Definição junto do valor** — os quatro status do implementador eram
+  enumerados numa linha e definidos três parágrafos abaixo; agora a
+  definição está entre parênteses ao lado de cada um.
+- **Redundância removida** — o `**Purpose:**` do re-review repetia a frase
+  anterior; a rationale "a tight report that cites lines gives the
+  controller everything it needs" repetia a regra que a precede.
+
+Redução: 519 → 490 linhas (−5,6%), 3423 → 3216 palavras (−6,0%). O teto é
+esse porque o volume desses arquivos é regra, não exemplo — Iron Law, litmus
+bloqueante, procedimento de teste, contrato de saída. Comprimir além disso
+exigiria cortar regra.
+
 ## plus.13 — grounding de dependências atravessa a fronteira spec → plano
 
 O plus.12 parou na spec. O plano continuava livre para escrever de memória o
