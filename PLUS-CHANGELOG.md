@@ -10,6 +10,34 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.22 — README declara o fork
+
+O README era o do upstream, íntegro: descrevia o Superpowers original e, na
+seção do Claude Code, só ensinava a instalar o upstream. Quem chegasse pelo
+repositório instalaria outra coisa que não este fork sem perceber, e as
+alterações próprias — registradas aqui desde o plus.1 — não tinham porta de
+entrada nenhuma.
+
+- **Nota de origem no topo** — fork de obra/superpowers (Jesse Vincent, MIT),
+  sem vínculo com o autor, com a Prime Radiant ou com a Anthropic, apontando
+  para este arquivo como registro das alterações próprias. Fork que não se
+  declara empresta reputação que não é dele.
+- **Seção por eixo, não por entrada** — cinco linhas para os cinco eixos
+  (spec fundamentada em evidência, contrato do plano cobrado por revisor,
+  matriz de cobertura, revisor de task que reexecuta a suíte, auditoria de
+  conformidade com rastreabilidade spec → task). Lista por eixo não apodrece a
+  cada `plus.N` novo; o detalhe fica onde já estava. As pendências entram por
+  referência à seção deste arquivo, pela mesma razão: lista duplicada diverge.
+- **Instalação corrigida** — `/plugin marketplace add rodrigopaitach/superpowersplus`
+  e `/plugin install superpowers@superpowersplus`, com o motivo de o plugin
+  seguir chamando `superpowers` enquanto o marketplace chama `superpowersplus`:
+  as skills se referenciam por esse prefixo em 54 pontos de `skills/`
+  (`superpowers:final-branch-audit` e afins, medido neste repo), e renomear o
+  plugin quebraria todas. As subseções do upstream ficam, marcadas como tal.
+- **Só acréscimo** — nenhuma linha do texto upstream foi alterada ou removida.
+  Linha modificada é superfície de conflito no próximo rebase; bloco novo em
+  região que o upstream não toca o Git resolve sozinho.
+
 ## plus.21 — Example Output renderiza os três buckets
 
 O Example Output do code reviewer trazia `Important` e `Minor` e nenhum

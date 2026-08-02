@@ -1,7 +1,37 @@
 # Superpowers
 
+> **Fork pessoal.** Este repositório é um fork de
+> [obra/superpowers](https://github.com/obra/superpowers) (Jesse Vincent, MIT)
+> com alterações próprias — não é uma cópia do upstream. Não tem vínculo com o
+> autor, com a Prime Radiant ou com a Anthropic, e não fala por eles. As
+> alterações próprias estão registradas em
+> [PLUS-CHANGELOG.md](PLUS-CHANGELOG.md); o restante deste README é texto do
+> upstream.
+
 Superpowers is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them.
 
+## O que muda neste fork
+
+Cinco eixos, sob um mesmo fio condutor: afirmação sobre o código exige citação
+`arquivo:linha`, e quem verifica reexecuta a busca em vez de aceitar a palavra
+de quem escreveu.
+
+- **Spec fundamentada em evidência** — critérios ancorados no código real e nas
+  dependências externas já presentes no projeto, não no que o modelo supõe.
+- **Contrato do plano cobrado por revisor** — um subagente lê a spec contra o
+  plano e bloqueia critério sem tarefa, tarefa sem origem e critério sem teste.
+- **Matriz de cobertura de testes** — cada critério mapeado por chave ao teste
+  que o cobre, em vez de cobertura afirmada em prosa.
+- **Revisor de task que reexecuta a suíte** — o revisor roda os testes, em vez
+  de aceitar o relatório de quem implementou.
+- **Auditoria de conformidade tarefa a tarefa** — no fim da branch, cada
+  critério da spec é rastreado até as tarefas que o entregam e vereditado
+  contra evidência localizada.
+
+O detalhe de cada mudança, entrada por entrada, está em
+[PLUS-CHANGELOG.md](PLUS-CHANGELOG.md). Os buracos identificados e
+deliberadamente não fechados estão em
+[Pendências conhecidas](PLUS-CHANGELOG.md#pendências-conhecidas).
 
 ## Quickstart
 
@@ -30,6 +60,27 @@ Installation differs by harness. If you use more than one, install Superpowers s
 ### Claude Code
 
 Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
+
+#### Este fork (superpowersplus)
+
+As duas subseções seguintes instalam o upstream. Para instalar **este fork**:
+
+- Registre o marketplace:
+
+  ```bash
+  /plugin marketplace add rodrigopaitach/superpowersplus
+  ```
+
+- Instale o plugin:
+
+  ```bash
+  /plugin install superpowers@superpowersplus
+  ```
+
+O marketplace se chama `superpowersplus`, mas o plugin continua se chamando
+`superpowers` porque as skills se referenciam entre si por esse prefixo
+(`superpowers:brainstorming`, `superpowers:writing-plans`, …) — renomear o
+plugin quebraria todas essas referências.
 
 #### Official Marketplace
 
