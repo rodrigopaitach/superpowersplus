@@ -10,6 +10,28 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **`scripts/release-notes.sh`** builds a release body from `CHANGELOG.md`:
+  the version's section, then **Open gaps**, then the footer. Someone reading a
+  release needs to see what is still open without clicking through. Applied
+  retroactively to the 1.0.0 and 1.1.0 release bodies. The procedure used to be
+  ad hoc; a release body that cannot be regenerated is a release body nobody
+  can check.
+
+### Fixed
+
+- **The escalation format is referenced where escalation actually fires** in
+  `subagent-driven-development` — the plan-mandated conflict, the breaker's
+  load-bearing branch, and the residuals surfacing through
+  `finishing-a-development-branch` — rather than only in the declaration near
+  the top of the file.
+- **English documents linking to the Portuguese historical changelog say so**
+  before the reader clicks, and the `Open gaps` link label matches the section
+  it points at.
+
 ## [1.1.0] - 2026-08-02
 
 ### Added

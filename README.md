@@ -39,7 +39,7 @@ Five axes on top of Superpowers, under one thread: a claim about the code requir
 - **Task reviewer that re-runs the suite** — the reviewer runs the tests, instead of accepting the implementer's report.
 - **Task-by-task conformance audit** — at the end of the branch, each criterion is traced to the tasks delivering it and given a verdict against located evidence.
 
-Every change is in [CHANGELOG.md](CHANGELOG.md); the `plus.N` entries that led to 1.0.0 are preserved in [docs/PLUS-CHANGELOG-historico.md](docs/PLUS-CHANGELOG-historico.md) (in Portuguese). Gaps deliberately left open are under [Known gaps](CHANGELOG.md#open-gaps).
+Every change is in [CHANGELOG.md](CHANGELOG.md); the `plus.N` entries that led to 1.0.0 are preserved in [docs/PLUS-CHANGELOG-historico.md](docs/PLUS-CHANGELOG-historico.md) (in Portuguese). Gaps deliberately left open are under [Open gaps](CHANGELOG.md#open-gaps).
 
 ## Installation
 
