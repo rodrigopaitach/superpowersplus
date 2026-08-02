@@ -10,7 +10,7 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
-## plus.10 — progressive disclosure no skill do controlador
+## plus.8 — progressive disclosure no skill do controlador
 
 `subagent-driven-development/SKILL.md` estava com 577 linhas, acima das 500
 recomendadas pela documentação oficial de Agent Skills, e fica no contexto do
