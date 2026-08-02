@@ -15,7 +15,7 @@ set -euo pipefail
 
 FROZEN="docs/PLUS-CHANGELOG-historico.md"
 
-staged="$(git diff --cached --name-only --diff-filter=ACMR)"
+staged="$(git diff --cached --name-only --diff-filter=ACMRD)"
 
 grep -qxF "$FROZEN" <<<"$staged" || exit 0
 

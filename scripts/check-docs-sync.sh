@@ -14,7 +14,7 @@ set -euo pipefail
 PT="docs/README.pt-BR.md"
 EN="docs/README.en.md"
 
-staged="$(git diff --cached --name-only --diff-filter=ACMR)"
+staged="$(git diff --cached --name-only --diff-filter=ACMRD)"
 
 staged_pt=0
 staged_en=0

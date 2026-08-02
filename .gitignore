@@ -11,3 +11,8 @@ triage/
 # development (see CLAUDE.md / README.md). It is not part of the published
 # plugin, so the whole directory is ignored here.
 evals/
+
+# Scratch directories for adversarial skill-behavior runs (tests/skill-behavior/)
+.skillrun/
+.skillrun2/
+.skillrun3/
