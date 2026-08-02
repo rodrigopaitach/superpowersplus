@@ -40,6 +40,12 @@ esse porque o volume desses arquivos é regra, não exemplo — Iron Law, litmus
 bloqueante, procedimento de teste, contrato de saída. Comprimir além disso
 exigiria cortar regra.
 
+Mesma compressão aplicada ao bloco `**Code quality:**` de
+`requesting-code-review/code-reviewer.md` (193 → 190 linhas), que carregava
+o mesmo formato de cinco bullets de pergunta única. Os blocos irmãos do
+mesmo `## What to Check` — `Plan alignment`, `Architecture`,
+`Production readiness` — têm o formato idêntico e ficaram como estavam.
+
 ## plus.13 — grounding de dependências atravessa a fronteira spec → plano
 
 O plus.12 parou na spec. O plano continuava livre para escrever de memória o

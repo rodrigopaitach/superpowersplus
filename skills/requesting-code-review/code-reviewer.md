@@ -41,12 +41,9 @@ Subagent (general-purpose):
     - Are deviations justified improvements, or problematic departures?
     - Is all planned functionality present?
 
-    **Code quality:**
-    - Clean separation of concerns?
-    - Proper error handling?
-    - Type safety where applicable?
-    - DRY without premature abstraction?
-    - Edge cases handled?
+    **Code quality:** clean separation of concerns? Proper error handling?
+    Type safety where applicable? DRY without premature abstraction? Edge
+    cases handled?
 
     **Architecture:**
     - Sound design decisions?
