@@ -1,0 +1,55 @@
+name: CI
+
+# Turns into a visible failure what today fails silently when core.hooksPath
+# is not configured on the committer's machine.
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Tests (brainstorm-server, node + shell)
+        working-directory: tests/brainstorm-server
+        run: |
+          npm install
+          npm test
+
+      # The two checks below reuse the repo's own scripts unchanged. Both read
+      # the git INDEX, because that is what the pre-commit hook reads. A fresh
+      # CI checkout has an empty index, so they would inspect nothing.
+      # `git reset --soft` rewinds HEAD to the base commit while leaving index
+      # and working tree alone — the index then holds exactly what this push or
+      # PR changed, and the scripts work as-is with no CI-specific variant.
+      #
+      # Scope note: the hook enforces the rule per COMMIT; this enforces it over
+      # the pushed range as a whole. A push that edits one doc in commit A and
+      # the other in commit B passes here and would not have passed the hook.
+      - name: Put the pushed range in the index
+        env:
+          # Via env, never interpolated into the script body: an expression
+          # expanded inline is substituted before the shell parses the line.
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          base="$BASE_SHA"
+          if [ -z "$base" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            base="$(git rev-parse HEAD)"   # no comparable base: checks no-op
+          fi
+          git reset --soft "$base"
+
+      - name: Shell lint (files this push changed)
+        run: scripts/lint-shell.sh
+
+      - name: Bilingual READMEs stay in sync
+        run: scripts/check-docs-sync.sh

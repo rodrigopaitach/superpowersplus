@@ -10,6 +10,51 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.32 — CI converte em falha visível o que hoje falha em silêncio
+
+O `githooks/pre-commit` do plus.28 só protege quem rodou
+`git config core.hooksPath githooks`. Quem não rodou commita e empurra sem
+nenhum sinal — e o modo de falha é justamente o silencioso: os dois READMEs
+divergem, ou um shell quebrado entra, e o repositório fica com o defeito sem
+que nada acuse. Hook é opcional por construção, porque `.git/` não é
+versionável; CI não é.
+
+- **Confirmado antes de criar: o upstream não tem `.github/workflows/`** — a
+  API do GitHub responde 404 em `obra/superpowers/contents/.github/workflows`.
+  O diretório é território livre e não conflita em rebase, ao contrário de
+  quase tudo que este fork tocou até aqui.
+- **Um truque de duas linhas reaproveita os dois scripts sem alterá-los** —
+  `scripts/lint-shell.sh` e `scripts/check-docs-sync.sh` leem o **índice**
+  (`git diff --cached`), porque é o que o hook lê. Checkout de CI tem índice
+  vazio, então os dois varreriam nada. `git reset --soft <base>` rebobina o
+  HEAD deixando índice e árvore intactos: o índice passa a conter exatamente o
+  que o push mudou. Nenhuma variante de CI dos scripts, nenhuma regra
+  reescrita — o que o plus.27 já havia estabelecido sobre regra duplicada
+  valendo agora para a regra executável.
+- **Lint no range, nunca `--all`** — medido antes de decidir: `--all` sai com
+  exit 1 e 11 achados, todos em três arquivos do upstream sob
+  `tests/claude-code/`. CI vermelho desde o primeiro push não é sinal, é
+  treinamento para ignorar sinal. E consertar o lint deles seria divergência
+  em arquivo do upstream, recusada pelo mesmo argumento do plus.30. O modo
+  padrão do script varre só o alterado, então o débito herdado fica quieto até
+  alguém tocar naqueles arquivos — momento em que passa a ser dele.
+- **Seis cenários verificados em clone descartável**, não inferidos: push só
+  com pt-BR **falha**; com os dois **passa**; sem mudança nenhuma **passa**
+  como no-op; push só de `.md` não varre shell e sai 0; shell limpo do fork
+  passa; shell do upstream com débito falha — o custo declarado do item
+  anterior.
+- **Expressão do GitHub via `env:`, nunca inline no `run:`** — `BASE_SHA` entra
+  como variável de ambiente. Um `${{ }}` expandido dentro do corpo do script é
+  substituído **antes** de o shell parsear a linha, o que transforma conteúdo
+  do evento em código. Aqui o valor é um SHA gerado pelo GitHub e não hostil,
+  mas a forma segura custa uma linha e elimina a classe inteira.
+- **Escopo do que o CI garante, dito por inteiro** — o hook cobra a regra por
+  COMMIT; o CI a cobra sobre o range do push. Um push que altera um README no
+  commit A e o outro no commit B passa no CI e não teria passado no hook. Está
+  escrito no próprio `ci.yml`, porque check que promete mais do que verifica é
+  o defeito que este fork existe para separar. Sem publicação, sem release,
+  sem `npm publish`: o projeto não é distribuído por npm.
+
 ## plus.31 — a seção Updating descreve o fluxo real do fork
 
 A última afirmação do `README.md` que descrevia o upstream como se fosse este
