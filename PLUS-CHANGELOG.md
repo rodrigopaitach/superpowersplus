@@ -10,6 +10,36 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.25 — documentação bilíngue do fork em `docs/`
+
+O plus.22 declarou o fork no `README.md`, mas em bloco curto: nota de origem,
+cinco eixos e instalação. Quem quisesse saber o que o fork faz, por que existe
+e o que ele gera no projeto não tinha para onde ir, e o `README.md` é
+justamente o arquivo que o upstream mais edita — crescer nele é comprar
+conflito de rebase a cada release.
+
+- **`docs/README.pt-BR.md` e `docs/README.en.md`** — documento completo por
+  idioma: o que é, por que existe, para quem, instalação, como funciona,
+  o que é gerado, diferenças em relação ao upstream, pendências e crédito.
+  O português é o original e o inglês a tradução, declarado no topo dos dois:
+  sem essa declaração, duas versões divergentes não têm árbitro.
+- **`README.md` cresceu duas linhas** — os badges de idioma entraram DENTRO do
+  bloco de fork que o plus.22 já havia criado, e nenhuma outra linha foi
+  tocada. Zero remoções no diff. Bloco novo em região que o upstream não
+  toca o rebase resolve sozinho; linha modificada, não.
+- **Nada prometido que não exista** — cada afirmação de comportamento foi
+  conferida contra as skills antes de ser escrita: os quatro portões e o que
+  cada um bloqueia, os caminhos onde vivem, os diretórios de spec e de plano,
+  as cinco colunas da matriz de cobertura. Os quatro caminhos de skill citados
+  nas tabelas foram abertos; os seis links relativos, resolvidos. O que não
+  existe está na seção de pendências, não no corpo.
+- **A seção "Para quem" declara o desenho, não só o público** — que o fork
+  serve inclusive a quem não programa é consequência do plus.23, não boa
+  vontade: recomendação obrigatória com fonte declarada, pergunta em
+  linguagem de consequência prática, coluna de consequência por opção. Todas
+  são regras que existem hoje nos arquivos, e a documentação as descreve como
+  são, sem arredondar para cima.
+
 ## plus.24 — regularização de spec antiga e preferência sobre o companheiro visual
 
 Duas consequências do plus.23 e do que ele deixou passar. Nenhuma delas

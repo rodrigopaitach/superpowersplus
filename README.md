@@ -7,6 +7,8 @@
 > alterações próprias estão registradas em
 > [PLUS-CHANGELOG.md](PLUS-CHANGELOG.md); o restante deste README é texto do
 > upstream.
+>
+> **📖 Documentação do fork:** [![Português](https://img.shields.io/badge/doc-Portugu%C3%AAs-009C3B?style=flat-square)](docs/README.pt-BR.md) [![English](https://img.shields.io/badge/doc-English-012169?style=flat-square)](docs/README.en.md)
 
 Superpowers is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them.
 
