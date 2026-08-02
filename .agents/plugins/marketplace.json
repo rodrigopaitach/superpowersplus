@@ -5,7 +5,7 @@
   },
   "plugins": [
     {
-      "name": "superpowers",
+      "name": "superpowersplus",
       "source": {
         "source": "url",
         "url": "./"
