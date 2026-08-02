@@ -10,6 +10,47 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.5 — varredura de consistência do fork
+
+Varredura por REGRA, não por arquivo: regra introduzida aqui pode ter eco em
+arquivo nunca tocado — foi o que aconteceu com a reexecução de testes
+(plus.3), que vivia em três lugares, dois deles intocados. Cinco
+bloqueantes; os cosméticos ficaram registrados sem correção.
+
+- **`subagent-driven-development` não lia a spec** — `executing-plans` trata
+  plano sem spec citada como bloqueio de entrada, mas o executor
+  RECOMENDADO, que é quem despacha a auditoria no fim, nunca abria a spec. A
+  branch inteira rodava para morrer em `LOST IN TRANSLATION`. Setup e
+  digraph do Process Flow agora exigem a leitura da spec citada antes da
+  Task 1.
+- **Revisor de plano não cobrava o cabeçalho** — `plan-document-reviewer-prompt.md`
+  ignorava tudo que virou obrigatório (caminho da spec, Test Coverage
+  Matrix, `**Spec criterion:**` por tarefa, critério auditável) e mandava
+  aprovar salvo "major scope creep" / "serious gaps": o que a auditoria
+  bloqueia, ele aprovava. Nova tabela `The Plan Contract (blocking)` com
+  seis linhas, carve-out da calibração, e o caminho da spec passa a vir do
+  cabeçalho do plano em vez de ser injetado no despacho.
+- **A spec não tinha critérios endereçáveis** — a auditoria cobra "uma linha
+  por critério da spec" e o plano nomeia o critério de cada tarefa, mas
+  `brainstorming` só exigia `Codebase Findings` e `Assumptions to Confirm`:
+  a origem das linhas ficava no julgamento do auditor, e dois auditores
+  enumeram conjuntos diferentes. Nova seção obrigatória `## Acceptance
+  Criteria` (numerada, um comportamento observável por item), cobrada como
+  bloqueante pelo revisor de spec (`Traceability`) e citada por id (`AC1`)
+  na tabela de rastreabilidade. Spec sem a seção é achado bloqueante, mas a
+  auditoria segue traçando pelos títulos numerados — o baseline existe e foi
+  aprovado, só não está indexado.
+- **Exemplo que contradizia formato obrigatório** — o Example Workflow do
+  SDD fechava task review sem a tabela `### Test Evidence` (sem a qual "a
+  tarefa não fecha") e mostrava PASS da auditoria sem linha de
+  rastreabilidade. Exemplo é a regra mais barata de imitar.
+- **Face de produtor inalcançável** — o litmus anti-teste-raso estava em
+  `test-driven-development` e no revisor, mas quem escreve o teste é o
+  subagente que roda com `implementer-prompt.md`, e lá o autorreview só
+  perguntava "Are tests comprehensive?". As três checagens bloqueantes mais
+  o mapeamento para o brief entraram no prompt; a pergunta não quantificada
+  saiu.
+
 ## plus.4 — rastreabilidade spec → tasks na auditoria
 
 A auditoria comparava o plano consigo mesmo. Requisito que se perdeu na

@@ -52,13 +52,17 @@ run.
 
 ## The Traceability Table
 
-Produce this FIRST, before the task table. One row per criterion in the
-spec, plus one row per plan task that no spec criterion motivated:
+Produce this FIRST, before the task table. One row per item in the spec's
+`## Acceptance Criteria` list — superpowers:brainstorming requires that
+section, so a spec lacking it is a blocking issue in its own right: report
+it, then trace against the spec's numbered requirement headings instead. The
+list is what fixes the row count; without it, two auditors enumerate two
+different sets. Then one row per plan task that no criterion motivated:
 
 | Spec criterion | Plan task(s) covering it | Verdict |
 |----------------|--------------------------|---------|
-| §2.1 Tokens expire after 15 minutes | Task 3 | TRACED |
-| §2.4 Refresh rotates the token | — | LOST IN TRANSLATION |
+| AC1 Tokens expire after 15 minutes | Task 3 | TRACED |
+| AC4 Refresh rotates the token | — | LOST IN TRANSLATION |
 | — | Task 7 (admin export) | INVENTED SCOPE |
 
 | Situation | Verdict |
@@ -67,12 +71,12 @@ spec, plus one row per plan task that no spec criterion motivated:
 | Spec criterion no task covers | **LOST IN TRANSLATION — BLOCKING** |
 | Plan task no spec criterion motivated | **INVENTED SCOPE — BLOCKING** |
 
-Cite the spec criterion by its section or heading, the task by number. Both
-failures block PASS exactly like a NOT DELIVERED row: the first ships less
-than the spec asked for, the second ships work nobody asked for. Neither is
-visible to a task review, which only ever sees one task's diff — and neither
-is visible to the task table below, which asks only whether the plan's own
-tasks landed.
+Cite the spec criterion by its id, the task by number. Both failures block
+PASS exactly like a NOT DELIVERED row: the first ships less than the spec
+asked for, the second ships work nobody asked for. Neither is visible to a
+task review, which only ever sees one task's diff — and neither is visible
+to the task table below, which asks only whether the plan's own tasks
+landed.
 
 A task delivering a criterion the spec states differently is not INVENTED
 SCOPE — trace it to that criterion and note the divergence in the row.
@@ -170,8 +174,10 @@ Subagent (general-purpose):
 
     ## Step 2: Traceability
 
-    One row per criterion in the spec, plus one row per plan task no spec
-    criterion motivated:
+    One row per item in the spec's `## Acceptance Criteria` list, plus one
+    row per plan task no criterion motivated. A spec with no such section is
+    a blocking issue: report it, then trace against its numbered requirement
+    headings.
 
     - Spec criterion covered by one or more tasks → TRACED
     - Spec criterion no task covers → LOST IN TRANSLATION (blocking)

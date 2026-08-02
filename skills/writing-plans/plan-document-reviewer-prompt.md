@@ -13,14 +13,34 @@ Subagent (general-purpose):
     You are a plan document reviewer. Verify this plan is complete and ready for implementation.
 
     **Plan to review:** [PLAN_FILE_PATH]
-    **Spec for reference:** [SPEC_FILE_PATH]
+
+    **Spec:** take the path from the plan's own `**Source spec:**` header
+    line — the plan is the artifact under review, and where it points is
+    part of what you are checking. Confirm the file exists and is committed
+    (`git log -1 -- <spec path>` names a commit). Read it: it is the
+    requirement, the plan is a translation of it.
+
+    ## The Plan Contract (blocking)
+
+    superpowers:final-branch-audit charges these at the end of the branch,
+    when fixing them costs a re-plan. Each missing item is a blocking issue,
+    not a recommendation:
+
+    | Requirement | If it fails |
+    |-------------|-------------|
+    | The header cites a source spec path that exists and is committed | BLOCKING — without it the audit's traceability pass cannot run at all |
+    | Every task carries a `**Spec criterion:**` line naming what motivated it | BLOCKING — a task tracing to nothing is INVENTED SCOPE at the audit |
+    | Every spec criterion is covered by at least one task | BLOCKING — LOST IN TRANSLATION at the audit; read the spec and the plan side by side, since a dropped requirement leaves no trace in the plan |
+    | A `## Test Coverage Matrix` with one row per acceptance criterion | BLOCKING — a criterion with no row is a criterion nobody planned to test |
+    | Every matrix row names a test some step actually creates | BLOCKING — a row pointing at a test no step writes is a placeholder wearing a table |
+    | Every acceptance criterion is observable and settled by a `file:line` citation | BLOCKING — "handles errors well" is a row the auditor can only fail |
 
     ## What to Check
 
     | Category | What to Look For |
     |----------|------------------|
     | Completeness | TODOs, placeholders, incomplete tasks, missing steps |
-    | Spec Alignment | Plan covers spec requirements, no major scope creep |
+    | Spec Alignment | Plan covers spec requirements, no scope creep — both directions are charged by the Plan Contract above |
     | Task Decomposition | Tasks have clear boundaries, steps are actionable |
     | Buildability | Could an engineer follow this plan without getting stuck? |
 
@@ -32,6 +52,8 @@ Subagent (general-purpose):
 
     Approve unless there are serious gaps — missing requirements from the spec,
     contradictory steps, placeholder content, or tasks so vague they can't be acted on.
+
+    Any Plan Contract failure blocks approval regardless of calibration.
 
     ## Output Format
 

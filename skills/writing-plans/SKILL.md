@@ -60,9 +60,10 @@ independently testable deliverable.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Source spec:** `docs/superpowers/specs/YYYY-MM-DD-<feature>.md` — the exact
-path of the approved design this plan implements, committed. Not a title, not
-"the design doc": the path superpowers:final-branch-audit will open.
+**Source spec:** `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` —
+the exact path of the approved design this plan implements, committed. Not
+a title, not "the design doc": the path superpowers:final-branch-audit will
+open.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -95,9 +96,9 @@ names are this repository's own — see the section below before filling it.]
 ````markdown
 ### Task N: [Component Name]
 
-**Spec criterion:** [the section or heading of the source spec this task
-exists to deliver — e.g. `§2.4 Refresh rotates the token`. A task with no
-spec criterion is scope you invented while planning.]
+**Spec criterion:** [the id of the item in the spec's `## Acceptance
+Criteria` list this task exists to deliver — e.g. `AC4 Refresh rotates the
+token`. A task with no spec criterion is scope you invented while planning.]
 
 **Files:**
 - Create: `exact/path/to/file.py`

@@ -116,6 +116,7 @@ digraph brainstorming {
 
 | Section | Rule |
 |---------|------|
+| `## Acceptance Criteria` | Numbered and addressable (`AC1`, `AC2`, …), one observable behavior each, stated so a `file:line` citation could settle it. This is the list superpowers:writing-plans traces task by task and superpowers:final-branch-audit charges row by row — a requirement that lives only in prose is a requirement no one can trace, and it goes missing without leaving a mark. |
 | `## Codebase Findings` | Every claim about the existing system carries a `path/file.ext:line` citation plus the quoted snippet. No located citation, the claim does not go in the spec. |
 | `## Assumptions to Confirm` | Everything you could NOT verify in the code. Never mix an assumption into verified facts. Each item records the search you ran (command/pattern + paths inspected) and why it could not be confirmed. Anything the code CAN answer is not an assumption — go verify it and cite it. If there are none, write "None". |
 

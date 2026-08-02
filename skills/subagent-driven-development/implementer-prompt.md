@@ -96,10 +96,16 @@ Subagent (general-purpose):
     - Did I only build what was requested?
     - Did I follow existing patterns in the codebase?
 
-    **Testing:**
-    - Do tests actually verify behavior (not just mock behavior)?
+    **Testing** — each of these is a blocking finding at review, so find
+    them here first:
+    - Any assertion that cannot fail (`expect(true)`, a test body with no
+      assertion)?
+    - Any test asserting only on mock call counts or mock existence, never
+      on the real component's behavior?
+    - Any happy-path-only test where the brief lists edge cases?
+    - Does every test I wrote map to a requirement in the brief? One that
+      maps to nothing is invented scope.
     - Did I follow TDD if required?
-    - Are tests comprehensive?
     - Is the test output pristine (no stray warnings or noise)?
 
     If you find issues during self-review, fix them now before reporting.

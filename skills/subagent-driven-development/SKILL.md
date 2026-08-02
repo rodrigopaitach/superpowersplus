@@ -69,7 +69,7 @@ digraph process {
         "Append completion to ledger, mark todo complete" [shape=box];
     }
 
-    "Setup: worktree, ledger check, read plan, pre-flight review" [shape=box];
+    "Setup: worktree, ledger check, read plan + cited spec, pre-flight review" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Dispatch conformance audit (superpowers:final-branch-audit)" [shape=box];
     "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [shape=box];
@@ -80,7 +80,7 @@ digraph process {
     "Final gates clean: delete this plan's workspace" [shape=box];
     "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
-    "Setup: worktree, ledger check, read plan, pre-flight review" -> "Dispatch implementer subagent (./implementer-prompt.md)";
+    "Setup: worktree, ledger check, read plan + cited spec, pre-flight review" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer asks questions?";
     "Implementer asks questions?" -> "Answer questions, provide context" [label="yes"];
     "Answer questions, provide context" -> "Implementer implements, tests, commits, self-reviews";
@@ -151,6 +151,12 @@ a ledger file, not only in todos.
 
 Read the plan once, note its context and Global Constraints, and create a
 todo per task.
+
+Read the spec the plan cites in its `**Source spec:**` header line. The plan
+is a translation of it, and the conformance audit at the end traces one
+against the other. A plan citing no spec is an entry blocker: get the path
+from your human partner before dispatching Task 1, never start and sort it
+out later.
 
 Before dispatching Task 1, scan the plan once for conflicts:
 
@@ -519,6 +525,8 @@ Implementer: [Later]
 
 [Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
 Task reviewer: Spec ✅ - all requirements met, nothing extra.
+  Test Evidence: `npm test test/hooks.test.js` exit 0 — 5 passed / 0 failed
+  (base: unknown); 3/3 brief criteria cited to a test file:line.
   Strengths: Good test coverage, clean. Issues: None. Task quality: Approved.
 
 [Ledger: Task 1: complete (commits a1b2c3d..d4e5f6a, review clean)]
@@ -535,6 +543,8 @@ Implementer: [No questions]
 [Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
 Task reviewer: Spec ❌:
   - Missing: Progress reporting (spec says "report every 100 items")
+  Test Evidence: `npm test test/recovery.test.js` exit 0 — 8 passed / 0 failed
+  (base: 5); criterion "reports every 100 items" — no test, row is `—`.
   Issues (Important): Magic number (100)
 
 [Fix round 1: resume the implementer with both findings]
@@ -542,7 +552,8 @@ Implementer: Added progress reporting, extracted PROGRESS_INTERVAL constant.
   Re-ran test/recovery.test.js — 10/10 passing. Fix report appended.
 
 [Run review-package PLAN_FILE FIX_BASE HEAD; dispatch scoped re-review]
-Re-reviewer: Missing progress reporting — ADDRESSED (src/recovery.js:41).
+Re-reviewer: Test Run: `npm test test/recovery.test.js` exit 0 — 10 passed
+  (previous: 8). Missing progress reporting — ADDRESSED (src/recovery.js:41).
   Magic number — ADDRESSED (src/recovery.js:7). New breakage: none.
   Verdict: all findings addressed.
 
@@ -553,7 +564,9 @@ Re-reviewer: Missing progress reporting — ADDRESSED (src/recovery.js:41).
 
 [After all tasks]
 [Dispatch superpowers:final-branch-audit with plan + MERGE_BASE..HEAD + ledger, most capable model]
-Auditor: PASS — 12/12 criteria DELIVERED, every row cited. No false completions.
+Auditor: PASS — spec docs/superpowers/specs/2026-03-04-feature-design.md
+  (exists, committed); traceability 9/9 TRACED, no invented scope;
+  12/12 criteria DELIVERED, every row cited. No false completions.
 
 [Run review-package PLAN_FILE MERGE_BASE HEAD; dispatch final code-reviewer, most capable model]
 Final reviewer: All requirements met. Deferred minors triaged: none block merge.

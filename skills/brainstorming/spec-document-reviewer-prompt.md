@@ -19,6 +19,7 @@ Subagent (general-purpose):
     | Category | What to Look For |
     |----------|------------------|
     | Groundedness | Open EVERY `file:line` cited in the spec. Confirm it exists and does what the spec claims. See below. |
+    | Traceability | `## Acceptance Criteria` exists, numbered and addressable, one observable behavior per item. See below. |
     | Completeness | TODOs, placeholders, "TBD", incomplete sections |
     | Consistency | Internal contradictions, conflicting requirements |
     | Clarity | Requirements ambiguous enough to cause someone to build the wrong thing |
@@ -48,6 +49,19 @@ Subagent (general-purpose):
     Report each blocking citation as: cited `file:line` → what the spec claims → what the code actually shows.
     Report each blocking assumption as: the item → what search was claimed (or missing) → what your own search found.
 
+    ## Traceability (blocking)
+
+    Everything downstream is charged against this list: the plan names the
+    criterion each task delivers, and the final audit traces the two in both
+    directions. A requirement stated only in prose is one nobody can trace.
+
+    | Finding | Verdict |
+    |---------|---------|
+    | No `## Acceptance Criteria` section | BLOCKING |
+    | A criterion bundling several behaviors | BLOCKING — it cannot take one verdict; split it |
+    | A criterion no `file:line` citation could settle ("handles errors well") | BLOCKING — rewrite it as an observable behavior |
+    | A requirement stated in the prose sections but absent from the list | BLOCKING — name it; the plan traces the list, not the prose |
+
     ## Calibration
 
     **Only flag issues that would cause real problems during implementation planning.**
@@ -56,7 +70,8 @@ Subagent (general-purpose):
     stylistic preferences, and "sections less detailed than others" are not.
 
     Approve unless there are serious gaps that would lead to a flawed plan.
-    Any Groundedness failure blocks approval regardless of calibration.
+    Any Groundedness or Traceability failure blocks approval regardless of
+    calibration.
 
     ## Output Format
 
