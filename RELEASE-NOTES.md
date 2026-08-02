@@ -2,7 +2,7 @@
 
 > **These are the UPSTREAM's releases**, inherited from
 > [obra/superpowers](https://github.com/obra/superpowers) and left unchanged.
-> The changes this fork makes on top of them are in
+> What superpowersplus adds on top of them is in
 > [`PLUS-CHANGELOG.md`](PLUS-CHANGELOG.md), numbered `plus.N` independently of
 > the versions below.
 

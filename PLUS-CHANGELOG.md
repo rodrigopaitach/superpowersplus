@@ -1,7 +1,17 @@
 # PLUS Changelog
 
-Mudanças deste fork ([rodrigopaitach/superpowersplus](https://github.com/rodrigopaitach/superpowersplus))
-sobre o upstream [obra/superpowers](https://github.com/obra/superpowers).
+> **Mudança de status.** Este projeto começou como fork pessoal e passou a se
+> apresentar como **projeto próprio, `superpowersplus`, obra derivada de
+> [Superpowers](https://github.com/obra/superpowers)** (Jesse Vincent, Prime
+> Radiant, MIT). O que mudou é a apresentação, não a relação técnica: o remote
+> continua, e **rebasear sobre o Superpowers segue sendo a forma de incorporar
+> as melhorias deles**. A numeração `plus.N` continua de onde estava — as
+> entradas anteriores a esta nota falam em "fork" porque era o vocabulário da
+> época, e não foram reescritas: changelog é registro do que aconteceu, não
+> descrição do estado atual.
+
+Mudanças do superpowersplus ([rodrigopaitach/superpowersplus](https://github.com/rodrigopaitach/superpowersplus))
+sobre o [Superpowers](https://github.com/obra/superpowers), do qual deriva.
 Entradas `plus.N` são numeradas na ordem em que entraram no fork.
 O campo `version` em `.claude-plugin/plugin.json` e `package.json` espelha o
 upstream e não é alterado aqui — a numeração `plus.N` é independente dele.

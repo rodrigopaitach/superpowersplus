@@ -1,15 +1,14 @@
 # Contributor Covenant Code of Conduct
 
-> **This is a personal fork, kept for its owner's own use.** The code of
-> conduct below is inherited verbatim from the upstream project,
-> [obra/superpowers](https://github.com/obra/superpowers), and is included
-> because the fork carries the upstream's files.
+> **This code of conduct is inherited verbatim from
+> [Superpowers](https://github.com/obra/superpowers)**, the project
+> superpowersplus derives from, and it governs this project unchanged.
 >
-> **Anything concerning THIS repository is raised as an issue here**, on
-> `rodrigopaitach/superpowersplus`. Do not contact the upstream maintainers
-> about this fork: they have no authority over it, no visibility into it, and
-> no responsibility for it. The enforcement contact that appeared in this file
-> was theirs, and it was removed for that reason.
+> **Anything concerning superpowersplus is raised as an issue here**, on
+> `rodrigopaitach/superpowersplus`. Do not contact Superpowers' maintainers
+> about this project: they have no authority over it, no visibility into it,
+> and no responsibility for it. The enforcement contact that appeared in this
+> file was theirs, and it was removed for that reason.
 
 ## Our Pledge
 
@@ -72,7 +71,7 @@ representative at an online or offline event.
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported by opening an issue on this repository
 (<https://github.com/rodrigopaitach/superpowersplus/issues>), which is the
-only enforcement channel for this fork.
+only enforcement channel for superpowersplus.
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
