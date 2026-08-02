@@ -44,10 +44,16 @@ Requires [Claude Code](https://claude.com/claude-code).
 ```
 
 ```bash
-/plugin install superpowers@superpowersplus
+/plugin install superpowersplus@superpowersplus
 ```
 
-**Why the plugin is called `superpowers` while the marketplace is `superpowersplus`:** the skills cross-reference each other by that prefix — `superpowers:brainstorming`, `superpowers:writing-plans`, `superpowers:final-branch-audit`, and so on, across dozens of points scattered through the skill files. Renaming the plugin would break every one of those references. It is the marketplace that needs its own name, so it does not collide with the upstream one.
+> **Already had it installed?** The plugin used to be named `superpowers`. Remove the old one first, or both will load and their skills will collide:
+>
+> ```bash
+> /plugin uninstall superpowers@superpowersplus
+> ```
+
+**The plugin's name is its namespace:** skills reference each other as `superpowersplus:brainstorming`, `superpowersplus:writing-plans`, `superpowersplus:final-branch-audit`, and so on across the skill files.
 
 ## Updating
 

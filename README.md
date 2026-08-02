@@ -48,10 +48,16 @@ Every change, entry by entry, is in [PLUS-CHANGELOG.md](PLUS-CHANGELOG.md). Gaps
 ```
 
 ```bash
-/plugin install superpowers@superpowersplus
+/plugin install superpowersplus@superpowersplus
 ```
 
-The marketplace is `superpowersplus`, but the plugin is still named `superpowers`: the skills cross-reference each other by that prefix (`superpowers:brainstorming`, `superpowers:writing-plans`, …) across the skill files, and renaming the plugin would break every one of those references.
+> **Already had it installed?** The plugin used to be named `superpowers`. Remove the old one first, or both will load and their skills will collide:
+>
+> ```bash
+> /plugin uninstall superpowers@superpowersplus
+> ```
+
+Skills reference each other by the plugin's name as a namespace — `superpowersplus:brainstorming`, `superpowersplus:writing-plans`, and so on across the skill files.
 
 ### Other harnesses
 
