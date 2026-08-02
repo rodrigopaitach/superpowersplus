@@ -40,11 +40,14 @@ esse porque o volume desses arquivos é regra, não exemplo — Iron Law, litmus
 bloqueante, procedimento de teste, contrato de saída. Comprimir além disso
 exigiria cortar regra.
 
-Mesma compressão aplicada ao bloco `**Code quality:**` de
-`requesting-code-review/code-reviewer.md` (193 → 190 linhas), que carregava
-o mesmo formato de cinco bullets de pergunta única. Os blocos irmãos do
-mesmo `## What to Check` — `Plan alignment`, `Architecture`,
-`Production readiness` — têm o formato idêntico e ficaram como estavam.
+Mesma compressão aplicada ao `## What to Check` de
+`requesting-code-review/code-reviewer.md` (193 → 184 linhas): os quatro
+blocos de pergunta única — `Plan alignment` (3), `Code quality` (5),
+`Architecture` (4) e `Production readiness` (4) — passam de um bullet por
+pergunta para prosa, com as dezesseis perguntas intactas. O bloco `Testing`
+do mesmo arquivo continua em bullets: não é lista de perguntas, é
+procedimento com regras multi-linha, o mesmo caso do `Testing` do
+implementer.
 
 ## plus.13 — grounding de dependências atravessa a fronteira spec → plano
 

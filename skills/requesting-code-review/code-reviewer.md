@@ -36,20 +36,17 @@ Subagent (general-purpose):
 
     ## What to Check
 
-    **Plan alignment:**
-    - Does the implementation match the plan / requirements?
-    - Are deviations justified improvements, or problematic departures?
-    - Is all planned functionality present?
+    **Plan alignment:** does the implementation match the plan /
+    requirements? Are deviations justified improvements, or problematic
+    departures? Is all planned functionality present?
 
     **Code quality:** clean separation of concerns? Proper error handling?
     Type safety where applicable? DRY without premature abstraction? Edge
     cases handled?
 
-    **Architecture:**
-    - Sound design decisions?
-    - Reasonable scalability and performance?
-    - Security concerns?
-    - Integrates cleanly with surrounding code?
+    **Architecture:** sound design decisions? Reasonable scalability and
+    performance? Security concerns? Integrates cleanly with surrounding
+    code?
 
     **Testing — run them, never infer from the diff:**
     - Run the project's test suite. Report the command verbatim, its exit
@@ -67,11 +64,8 @@ Subagent (general-purpose):
       report and name the command you would have run. "All tests passing"
       answered by reading the diff is not an answer.
 
-    **Production readiness:**
-    - Migration strategy if schema changed?
-    - Backward compatibility considered?
-    - Documentation complete?
-    - No obvious bugs?
+    **Production readiness:** migration strategy if schema changed? Backward
+    compatibility considered? Documentation complete? No obvious bugs?
 
     ## Calibration
 
