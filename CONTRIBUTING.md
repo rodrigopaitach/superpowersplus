@@ -16,5 +16,5 @@ That includes anything covered by [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md),
 which is inherited from Superpowers but enforced only here.
 
 What superpowersplus adds is recorded in
-[`PLUS-CHANGELOG.md`](PLUS-CHANGELOG.md). Documentation in
+[`CHANGELOG.md`](CHANGELOG.md). Documentation in
 [Portuguese](docs/README.pt-BR.md) and [English](docs/README.en.md).

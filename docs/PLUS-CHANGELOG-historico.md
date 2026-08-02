@@ -1,7 +1,14 @@
-# PLUS Changelog
+# PLUS Changelog — histórico do processo
 
-**Versão atual:** `1.0.0` · **Base do upstream incorporada:** [`44c9b2d`](https://github.com/obra/superpowers/commit/44c9b2d) (2026-07-27).
-Este par substitui o espelhamento do `version` do upstream, abandonado nesta versão: o número descreve este projeto, e a linha acima registra sobre qual base ele está. Atualize-a a cada rebase.
+> **Arquivo histórico, preservado intacto.** Registra as 34 entradas `plus.N`
+> na forma em que foram escritas, entre o dia em que o projeto era um fork
+> pessoal e a versão `1.0.0`. O changelog vigente é
+> [`CHANGELOG.md`](../CHANGELOG.md), no formato Keep a Changelog; este arquivo
+> não é mais atualizado.
+>
+> As entradas falam em "fork" e usam o namespace `superpowers:` porque era o
+> vocabulário da época. Não foram reescritas: registro do processo não se
+> reescreve para combinar com o presente.
 
 > **Mudança de status.** Este projeto começou como fork pessoal e passou a se
 > apresentar como **projeto próprio, `superpowersplus`, obra derivada de

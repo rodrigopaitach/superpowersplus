@@ -99,7 +99,7 @@ All of it is git-versioned files, readable without any tooling. The decision rec
 
 ## What it adds to Superpowers
 
-Five axes. The detail of each change, entry by entry, is in [`PLUS-CHANGELOG.md`](../PLUS-CHANGELOG.md) (written in Portuguese).
+Five axes. The detail of each change, entry by entry, is in [`CHANGELOG.md`](../CHANGELOG.md) (written in Portuguese).
 
 - **Evidence-grounded spec** — criteria anchored in the real code and in the external dependencies already present in the project, not in what the model assumes.
 - **Plan contract charged by a reviewer** — a subagent reads the spec against the plan and blocks a criterion with no task, a task with no origin, and a criterion with no test.
@@ -123,7 +123,7 @@ export SUPERPOWERS_DISABLE_TELEMETRY=1
 
 ## Known gaps
 
-Gaps identified and deliberately left open are recorded in [Pendências conhecidas](../PLUS-CHANGELOG.md#pendências-conhecidas) (in Portuguese), each with the reason it was not closed. A gap with no record comes back as a discovery.
+Gaps identified and deliberately left open are recorded in [Known gaps](../CHANGELOG.md#known-gaps) (in Portuguese), each with the reason it was not closed. A gap with no record comes back as a discovery.
 
 ## License and credit
 

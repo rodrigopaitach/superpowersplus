@@ -99,7 +99,7 @@ Tudo é arquivo versionado em git, legível sem ferramenta nenhuma. O registro d
 
 ## O que acrescenta ao Superpowers
 
-Cinco eixos. O detalhe de cada mudança, entrada por entrada, está em [`PLUS-CHANGELOG.md`](../PLUS-CHANGELOG.md).
+Cinco eixos. O detalhe de cada mudança, entrada por entrada, está em [`CHANGELOG.md`](../CHANGELOG.md).
 
 - **Spec fundamentada em evidência** — critérios ancorados no código real e nas dependências externas já presentes no projeto, não no que o modelo supõe.
 - **Contrato do plano cobrado por revisor** — um subagente lê a spec contra o plano e bloqueia critério sem tarefa, tarefa sem origem e critério sem teste.
@@ -123,7 +123,7 @@ export SUPERPOWERS_DISABLE_TELEMETRY=1
 
 ## Pendências conhecidas
 
-Buracos identificados e deliberadamente não fechados estão registrados em [Pendências conhecidas](../PLUS-CHANGELOG.md#pendências-conhecidas), com o motivo de cada um não ter sido fechado. Lacuna sem registro volta como descoberta.
+Buracos identificados e deliberadamente não fechados estão registrados em [Known gaps](../CHANGELOG.md#known-gaps), com o motivo de cada um não ter sido fechado. Lacuna sem registro volta como descoberta.
 
 ## Licença e crédito
 
