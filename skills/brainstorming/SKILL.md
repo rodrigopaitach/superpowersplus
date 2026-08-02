@@ -23,7 +23,7 @@ You MUST create a task for each of these items and complete them in order:
 
 1. **Investigate the codebase** — MANDATORY before ANY question to the user. Read the real code: files, tests, configs, recent commits. Record every finding as `path/file.ext:line` + the quoted snippet. This recorded output becomes the spec's `## Codebase Findings` section. Claims about a library, external API, or third-party service are grounded the same way, in the order and citation forms below — see "Where a Claim Comes From". No investigation output, no questions.
 2. **Build the coverage map** — from the request and the investigation, before any question. Assign every category one of four states with its reason, apply the admission filter so only decision-changing gaps become questions, and order what remains by impact × uncertainty. Every question you then ask carries a recommendation with a declared source, and every accepted answer is written into the spec and saved as you go. See `skills/brainstorming/coverage-map.md`.
-3. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
+3. **Check for a declared preference about the visual companion, then offer just-in-time** — NOT upfront. Look first for a preference in the context: the project's `CLAUDE.md`, your memory of this user, or an instruction in this conversation. Declared "never" means never offer, and never say that you didn't — the flow just continues in text. No preference, or a favorable one: the first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
 4. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 5. **Propose 2-3 approaches** — with trade-offs and your recommendation
 6. **Present design** — in sections scaled to their complexity, get user approval after each section
@@ -43,6 +43,9 @@ digraph brainstorming {
     "Investigate code + deps\n(cite file:line / pinned source)" [shape=box];
     "Build coverage map\n(state + reason per category)" [shape=box];
     "Gap changes a decision?" [shape=diamond];
+    "Preference against the\ncompanion declared?" [shape=diamond];
+    "Question clearer shown\nthan described?" [shape=diamond];
+    "Offer visual companion\n(its own message)" [shape=box];
     "Ask clarifying questions" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
@@ -55,7 +58,12 @@ digraph brainstorming {
 
     "Investigate code + deps\n(cite file:line / pinned source)" -> "Build coverage map\n(state + reason per category)";
     "Build coverage map\n(state + reason per category)" -> "Gap changes a decision?";
-    "Gap changes a decision?" -> "Ask clarifying questions" [label="yes, highest\nimpact x uncertainty first"];
+    "Gap changes a decision?" -> "Preference against the\ncompanion declared?" [label="yes, highest\nimpact x uncertainty first"];
+    "Preference against the\ncompanion declared?" -> "Ask clarifying questions" [label="yes, text only\n(never say so)"];
+    "Preference against the\ncompanion declared?" -> "Question clearer shown\nthan described?" [label="none declared,\nor favorable"];
+    "Question clearer shown\nthan described?" -> "Offer visual companion\n(its own message)" [label="yes, and not\noffered yet"];
+    "Question clearer shown\nthan described?" -> "Ask clarifying questions" [label="no"];
+    "Offer visual companion\n(its own message)" -> "Ask clarifying questions";
     "Gap changes a decision?" -> "Propose 2-3 approaches" [label="no, record\nstate + reason"];
     "Ask clarifying questions" -> "Build coverage map\n(state + reason per category)" [label="integrate answer,\nsave spec"];
     "Propose 2-3 approaches" -> "Present design sections";
@@ -194,6 +202,15 @@ Wait for the user's response. If they request changes, make them and re-run the 
 ## Visual Companion
 
 A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
+
+**Check for a declared preference first.** Before any offer, look for a stated preference about the visual companion — the project's `CLAUDE.md`, your memory of this user, or something they said in this conversation. Some partners never want it.
+
+| Preference found | What you do |
+|------------------|-------------|
+| Against the companion ("never", "don't offer", "text only") | Never offer it, under any circumstance. **Do not mention that you refrained** — announcing the suppressed offer is the offer. Continue in text |
+| None declared, or favorable | The just-in-time behavior below |
+
+**A declared preference beats the just-in-time criterion.** A question that would be far clearer shown is still not offered when the preference says never — the criterion decides *when* to offer, only among partners who have not already answered *whether*. Two rules do not compete here; the preference is checked first and settles it.
 
 **Offering the companion (just-in-time):** Do NOT offer it upfront. Wait until a question would genuinely be clearer shown than told — a real mockup / layout / diagram question, not merely a UI *topic*. The first time that happens, offer it then, as its own message:
 > "This next part might be easier if I show you — I can put together mockups, diagrams, and comparisons in a browser tab as we go. It's still new and can be token-intensive. Want me to? I'll open it for you."
