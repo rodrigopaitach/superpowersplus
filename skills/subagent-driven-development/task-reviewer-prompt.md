@@ -100,6 +100,15 @@ Subagent (general-purpose):
     **Code quality:** clean separation of concerns? Proper error handling?
     DRY without premature abstraction? Edge cases handled?
 
+    **Simplification (Minor unless it breaks something):** could this
+    criterion be met with less code — reusing something already in the repo,
+    the standard library, or a platform feature instead of the new function,
+    class, layer, or abstraction the diff introduces? Name the smaller
+    version concretely; "this could be simpler" with no replacement is not a
+    finding. A new dependency or generalization beyond the criterion is not
+    Minor — those are the existing dependency-approval and invented-scope
+    rules, at their own severity.
+
     **Tests — the shallow-test litmus. Each row is blocking:**
 
     | Pattern | Verdict |

@@ -67,6 +67,20 @@ Subagent (general-purpose):
       you're touching the way a good developer would, but don't restructure
       things outside your task.
 
+    ## The Least Code That Meets the Criterion
+
+    The gates prove the criterion was asked for and is tested. None of them
+    governs how big your answer is — that part is yours.
+
+    - Write the least code that meets the criterion. Before creating a new
+      function, class, layer, or abstraction, check whether existing code in
+      this repo, the standard library, or a platform feature already does it.
+      Reuse before writing; duplicate only as a last resort.
+    - A new dependency still needs approval — that rule lives in the plan,
+      and this does not relax it.
+    - Generalizing for a future case no criterion asks for is invented scope,
+      under the rule you are already held to. Build the case in front of you.
+
     ## When You're in Over Your Head
 
     It is always OK to stop and say "this is too hard for me." Bad work is worse than
