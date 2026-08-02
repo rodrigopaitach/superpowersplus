@@ -12,7 +12,9 @@ triage/
 # plugin, so the whole directory is ignored here.
 evals/
 
-# Scratch directories for adversarial skill-behavior runs (tests/skill-behavior/)
-.skillrun/
-.skillrun2/
-.skillrun3/
+# Scratch directories for adversarial skill-behavior runs (tests/skill-behavior/).
+# A glob, not an enumeration: the list was written as .skillrun/, .skillrun2/,
+# .skillrun3/ and the third measurement used .skillrun4/, which no line covered.
+# A pattern that has to be extended by hand at every run is a pattern that is
+# stale at every run.
+.skillrun*/

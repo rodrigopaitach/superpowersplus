@@ -64,6 +64,12 @@ References below name them so a claim here can be traced there.
   surfaced them unprompted, which is how the gap was found. Each builds its own
   temporary repository or reads files directly, so none depends on the
   checkout's index. Suites that dispatch a live agent stay out on purpose.
+- **The scratch directories of the adversarial runs are matched by a glob**,
+  `.skillrun*/`, instead of the three names `.gitignore` listed one by one. The
+  third measurement used `.skillrun4/`, which no line covered — a pattern that
+  has to be extended by hand at every run is stale at every run. Nothing was
+  ever committed from one of these directories; the exposure was untracked
+  scratch sitting visible in `git status`.
 - **`scripts/check-docs-sync.sh` and `scripts/check-frozen-history.sh` missed
   deletions.** Both filtered staged paths with `--diff-filter=ACMR`, which
   excludes `D` — so `git rm` on one of the bilingual pair, or on the frozen
