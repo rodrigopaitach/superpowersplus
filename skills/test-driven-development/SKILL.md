@@ -209,6 +209,29 @@ When writing or changing any test, read [writing-good-tests.md](writing-good-tes
 - Keep test-only code in test utilities, out of production classes
 - Understand a dependency's side effects before mocking it
 
+## What Counts as a Valid Test
+
+Know this before the reviewer charges it. The task reviewer re-runs your
+test command itself and fills a `Criterion | test file:line | assertion`
+table from your tests — your reported run is a claim, not evidence, so
+report the exact command and its output for the two runs to be compared.
+
+These three patterns are blocking findings at review, not style notes:
+
+| Pattern | Why it fails |
+|---------|--------------|
+| An assertion that cannot fail — `expect(true)`, `assert 1 == 1` — or a test with no assertion | Proves the runner works. Nothing else. |
+| Assertions only on mock call counts or mock existence | Tests the mock, not your code. See [writing-good-tests.md](writing-good-tests.md). |
+| Happy path only, when the spec or brief lists edge cases | Those listed cases are requirements, not extras. |
+
+**The inverse, same weight:** every test maps to a requirement in the plan's
+Test Coverage Matrix. A test mapping to nothing is invented scope — the
+reviewer reports it as Extra, exactly like unrequested production code.
+
+Deleting or skipping a test to get green is the same finding: the reviewer
+compares the test count against the base and reads the diff for tests newly
+marked skipped, `xfail`, or `.only`.
+
 ## Common Rationalizations
 
 | Excuse | Reality |
@@ -292,6 +315,10 @@ Before marking work complete:
 - [ ] Output pristine (no errors, warnings)
 - [ ] Tests use real code (mocks only if unavoidable)
 - [ ] Edge cases and errors covered
+- [ ] No test in this change trips the shallow-test litmus above
+- [ ] Every test maps to a row in the plan's Test Coverage Matrix
+- [ ] No test was deleted, renamed away, or newly skipped to reach green
+- [ ] The exact test command and its output are in your report
 
 Can't check all boxes? You skipped TDD. Start over.
 

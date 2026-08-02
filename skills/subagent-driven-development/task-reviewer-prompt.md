@@ -1,11 +1,12 @@
 # Task Reviewer Prompt Template
 
 Use this template when dispatching a task reviewer subagent. The reviewer
-reads the task's diff once and returns two verdicts: spec compliance and
-code quality.
+reads the task's diff once, re-runs the task's tests, and returns two
+verdicts: spec compliance and code quality.
 
 **Purpose:** Verify one task's implementation matches its requirements (nothing
-more, nothing less) and is well-built (clean, tested, maintainable)
+more, nothing less) and is well-built (clean, tested, maintainable). The
+implementer never grades its own test work: the reviewer runs the suite.
 
 ```
 Subagent (general-purpose):
@@ -61,19 +62,27 @@ Subagent (general-purpose):
     implementer grading their own work. Judge the code on its merits — a
     stated rationale never downgrades a finding's severity.
 
-    ## Tests
+    ## Tests — Run Them Yourself
 
-    The implementer already ran the tests and reported results with TDD
-    evidence for exactly this code. Do not re-run the suite to confirm their
-    report. Run a test only when reading the code raises a specific doubt
-    that no existing run answers — and then a focused test, never a
-    package-wide suite, race detector run, or repeated/high-count loop. If
-    heavy validation seems warranted, recommend it in your report instead of
-    running it. If you cannot run commands in this environment, name the
-    test you would run.
+    The implementer's reported test run is a claim about a run you did not
+    see, made by the author of the tests being judged. Re-run them.
 
-    Warnings or other noise in the implementer's reported test output are
-    findings — test output should be pristine.
+    1. Run the task's test command: `[TEST_COMMAND]`. Report it verbatim
+       with its exit code and the counts (passed / failed / skipped).
+    2. Check the count did not fall. Base count before this task:
+       `[BASE_TEST_COUNT]`. Not supplied, or the runner reports no total?
+       Derive the delta from the diff instead and say so.
+    3. Read the diff for tests deleted, renamed away, or newly marked
+       skipped, `xfail`, `.only`, or `t.Skip`. Any test this diff disables
+       is a finding on its own, whatever the pass line says.
+
+    Your review stays read-only: run the tests, never checkout, stash, or
+    reset to compare. If you cannot run commands in this environment, say so
+    in the first line of your report and name the command you would have
+    run — never infer a pass from the implementer's output.
+
+    Warnings or other noise in the test output are findings — test output
+    should be pristine.
 
     ## Part 1: Spec Compliance
 
@@ -98,9 +107,20 @@ Subagent (general-purpose):
     - DRY without premature abstraction?
     - Edge cases handled?
 
-    **Tests:**
-    - Do the new and changed tests verify real behavior, not mocks?
-    - Are the task's edge cases covered?
+    **Tests — the shallow-test litmus. Each row is blocking:**
+
+    | Pattern | Verdict |
+    |---------|---------|
+    | An assertion that cannot fail — `expect(true)`, `assert 1 == 1` — or a test body with no assertion at all | BLOCKING |
+    | Assertions only on mock call counts or mock existence, never on the real component's behavior | BLOCKING |
+    | Happy path only, while the brief or the global constraints list edge cases | BLOCKING |
+
+    A passing suite made of these tests is a passing suite that proves
+    nothing. Report each as Critical, cited at `file:line`.
+
+    **The inverse check, same weight:** every new or changed test maps to a
+    requirement in the brief. A test that maps to nothing is invented
+    scope — report it as Extra under Part 1.
 
     **Structure:**
     - Does each file have one clear responsibility with a well-defined interface?
@@ -146,6 +166,21 @@ Subagent (general-purpose):
       diff alone, and what the controller should check — report alongside the
       ✅/❌ verdict for everything you could verify]
 
+    ### Test Evidence
+
+    **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/failed/
+    skipped] (base: [BASE_TEST_COUNT])
+
+    | Criterion | Test file:line | Assertion |
+    |-----------|----------------|-----------|
+    | [criterion, verbatim from the brief] | `tests/auth/test_verify.py:41` | [what it actually asserts, not the test's name] |
+    | [criterion nothing covers] | — | NONE |
+
+    One row per criterion in the brief — including the ones with no test.
+    A `—` row is a blocking finding, and so is a row whose assertion fails
+    the litmus above. This table is not optional: without it the task does
+    not close, and a report that omits it is itself the finding.
+
     ### Strengths
     [What's well done? Be specific.]
 
@@ -175,11 +210,18 @@ Subagent (general-purpose):
   are already in this template)
 - `[REPORT_FILE]` — REQUIRED: the file the implementer wrote its detailed
   report to
+- `[TEST_COMMAND]` — REQUIRED: the command that runs this task's tests, taken
+  from the plan's Test Coverage Matrix or the repository's runner config. The
+  reviewer runs it; do not pass a command you have not confirmed exists
+- `[BASE_TEST_COUNT]` — the test count at `[BASE_SHA]`, so the reviewer can
+  see whether tests disappeared. Omit only when no total is available, and
+  expect the reviewer to derive the delta from the diff instead
 - `[BASE_SHA]` — commit before this task
 - `[HEAD_SHA]` — current commit
 - `[DIFF_FILE]` — REQUIRED: the path the controller wrote the review
   package to (`scripts/review-package PLAN_FILE BASE HEAD` prints the unique
   path it wrote; the package never enters the controller's context)
 
-**Reviewer returns:** Spec Compliance verdict (✅/❌/⚠️), Strengths, Issues
+**Reviewer returns:** Spec Compliance verdict (✅/❌/⚠️), Test Evidence table
+(command, counts, one row per criterion), Strengths, Issues
 (Critical/Important/Minor), Task quality verdict

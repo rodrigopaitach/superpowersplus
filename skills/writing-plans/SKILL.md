@@ -73,6 +73,16 @@ naming and copy rules, platform requirements — one line each, with exact
 values copied verbatim from the spec. Every task's requirements implicitly
 include this section.]
 
+## Test Coverage Matrix
+
+[One row per acceptance criterion, across every task. Test types and layer
+names are this repository's own — see the section below before filling it.]
+
+| Task | Criterion | Test type | Layer | Test |
+|------|-----------|-----------|-------|------|
+| 3 | Rejects expired tokens | unit | `tests/auth/` | `tests/auth/test_verify.py::test_rejects_expired` |
+| 5 | Login survives a token refresh | e2e | `e2e/` | `e2e/login.spec.ts::refreshes mid-session` |
+
 ---
 ```
 
@@ -148,6 +158,37 @@ An unauditable criterion is a plan failure, exactly like a placeholder — the
 auditor charges what the plan wrote, and the branch fails on wording you
 controlled.
 
+## Test Coverage Matrix
+
+Derived from the spec: one row per acceptance criterion, naming the kind of
+test required and the layer it lives in. A criterion promised a test in its
+own line and given no row is a criterion nobody planned to test.
+
+The matrix is what the task reviewer charges test by test, and what marks a
+test matching no requirement as invented scope.
+
+**Read this repository's conventions before writing a single row.** You are
+recording the standard already in use, not importing one:
+
+| Source | What it tells you |
+|--------|-------------------|
+| `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md` | Stated testing rules, coverage floors, banned patterns |
+| Test runner config — `pytest.ini`, `vitest.config.*`, `package.json` scripts, `Makefile` | The command that runs tests, and how suites are split |
+| CI workflow files | Which suites gate a merge, and in what order |
+| Existing tests | The layers that actually exist here, their directories and naming |
+
+Cite what you found as `path/file.ext:line`. Found nothing — no test
+directory, no runner configured? Say that in the matrix and propose the
+layers, labeled as a proposal for your human partner to approve.
+
+| Column | Rule |
+|--------|------|
+| Task | The task that delivers the criterion |
+| Criterion | Copied verbatim from that task's acceptance criteria |
+| Test type | This repository's vocabulary, not a generic one — whatever its config and existing tests call the kinds |
+| Layer | The real directory the type lives in here |
+| Test | The exact test id a step in that task creates |
+
 ## No Placeholders
 
 Every step must contain the actual content an engineer needs. These are **plan failures** — never write them:
@@ -169,6 +210,8 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 **3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
 
 **4. Auditable criteria:** Does every task have acceptance criteria, each one observable, settled by a citation, and naming its covering test? Read each one as the auditor will: could a `file:line` prove or disprove it? If not, rewrite it.
+
+**5. Matrix coverage:** Does every acceptance criterion have a row in the Test Coverage Matrix, and does every row name a test some step actually creates? A row pointing at a test no step writes is a placeholder wearing a table.
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 

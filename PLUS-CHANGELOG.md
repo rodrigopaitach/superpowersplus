@@ -10,6 +10,35 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.3 — matriz de cobertura e revisor de task que reexecuta a suíte
+
+Nada garantia que o teste prometido na spec virasse teste real no código. Pior:
+o `task-reviewer-prompt.md` mandava NÃO reexecutar a suíte, confiando no
+relatório de quem escreveu os testes — o autor avaliando o próprio trabalho de
+teste.
+
+- **`## Test Coverage Matrix`** — nova seção obrigatória no cabeçalho do plano
+  (`writing-plans`): uma linha por critério de aceite, com tipo de teste e
+  camada. Antes de montá-la o agente lê as convenções do repositório
+  (`CLAUDE.md`/`AGENTS.md`, config do runner, CI, testes existentes) e cita
+  `arquivo:linha` — registra o padrão em uso em vez de importar um de fora.
+- **Revisor reexecuta** — a instrução "do not re-run the suite" saiu. O revisor
+  roda o comando de teste da tarefa, reporta comando/exit code/contagens,
+  confere que a contagem não caiu e lê o diff atrás de teste apagado, renomeado
+  ou recém-marcado como `skip`/`xfail`/`.only`. Continua read-only: roda os
+  testes, nunca faz checkout nem reset.
+- **Tabela `Critério | teste arquivo:linha | asserção`** — uma linha por
+  critério do brief, inclusive os sem teste. Sem a tabela a tarefa não fecha, e
+  relatório que a omite é ele próprio o achado.
+- **Litmus anti-teste-raso (bloqueante)** — asserção que não pode falhar
+  (`expect(true)`, teste sem asserção), asserção só em mock (contagem de
+  chamada/existência) e happy path só quando há casos de borda listados. Mais a
+  checagem inversa: teste que não mapeia para requisito da matriz é escopo
+  inventado, reportado como Extra.
+- **`test-driven-development`** — as mesmas exigências declaradas onde o teste é
+  produzido, com o litmus, o mapeamento para a matriz e 4 itens novos no
+  checklist de verificação.
+
 ## plus.2 — auditoria de conformidade tarefa a tarefa na revisão final da branch
 
 A revisão final era só revisão de qualidade do diff da branch. Nada obrigava
