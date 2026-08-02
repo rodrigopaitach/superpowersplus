@@ -1,6 +1,8 @@
 # Superpowers+ — documentação em português
 
-> Este é o documento original. A versão em inglês, [`README.en.md`](README.en.md), é a tradução dele.
+> **Este é o texto canônico.** A versão em inglês, [`README.en.md`](README.en.md), é a tradução dele — em qualquer divergência, este arquivo é o que vale.
+>
+> **Editar um exige editar o outro no MESMO commit.** Um commit que altera só um dos dois abre uma divergência que ninguém consegue ver depois: as duas versões continuam plausíveis, e nada indica qual envelheceu.
 
 ## O que é
 
@@ -22,7 +24,7 @@ As duas coisas têm a mesma forma: **uma afirmação sem verificação parece ex
 
 ## Para quem
 
-Para quem usa um agente de código com trabalho de verdade em jogo — e explicitamente **inclusive para quem não programa**.
+Para quem usa um agente de código com trabalho de verdade em jogo — pessoas desenvolvedoras, entusiastas, e explicitamente **inclusive quem não programa**.
 
 Essa parte é desenho, não acaso. Um parceiro que não programa não consegue julgar se uma decisão técnica está certa, mas consegue julgar de **onde ela veio**: abrir o arquivo na linha citada e ver que existe e diz o que foi afirmado. Então:
 
@@ -43,7 +45,7 @@ Requer o [Claude Code](https://claude.com/claude-code).
 /plugin install superpowers@superpowersplus
 ```
 
-**Por que o plugin se chama `superpowers` e o marketplace `superpowersplus`:** as skills se referenciam entre si por esse prefixo — `superpowers:brainstorming`, `superpowers:writing-plans`, `superpowers:final-branch-audit` e assim por diante, em 54 pontos dos arquivos de skill. Renomear o plugin quebraria todas essas referências. O marketplace é que precisa de nome próprio, para não colidir com o do upstream.
+**Por que o plugin se chama `superpowers` e o marketplace `superpowersplus`:** as skills se referenciam entre si por esse prefixo — `superpowers:brainstorming`, `superpowers:writing-plans`, `superpowers:final-branch-audit` e assim por diante, em dezenas de pontos espalhados pelos arquivos de skill. Renomear o plugin quebraria todas essas referências. O marketplace é que precisa de nome próprio, para não colidir com o do upstream.
 
 ## Como funciona
 

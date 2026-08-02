@@ -1,6 +1,8 @@
 # Superpowers+ — English documentation
 
-> This is a translation. The original document is the Portuguese one, [`README.pt-BR.md`](README.pt-BR.md).
+> **This is a translation.** The canonical text is the Portuguese one, [`README.pt-BR.md`](README.pt-BR.md) — on any divergence, that file is the one that holds.
+>
+> **Editing one requires editing the other in the SAME commit.** A commit that changes only one of the two opens a divergence nobody can see afterwards: both versions stay plausible, and nothing marks which one went stale.
 
 ## What it is
 
@@ -22,7 +24,7 @@ Both have the same shape: **an unverified claim looks exactly like a verified on
 
 ## Who it is for
 
-Anyone using a coding agent with real work at stake — and explicitly **including people who do not program**.
+Anyone using a coding agent with real work at stake — developers, enthusiasts, and explicitly **including people who do not program**.
 
 That part is design, not accident. A partner who does not program cannot judge whether a technical decision is right, but can judge **where it came from**: open the cited line and see that it exists and says what was claimed. So:
 
@@ -43,7 +45,7 @@ Requires [Claude Code](https://claude.com/claude-code).
 /plugin install superpowers@superpowersplus
 ```
 
-**Why the plugin is called `superpowers` while the marketplace is `superpowersplus`:** the skills cross-reference each other by that prefix — `superpowers:brainstorming`, `superpowers:writing-plans`, `superpowers:final-branch-audit`, and so on, across 54 points in the skill files. Renaming the plugin would break every one of those references. It is the marketplace that needs its own name, so it does not collide with the upstream one.
+**Why the plugin is called `superpowers` while the marketplace is `superpowersplus`:** the skills cross-reference each other by that prefix — `superpowers:brainstorming`, `superpowers:writing-plans`, `superpowers:final-branch-audit`, and so on, across dozens of points scattered through the skill files. Renaming the plugin would break every one of those references. It is the marketplace that needs its own name, so it does not collide with the upstream one.
 
 ## How it works
 
