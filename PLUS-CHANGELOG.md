@@ -45,6 +45,15 @@ teste.
   que relato do implementador não é evidência. O re-review também reporta
   comando, exit code e contagens, e trata achado "corrigido" apagando o teste
   que o pegou como NOT ADDRESSED.
+- **Face de produtor alinhada** — `implementer-prompt.md` dizia ao implementador
+  que o relatório dele ERA a evidência de teste. Agora diz o contrário: o
+  re-revisor roda o mesmo comando, e o relatório existe para as duas execuções
+  serem comparadas — daí a exigência de registrar comando e contagens.
+- **Code reviewer final** — "All tests passing?" era pergunta sem método
+  declarado, respondível pela leitura do diff. Passa a exigir execução da
+  suíte, com comando, exit code e contagens na seção `### Test Run`, mais a
+  checagem de teste apagado/renomeado/marcado `skip` no range. Sem comando no
+  despacho, o revisor deriva da config do runner e declara qual usou.
 - **Placeholders documentados no despacho** — o controlador aprende onde obter
   `[TEST_COMMAND]` (matriz do plano ou config do runner, confirmado antes de
   passar) e `[BASE_TEST_COUNT]` (contagem da review anterior; `unknown` quando

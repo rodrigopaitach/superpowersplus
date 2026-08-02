@@ -109,9 +109,11 @@ Subagent (general-purpose):
     If the task review finds issues, you will be resumed with the findings.
     Fix them, re-run the tests that cover the amended code, and append a fix
     report to your report file: what you changed, the covering tests you
-    ran, the command, and the output. Reviewers will not re-run tests for
-    you — your report is the test evidence. Then reply with the same short
-    status contract as your first report.
+    ran, the command, and the output. The re-reviewer runs that same command
+    itself — your report exists so the two runs can be compared, not to
+    stand in for theirs. Report the command exactly as you ran it, and the
+    counts it printed. Then reply with the same short status contract as
+    your first report.
 
     ## Report Format
 

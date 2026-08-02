@@ -54,11 +54,21 @@ Subagent (general-purpose):
     - Security concerns?
     - Integrates cleanly with surrounding code?
 
-    **Testing:**
+    **Testing — run them, never infer from the diff:**
+    - Run the project's test suite. Report the command verbatim, its exit
+      code, and the counts. If the dispatch named a test command, run that
+      one; otherwise derive it from the runner config (`package.json`
+      scripts, `Makefile`, `pytest.ini`, the CI workflow) and say which you
+      ran and where you found it.
+    - Does this range delete, rename away, or newly mark any test as
+      skipped, `xfail`, or `.only`? A green run over a shrunken suite is not
+      a green branch — report it as an issue on its own.
     - Tests verify real behavior, not mocks?
     - Edge cases covered?
     - Integration tests where they matter?
-    - All tests passing?
+    - Cannot run commands in this environment? Say so explicitly in your
+      report and name the command you would have run. "All tests passing"
+      answered by reading the diff is not an answer.
 
     **Production readiness:**
     - Migration strategy if schema changed?
@@ -78,6 +88,11 @@ Subagent (general-purpose):
     say so.
 
     ## Output Format
+
+    ### Test Run
+
+    **Command:** [verbatim, and where you got it] — **exit:** [code] —
+    **counts:** [passed/failed/skipped]
 
     ### Strengths
     [What's well done? Be specific.]
@@ -119,6 +134,7 @@ Subagent (general-purpose):
 
     **DON'T:**
     - Say "looks good" without checking
+    - Answer "tests pass" without having run them in this review
     - Mark nitpicks as Critical
     - Give feedback on code you didn't actually read
     - Be vague ("improve error handling")
@@ -131,11 +147,16 @@ Subagent (general-purpose):
 - `[BASE_SHA]` — starting commit
 - `[HEAD_SHA]` — ending commit
 
-**Reviewer returns:** Strengths, Issues (Critical / Important / Minor), Recommendations, Assessment
+**Reviewer returns:** Test Run (command, exit code, counts), Strengths, Issues (Critical / Important / Minor), Recommendations, Assessment
 
 ## Example Output
 
 ```
+### Test Run
+
+**Command:** `npm test` (from package.json scripts.test) — **exit:** 0 —
+**counts:** 18 passed / 0 failed / 0 skipped
+
 ### Strengths
 - Clean database schema with proper migrations (db.ts:15-42)
 - Comprehensive test coverage (18 tests, all edge cases)
