@@ -10,6 +10,37 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **The Codex development marketplace is `superpowersplus-dev`** (display name
+  `superpowersplus Dev`), in `.agents/plugins/marketplace.json` — the last
+  identifier still carrying the upstream's name. Its assertions in
+  `tests/codex/test-marketplace-manifest.sh` were updated in the same commit.
+- **Every harness manifest carries the same description.** `.codex-plugin`,
+  `.kimi-plugin`, `.cursor-plugin`, and `gemini-extension.json` still described
+  Superpowers; they now use the text `.claude-plugin` already used, which
+  describes this project and credits the origin. One string across five files,
+  so they cannot drift apart.
+- **`docs/PLUS-CHANGELOG-historico.md` is declared frozen** in `CLAUDE.md` and
+  takes no new writing. The live list of open gaps moved here, to
+  [Open gaps](#open-gaps) — closing one now updates the maintained document
+  instead of the archived one.
+
+### Fixed
+
+- **`tests/codex/test-package-codex-plugin.sh` hardcoded the plugin name** in
+  the expected manifest summary while reading the version from the manifest
+  beside it, so it broke the moment the namespace was renamed. It now reads the
+  name the same way. The failure had been reported as pre-existing on the
+  strength of a `git checkout <ref> -- .` baseline; that measurement was
+  invalid, because `scripts/package-codex-plugin.sh` packages from a git ref
+  rather than the working tree, so the restored test file and the packaged
+  manifest came from different commits. Re-measured in a full clone with a
+  detached checkout: the test passes at `b6b68ef`, immediately before the
+  rename.
+
 ## [1.0.0] - 2026-08-02
 
 First release under this project's own version. Everything below is the
