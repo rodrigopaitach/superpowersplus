@@ -224,9 +224,11 @@ These three patterns are blocking findings at review, not style notes:
 | Assertions only on mock call counts or mock existence | Tests the mock, not your code. See [writing-good-tests.md](writing-good-tests.md). |
 | Happy path only, when the spec or brief lists edge cases — including every case an `IR` criterion names, the spec's home for edge cases, concurrency, failure modes and limits | Those listed cases are requirements, not extras. |
 
-**The inverse, same weight:** every test maps to a requirement in the plan's
-Test Coverage Matrix. A test mapping to nothing is invented scope — the
-reviewer reports it as Extra, exactly like unrequested production code.
+**The inverse, same weight:** every test maps to a row in the plan's Test
+Coverage Matrix — the row for the task criterion it covers, keyed the same
+way the brief and the reviewer's table are (`T3.1`). A test mapping to
+nothing is invented scope — the reviewer reports it as Extra, exactly like
+unrequested production code.
 
 Deleting or skipping a test to get green is the same finding: the reviewer
 compares the test count against the base and reads the diff for tests newly
@@ -316,7 +318,8 @@ Before marking work complete:
 - [ ] Tests use real code (mocks only if unavoidable)
 - [ ] Edge cases and errors covered
 - [ ] No test in this change trips the shallow-test litmus above
-- [ ] Every test maps to a row in the plan's Test Coverage Matrix
+- [ ] Every test maps to a row in the plan's Test Coverage Matrix — the row
+      for the task criterion it covers, one row per test
 - [ ] No test was deleted, renamed away, or newly skipped to reach green
 - [ ] The exact test command and its output are in your report
 

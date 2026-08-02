@@ -10,6 +10,35 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.11 — chave da matriz de cobertura alinhada ao critério de tarefa
+
+Varredura de consistência sobre o plus.10. O plus.9 tinha trocado a chave da
+Test Coverage Matrix para id de spec sem ajustar as colunas: a linha nomeava
+UMA tarefa e UM teste, mas um `AC` refinado em `T3.1` e `T3.2` tem dois
+testes, e a rastreabilidade admite critério coberto por mais de uma tarefa.
+Não cabia na linha, e cada plano ia improvisar diferente.
+
+- **Uma linha por critério de tarefa, um teste por linha** — a coluna `Task`
+  saiu (o rótulo `T3.1` já carrega o número) e entrou `Spec criterion`, com
+  o `AC`/`IR` que a linha refina. Critério cujo comportamento exige dois
+  testes são dois critérios: divide-se na tarefa e cada metade ganha sua
+  linha.
+- **A leitura inversa continua valendo** — `AC` ou `IR` que não aparece na
+  coluna `Spec criterion` de nenhuma linha é achado, do mesmo jeito que
+  antes. `IR` segue de primeira classe: refinado em critério de tarefa e
+  testado nos mesmos termos de um `AC`.
+- **Três tabelas do fluxo com a mesma chave** — a matriz do plano, a tabela
+  `Test Evidence` do task reviewer e a tabela de entrega da auditoria agora
+  são todas por critério de tarefa. `test-driven-development` diz qual linha
+  cada teste mapeia, em vez de "uma linha da matriz".
+- **Revisor de plano cobra o rótulo** — nova linha bloqueante no `The Plan
+  Contract`: critério de tarefa é `T<tarefa>.<n>`, nunca `AC`/`IR`. A regra
+  existia desde o plus.10 mas só era cobrada pela auditoria, no fim da
+  branch — tarde, que é o defeito que o plus.6 existiu para fechar.
+- **Descrição obsoleta em `brainstorming`** — dizia que o plano "dá uma
+  linha da matriz a cada `IR`"; agora descreve o refinamento em critério de
+  tarefa carregando o id.
+
 ## plus.10 — id de critério de tarefa separado do id de critério da spec
 
 Varredura de consistência sobre o que entrou no plus.5 ao plus.9. Um

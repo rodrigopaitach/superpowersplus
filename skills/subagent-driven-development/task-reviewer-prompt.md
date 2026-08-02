@@ -177,6 +177,8 @@ Subagent (general-purpose):
     | [criterion nothing covers] | — | NONE |
 
     One row per criterion in the brief — including the ones with no test.
+    Same key as the plan's Test Coverage Matrix, which is one row per task
+    criterion: your table and that one line up row for row.
     A `—` row is a blocking finding, and so is a row whose assertion fails
     the litmus above. This table is not optional: without it the task does
     not close, and a report that omits it is itself the finding.
