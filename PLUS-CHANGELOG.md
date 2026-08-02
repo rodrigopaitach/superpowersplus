@@ -10,6 +10,33 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.13 — grounding de dependências atravessa a fronteira spec → plano
+
+O plus.12 parou na spec. O plano continuava livre para escrever de memória o
+código que chama a dependência — e é pior lá do que na spec: `task-brief`
+extrai a tarefa verbatim e o controlador a entrega como "your requirements,
+with the exact values to use verbatim". Assinatura meio lembrada chega ao
+implementador com rótulo de fato.
+
+- **Passo que chama dependência cita fonte** — nova seção `## Code That
+  Calls a Dependency`, nas mesmas duas formas do plus.12. Código que a spec
+  já fundamentou copia a citação da spec; assinatura, nome de campo, código
+  de erro, cabeçalho ou default que a spec nunca declarou exige fonte
+  própria, porque a spec resolveu o design, não cada símbolo a digitar.
+- **Fonte inalcançável não vira aprovação** — sobe para o parceiro humano,
+  mesmo roteamento do plus.12. Escrever a chamada assim mesmo inverte o
+  custo: chega como valor exato, parece deliberada para o revisor e a
+  divergência aparece na integração.
+- **Tech Stack é derivada, não citada** — nomear `stripe` não afirma nada
+  sobre `stripe`, então não há doc a citar. O risco dela é outro: biblioteca
+  que aparece PELA PRIMEIRA VEZ no plano é decisão de design que ninguém
+  aprovou. Cada entrada passa a rastrear para a spec ou para um manifesto já
+  no repo, nomeado (`package.json:31`).
+- **Regra do par** — duas linhas bloqueantes novas no `The Plan Contract`
+  (fonte no passo, rastreio da Tech Stack), mais o procedimento de
+  verificação e a lista `Unverified External Calls` no relatório do revisor
+  de plano.
+
 ## plus.12 — grounding estendido a dependências externas
 
 `## Codebase Findings` exigia `arquivo:linha` para afirmação sobre o código

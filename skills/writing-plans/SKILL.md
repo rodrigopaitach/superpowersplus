@@ -69,7 +69,11 @@ open.
 
 **Architecture:** [2-3 sentences about approach]
 
-**Tech Stack:** [Key technologies/libraries]
+**Tech Stack:** [Key technologies/libraries. Every entry traces to the
+spec's `## External Dependencies` or its architecture section, or to a
+manifest already in this repo — name which, `package.json:31`. A library
+appearing here for the first time is a design decision nobody approved:
+take it to your human partner instead of writing it in.]
 
 ## Global Constraints
 
@@ -250,6 +254,41 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
 - Steps that describe what to do without showing how (code blocks required for code steps)
 - References to types, functions, or methods not defined in any task
+
+## Code That Calls a Dependency
+
+Every code block here is transcribed, not interpreted: `scripts/task-brief`
+extracts the task verbatim and the controller hands it over as "your
+requirements, with the exact values to use verbatim". A signature you
+half-remembered reaches the implementer labeled as fact, and the first thing
+to disagree with it is the running system.
+
+superpowers:brainstorming grounds every claim the spec makes about a
+library, external API, or third-party service in one of two forms: the
+lockfile-pinned version plus the line you read inside the dependency, or the
+vendor's official documentation for that version. A step whose code calls
+that dependency carries the same source, in the same forms.
+
+| In the step | What it carries |
+|-------------|-----------------|
+| Code the spec already grounded | The spec's citation, copied into the block as a comment |
+| A signature, field name, error code, header, status, or default the spec never stated | Its own source, in one of the two forms. The spec settled the design, not every symbol you now have to type |
+| A call you could not ground at either source | Not a step. Take it to your human partner with what you tried — same routing as an unverifiable claim in the spec |
+
+**An unreachable source is not an approval.** Writing the call anyway
+inverts the cost: it reaches the implementer as an exact value, the reviewer
+sees code that looks deliberate, and the disagreement surfaces at
+integration.
+
+```python
+# stripe@14.21.0 (pinned at package-lock.json:1188)
+# node_modules/stripe/src/resources/PaymentIntents.js:41 — create(params,
+# options); the idempotency key goes in options, never in params.
+intent = stripe.PaymentIntent.create(
+    {"amount": 1200, "currency": "brl"},
+    idempotency_key=key,
+)
+```
 
 ## Plan Review
 

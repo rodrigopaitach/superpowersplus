@@ -34,7 +34,26 @@ Subagent (general-purpose):
     | Every task criterion is labeled `T<task number>.<n>`, never `AC` or `IR` | BLOCKING — those prefixes are the spec's ids. A task criterion called `AC1` collides with the spec's `AC1`, and the audit's two tables stop lining up |
     | A `## Test Coverage Matrix` with one row per task criterion, one test each, and every `AC` and `IR` appearing in the Spec criterion column of at least one row | BLOCKING — a criterion with no row is a criterion nobody planned to test. An `IR` (concurrency, error handling, observability, edge cases) is charged on the same terms as an `AC`: named test type, real layer, exact test id |
     | Every matrix row names a test some step actually creates | BLOCKING — a row pointing at a test no step writes is a placeholder wearing a table |
+    | Every code step calling a library, external API, or third-party service cites its source: the lockfile-pinned version plus the line inside the dependency, or the vendor's official doc for that version | BLOCKING — the brief hands this code to the implementer as the exact values to use verbatim, so an ungrounded signature ships as fact. A symbol the spec never stated needs its own source, not the spec's general citation |
+    | Every Tech Stack entry traces to the spec or to a manifest already in the repo, named | BLOCKING — a library first appearing in the plan is a design decision nobody approved |
     | Every criterion, `AC` and `IR`, is observable and settled by a `file:line` citation | BLOCKING — "handles errors well" is a row the auditor can only fail |
+
+    ### Verifying a dependency-calling step
+
+    Read the lockfile and confirm the pinned version — the plan's version
+    line is a claim like any other. Cited a path inside the dependency? Open
+    it and confirm the signature, field, or code the step uses. Cited a doc
+    URL? Fetch it, read it for that version, and confirm the vendor's own
+    domain. A step whose source you cannot reach from this environment goes
+    under **Unverified External Calls** — never approved silently, because
+    an unreachable source and a confirmed one look identical in the plan.
+
+    Example of a step that passes:
+
+        # stripe@14.21.0 (pinned at package-lock.json:1188)
+        # node_modules/stripe/src/resources/PaymentIntents.js:41 —
+        # create(params, options); idempotency key goes in options.
+        intent = stripe.PaymentIntent.create({...}, idempotency_key=key)
 
     ## What to Check
 
@@ -66,8 +85,11 @@ Subagent (general-purpose):
     **Issues (if any):**
     - [Task X, Step Y]: [specific issue] - [why it matters for implementation]
 
+    **Unverified External Calls (if any):**
+    - [Task X, Step Y]: [the call] — source cited: [path or URL] — could not reach it because [reason]
+
     **Recommendations (advisory, do not block approval):**
     - [suggestions for improvement]
 ```
 
-**Reviewer returns:** Status, Issues (if any), Recommendations
+**Reviewer returns:** Status, Issues (if any), Unverified External Calls (if any), Recommendations
