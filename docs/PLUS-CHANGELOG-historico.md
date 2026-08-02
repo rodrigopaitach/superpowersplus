@@ -1249,8 +1249,10 @@ context"), sem obrigação de evidência.
 
 ## Pendências conhecidas
 
-Buracos identificados e deliberadamente não fechados. Ficam aqui porque
-lacuna sem registro volta como descoberta.
+> **Registro de abertura.** A lista viva das pendências em aberto mudou-se para
+> [`CHANGELOG.md`](../CHANGELOG.md#open-gaps), que é o documento atualizado
+> quando uma delas fecha. O que fica abaixo é o texto como foi escrito quando
+> cada uma foi identificada, e não é mais mantido.
 
 - **Iron Law do TDD sem face verificadora** — o `implementer-prompt.md` exige
   teste antes do código (plus.7), mas nenhum verificador consegue provar a

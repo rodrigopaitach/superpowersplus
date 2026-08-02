@@ -133,14 +133,39 @@ by entry.
   `tests/skill-behavior/RESULT-external-content-is-data.md`. (plus.26, plus.27,
   plus.28)
 
-### Known gaps
+## Open gaps
 
-Five gaps are identified and deliberately open, each with the reason it was not
-closed: the TDD Iron Law has no verifying face, no mutation sensor kills a
-test that passes by accident, dependency grounding stops at the plan boundary,
-one lockfile line number in an example remains illustrative, and there is no
-eval harness in this repository. They are recorded in
-[`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas).
+Identified and deliberately left open, each with the reason it was not closed.
+**This is the live list** — closing one updates it here. When each was opened is
+recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas).
+
+- **The TDD Iron Law has no verifying face.** The implementer prompt requires a
+  test before code, but no verifier can prove the order: the only record that
+  the test came first is a report section written by the party being audited. A
+  gate on it would be decorative. Evaluated and not implemented: separate
+  commits, test first, which a reviewer could check by commit order — deferred
+  because it changes commit granularity for all work done with this project.
+  (opened plus.7)
+- **No mutation sensor.** Nothing currently kills a test that passes by
+  accident. The anti-shallow-test litmus catches syntactic patterns
+  (`expect(true)`, assertions only on mocks), not an assertion that simply does
+  not reach the behavior. Deferred until there is enough real use to calibrate
+  which mutations are worth the cost. (opened plus.3)
+- **Dependency grounding stops at the plan.** `lockfile`, `pinned`,
+  `official doc`, and `vendor` appear in the two spec files and the two plan
+  files, and nowhere in `implementer-prompt.md`, `task-reviewer-prompt.md`, or
+  `final-branch-audit`. The planned call is verified; the delivered call is
+  not. That is the plan → code boundary, one step past what was closed.
+  (opened plus.13)
+- **No eval harness in this repository.** `evals/` is gitignored and absent;
+  what exists is `tests/skill-behavior/`, with one rule measured. Cloning
+  `superpowers-evals` and wiring it in is desirable and undone: it needs a
+  submodule or a manual clone per checkout. (opened plus.34)
+- **One lockfile line number in an example is illustrative.**
+  `package-lock.json:1188` in `brainstorming/SKILL.md` matches no real
+  lockfile — this repository is zero-dependency and the line varies per project
+  anyway. Closing it would need an example project with a versioned lockfile
+  inside the repo. (opened plus.1)
 
 Most rules in this project are reasoned rather than measured. Only the
 external-content rule has been measured, once.

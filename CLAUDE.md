@@ -42,6 +42,8 @@ The upstream remote stays, and rebasing onto `obra/superpowers` is how their imp
 - **Domain-specific skills.** Ask: "would this help someone working on a completely different kind of project?" If not, it goes in a standalone plugin.
 - **Bundled unrelated changes.** One problem per commit.
 
+**`docs/PLUS-CHANGELOG-historico.md` is a frozen record and takes no new writing.** Everything new goes in `CHANGELOG.md`, including closing an open gap.
+
 ## Versioning
 
 Semver, from `1.0.0` on. **PATCH** for a fix that does not change how a skill behaves; **MINOR** for a new skill or a compatible new rule; **MAJOR** for anything that breaks existing artifacts or invocations — the namespace rename would have been MAJOR.

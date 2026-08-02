@@ -123,7 +123,7 @@ export SUPERPOWERS_DISABLE_TELEMETRY=1
 
 ## Known gaps
 
-Gaps identified and deliberately left open are recorded in [Known gaps](../CHANGELOG.md#known-gaps) (in Portuguese), each with the reason it was not closed. A gap with no record comes back as a discovery.
+Gaps identified and deliberately left open are recorded in [Known gaps](../CHANGELOG.md#open-gaps) (in Portuguese), each with the reason it was not closed. A gap with no record comes back as a discovery.
 
 ## License and credit
 

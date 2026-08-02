@@ -123,7 +123,7 @@ export SUPERPOWERS_DISABLE_TELEMETRY=1
 
 ## Pendências conhecidas
 
-Buracos identificados e deliberadamente não fechados estão registrados em [Known gaps](../CHANGELOG.md#known-gaps), com o motivo de cada um não ter sido fechado. Lacuna sem registro volta como descoberta.
+Buracos identificados e deliberadamente não fechados estão registrados em [Known gaps](../CHANGELOG.md#open-gaps), com o motivo de cada um não ter sido fechado. Lacuna sem registro volta como descoberta.
 
 ## Licença e crédito
 
