@@ -1,325 +1,145 @@
-# Superpowers
+# superpowersplus
 
-> **Fork pessoal.** Este repositório é um fork de
-> [obra/superpowers](https://github.com/obra/superpowers) (Jesse Vincent, MIT)
-> com alterações próprias — não é uma cópia do upstream. Não tem vínculo com o
-> autor, com a Prime Radiant ou com a Anthropic, e não fala por eles. As
-> alterações próprias estão registradas em
-> [PLUS-CHANGELOG.md](PLUS-CHANGELOG.md); o restante deste README é texto do
-> upstream.
+A development methodology for coding agents, where every claim the agent makes about your code carries a `file:line` citation — and whoever verifies re-runs the search instead of taking the writer's word for it.
+
+> **Based on [Superpowers](https://github.com/obra/superpowers), by Jesse Vincent (Prime Radiant), under the MIT license.** superpowersplus is a derivative work: it keeps Superpowers' skills and workflow and adds its own verification layer on top. It is not affiliated with Jesse Vincent, Prime Radiant, or Anthropic, and speaks for none of them.
 >
-> **📖 Documentação do fork:** [![Português](https://img.shields.io/badge/doc-Portugu%C3%AAs-009C3B?style=flat-square)](docs/README.pt-BR.md) [![English](https://img.shields.io/badge/doc-English-012169?style=flat-square)](docs/README.en.md)
+> **📖 Documentation:** [![Português](https://img.shields.io/badge/doc-Portugu%C3%AAs-009C3B?style=flat-square)](docs/README.pt-BR.md) [![English](https://img.shields.io/badge/doc-English-012169?style=flat-square)](docs/README.en.md)
 
-Superpowers is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them.
+## Why it exists
 
-## O que muda neste fork
+The problem is not the agent writing bad code. It is the agent writing correct code against an invented spec.
 
-Cinco eixos, sob um mesmo fio condutor: afirmação sobre o código exige citação
-`arquivo:linha`, e quem verifica reexecuta a busca em vez de aceitar a palavra
-de quem escreveu.
+An agent that cannot find the answer in your code does not go quiet. It produces the most plausible answer — the one that holds for software in general, not for yours. Written into the spec, that sentence is indistinguishable from one somebody verified: it passes review, becomes a task in the plan, becomes code, and fails at integration, where fixing it costs the most.
 
-- **Spec fundamentada em evidência** — critérios ancorados no código real e nas
-  dependências externas já presentes no projeto, não no que o modelo supõe.
-- **Contrato do plano cobrado por revisor** — um subagente lê a spec contra o
-  plano e bloqueia critério sem tarefa, tarefa sem origem e critério sem teste.
-- **Matriz de cobertura de testes** — cada critério mapeado por chave ao teste
-  que o cobre, em vez de cobertura afirmada em prosa.
-- **Revisor de task que reexecuta a suíte** — o revisor roda os testes, em vez
-  de aceitar o relatório de quem implementou.
-- **Auditoria de conformidade tarefa a tarefa** — no fim da branch, cada
-  critério da spec é rastreado até as tarefas que o entregam e vereditado
-  contra evidência localizada.
+The same goes for tests. A green suite proves the tests passed, not that they test anything. A report saying "all tests pass", written by whoever implemented the thing, is the only evidence most workflows have — and it is produced by the party being audited.
 
-O detalhe de cada mudança, entrada por entrada, está em
-[PLUS-CHANGELOG.md](PLUS-CHANGELOG.md). Os buracos identificados e
-deliberadamente não fechados estão em
-[Pendências conhecidas](PLUS-CHANGELOG.md#pendências-conhecidas).
+Both have the same shape: **an unverified claim looks exactly like a verified one.** superpowersplus exists to tell them apart.
 
-## Quickstart
+## Who it is for
 
-Give your agent Superpowers: [Claude Code](#claude-code), [Antigravity](#antigravity), [Codex App](#codex-app), [Codex CLI](#codex-cli), [Cursor](#cursor), [Factory Droid](#factory-droid), [Gemini CLI](#gemini-cli), [GitHub Copilot CLI](#github-copilot-cli), [Kimi Code](#kimi-code), [OpenCode](#opencode), [Pi](#pi).
+Anyone using a coding agent with real work at stake — developers, enthusiasts, and explicitly **including people who do not program**.
 
-## How it works
+That last part is design, not accident. Someone who does not program cannot judge whether a technical decision is right, but can judge **where it came from**: open the cited line and see that it exists and says what was claimed. So:
 
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
+- **Every question ships a recommendation.** No exception. A question without one hands a technical decision to someone with no basis to take it.
+- **The recommendation's source is declared** — a pattern already in your project (cited as `file:line`), the official documentation of the dependency involved, or general good practice. When it is general practice, the agent says so, so you know no verification against your code happened there.
+- **Questions are written as practical consequence**: what breaks, what gets slow, what gets expensive later. Not the mechanism. A technical term appears only if it is defined in the same sentence.
+- **The options table carries a consequence column**, so you recognize what you are accepting without having to become an architect.
 
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
+## What it adds
 
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
+Five axes on top of Superpowers, under one thread: a claim about the code requires a citation, and the verifier re-runs the search.
 
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for your agent to work autonomously for a couple hours at a time without deviating from the plan you put together.
+- **Evidence-grounded spec** — criteria anchored in the real code and in the external dependencies already present in the project, not in what the model assumes.
+- **Plan contract charged by a reviewer** — a subagent reads the spec against the plan and blocks a criterion with no task, a task with no origin, and a criterion with no test.
+- **Test coverage matrix** — each criterion mapped by key to the test covering it, instead of coverage asserted in prose.
+- **Task reviewer that re-runs the suite** — the reviewer runs the tests, instead of accepting the implementer's report.
+- **Task-by-task conformance audit** — at the end of the branch, each criterion is traced to the tasks delivering it and given a verdict against located evidence.
 
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
+Every change, entry by entry, is in [PLUS-CHANGELOG.md](PLUS-CHANGELOG.md). Gaps deliberately left open are in [Pendências conhecidas](PLUS-CHANGELOG.md#pendências-conhecidas).
 
 ## Installation
 
-Installation differs by harness. If you use more than one, install Superpowers separately for each one.
-
 ### Claude Code
 
-Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
-
-#### Este fork (superpowersplus)
-
-As duas subseções seguintes instalam o upstream. Para instalar **este fork**:
-
-- Registre o marketplace:
-
-  ```bash
-  /plugin marketplace add rodrigopaitach/superpowersplus
-  ```
-
-- Instale o plugin:
-
-  ```bash
-  /plugin install superpowers@superpowersplus
-  ```
-
-O marketplace se chama `superpowersplus`, mas o plugin continua se chamando
-`superpowers` porque as skills se referenciam entre si por esse prefixo
-(`superpowers:brainstorming`, `superpowers:writing-plans`, …) — renomear o
-plugin quebraria todas essas referências.
-
-#### Official Marketplace
-
-- Install the plugin from Anthropic's official marketplace:
-
-  ```bash
-  /plugin install superpowers@claude-plugins-official
-  ```
-
-#### Superpowers Marketplace
-
-The Superpowers marketplace provides Superpowers and some other related plugins for Claude Code.
-
-- Register the marketplace:
-
-  ```bash
-  /plugin marketplace add obra/superpowers-marketplace
-  ```
-
-- Install the plugin from this marketplace:
-
-  ```bash
-  /plugin install superpowers@superpowers-marketplace
-  ```
-
-### Antigravity
-
-Install Superpowers as a plugin from this repository:
-
 ```bash
-agy plugin install https://github.com/obra/superpowers
+/plugin marketplace add rodrigopaitach/superpowersplus
 ```
 
-Antigravity runs the plugin's session-start hook, so Superpowers is active from
-the first message. Reinstall with the same command to update.
-
-### Codex App
-
-Superpowers is available via the [official Codex plugin marketplace](https://github.com/openai/plugins).
-
-- In the Codex app, click on Plugins in the sidebar.
-- You should see `Superpowers` in the Coding section.
-- Click the `+` next to Superpowers and follow the prompts.
-
-### Codex CLI
-
-Superpowers is available via the [official Codex plugin marketplace](https://github.com/openai/plugins).
-
-- Open the plugin search interface:
-
-  ```bash
-  /plugins
-  ```
-
-- Search for Superpowers:
-
-  ```bash
-  superpowers
-  ```
-
-- Select `Install Plugin`.
-
-### Cursor
-
-- In Cursor Agent chat, install from marketplace:
-
-  ```text
-  /add-plugin superpowers
-  ```
-
-- Or search for "superpowers" in the plugin marketplace.
-
-### Factory Droid
-
-- Register the marketplace:
-
-  ```bash
-  droid plugin marketplace add https://github.com/obra/superpowers
-  ```
-
-- Install the plugin:
-
-  ```bash
-  droid plugin install superpowers@superpowers
-  ```
-
-### Gemini CLI
-
-- Install the extension:
-
-  ```bash
-  gemini extensions install https://github.com/obra/superpowers
-  ```
-
-- Update later:
-
-  ```bash
-  gemini extensions update superpowers
-  ```
-
-### GitHub Copilot CLI
-
-- Register the marketplace:
-
-  ```bash
-  copilot plugin marketplace add obra/superpowers-marketplace
-  ```
-
-- Install the plugin:
-
-  ```bash
-  copilot plugin install superpowers@superpowers-marketplace
-  ```
-
-### Kimi Code
-
-Superpowers is available in Kimi Code's plugin marketplace.
-
-- Open Kimi Code's plugin manager:
-
-  ```text
-  /plugins
-  ```
-
-- Go to `Marketplace` > `Superpowers` and install it.
-
-- Or install directly from this repository:
-
-  ```text
-  /plugins install https://github.com/obra/superpowers
-  ```
-
-- Detailed docs: [docs/README.kimi.md](docs/README.kimi.md)
-
-### OpenCode
-
-OpenCode uses its own plugin install; install Superpowers separately even if you
-already use it in another harness.
-
-- Tell OpenCode:
-
-  ```
-  Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-  ```
-
-- Detailed docs: [docs/README.opencode.md](docs/README.opencode.md)
-
-### Pi
-
-Install Superpowers as a Pi package from this repository:
-
 ```bash
-pi install git:github.com/obra/superpowers
+/plugin install superpowers@superpowersplus
 ```
 
-For local development, run Pi with this checkout loaded as a temporary package:
+The marketplace is `superpowersplus`, but the plugin is still named `superpowers`: the skills cross-reference each other by that prefix (`superpowers:brainstorming`, `superpowers:writing-plans`, …) across the skill files, and renaming the plugin would break every one of those references.
 
-```bash
-pi -e /path/to/superpowers
-```
+### Other harnesses
 
-The Pi package loads the Superpowers skills and a small extension that injects the `using-superpowers` bootstrap at session startup and again after compaction. Pi has native skills, so no compatibility `Skill` tool is required. Subagent and task-list tools remain optional Pi companion packages.
+Claude Code is the path this project actually exercises. The harnesses below are supported by the underlying Superpowers and install from a git URL, so pointing them at this repository uses the same mechanism — but none of them is tested here, and problems with them belong in [this repository's issues](https://github.com/rodrigopaitach/superpowersplus/issues), not the upstream's.
 
-## The Basic Workflow
+| Harness | Command |
+|---------|---------|
+| Antigravity | `agy plugin install https://github.com/rodrigopaitach/superpowersplus` |
+| Gemini CLI | `gemini extensions install https://github.com/rodrigopaitach/superpowersplus` |
+| Factory Droid | `droid plugin marketplace add https://github.com/rodrigopaitach/superpowersplus` |
+| Kimi Code | `/plugins install https://github.com/rodrigopaitach/superpowersplus` — [detailed docs](docs/README.kimi.md) |
+| Pi | `pi install git:github.com/rodrigopaitach/superpowersplus` |
+| OpenCode | Tell it to fetch and follow `https://raw.githubusercontent.com/rodrigopaitach/superpowersplus/refs/heads/main/.opencode/INSTALL.md` — [detailed docs](docs/README.opencode.md) |
 
-1. **brainstorming** - Activates before writing code. Investigates the real code first, refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves a spec with numbered acceptance criteria, then a reviewer subagent opens every `file:line` it cites and blocks on any claim the code doesn't back.
+Antigravity runs the session-start hook, so skills are active from the first message. Pi loads the skills plus a small extension injecting the `using-superpowers` bootstrap at startup and after compaction.
 
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
+Codex, Cursor, and GitHub Copilot CLI install from their own marketplaces, which carry the upstream Superpowers rather than this project.
 
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps, and the spec criterion it delivers. A reviewer subagent then reads the spec against the plan and blocks on a missing spec path, a task nothing motivated, or a criterion with no test row.
+## How it works
 
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
+It starts the moment you fire up your coding agent. As soon as it sees you are building something, it does *not* jump to writing code. It steps back and asks what you are really trying to do — and, before asking anything, it reads your actual code.
 
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
+Once it has teased a spec out of the conversation, it shows it to you in chunks short enough to actually read. Then a reviewer subagent opens every `file:line` the spec cites and blocks on any claim the code does not back.
 
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
+After you sign off, the agent builds an implementation plan clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI, and DRY — and a second reviewer charges the plan against the spec.
 
-7. **final-branch-audit** - Activates when all plan tasks are done, before the final code review. Traces every spec criterion to the tasks covering it, then verdicts every acceptance criterion against `file:line` evidence. A requirement no task covers is lost in translation; a task no criterion motivated is invented scope; no citation, not delivered.
+Then it works through the tasks with a fresh subagent each, reviewing as it goes. It is not uncommon for it to work autonomously for a couple of hours without deviating from the plan you approved.
 
-8. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests and the audit verdict, presents options (merge/PR/keep/discard), cleans up worktree.
+**The skills trigger automatically.** You do not invoke anything.
 
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
+### The workflow
 
-## What's Inside
+1. **brainstorming** — Activates before writing code. Investigates the real code first, builds a ten-category coverage map to decide what to ask, refines through questions that each carry a recommendation and its source, presents the design in sections. Saves a spec with numbered acceptance criteria; a reviewer subagent then opens every `file:line` it cites.
+2. **using-git-worktrees** — Activates after design approval. Isolated workspace on a new branch, project setup, clean test baseline.
+3. **writing-plans** — Breaks work into bite-sized tasks (2–5 minutes each). Every task has exact file paths, complete code, verification steps, and the spec criterion it delivers. A reviewer blocks on a missing spec path, a task nothing motivated, or a criterion with no test row.
+4. **subagent-driven-development** or **executing-plans** — Fresh subagent per task with two-stage review (spec compliance, then code quality), or batches with human checkpoints.
+5. **test-driven-development** — Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
+6. **requesting-code-review** — Between tasks. Reviews against the plan, reports issues by severity. Critical issues block progress.
+7. **final-branch-audit** — When all plan tasks are done. Traces every spec criterion to the tasks covering it, then verdicts each one against `file:line` evidence. A requirement no task covers is lost in translation; a task no criterion motivated is invented scope; no citation, not delivered.
+8. **finishing-a-development-branch** — Verifies tests and the audit verdict, presents options (merge/PR/keep/discard), cleans up the worktree.
 
-### Skills Library
+## What gets generated
 
-**Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
+| Artifact | Where |
+|----------|-------|
+| Spec | `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` |
+| Implementation plan | `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` |
+| Coverage map | A `## Coverage Map` section inside the spec — one row per category with its state and destination, and below it the decision record: each question, the answer, the recommendation given, and its source |
 
-**Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
-- **verification-before-completion** - Ensure it's actually fixed
+All of it is git-versioned files, readable without any tooling. The decision record is what lets you audit later **what** you agreed to and **on what basis** — including once the conversation is gone.
 
-**Collaboration** 
-- **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
-- **executing-plans** - Batch execution with checkpoints
-- **dispatching-parallel-agents** - Concurrent subagent workflows
-- **requesting-code-review** - Pre-review checklist
-- **receiving-code-review** - Responding to feedback
-- **final-branch-audit** - Spec-to-task traceability plus task-by-task conformance audit against located evidence
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
+## Skills library
 
-**Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-superpowers** - Introduction to the skills system
+**Testing** — `test-driven-development` (RED-GREEN-REFACTOR, includes testing anti-patterns reference)
+
+**Debugging** — `systematic-debugging` (4-phase root cause, includes root-cause-tracing, defense-in-depth, condition-based-waiting) · `verification-before-completion`
+
+**Collaboration** — `brainstorming` · `writing-plans` · `executing-plans` · `dispatching-parallel-agents` · `requesting-code-review` · `receiving-code-review` · `final-branch-audit` · `using-git-worktrees` · `finishing-a-development-branch` · `subagent-driven-development`
+
+**Meta** — `writing-skills` · `using-superpowers`
 
 ## Philosophy
 
-- **Test-Driven Development** - Write tests first, always
-- **Systematic over ad-hoc** - Process over guessing
-- **Complexity reduction** - Simplicity as primary goal
-- **Evidence over claims** - Verify before declaring success
-
-Read [the original release announcement](https://blog.fsck.com/2025/10/09/superpowers/).
+- **Evidence over claims** — a claim with no located citation is not delivered
+- **Test-Driven Development** — write tests first, always
+- **Systematic over ad-hoc** — process over guessing
+- **Complexity reduction** — simplicity as the primary goal
 
 ## Contributing
 
-This fork is personal and does not take contributions. Contributing to the original project happens at [obra/superpowers](https://github.com/obra/superpowers), under its own process — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+superpowersplus does not take contributions. Contributing to Superpowers itself happens at [obra/superpowers](https://github.com/obra/superpowers), under its own process — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Updating
 
-This fork is not on the official marketplace, so nothing updates itself: rebase onto the upstream, then refresh the plugin from this marketplace. Full procedure in [Português](docs/README.pt-BR.md#atualizando) / [English](docs/README.en.md#updating).
-
-## License
-
-MIT License - see LICENSE file for details
+Not on the official marketplace, so nothing updates itself: rebase onto Superpowers to pick up its improvements, then refresh the plugin from this marketplace. Full procedure in [Português](docs/README.pt-BR.md#atualizando) / [English](docs/README.en.md#updating).
 
 ## Visual companion telemetry
 
-Because skills and plugins don't provide any feedback to creators, we have no idea how many of you are using Superpowers. By default, the Prime Radiant logo on brainstorming's optional visual companion feature is loaded from our website. It includes the version of Superpowers in use. It does not include any details about your project, prompt, or coding agent. We don't see your clicks or anything about what you're building. This helps us have a rough idea of how many folks are using Superpowers and which version of Superpowers they're using. It's 100% optional. To disable this, set the environment variable `SUPERPOWERS_DISABLE_TELEMETRY` to any true value. Superpowers also honors Claude Code's `DISABLE_TELEMETRY` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` opt-outs.
+Brainstorming's optional visual companion loads the Prime Radiant logo from their site, with the Superpowers version in the URL. Nothing about your project, prompt, or agent goes with it — it is a rough usage count, and the mechanism and the credit are Superpowers'.
 
-**This fork's guidance:** turn it off. `export SUPERPOWERS_DISABLE_TELEMETRY=1` in your environment — `DISABLE_TELEMETRY` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` are honored too, since this fork does not change that code. **The code default is still the upstream's: on.** This fork does not ship it disabled and does not modify `server.cjs`; turning it off is an action you take in your own environment. The paragraph above is the upstream's, and the credit in it is theirs.
+**Turn it off:** `export SUPERPOWERS_DISABLE_TELEMETRY=1`. `DISABLE_TELEMETRY` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` are honored too. **The code default is still on** — superpowersplus does not ship it disabled and does not modify that code, so turning it off is an action you take in your own environment.
 
-## Community
+## Origin and credit
 
-Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of the folks at [Prime Radiant](https://primeradiant.com).
+superpowersplus is a derivative work of [Superpowers](https://github.com/obra/superpowers), built by [Jesse Vincent](https://blog.fsck.com) and the folks at [Prime Radiant](https://primeradiant.com). The methodology, the skills, and the workflow are theirs; the verification layer described under "What it adds" is this project's. Read [the original release announcement](https://blog.fsck.com/2025/10/09/superpowers/).
 
-- **Discord**: [Join us](https://discord.gg/35wsABTejz) for community support, questions, and sharing what you're building with Superpowers
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Release announcements**: [Sign up](https://primeradiant.com/superpowers/) to get notified about new versions
+Superpowers' own community — Discord, issues, release announcements — is at [obra/superpowers](https://github.com/obra/superpowers). Anything about superpowersplus goes to [this repository's issues](https://github.com/rodrigopaitach/superpowersplus/issues).
+
+## License
+
+MIT — see [LICENSE](LICENSE). Copyright remains with Jesse Vincent; this derivative work is distributed under the same terms.
