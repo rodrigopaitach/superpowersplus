@@ -6,6 +6,11 @@
 > [`CHANGELOG.md`](../CHANGELOG.md), no formato Keep a Changelog; este arquivo
 > não é mais atualizado.
 >
+> **O estado ATUAL das pendências vive exclusivamente em
+> [`CHANGELOG.md`](../CHANGELOG.md#open-gaps).** As descrições abaixo registram
+> apenas a abertura de cada uma, na forma em que foi escrita; se divergirem do
+> `CHANGELOG`, é o `CHANGELOG` que vale.
+>
 > As entradas falam em "fork" e usam o namespace `superpowers:` porque era o
 > vocabulário da época. Não foram reescritas: registro do processo não se
 > reescreve para combinar com o presente.

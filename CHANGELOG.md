@@ -117,7 +117,7 @@ by entry.
 - **Authorship and repository metadata** point to this project. Attributing a
   package with 34 changes he did not write to Jesse Vincent erased the actual
   author and made him answerable for defects that are not his. (plus.34)
-- **`CLAUDE.md` reduced from 126 to ~55 lines** — it described the upstream's
+- **`CLAUDE.md` cut to well under half its length** — it described the upstream's
   contribution process, including a PR template removed here and an eval
   harness absent from this checkout, in a file loaded into every session.
   (plus.34)
