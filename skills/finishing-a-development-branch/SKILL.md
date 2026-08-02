@@ -7,7 +7,7 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 ## Overview
 
-**Core principle:** Verify tests → Detect environment → Present options → Execute choice → Clean up.
+**Core principle:** Verify tests → Verify the conformance audit → Detect environment → Present options → Execute choice → Clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
@@ -25,13 +25,29 @@ Tests failing (<N> failures). Must fix before completing:
 
 **If tests pass:** continue to Step 2.
 
-## Step 2: Detect Environment
+## Step 2: Verify the Conformance Audit
+
+A green suite proves the code that exists works. It says nothing about the
+work the plan asked for and nobody built. Before any merge option is on the
+table, superpowers:final-branch-audit MUST have run over this branch and
+returned PASS.
+
+| State | Action |
+|-------|--------|
+| Audit ran, verdict PASS | Continue to Step 3 |
+| Audit ran, verdict FAIL | Stop. Report the NOT DELIVERED rows. The branch is not finished — route the gaps into a fix wave. |
+| No audit was run (e.g. the branch came through superpowers:executing-plans, or by hand) | Run it now: dispatch superpowers:final-branch-audit with the plan file, `git merge-base <base-branch> HEAD`..HEAD, and any ledger. Then apply the rows above. |
+| No plan exists for this branch | Say so explicitly and ask your human partner whether to proceed without the audit. Do not decide this yourself. |
+
+A FALSE COMPLETION finding always stops here, whatever else the audit said.
+
+## Step 3: Detect Environment
 
 ```bash
 GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
 GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
-# Capture now, while still inside the workspace — Step 5 changes directory
-# before cleanup (Step 6) needs this value
+# Capture now, while still inside the workspace — Step 6 changes directory
+# before cleanup (Step 7) needs this value
 WORKTREE_PATH=$(git rev-parse --show-toplevel)
 ```
 
@@ -40,17 +56,17 @@ This determines which menu to show and how cleanup works:
 | State | Menu | Cleanup |
 |-------|------|---------|
 | `GIT_DIR == GIT_COMMON` (normal repo) | Standard 3 options | No worktree to clean up |
-| `GIT_DIR != GIT_COMMON`, named branch | Standard 3 options | Provenance-based (see Step 6) |
+| `GIT_DIR != GIT_COMMON`, named branch | Standard 3 options | Provenance-based (see Step 7) |
 | `GIT_DIR != GIT_COMMON`, detached HEAD | Reduced 2 options (no merge) | Externally managed — leave in place |
 
-## Step 3: Determine Base Branch
+## Step 4: Determine Base Branch
 
 The base branch is whatever this work forked from — usually named in the
 plan, the conversation, or the branch's upstream. If it is not already
 known, ask: "This branch split from <your best guess> - is that correct?"
 Confirm before merging: merging into the wrong base is expensive to undo.
 
-## Step 4: Present Options
+## Step 5: Present Options
 
 **Normal repo and named-branch worktree — present exactly these 3 options:**
 
@@ -81,7 +97,7 @@ human partner explicitly asking for it (see "If your human partner asks to
 discard the work" below). Wait for their answer; the integration decision
 is theirs.
 
-## Step 5: Execute Choice
+## Step 6: Execute Choice
 
 ### Option 1: Merge Locally
 
@@ -103,7 +119,7 @@ If tests fail on the merged result: stop, leave the worktree and branch in
 place, and investigate — nothing has been pushed, so the merge is local
 and recoverable.
 
-Once the merged result is green: clean up the worktree (Step 6), then
+Once the merged result is green: clean up the worktree (Step 7), then
 delete the branch:
 
 ```bash
@@ -150,19 +166,19 @@ MAIN_ROOT=$(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-tople
 cd "$MAIN_ROOT"
 ```
 
-Then clean up the worktree (Step 6) and force-delete the branch:
+Then clean up the worktree (Step 7) and force-delete the branch:
 
 ```bash
 git branch -D <feature-branch>
 ```
 
-## Step 6: Cleanup Workspace
+## Step 7: Cleanup Workspace
 
 **Runs for Option 1 and confirmed discards.** Options 2 and 3 always
 preserve the worktree. Both callers have already changed directory to the
 main repo root — worktree removal must run from outside the worktree —
 and use the `GIT_DIR`/`GIT_COMMON`/`WORKTREE_PATH` values captured in
-Step 2, from before that directory change.
+Step 3, from before that directory change.
 
 **If `GIT_DIR == GIT_COMMON`:** Normal repo, no worktree to clean up. Done.
 
@@ -191,6 +207,9 @@ place. If your platform provides a workspace-exit tool, use it.
 | Excuse | Reality |
 |--------|---------|
 | "Tests passed earlier this session" | Run the suite on the tree you are about to integrate. A green run only proves the tree it ran on. |
+| "The suite is green, so the plan is delivered" | Green proves the code that exists works. A task nobody built breaks no test. Run the audit. |
+| "This branch came through executing-plans, there's no audit step there" | That is exactly why Step 2 runs it here. The path without a final review is the one that most needs the gate. |
+| "The audit failed on one row, that's close enough to merge" | FAIL means the branch did not deliver the plan. Present no menu until it PASSes. |
 | "They obviously want it merged" | Integration is your human partner's decision. Present the menu and wait. |
 | "They seem done with this feature — I'll offer to discard it" | The menu is complete as written. Discard happens only when your human partner asks for it in so many words. |
 | "'Yeah, get rid of it' counts as confirmation" | Only the typed word `discard` authorizes deletion. |

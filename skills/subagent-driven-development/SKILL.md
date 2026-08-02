@@ -5,7 +5,7 @@ description: Use when executing implementation plans with independent tasks in t
 
 # Subagent-Driven Development
 
-Execute plan by dispatching a fresh implementer subagent per task, a task review (spec compliance + code quality) after each, and a broad whole-branch review at the end.
+Execute plan by dispatching a fresh implementer subagent per task, a task review (spec compliance + code quality) after each, and two gates at the end: a task-by-task conformance audit, then a broad whole-branch review.
 
 **Why subagents:** You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.
 
@@ -71,9 +71,13 @@ digraph process {
 
     "Setup: worktree, ledger check, read plan, pre-flight review" [shape=box];
     "More tasks remain?" [shape=diamond];
+    "Dispatch conformance audit (superpowers:final-branch-audit)" [shape=box];
     "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [shape=box];
-    "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals" [shape=box];
-    "Final review clean: delete this plan's workspace" [shape=box];
+    "Audit gaps + review findings all addressed?" [shape=diamond];
+    "Fix wave iteration I of 3?" [shape=diamond];
+    "Fix wave iteration: ONE fix dispatch (audit gaps + findings), one scoped re-review" [shape=box];
+    "Adjudicate residuals (FALSE COMPLETION is never parked)" [shape=box];
+    "Final gates clean: delete this plan's workspace" [shape=box];
     "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
     "Setup: worktree, ledger check, read plan, pre-flight review" -> "Dispatch implementer subagent (./implementer-prompt.md)";
@@ -100,10 +104,16 @@ digraph process {
     "Park findings in ledger with rulings" -> "Append completion to ledger, mark todo complete";
     "Append completion to ledger, mark todo complete" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
-    "More tasks remain?" -> "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [label="no"];
-    "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" -> "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals";
-    "Final findings? ONE fix dispatch, one scoped re-review, adjudicate residuals" -> "Final review clean: delete this plan's workspace";
-    "Final review clean: delete this plan's workspace" -> "Use superpowers:finishing-a-development-branch";
+    "More tasks remain?" -> "Dispatch conformance audit (superpowers:final-branch-audit)" [label="no"];
+    "Dispatch conformance audit (superpowers:final-branch-audit)" -> "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)";
+    "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" -> "Audit gaps + review findings all addressed?";
+    "Audit gaps + review findings all addressed?" -> "Final gates clean: delete this plan's workspace" [label="yes"];
+    "Audit gaps + review findings all addressed?" -> "Fix wave iteration I of 3?" [label="no"];
+    "Fix wave iteration I of 3?" -> "Fix wave iteration: ONE fix dispatch (audit gaps + findings), one scoped re-review" [label="I < 3 - next iteration"];
+    "Fix wave iteration I of 3?" -> "Adjudicate residuals (FALSE COMPLETION is never parked)" [label="I = 3 - cap"];
+    "Fix wave iteration: ONE fix dispatch (audit gaps + findings), one scoped re-review" -> "Audit gaps + review findings all addressed?";
+    "Adjudicate residuals (FALSE COMPLETION is never parked)" -> "Final gates clean: delete this plan's workspace";
+    "Final gates clean: delete this plan's workspace" -> "Use superpowers:finishing-a-development-branch";
 }
 ```
 
@@ -163,8 +173,9 @@ Use the least powerful model that can handle each role to conserve cost and incr
 **Integration and judgment tasks** (multi-file coordination, pattern matching, debugging): use a standard model.
 
 **Architecture and design tasks**: use the most capable available model.
-The final whole-branch review is one of these — dispatch it on the most
-capable available model, not the session default.
+The final conformance audit and the final whole-branch review are both
+these — dispatch them on the most capable available model, not the session
+default.
 
 **Review tasks**: choose the model with the same judgment, scaled to the
 diff's size, complexity, and risk. A small mechanical diff does not need the
@@ -390,6 +401,22 @@ parked-with-ruling at the cap.
 
 ## Final Review
 
+Two gates run at the end, in this order, and both feed ONE findings list.
+
+### 1. Conformance audit (first)
+
+Dispatch superpowers:final-branch-audit on the most capable available model,
+with the plan file path, the branch range (MERGE_BASE = `git merge-base main
+HEAD`), and this plan's ledger path. It walks every task and verdicts every
+acceptance criterion against located evidence.
+
+It runs BEFORE the code review: a reviewer cannot flag a task nobody
+implemented — absent code produces no diff. An audit FAIL does not skip the
+code review; its gaps and FALSE COMPLETION findings join the review's
+findings in the same fix wave.
+
+### 2. Whole-branch code review
+
 The final whole-branch review gets a package too: run
 `scripts/review-package PLAN_FILE MERGE_BASE HEAD` (MERGE_BASE = the commit the
 branch started from, e.g. `git merge-base main HEAD`) and include the
@@ -401,24 +428,37 @@ superpowers:requesting-code-review's
 the ledger's deferred-minor and parked lines so it can triage which must be
 fixed before merge.
 
-If the final whole-branch review returns findings, dispatch ONE fix subagent
-with the complete findings list — not one fixer per finding.
-Per-finding fixers each rebuild context and re-run suites; a real
-session's final-review fix wave cost more than all its tasks combined.
-Then run exactly one scoped re-review of the fix wave
-(`scripts/review-package PLAN_FILE FIX_BASE HEAD` over the fix range,
-[re-review-prompt.md](re-review-prompt.md)).
-Adjudicate any residual findings as in the task loop's breaker: park with
-rulings, or stop on load-bearing ones. There is no second fix wave —
-residual load-bearing findings surface to your human partner when
-finishing-a-development-branch presents the options.
+### 3. The fix wave — up to 3 iterations
+
+When the audit or the review returns findings, dispatch ONE fix subagent per
+iteration with the complete list — audit gaps and review findings together,
+never one fixer per finding. Per-finding fixers each rebuild context and
+re-run suites; a real session's final-review fix wave cost more than all its
+tasks combined.
+
+Each iteration ends with exactly one scoped re-review of that iteration's fix
+diff (`scripts/review-package PLAN_FILE FIX_BASE HEAD` over the fix range,
+[re-review-prompt.md](re-review-prompt.md)). When the iteration fixed audit
+gaps, re-run the conformance audit too, scoped to those tasks — a gap is
+closed by evidence, not by a fixer's word.
+
+Three iterations maximum. Append each one to the ledger:
+`Final: fix wave <I>/3 (<X> addressed, <Y> open — <one-liners>; commits <a7>..<b7>)`
+
+Only after the third iteration, adjudicate what is still open as in the task
+loop's breaker: park with rulings, or stop on load-bearing ones. Parking
+before the cap is pre-judging with a different name. **A FALSE COMPLETION
+finding is never parked** — a task the plan claims is done and the branch does
+not contain is load-bearing by definition. Residual load-bearing findings
+surface to your human partner when finishing-a-development-branch presents
+the options.
 
 ## Finish
 
-When the final whole-branch review is clean and its fixes are merged,
-delete this plan's workspace (`rm -rf <workspace>`) — the git history is
-the record now. Sibling directories belong to other plans; leave them
-alone.
+When both final gates are clean — the conformance audit PASSes and the
+whole-branch review's fixes are merged — delete this plan's workspace
+(`rm -rf <workspace>`) — the git history is the record now. Sibling
+directories belong to other plans; leave them alone.
 
 Use superpowers:finishing-a-development-branch.
 
@@ -434,6 +474,8 @@ Use superpowers:finishing-a-development-branch.
 | "The fix was small, skip the re-review" | Unreviewed fixes are how regressions land. Every round ends with a scoped re-review. |
 | "Reviews slow the loop down" | The loop without reviews is just unverified churn. Reviews are the loop's brakes and steering. |
 | "Ledger bookkeeping is overhead" | The ledger is what survives compaction. Controllers without one have re-dispatched entire completed task sequences. |
+| "Every task was reviewed, the final audit is redundant" | Task reviews see one diff each. None of them can see a task that was never dispatched — that task has no diff and no reviewer. |
+| "The audit gap is minor, I'll park it now" | Parking happens after fix wave 3, never before. FALSE COMPLETION is never parked at all. |
 
 ## Example Workflow
 
@@ -494,6 +536,9 @@ Re-reviewer: Missing progress reporting — ADDRESSED (src/recovery.js:41).
 ...
 
 [After all tasks]
+[Dispatch superpowers:final-branch-audit with plan + MERGE_BASE..HEAD + ledger, most capable model]
+Auditor: PASS — 12/12 criteria DELIVERED, every row cited. No false completions.
+
 [Run review-package PLAN_FILE MERGE_BASE HEAD; dispatch final code-reviewer, most capable model]
 Final reviewer: All requirements met. Deferred minors triaged: none block merge.
 

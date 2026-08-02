@@ -92,6 +92,11 @@ include this section.]
   and return types. A task's implementer sees only their own task; this
   block is how they learn the names and types neighboring tasks use.]
 
+**Acceptance criteria:**
+- AC1: [one observable behavior, stated so a `file:line` citation can settle
+  it] — test: `tests/exact/path/to/test.py::test_specific_behavior`
+- AC2: [next behavior] — test: `tests/exact/path/to/test.py::test_other`
+
 - [ ] **Step 1: Write the failing test**
 
 ```python
@@ -125,6 +130,24 @@ git commit -m "feat: add specific feature"
 ```
 ````
 
+## Acceptance Criteria
+
+Every task carries them, and superpowers:final-branch-audit charges them one
+by one at the end of the branch — one row per criterion, each needing an
+implementation `file:line` and a test `file:line` before it counts as
+delivered. Write them in the form that audit can settle.
+
+| Requirement | Why |
+|-------------|-----|
+| One observable behavior per criterion | A criterion bundling three behaviors cannot take one verdict. |
+| Stated so a citation settles it | "Handles errors well" is unauditable. "Returns 429 with a `Retry-After` header" is a row the auditor can cite or fail. |
+| Names the covering test | The audit fails any criterion whose implementation exists untested. Naming the test here is what makes it exist. |
+| Backed by steps that build it | A criterion no step implements is a gap you wrote into the plan yourself. |
+
+An unauditable criterion is a plan failure, exactly like a placeholder — the
+auditor charges what the plan wrote, and the branch fails on wording you
+controlled.
+
 ## No Placeholders
 
 Every step must contain the actual content an engineer needs. These are **plan failures** — never write them:
@@ -144,6 +167,8 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 **2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
 
 **3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+
+**4. Auditable criteria:** Does every task have acceptance criteria, each one observable, settled by a citation, and naming its covering test? Read each one as the auditor will: could a `file:line` prove or disprove it? If not, rewrite it.
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
