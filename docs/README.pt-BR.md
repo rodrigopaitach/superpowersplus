@@ -3,6 +3,8 @@
 > **Este é o texto canônico.** A versão em inglês, [`README.en.md`](README.en.md), é a tradução dele — em qualquer divergência, este arquivo é o que vale.
 >
 > **Editar um exige editar o outro no MESMO commit.** Um commit que altera só um dos dois abre uma divergência que ninguém consegue ver depois: as duas versões continuam plausíveis, e nada indica qual envelheceu.
+>
+> Para a regra ser cobrada e não só declarada: `ln -s ../../scripts/check-docs-sync.sh .git/hooks/pre-commit`. O script é versionado no repositório; ativá-lo é decisão de cada clone.
 
 ## O que é
 

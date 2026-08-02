@@ -3,6 +3,8 @@
 > **This is a translation.** The canonical text is the Portuguese one, [`README.pt-BR.md`](README.pt-BR.md) — on any divergence, that file is the one that holds.
 >
 > **Editing one requires editing the other in the SAME commit.** A commit that changes only one of the two opens a divergence nobody can see afterwards: both versions stay plausible, and nothing marks which one went stale.
+>
+> To have the rule enforced rather than merely stated: `ln -s ../../scripts/check-docs-sync.sh .git/hooks/pre-commit`. The script is versioned in the repository; activating it is each clone's own call.
 
 ## What it is
 
