@@ -1,8 +1,14 @@
 # Escalation Format
 
-How a decision is handed to your human partner. Generalized from the question
-form in `skills/brainstorming/coverage-map.md`, which already required it for
-clarifying questions.
+**The shape itself is stated where the escalation happens** — the four
+numbered items at each trigger point in `executing-plans`, `writing-plans`,
+`final-branch-audit`, and `subagent-driven-development`. Read it there. This
+file carries what those four lines cannot: the boundary they apply to, why
+they are worded that way, and one worked example.
+
+That split is measured, not preferred. Three runs of the same scenario moved
+from 1/3 to 3/3 as the shape moved out of this file and into the moment of use
+— see `tests/skill-behavior/README.md`.
 
 **Scope: the machine → human boundary only.** A reviewer reporting to the
 controller, or an implementer reporting to the controller, keeps its own
@@ -15,23 +21,13 @@ declared source. They decide badly — or stall — given internal gate
 vocabulary. An escalation that reads like a verdict hands them a decision they
 have no basis to take.
 
-## The four parts, in this order
-
-1. **The finding, in one sentence of practical consequence** — what breaks,
-   what costs, what ends up wrong if nothing is decided. The mechanism does
-   not open the explanation; it may follow in one sentence if it helps.
-2. **The options, 2–4**, each with one line of what it means in practice.
-   **Always include doing nothing now, with its cost.** An escalation without
-   that option is a demand wearing a question's clothes.
-3. **The recommendation, with its source declared**, in the order already in
-   force: a pattern in this project (`path/file.ext:line`) > the dependency's
-   official documentation > general good practice, said to be general practice.
-4. **Before sending, reread the whole message once**, looking for terms
-   someone outside this project would not know. Rewrite each in plain
-   language, or define it in the sentence that uses it. This is a step you
-   perform, not a standard you aspire to: the writer is the worst judge of
-   what the reader does not know, and the only way past that is to go back
-   over the text once with the reader in mind.
+**Why the fourth item is an action and not a standard.** Items 1–3 describe
+what the message contains, checkable once while writing it. Item 4 describes a
+pass over the finished text. Worded as a quality bar — "with no technical term
+left undefined" — it was measured failing twice: a bar is something a writer
+believes they already meet, because the writer is the worst judge of what the
+reader does not know. It only began holding once it named a moment for the
+check to happen in.
 
 **Gate vocabulary** — `LOST IN TRANSLATION`, `FALSE COMPLETION`,
 `INVENTED SCOPE`, severity labels — may appear in parentheses as a reference

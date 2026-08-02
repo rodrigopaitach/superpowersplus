@@ -46,6 +46,16 @@ References below name them so a claim here can be traced there.
   appeared; the "no undefined technical term" item still did not hold. The rule
   was not amended in response.
 
+### Changed
+
+- **The escalation shape lives at the trigger point; the reference file keeps
+  only what those four lines cannot carry** — the boundary they apply to, why
+  the fourth item is an action rather than a standard, and the worked example.
+  The file used to restate the four parts in full, so the same rule was written
+  in two places and the canonical copy was not the one that had been measured.
+  The inversion is the measurement's own finding: 1/3 with the shape reachable
+  only through a link, 3/3 with it stated where the escalation fires.
+
 ### Fixed
 
 - **`scripts/check-docs-sync.sh` and `scripts/check-frozen-history.sh` missed
