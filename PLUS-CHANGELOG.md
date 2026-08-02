@@ -1,5 +1,8 @@
 # PLUS Changelog
 
+**Versão atual:** `1.0.0` · **Base do upstream incorporada:** [`44c9b2d`](https://github.com/obra/superpowers/commit/44c9b2d) (2026-07-27).
+Este par substitui o espelhamento do `version` do upstream, abandonado nesta versão: o número descreve este projeto, e a linha acima registra sobre qual base ele está. Atualize-a a cada rebase.
+
 > **Mudança de status.** Este projeto começou como fork pessoal e passou a se
 > apresentar como **projeto próprio, `superpowersplus`, obra derivada de
 > [Superpowers](https://github.com/obra/superpowers)** (Jesse Vincent, Prime
