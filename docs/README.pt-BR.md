@@ -1,4 +1,4 @@
-# Superpowers+ — documentação em português
+# superpowersplus — documentação em português
 
 > **Este é o texto canônico.** A versão em inglês, [`README.en.md`](README.en.md), é a tradução dele — em qualquer divergência, este arquivo é o que vale.
 >
@@ -8,11 +8,11 @@
 
 ## O que é
 
-Um fork pessoal de [obra/superpowers](https://github.com/obra/superpowers), de Jesse Vincent, licenciado sob MIT.
+Uma metodologia de desenvolvimento para agentes de código, **baseada em [Superpowers](https://github.com/obra/superpowers), de Jesse Vincent (Prime Radiant), sob licença MIT**.
 
-O Superpowers original é uma metodologia de desenvolvimento para agentes de código: um conjunto de skills que se ativam sozinhas e fazem o agente parar antes de escrever código, entender o que você quer, escrever uma especificação, planejar, e só então implementar — com TDD de verdade.
+O Superpowers é um conjunto de skills que se ativam sozinhas e fazem o agente parar antes de escrever código, entender o que você quer, escrever uma especificação, planejar, e só então implementar — com TDD de verdade.
 
-Este fork mantém tudo isso e acrescenta um eixo: **evidence-or-zero**. Toda afirmação que o agente faz sobre o seu código exige uma citação `arquivo:linha`, e quem verifica reexecuta a busca em vez de aceitar a palavra de quem escreveu.
+O superpowersplus é obra derivada: mantém tudo isso e acrescenta um eixo: **evidence-or-zero**. Toda afirmação que o agente faz sobre o seu código exige uma citação `arquivo:linha`, e quem verifica reexecuta a busca em vez de aceitar a palavra de quem escreveu.
 
 ## Por que existe
 
@@ -22,7 +22,7 @@ Um agente que não encontra a resposta no seu código não fica em silêncio. El
 
 O mesmo vale para teste. Uma suíte verde prova que os testes passaram, não que testam alguma coisa. Um relatório que diz "todos os testes passam", escrito por quem implementou, é a única evidência que a maioria dos fluxos tem — e é produzida por quem está sendo auditado.
 
-As duas coisas têm a mesma forma: **uma afirmação sem verificação parece exatamente igual a uma verificada.** Este fork existe para separar as duas.
+As duas coisas têm a mesma forma: **uma afirmação sem verificação parece exatamente igual a uma verificada.** O superpowersplus existe para separar as duas.
 
 ## Para quem
 
@@ -51,7 +51,7 @@ Requer o [Claude Code](https://claude.com/claude-code).
 
 ## Atualizando
 
-Este fork não está no marketplace oficial, então **nada se atualiza sozinho**. São dois passos, nesta ordem:
+O superpowersplus não está no marketplace oficial, então **nada se atualiza sozinho**. São dois passos, nesta ordem:
 
 1. **Rebasear sobre o upstream**, para trazer as mudanças do `obra/superpowers`. É aqui que as alterações `plus.N` podem conflitar — e é por isso que elas foram escritas para tocar o mínimo possível dos arquivos que o upstream edita com frequência.
 2. **Atualizar o plugin instalado:**
@@ -61,7 +61,7 @@ Este fork não está no marketplace oficial, então **nada se atualiza sozinho**
    /reload-plugins
    ```
 
-Quem usa o fork sem acompanhar o upstream faz só o passo 2.
+Quem não acompanha o Superpowers faz só o passo 2.
 
 ## Como funciona
 
@@ -91,7 +91,7 @@ Entre cada etapa há um portão. Nenhum deles é o próprio agente se auto-avali
 
 Tudo é arquivo versionado em git, legível sem ferramenta nenhuma. O registro de decisão é o que permite auditar depois **no que** você concordou e **com base em quê** — inclusive quando a conversa já não existe mais.
 
-## Diferenças em relação ao upstream
+## O que acrescenta ao Superpowers
 
 Cinco eixos. O detalhe de cada mudança, entrada por entrada, está em [`PLUS-CHANGELOG.md`](../PLUS-CHANGELOG.md).
 
@@ -105,15 +105,15 @@ Cinco eixos. O detalhe de cada mudança, entrada por entrada, está em [`PLUS-CH
 
 O companheiro visual do brainstorming carrega o logo da Prime Radiant do site deles, com a versão do Superpowers embutida na URL. Não vai nada do seu projeto, do seu prompt nem do seu agente — é uma contagem aproximada de uso, e o crédito é do upstream.
 
-**A orientação deste fork é desligar:**
+**A orientação deste projeto é desligar:**
 
 ```bash
 export SUPERPOWERS_DISABLE_TELEMETRY=1
 ```
 
-`DISABLE_TELEMETRY` e `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` também são respeitados — este fork não altera esse código.
+`DISABLE_TELEMETRY` e `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` também são respeitados — o superpowersplus não altera esse código.
 
-**O padrão do código continua sendo o do upstream: ligado.** Este fork não vem desligado e não modifica `skills/brainstorming/scripts/server.cjs`. Desligar é ação sua, no seu ambiente. Inverter o padrão no núcleo foi avaliado e recusado: dois testes do upstream (`tests/brainstorm-server/branding.test.js:245` e `:261`) afirmam o logo presente por padrão, e reescrevê-los para dizer o contrário faria com que parassem de detectar mudanças do próprio upstream.
+**O padrão do código continua ligado.** O superpowersplus não vem desligado e não modifica `skills/brainstorming/scripts/server.cjs`. Desligar é ação sua, no seu ambiente. Inverter o padrão no núcleo foi avaliado e recusado: dois testes do upstream (`tests/brainstorm-server/branding.test.js:245` e `:261`) afirmam o logo presente por padrão, e reescrevê-los para dizer o contrário faria com que parassem de detectar mudanças do próprio upstream.
 
 ## Pendências conhecidas
 
@@ -123,4 +123,6 @@ Buracos identificados e deliberadamente não fechados estão registrados em [Pen
 
 MIT — ver [`LICENSE`](../LICENSE).
 
-O Superpowers é criação de [Jesse Vincent](https://blog.fsck.com) e do pessoal da [Prime Radiant](https://primeradiant.com). Este fork é pessoal e **não tem vínculo com o autor, com a Prime Radiant ou com a Anthropic**, e não fala por nenhum deles. Problemas causados por este fork não são problema deles: relate aqui, não no repositório original.
+O superpowersplus é **obra derivada do [Superpowers](https://github.com/obra/superpowers)**, criação de [Jesse Vincent](https://blog.fsck.com) e do pessoal da [Prime Radiant](https://primeradiant.com). A metodologia, as skills e o fluxo são deles; a camada de verificação descrita acima é deste projeto. O copyright permanece com Jesse Vincent, e a obra derivada é distribuída sob os mesmos termos.
+
+Este projeto **não tem vínculo com o autor, com a Prime Radiant ou com a Anthropic**, e não fala por nenhum deles. Problemas causados pelo superpowersplus não são problema deles: relate aqui, não no repositório original.

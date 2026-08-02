@@ -1,4 +1,4 @@
-# Superpowers+ — English documentation
+# superpowersplus — English documentation
 
 > **This is a translation.** The canonical text is the Portuguese one, [`README.pt-BR.md`](README.pt-BR.md) — on any divergence, that file is the one that holds.
 >
@@ -8,11 +8,11 @@
 
 ## What it is
 
-A personal fork of [obra/superpowers](https://github.com/obra/superpowers), by Jesse Vincent, licensed MIT.
+A development methodology for coding agents, **based on [Superpowers](https://github.com/obra/superpowers), by Jesse Vincent (Prime Radiant), under the MIT license**.
 
-The original Superpowers is a development methodology for coding agents: a set of skills that trigger on their own and make the agent stop before writing code, understand what you actually want, write a spec, plan, and only then implement — with real TDD.
+Superpowers is a set of skills that trigger on their own and make the agent stop before writing code, understand what you actually want, write a spec, plan, and only then implement — with real TDD.
 
-This fork keeps all of that and adds one axis: **evidence-or-zero**. Every claim the agent makes about your code requires a `file:line` citation, and whoever verifies re-runs the search instead of taking the writer's word for it.
+superpowersplus is a derivative work: it keeps all of that and adds one axis: **evidence-or-zero**. Every claim the agent makes about your code requires a `file:line` citation, and whoever verifies re-runs the search instead of taking the writer's word for it.
 
 ## Why it exists
 
@@ -22,7 +22,7 @@ An agent that cannot find the answer in your code does not go quiet. It produces
 
 The same goes for tests. A green suite proves the tests passed, not that they test anything. A report saying "all tests pass", written by whoever implemented the thing, is the only evidence most workflows have — and it is produced by the party being audited.
 
-Both have the same shape: **an unverified claim looks exactly like a verified one.** This fork exists to tell them apart.
+Both have the same shape: **an unverified claim looks exactly like a verified one.** superpowersplus exists to tell them apart.
 
 ## Who it is for
 
@@ -51,7 +51,7 @@ Requires [Claude Code](https://claude.com/claude-code).
 
 ## Updating
 
-This fork is not on the official marketplace, so **nothing updates itself**. Two steps, in this order:
+superpowersplus is not on the official marketplace, so **nothing updates itself**. Two steps, in this order:
 
 1. **Rebase onto the upstream**, to bring in `obra/superpowers`'s changes. This is where the `plus.N` changes can conflict — and why they were written to touch as little as possible of the files the upstream edits often.
 2. **Refresh the installed plugin:**
@@ -61,7 +61,7 @@ This fork is not on the official marketplace, so **nothing updates itself**. Two
    /reload-plugins
    ```
 
-If you use the fork without tracking the upstream, only step 2 applies.
+If you do not track Superpowers, only step 2 applies.
 
 ## How it works
 
@@ -91,7 +91,7 @@ There is a gate between each stage. None of them is the agent grading itself —
 
 All of it is git-versioned files, readable without any tooling. The decision record is what lets you audit later **what** you agreed to and **on what basis** — including once the conversation is gone.
 
-## Differences from upstream
+## What it adds to Superpowers
 
 Five axes. The detail of each change, entry by entry, is in [`PLUS-CHANGELOG.md`](../PLUS-CHANGELOG.md) (written in Portuguese).
 
@@ -105,15 +105,15 @@ Five axes. The detail of each change, entry by entry, is in [`PLUS-CHANGELOG.md`
 
 Brainstorming's visual companion loads the Prime Radiant logo from their site, with the Superpowers version embedded in the URL. Nothing about your project, your prompt, or your agent goes with it — it is a rough usage count, and the credit is the upstream's.
 
-**This fork's guidance is to turn it off:**
+**This project's guidance is to turn it off:**
 
 ```bash
 export SUPERPOWERS_DISABLE_TELEMETRY=1
 ```
 
-`DISABLE_TELEMETRY` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` are honored too — this fork does not change that code.
+`DISABLE_TELEMETRY` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` are honored too — superpowersplus does not change that code.
 
-**The code default is still the upstream's: on.** This fork does not ship it disabled and does not modify `skills/brainstorming/scripts/server.cjs`. Turning it off is your action, in your own environment. Inverting the default in the core was evaluated and refused: two upstream tests (`tests/brainstorm-server/branding.test.js:245` and `:261`) assert the logo present by default, and rewriting them to say the opposite would stop them detecting the upstream's own changes.
+**The code default is still on.** superpowersplus does not ship it disabled and does not modify `skills/brainstorming/scripts/server.cjs`. Turning it off is your action, in your own environment. Inverting the default in the core was evaluated and refused: two upstream tests (`tests/brainstorm-server/branding.test.js:245` and `:261`) assert the logo present by default, and rewriting them to say the opposite would stop them detecting the upstream's own changes.
 
 ## Known gaps
 
@@ -123,4 +123,6 @@ Gaps identified and deliberately left open are recorded in [Pendências conhecid
 
 MIT — see [`LICENSE`](../LICENSE).
 
-Superpowers is the work of [Jesse Vincent](https://blog.fsck.com) and the folks at [Prime Radiant](https://primeradiant.com). This fork is personal and **has no affiliation with the author, with Prime Radiant, or with Anthropic**, and speaks for none of them. Problems caused by this fork are not their problem: report them here, not on the original repository.
+superpowersplus is a **derivative work of [Superpowers](https://github.com/obra/superpowers)**, built by [Jesse Vincent](https://blog.fsck.com) and the folks at [Prime Radiant](https://primeradiant.com). The methodology, the skills, and the workflow are theirs; the verification layer described above is this project's. Copyright remains with Jesse Vincent, and this derivative work is distributed under the same terms.
+
+This project **has no affiliation with the author, with Prime Radiant, or with Anthropic**, and speaks for none of them. Problems caused by superpowersplus are not their problem: report them here, not on the original repository.
