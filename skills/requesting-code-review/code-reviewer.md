@@ -99,6 +99,10 @@ Subagent (general-purpose):
     #### Minor (Nice to Have)
     [Code style, optimization opportunities, documentation polish]
 
+    All three buckets appear, every time. A bucket with nothing in it says
+    "None" — a dropped heading and a bucket you never considered read the
+    same to whoever gets this report.
+
     For each issue:
     - File:line reference
     - What's wrong
@@ -154,6 +158,9 @@ Subagent (general-purpose):
 - Good error handling with fallbacks (summarizer.ts:85-92)
 
 ### Issues
+
+#### Critical (Must Fix)
+None.
 
 #### Important (Should Fix)
 1. **Missing help text in CLI wrapper**

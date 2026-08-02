@@ -10,6 +10,21 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.21 — Example Output renderiza os três buckets
+
+O Example Output do code reviewer trazia `Important` e `Minor` e nenhum
+`Critical` — legítimo num review sem achado crítico, mas é a única
+renderização do formato de três buckets no arquivo, e exemplo sem a seção
+ensina a omiti-la. Quem copia entrega um relatório onde "nada crítico" e
+"nunca olhei para o crítico" são a mesma coisa.
+
+- **Exemplo exibe os três**, com `#### Critical (Must Fix)` seguido de
+  `None.` — mesma solução que o plus.15 deu para as seções da spec, pelo
+  mesmo motivo: seção ausente e seção vazia não podem ter a mesma aparência.
+- **Regra do par** — a especificação do Output Format passou a exigir os
+  três buckets em toda saída, com `"None"` no que estiver vazio. Exibir no
+  exemplo sem cobrar na especificação seria regra que ninguém enunciou.
+
 ## plus.20 — exemplos alinhados às especificações que ilustram
 
 Divergências entre um exemplo e a especificação que ele ilustra, no mesmo
