@@ -85,7 +85,7 @@ Subagent (general-purpose):
     | Task Decomposition | Tasks have clear boundaries, steps are actionable |
     | Internal Consistency | Types, signatures, and property names used in later tasks match what earlier tasks define. `clearLayers()` in Task 3 and `clearFullLayers()` in Task 7 is a bug the implementer inherits |
     | Buildability | Could an engineer follow this plan without getting stuck? |
-    | Simplification | Could a criterion be met with a smaller structure — something already in this repo, the standard library, or a platform feature — instead of the new layer, module, or abstraction the plan introduces? **Advisory, never blocking**: name the smaller version concretely, since "this could be simpler" with no replacement is not a finding. The exception is a new layer whose justification names no criterion — that is invented scope, blocking under the Plan Contract above, not a suggestion |
+    | Simplification | Could a criterion be met with a smaller structure — something already in this repo, the standard library, or a platform feature — instead of the new layer, module, or abstraction the plan introduces? **Advisory, never blocking**: name the smaller version concretely, since "this could be simpler" with no replacement is not a finding. On a re-review, a suggestion from the previous round that was neither adopted nor answered with a one-line reason on the structure's justification line is itself an advisory finding — the author may keep the larger version, but a refusal nobody recorded reads exactly like a suggestion nobody read. The exception is a new layer whose justification names no criterion — that is invented scope, blocking under the Plan Contract above, not a suggestion |
 
     ## Calibration
 

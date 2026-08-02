@@ -37,6 +37,7 @@ This structure informs the task decomposition. Each task should produce self-con
 
 - Before putting a new layer, module, or abstraction in the plan, check whether structure that already exists in this project meets the criterion. Reusing it means citing it the way every other claim about this codebase is cited — `path/file.ext:line` for the structure you are reusing.
 - A new layer, module, or abstraction carries a one-line justification naming the criterion that forces it. One that names no criterion is invented scope under the rule the plan is already held to.
+- **That justification line is also where a refused simplification lands.** When the plan reviewer proposes a smaller version and you keep the larger one, the reason goes on that line, in the same form the Coverage Map requires of a `Deferred` or `Outstanding` state: one line, stated, in the document. Refusing is yours to do; refusing silently leaves a structure nobody can tell was questioned from one nobody ever looked at.
 
 ## Task Right-Sizing
 
