@@ -112,7 +112,9 @@ Subagent (general-purpose):
       assertion)?
     - Any test asserting only on mock call counts or mock existence, never
       on the real component's behavior?
-    - Any happy-path-only test where the brief lists edge cases?
+    - Any happy-path-only test where the brief — or the `IR` criterion it
+      names, which is where edge cases, concurrency and failure modes live —
+      lists edge cases?
     - Does every test I wrote map to a requirement in the brief? One that
       maps to nothing is invented scope.
     - Did I watch every test fail before writing the code that passes it?

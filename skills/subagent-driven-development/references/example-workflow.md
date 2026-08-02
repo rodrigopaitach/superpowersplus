@@ -29,7 +29,7 @@ Implementer: [Later]
 [Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
 Task reviewer: Spec ✅ - all requirements met, nothing extra.
   Test Evidence: `npm test test/hooks.test.js` exit 0 — 5 passed / 0 failed
-  (base: unknown); 3/3 brief criteria (AC1, AC2, IR1) cited to a test file:line.
+  (base: unknown); 3/3 brief criteria (T1.1, T1.2, T1.3) cited to a test file:line.
   Strengths: Good test coverage, clean. Issues: None. Task quality: Approved.
 
 [Ledger: Task 1: complete (commits a1b2c3d..d4e5f6a, review clean)]
@@ -47,7 +47,7 @@ Implementer: [No questions]
 Task reviewer: Spec ❌:
   - Missing: Progress reporting (spec says "report every 100 items")
   Test Evidence: `npm test test/recovery.test.js` exit 0 — 8 passed / 0 failed
-  (base: 5); criterion AC4 "reports every 100 items" — no test, row is `—`.
+  (base: 5); criterion T2.3 "reports every 100 items" — no test, row is `—`.
   Issues (Important): Magic number (100)
 
 [Fix round 1: resume the implementer with both findings]

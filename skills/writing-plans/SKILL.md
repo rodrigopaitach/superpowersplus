@@ -114,10 +114,12 @@ once`. A task with no spec criterion is scope you invented while planning.]
   and return types. A task's implementer sees only their own task; this
   block is how they learn the names and types neighboring tasks use.]
 
-**Acceptance criteria:**
-- AC1: [one observable behavior, stated so a `file:line` citation can settle
+**Acceptance criteria:** [labeled `T<task number>.<n>`. `AC` and `IR` are
+the spec's ids and never a task's — the audit reads one table by spec id and
+another by task label, and the same string in both is how it conflates them.]
+- TN.1: [one observable behavior, stated so a `file:line` citation can settle
   it] — test: `tests/exact/path/to/test.py::test_specific_behavior`
-- AC2: [next behavior] — test: `tests/exact/path/to/test.py::test_other`
+- TN.2: [next behavior] — test: `tests/exact/path/to/test.py::test_other`
 
 - [ ] **Step 1: Write the failing test**
 
@@ -161,6 +163,7 @@ delivered. Write them in the form that audit can settle.
 
 | Requirement | Why |
 |-------------|-----|
+| Labeled `T<task number>.<n>`, never `AC` or `IR` | Those two prefixes belong to the spec's ids. The audit's traceability table is keyed by spec id and its delivery table by task label; a task criterion called `AC1` collides with the spec's `AC1` and the two tables stop lining up. |
 | One observable behavior per criterion | A criterion bundling three behaviors cannot take one verdict. |
 | Stated so a citation settles it | "Handles errors well" is unauditable. "Returns 429 with a `Retry-After` header" is a row the auditor can cite or fail. |
 | Names the covering test | The audit fails any criterion whose implementation exists untested. Naming the test here is what makes it exist. |

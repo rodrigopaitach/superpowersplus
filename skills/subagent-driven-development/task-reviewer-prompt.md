@@ -113,7 +113,7 @@ Subagent (general-purpose):
     |---------|---------|
     | An assertion that cannot fail — `expect(true)`, `assert 1 == 1` — or a test body with no assertion at all | BLOCKING |
     | Assertions only on mock call counts or mock existence, never on the real component's behavior | BLOCKING |
-    | Happy path only, while the brief or the global constraints list edge cases | BLOCKING |
+    | Happy path only, while the brief, the spec criterion it names, or the global constraints list edge cases. An `IR` criterion is where edge cases, concurrency, failure modes and limits live — its listed cases are the requirement | BLOCKING |
 
     A passing suite made of these tests is a passing suite that proves
     nothing. Report each as Critical, cited at `file:line`.
@@ -173,7 +173,7 @@ Subagent (general-purpose):
 
     | Criterion | Test file:line | Assertion |
     |-----------|----------------|-----------|
-    | [criterion id + text, verbatim from the brief — `AC1 …`, `IR2 …`] | `tests/auth/test_verify.py:41` | [what it actually asserts, not the test's name] |
+    | [criterion label + text, verbatim from the brief — `T3.1 …`; `AC`/`IR` are spec ids, not task labels] | `tests/auth/test_verify.py:41` | [what it actually asserts, not the test's name] |
     | [criterion nothing covers] | — | NONE |
 
     One row per criterion in the brief — including the ones with no test.

@@ -222,7 +222,7 @@ These three patterns are blocking findings at review, not style notes:
 |---------|--------------|
 | An assertion that cannot fail — `expect(true)`, `assert 1 == 1` — or a test with no assertion | Proves the runner works. Nothing else. |
 | Assertions only on mock call counts or mock existence | Tests the mock, not your code. See [writing-good-tests.md](writing-good-tests.md). |
-| Happy path only, when the spec or brief lists edge cases | Those listed cases are requirements, not extras. |
+| Happy path only, when the spec or brief lists edge cases — including every case an `IR` criterion names, the spec's home for edge cases, concurrency, failure modes and limits | Those listed cases are requirements, not extras. |
 
 **The inverse, same weight:** every test maps to a requirement in the plan's
 Test Coverage Matrix. A test mapping to nothing is invented scope — the

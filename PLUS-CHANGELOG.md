@@ -10,6 +10,40 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.10 — id de critério de tarefa separado do id de critério da spec
+
+Varredura de consistência sobre o que entrou no plus.5 ao plus.9. Um
+bloqueante: `AC1` passou a significar duas coisas. O rótulo de critério
+DA TAREFA (`AC1:`, `AC2:`, reiniciando a cada tarefa) é upstream; o id de
+critério DA SPEC (`AC1`, único no documento) veio com o plus.5 e se espalhou
+no plus.9. As duas tabelas da auditoria — rastreabilidade por id de spec,
+entrega por critério de tarefa — passaram a poder carregar a mesma string em
+linhas diferentes.
+
+- **Rótulo de tarefa vira `T<tarefa>.<n>`** — `T3.1`, `T3.2`. `AC` e `IR`
+  ficam exclusivamente para a spec. A regra entrou também na tabela de
+  requisitos de critério em `writing-plans`, não só no template.
+- **Auditoria declara os dois espaços** — a tabela de entrega diz que é
+  chaveada por rótulo de tarefa e que linha com `AC`/`IR` está citando a
+  lista errada; o Step 3 do despacho repete a distinção para o auditor.
+- **Exemplos corrigidos** — tabela de entrega da auditoria, linha-modelo do
+  `Test Evidence` do task reviewer e as duas contagens de critério na
+  transcrição em `references/example-workflow.md`, que usavam id de spec
+  para critério de brief.
+- **Litmus reconhece `IR`** — "happy path só quando há casos de borda
+  listados" agora nomeia o `IR` como a casa dos casos de borda, concorrência,
+  modos de falha e limites, nas três faces onde a regra vive: revisor de
+  task, autorreview do implementador e `test-driven-development`.
+- **Diálogo alinhado à seção obrigatória** — a fase de apresentação do design
+  em `brainstorming` lista os mesmos eixos que `## Implicit Requirements`
+  cobra, em vez de parar em "error handling, testing".
+- **Ponteiro de volta** — `references/final-review.md` dizia "(see Model
+  Selection)" sem dizer onde; agora diz `in SKILL.md`.
+
+Limpo na mesma varredura: nenhuma linguagem de opcionalidade nas mudanças do
+plus.5 ao plus.9, nenhum gate novo apoiado em artefato do auditado, nenhuma
+referência pendente às seções movidas no plus.8.
+
 ## plus.9 — requisito implícito entra na matriz de cobertura
 
 O `brainstorming` é bom em levantar requisito implícito — concorrência,

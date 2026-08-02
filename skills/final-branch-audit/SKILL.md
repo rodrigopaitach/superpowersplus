@@ -99,10 +99,14 @@ marks complete:
 
 | Task | Criterion | Implementation | Test | Verdict |
 |------|-----------|----------------|------|---------|
-| 3 | AC1 Rejects expired tokens | `src/auth/verify.ts:88` | `tests/auth/verify.test.ts:41` | DELIVERED |
-| 4 | AC6 Retries on 429 with backoff | — | — | NOT DELIVERED |
-| 5 | IR2 Concurrent refreshes rotate the token once | `src/auth/refresh.ts:52` | `tests/integration/test_refresh.py:73` | DELIVERED |
+| 3 | T3.1 Rejects expired tokens | `src/auth/verify.ts:88` | `tests/auth/verify.test.ts:41` | DELIVERED |
+| 4 | T4.2 Retries on 429 with backoff | — | — | NOT DELIVERED |
+| 5 | T5.1 Concurrent refreshes rotate the token once | `src/auth/refresh.ts:52` | `tests/integration/test_refresh.py:73` | DELIVERED |
 
+- **Two id spaces, never mixed.** This table is keyed by the plan's
+  task-level labels (`T3.1`, superpowers:writing-plans requires that form);
+  the traceability table above is keyed by the spec's ids (`AC1`, `IR2`). A
+  row here carrying an `AC` or `IR` id is citing the wrong list.
 - **Implementation** and **Test** are `path/file.ext:line` — a path alone is
   not a citation, and neither is a commit SHA.
 - Cite the line that DOES the thing, not the file that mentions it.
@@ -199,6 +203,10 @@ Subagent (general-purpose):
 
     Every acceptance criterion of every task. One row each in the task table
     below — including tasks the plan or ledger calls complete.
+
+    Cite each one by the plan's task-level label (`T3.1`), not by an `AC` or
+    `IR` id: those belong to the spec and key the traceability table in Step
+    2. Same string in both tables means the two stopped lining up.
 
     Evidence-or-zero: a criterion with no `path/file.ext:line` citation is
     NOT DELIVERED. A citation that does not check out is NOT DELIVERED.
