@@ -63,6 +63,17 @@ The upstream remote stays, and rebasing onto `obra/superpowers` is how their imp
 
 **`docs/PLUS-CHANGELOG-historico.md` is a frozen record and takes no new writing.** Everything new goes in `CHANGELOG.md`, including closing an open gap.
 
+## Preparing a commit
+
+**Never chain content preparation and `git commit` in one `&&` block.** Prepare,
+then verify the preparation produced what you expected, then commit. A script
+that edits three files and a `git commit` on the next line are independent: the
+edit can fail and the commit still runs.
+
+This is not hypothetical. A `CHANGELOG.md` edit failed on a wrong anchor, the
+commit and the push ran anyway, and the change shipped without its changelog
+entry — the failure was invisible because nothing was chained to it.
+
 ## Versioning
 
 Semver, from `1.0.0` on. **PATCH** for a fix that does not change how a skill behaves; **MINOR** for a new skill or a compatible new rule; **MAJOR** for anything that breaks existing artifacts or invocations — the namespace rename would have been MAJOR.

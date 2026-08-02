@@ -53,3 +53,9 @@ jobs:
 
       - name: Bilingual READMEs stay in sync
         run: scripts/check-docs-sync.sh
+
+      # Integrity of the adversarial records only. The tests themselves are
+      # never re-run here: they dispatch a live agent, cost tokens, and are
+      # non-deterministic. Re-running one is a human decision.
+      - name: Adversarial records are well formed
+        run: scripts/check-skill-behavior-records.sh

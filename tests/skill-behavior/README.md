@@ -83,6 +83,18 @@ did not — so the improvement is consistent with the fix but not isolated by it
 
 Neither run amended the rule. Recording the failure is the result.
 
+## What CI does, and does not
+
+CI checks that these records are **well formed** —
+`scripts/check-skill-behavior-records.sh` verifies every `FIXTURE-*` says it is
+a fixture and every `RESULT-*` carries its date, its model, and per-criterion
+verdicts. A record missing those cannot be compared against a later run, which
+is the only thing it exists for.
+
+**CI never re-runs the tests.** They dispatch a live agent: tokens, minutes, and
+a non-deterministic result. Re-running one is a human decision, taken when the
+rule under test changes — not something that happens on every push.
+
 ## Re-running
 
 The versioned fixtures are labeled as fixtures, on purpose: nobody should ever
