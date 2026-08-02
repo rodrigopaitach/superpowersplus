@@ -227,3 +227,27 @@ context"), sem obrigação de evidência.
   por despacho do subagente `spec-document-reviewer-prompt.md` (até então
   órfão no repo), com categoria `Groundedness`: o revisor abre cada
   `arquivo:linha` citado e confirma que existe e faz o que a spec afirma.
+
+## Pendências conhecidas
+
+Buracos identificados e deliberadamente não fechados. Ficam aqui porque
+lacuna sem registro volta como descoberta.
+
+- **Iron Law do TDD sem face verificadora** — o `implementer-prompt.md` exige
+  teste antes do código (plus.7), mas nenhum verificador consegue provar a
+  ordem: o único registro de que o teste veio antes é a seção `TDD Evidence`
+  do relatório, produzida por quem está sendo auditado. Gate baseado nela
+  seria decorativo. Opção avaliada e não implementada: exigir teste e
+  implementação em commits separados, teste primeiro, o que o revisor
+  verificaria pela ordem dos commits no review package. Adiada porque muda a
+  granularidade de commit de todo trabalho feito com o fork — custo que não
+  se justifica antes de haver medição de quanto o teste-depois escapa na
+  prática.
+- **Sensor de mutação** — nenhuma checagem atual mata o teste que passa por
+  acidente: o litmus anti-teste-raso pega padrão sintático (`expect(true)`,
+  asserção só em mock), não asserção que simplesmente não alcança o
+  comportamento. O verificador injetaria uma falha comportamental em estado
+  descartável e confirmaria que a suíte a mata; teste que sobrevive à
+  mutação não testa o mecanismo. Adiado até haver uso real do fork — sem
+  execuções para calibrar quais mutações valem o custo, a checagem entraria
+  como ritual.
