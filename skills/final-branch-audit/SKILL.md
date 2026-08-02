@@ -53,17 +53,24 @@ run.
 ## The Traceability Table
 
 Produce this FIRST, before the task table. One row per item in the spec's
-`## Acceptance Criteria` list — superpowers:brainstorming requires that
-section, so a spec lacking it is a blocking issue in its own right: report
-it, then trace against the spec's numbered requirement headings instead. The
-list is what fixes the row count; without it, two auditors enumerate two
+`## Acceptance Criteria` list **and one per item in its `## Implicit
+Requirements` list** — superpowers:brainstorming requires both sections, so
+a spec lacking either is a blocking issue in its own right: report it, then
+trace against the spec's numbered requirement headings instead. The lists
+are what fix the row count; without them, two auditors enumerate two
 different sets. Then one row per plan task that no criterion motivated:
 
 | Spec criterion | Plan task(s) covering it | Verdict |
 |----------------|--------------------------|---------|
 | AC1 Tokens expire after 15 minutes | Task 3 | TRACED |
 | AC4 Refresh rotates the token | — | LOST IN TRANSLATION |
+| IR2 Concurrent refreshes rotate the token once | Task 5 | TRACED |
+| IR3 Refresh failures are logged with the account id | — | LOST IN TRANSLATION |
 | — | Task 7 (admin export) | INVENTED SCOPE |
+
+`AC` and `IR` are one id space here. An implicit requirement no task covers
+is LOST IN TRANSLATION exactly like an acceptance criterion — the spec
+raised it, the plan dropped it, and the branch will ship without it.
 
 | Situation | Verdict |
 |-----------|---------|
@@ -92,8 +99,9 @@ marks complete:
 
 | Task | Criterion | Implementation | Test | Verdict |
 |------|-----------|----------------|------|---------|
-| 3 | Rejects expired tokens | `src/auth/verify.ts:88` | `tests/auth/verify.test.ts:41` | DELIVERED |
-| 4 | Retries on 429 with backoff | — | — | NOT DELIVERED |
+| 3 | AC1 Rejects expired tokens | `src/auth/verify.ts:88` | `tests/auth/verify.test.ts:41` | DELIVERED |
+| 4 | AC6 Retries on 429 with backoff | — | — | NOT DELIVERED |
+| 5 | IR2 Concurrent refreshes rotate the token once | `src/auth/refresh.ts:52` | `tests/integration/test_refresh.py:73` | DELIVERED |
 
 - **Implementation** and **Test** are `path/file.ext:line` — a path alone is
   not a citation, and neither is a commit SHA.
@@ -174,10 +182,11 @@ Subagent (general-purpose):
 
     ## Step 2: Traceability
 
-    One row per item in the spec's `## Acceptance Criteria` list, plus one
-    row per plan task no criterion motivated. A spec with no such section is
-    a blocking issue: report it, then trace against its numbered requirement
-    headings.
+    One row per item in the spec's `## Acceptance Criteria` list AND one per
+    item in its `## Implicit Requirements` list — `AC` and `IR` are one id
+    space, charged identically — plus one row per plan task no criterion
+    motivated. A spec missing either section is a blocking issue: report it,
+    then trace against its numbered requirement headings.
 
     - Spec criterion covered by one or more tasks → TRACED
     - Spec criterion no task covers → LOST IN TRANSLATION (blocking)
@@ -275,3 +284,4 @@ Traceability failures do not route like delivery gaps:
 | "The plan was written from the spec, so tracing them is redundant" | The plan is the artifact under audit. A requirement lost while writing it leaves no trace in it — that is exactly the gap the traceability table exists to catch. |
 | "The plan doesn't cite a spec, I'll find the obvious one in docs/" | Inferring the spec means auditing against a document nobody approved for this plan. Report the missing citation as blocking. |
 | "Task 7 isn't in the spec but it's clearly needed" | Then the spec needed amending and nobody did it. INVENTED SCOPE is a finding, not a judgment call about usefulness. |
+| "IR3 is non-functional — it's not really a deliverable criterion" | The spec gave it an id, which makes it a criterion. Implicit requirements are the ones that quietly disappear between spec and plan; that is exactly why they carry ids and get charged here. |

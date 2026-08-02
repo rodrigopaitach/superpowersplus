@@ -80,13 +80,15 @@ include this section.]
 
 ## Test Coverage Matrix
 
-[One row per acceptance criterion, across every task. Test types and layer
-names are this repository's own — see the section below before filling it.]
+[One row per spec criterion — every `AC` and every `IR` — across every
+task. Test types and layer names are this repository's own — see the
+section below before filling it.]
 
 | Task | Criterion | Test type | Layer | Test |
 |------|-----------|-----------|-------|------|
-| 3 | Rejects expired tokens | unit | `tests/auth/` | `tests/auth/test_verify.py::test_rejects_expired` |
-| 5 | Login survives a token refresh | e2e | `e2e/` | `e2e/login.spec.ts::refreshes mid-session` |
+| 3 | AC1 Rejects expired tokens | unit | `tests/auth/` | `tests/auth/test_verify.py::test_rejects_expired` |
+| 5 | AC3 Login survives a token refresh | e2e | `e2e/` | `e2e/login.spec.ts::refreshes mid-session` |
+| 5 | IR2 Two refreshes in flight rotate the token once | integration | `tests/integration/` | `tests/integration/test_refresh.py::test_concurrent_refresh_rotates_once` |
 
 ---
 ```
@@ -97,8 +99,9 @@ names are this repository's own — see the section below before filling it.]
 ### Task N: [Component Name]
 
 **Spec criterion:** [the id of the item in the spec's `## Acceptance
-Criteria` list this task exists to deliver — e.g. `AC4 Refresh rotates the
-token`. A task with no spec criterion is scope you invented while planning.]
+Criteria` or `## Implicit Requirements` list this task exists to deliver —
+e.g. `AC4 Refresh rotates the token`, `IR2 Concurrent refreshes rotate
+once`. A task with no spec criterion is scope you invented while planning.]
 
 **Files:**
 - Create: `exact/path/to/file.py`
@@ -176,6 +179,7 @@ plan, in both directions. Two rules make that pass possible:
 |------|-----|
 | The header cites the spec's exact committed path | The auditor takes the path from the plan. No citation, and the traceability pass cannot run at all — it is reported as blocking, not skipped. |
 | Every task names the spec criterion it delivers | A task tracing to nothing is INVENTED SCOPE at the audit. A spec criterion no task names is LOST IN TRANSLATION. |
+| `AC` and `IR` ids trace identically | The audit charges both lists. An implicit requirement no task names fails the same way an acceptance criterion would. |
 
 Both failures are found by reading the spec and the plan side by side —
 which is what the auditor does, and what you should do before saving. A
@@ -187,9 +191,17 @@ task in. Amending the spec is cheap now and blocking later.
 
 ## Test Coverage Matrix
 
-Derived from the spec: one row per acceptance criterion, naming the kind of
-test required and the layer it lives in. A criterion promised a test in its
-own line and given no row is a criterion nobody planned to test.
+Derived from the spec: one row per criterion, naming the kind of test
+required and the layer it lives in. A criterion promised a test in its own
+line and given no row is a criterion nobody planned to test.
+
+**`IR` items are criteria of the first class here, not a second tier.** The
+spec's `## Implicit Requirements` — concurrency, error handling,
+observability, edge cases, limits — get a row each, on the same terms as
+every `AC`: a named test type, a real layer, an exact test id. An `IR` with
+no row is an omission, not a decision. If one genuinely cannot be tested at
+the layers this repository has, say so in the row and take it to your human
+partner; do not drop it and do not leave the row blank.
 
 The matrix is what the task reviewer charges test by test, and what marks a
 test matching no requirement as invented scope.
@@ -211,7 +223,7 @@ layers, labeled as a proposal for your human partner to approve.
 | Column | Rule |
 |--------|------|
 | Task | The task that delivers the criterion |
-| Criterion | Copied verbatim from that task's acceptance criteria |
+| Criterion | The spec id (`AC1`, `IR2`) plus the text, copied verbatim |
 | Test type | This repository's vocabulary, not a generic one — whatever its config and existing tests call the kinds |
 | Layer | The real directory the type lives in here |
 | Test | The exact test id a step in that task creates |

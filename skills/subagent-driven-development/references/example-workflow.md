@@ -29,7 +29,7 @@ Implementer: [Later]
 [Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
 Task reviewer: Spec ✅ - all requirements met, nothing extra.
   Test Evidence: `npm test test/hooks.test.js` exit 0 — 5 passed / 0 failed
-  (base: unknown); 3/3 brief criteria cited to a test file:line.
+  (base: unknown); 3/3 brief criteria (AC1, AC2, IR1) cited to a test file:line.
   Strengths: Good test coverage, clean. Issues: None. Task quality: Approved.
 
 [Ledger: Task 1: complete (commits a1b2c3d..d4e5f6a, review clean)]
@@ -47,7 +47,7 @@ Implementer: [No questions]
 Task reviewer: Spec ❌:
   - Missing: Progress reporting (spec says "report every 100 items")
   Test Evidence: `npm test test/recovery.test.js` exit 0 — 8 passed / 0 failed
-  (base: 5); criterion "reports every 100 items" — no test, row is `—`.
+  (base: 5); criterion AC4 "reports every 100 items" — no test, row is `—`.
   Issues (Important): Magic number (100)
 
 [Fix round 1: resume the implementer with both findings]
@@ -68,7 +68,7 @@ Re-reviewer: Test Run: `npm test test/recovery.test.js` exit 0 — 10 passed
 [After all tasks]
 [Dispatch superpowers:final-branch-audit with plan + MERGE_BASE..HEAD + ledger, most capable model]
 Auditor: PASS — spec docs/superpowers/specs/2026-03-04-feature-design.md
-  (exists, committed); traceability 9/9 TRACED, no invented scope;
+  (exists, committed); traceability 9/9 TRACED (6 AC + 3 IR), no invented scope;
   12/12 criteria DELIVERED, every row cited. No false completions.
 
 [Run review-package PLAN_FILE MERGE_BASE HEAD; dispatch final code-reviewer, most capable model]

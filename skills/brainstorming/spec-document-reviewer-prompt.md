@@ -19,7 +19,7 @@ Subagent (general-purpose):
     | Category | What to Look For |
     |----------|------------------|
     | Groundedness | Open EVERY `file:line` cited in the spec. Confirm it exists and does what the spec claims. See below. |
-    | Traceability | `## Acceptance Criteria` exists, numbered and addressable, one observable behavior per item. See below. |
+    | Traceability | `## Acceptance Criteria` and `## Implicit Requirements` exist, numbered and addressable, one observable behavior per item. See below. |
     | Completeness | TODOs, placeholders, "TBD", incomplete sections |
     | Consistency | Internal contradictions, conflicting requirements |
     | Clarity | Requirements ambiguous enough to cause someone to build the wrong thing |
@@ -58,9 +58,17 @@ Subagent (general-purpose):
     | Finding | Verdict |
     |---------|---------|
     | No `## Acceptance Criteria` section | BLOCKING |
+    | No `## Implicit Requirements` section — "None" is the way to say there are none | BLOCKING |
     | A criterion bundling several behaviors | BLOCKING — it cannot take one verdict; split it |
     | A criterion no `file:line` citation could settle ("handles errors well") | BLOCKING — rewrite it as an observable behavior |
     | A requirement stated in the prose sections but absent from the list | BLOCKING — name it; the plan traces the list, not the prose |
+
+    Read the prose for implicit requirements the spec discusses and never
+    gave an `IR` id: concurrency, error handling, observability, edge cases,
+    limits, failure modes. Each one is the row above — an unlisted implicit
+    requirement reaches no plan and no matrix, and nothing downstream can
+    notice it is missing. Judge them by the same bar as an `AC`; "it is
+    non-functional" is not a reason for a weaker one.
 
     ## Calibration
 

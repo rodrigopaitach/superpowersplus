@@ -10,6 +10,39 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.9 — requisito implícito entra na matriz de cobertura
+
+O `brainstorming` é bom em levantar requisito implícito — concorrência,
+tratamento de erro, observabilidade, caso de borda, limite —, mas nada
+obrigava esses achados a virarem linha da Test Coverage Matrix. Eles morriam
+na spec: sem id, não entram na rastreabilidade; sem linha na matriz, ninguém
+planeja o teste; e nenhum verificador consegue notar a falta do que nunca
+foi nomeado.
+
+- **`## Implicit Requirements`** — nova seção obrigatória da spec, numerada
+  `IR1`, `IR2`, …, escrita na mesma forma de um critério de aceite: um
+  comportamento observável, resolvível por citação `arquivo:linha`. Sem
+  nenhum, escreve-se "None".
+- **Um só espaço de ids** — `AC` e `IR` são cobrados de forma idêntica
+  daí em diante: a tarefa do plano nomeia qualquer um dos dois no
+  `**Spec criterion:**`, a matriz dá uma linha a cada um, e a tabela de
+  rastreabilidade da auditoria trata `IR` sem tarefa como `LOST IN
+  TRANSLATION`, igual a um `AC`.
+- **Primeira classe na matriz** — `IR` recebe tipo de teste nomeado, camada
+  real e id exato de teste, nas mesmas condições de um `AC`. `IR` sem linha
+  é omissão, não escolha; e o que não puder ser testado nas camadas
+  existentes vai declarado na linha e levado ao parceiro humano, nunca
+  descartado em silêncio.
+- **Regra do par nas duas pontas** — o revisor de spec bloqueia seção
+  ausente e requisito implícito discutido na prosa sem id `IR` ("é
+  não-funcional" não vale como bar mais baixa); o revisor de plano cobra a
+  cobertura e a linha da matriz para `AC` e `IR` igualmente.
+- **Exemplos atualizados** — todos os que enumeram critério: matriz do
+  cabeçalho do plano, as duas tabelas da auditoria, a tabela `Test Evidence`
+  do task reviewer e a transcrição em
+  `subagent-driven-development/references/example-workflow.md`, que depois do
+  plus.8 já não vive no SKILL.md.
+
 ## plus.8 — progressive disclosure no skill do controlador
 
 `subagent-driven-development/SKILL.md` estava com 577 linhas, acima das 500

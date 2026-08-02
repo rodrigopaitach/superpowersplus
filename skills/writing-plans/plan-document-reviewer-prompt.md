@@ -30,10 +30,10 @@ Subagent (general-purpose):
     |-------------|-------------|
     | The header cites a source spec path that exists and is committed | BLOCKING — without it the audit's traceability pass cannot run at all |
     | Every task carries a `**Spec criterion:**` line naming what motivated it | BLOCKING — a task tracing to nothing is INVENTED SCOPE at the audit |
-    | Every spec criterion is covered by at least one task | BLOCKING — LOST IN TRANSLATION at the audit; read the spec and the plan side by side, since a dropped requirement leaves no trace in the plan |
-    | A `## Test Coverage Matrix` with one row per acceptance criterion | BLOCKING — a criterion with no row is a criterion nobody planned to test |
+    | Every spec criterion is covered by at least one task — `AC` and `IR` alike | BLOCKING — LOST IN TRANSLATION at the audit; read the spec and the plan side by side, since a dropped requirement leaves no trace in the plan |
+    | A `## Test Coverage Matrix` with one row per spec criterion, `AC` and `IR` alike | BLOCKING — a criterion with no row is a criterion nobody planned to test. An `IR` (concurrency, error handling, observability, edge cases) is charged on the same terms as an `AC`: named test type, real layer, exact test id |
     | Every matrix row names a test some step actually creates | BLOCKING — a row pointing at a test no step writes is a placeholder wearing a table |
-    | Every acceptance criterion is observable and settled by a `file:line` citation | BLOCKING — "handles errors well" is a row the auditor can only fail |
+    | Every criterion, `AC` and `IR`, is observable and settled by a `file:line` citation | BLOCKING — "handles errors well" is a row the auditor can only fail |
 
     ## What to Check
 

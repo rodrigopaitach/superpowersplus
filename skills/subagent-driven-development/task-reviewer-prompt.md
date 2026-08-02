@@ -173,7 +173,7 @@ Subagent (general-purpose):
 
     | Criterion | Test file:line | Assertion |
     |-----------|----------------|-----------|
-    | [criterion, verbatim from the brief] | `tests/auth/test_verify.py:41` | [what it actually asserts, not the test's name] |
+    | [criterion id + text, verbatim from the brief — `AC1 …`, `IR2 …`] | `tests/auth/test_verify.py:41` | [what it actually asserts, not the test's name] |
     | [criterion nothing covers] | — | NONE |
 
     One row per criterion in the brief — including the ones with no test.
