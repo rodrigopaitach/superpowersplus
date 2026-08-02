@@ -1,5 +1,7 @@
 # superpowersplus
 
+[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest)
+
 A development methodology for coding agents, where every claim the agent makes about your code carries a `file:line` citation — and whoever verifies re-runs the search instead of taking the writer's word for it.
 
 > **Based on [Superpowers](https://github.com/obra/superpowers), by Jesse Vincent (Prime Radiant), under the MIT license.** superpowersplus is a derivative work: it keeps Superpowers' skills and workflow and adds its own verification layer on top. It is not affiliated with Jesse Vincent, Prime Radiant, or Anthropic, and speaks for none of them.
