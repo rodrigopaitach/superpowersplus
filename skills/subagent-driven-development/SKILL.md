@@ -19,7 +19,8 @@ ledger and the tool results carry the record.
 **Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
 2. **2–4 options with the cost of each**, always including doing nothing now.
-3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such — with no technical term left undefined in the sentence that uses it.
+3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.
+4. **Before sending, reread the whole message once**, looking for terms someone outside this project would not know. Rewrite each in plain language, or define it in the sentence that uses it. A gate verdict name (`LOST IN TRANSLATION`, `INVENTED SCOPE`, …) appears only in parentheses, never carrying the explanation.
 
 **Continuous execution:** Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are: BLOCKED status you cannot resolve, ambiguity that genuinely prevents progress, or all tasks complete. "Should I continue?" prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.
 

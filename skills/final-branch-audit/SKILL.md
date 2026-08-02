@@ -289,7 +289,8 @@ Traceability failures do not route like delivery gaps:
 **Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
 2. **2–4 options with the cost of each**, always including doing nothing now.
-3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such — with no technical term left undefined in the sentence that uses it.
+3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.
+4. **Before sending, reread the whole message once**, looking for terms someone outside this project would not know. Rewrite each in plain language, or define it in the sentence that uses it. A gate verdict name (`LOST IN TRANSLATION`, `INVENTED SCOPE`, …) appears only in parentheses, never carrying the explanation.
 
 ## Common Rationalizations
 

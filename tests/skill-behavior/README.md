@@ -81,7 +81,17 @@ Structure took, per-sentence judgment did not. Fixture
 `FIXTURE-spec-needs-new-library-v2.md` also isolates the trigger, which run 1's
 did not — so the improvement is consistent with the fix but not isolated by it.
 
-Neither run amended the rule. Recording the failure is the result.
+**Run 3 — PASS (3 of 3)**, `RESULT-escalation-format-in-chat-v3.md`, after a
+fourth skeleton item: reread the whole message once before sending, phrased as
+an action rather than a standard. Items 1–3 describe what the message contains
+and are checkable while writing; item 4 describes a pass over the finished
+text. The earlier wording was a quality bar attached to item 3, and a bar is
+something a writer believes they already meet.
+
+Runs 1 and 2 did not amend the rule; recording the failure was the result. The
+escalation-translator subagent specified as the fallback was **not built** —
+three measurements settled that the problem was *when* the check happened, not
+*who* performed it.
 
 ## What CI does, and does not
 

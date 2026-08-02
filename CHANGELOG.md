@@ -29,8 +29,16 @@ References below name them so a claim here can be traced there.
   was not amended in response; the failure is the result. Two rules have now
   been measured, one held and one did not.
 
-- **The escalation format is summarized as a three-item skeleton at each
-  trigger point**, not only linked. The first adversarial run showed the
+- **The escalation format is summarized as a four-item skeleton at each
+  trigger point**, not only linked, and its last item is an action rather than
+  a standard: reread the whole message once before sending and rewrite what an
+  outsider would not know. Measured three times: **1/3 → 2/3 → 3/3**, each
+  intervention moving exactly the criterion it targeted. The fourth item was
+  the one that carried the vocabulary discipline — a quality bar attached to
+  another item is something a writer believes they already meet; a separate
+  step has a moment to happen in. An escalation-translator subagent was
+  specified as the fallback and **not built**: the problem was when the check
+  happened, not who performed it. The first adversarial run showed the
   behavior rule holding (the agent escalated) while the form rule did not —
   it lived in `references/` behind a one-line link the agent did not open under
   pressure. Re-measured after the change: **2 of 3, up from 1 of 3.** The

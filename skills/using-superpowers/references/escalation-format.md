@@ -26,7 +26,12 @@ have no basis to take.
 3. **The recommendation, with its source declared**, in the order already in
    force: a pattern in this project (`path/file.ext:line`) > the dependency's
    official documentation > general good practice, said to be general practice.
-4. **A technical term only if defined in the same sentence.**
+4. **Before sending, reread the whole message once**, looking for terms
+   someone outside this project would not know. Rewrite each in plain
+   language, or define it in the sentence that uses it. This is a step you
+   perform, not a standard you aspire to: the writer is the worst judge of
+   what the reader does not know, and the only way past that is to go back
+   over the text once with the reader in mind.
 
 **Gate vocabulary** — `LOST IN TRANSLATION`, `FALSE COMPLETION`,
 `INVENTED SCOPE`, severity labels — may appear in parentheses as a reference
