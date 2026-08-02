@@ -32,6 +32,8 @@ You MUST create a task for each of these items and complete them in order:
 9. **User reviews written spec** — ask user to review the spec file before proceeding
 10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
+**Resuming a spec written before the map was required?** Build it from what the spec already contains — every criterion, finding, and assumption already there fills a row — and mark `Outstanding` only what the spec does not answer. Do not re-run the interview from scratch: the decisions were already made and approved, and reopening them costs your human partner the work twice.
+
 **The coverage map is a floor, not a ceiling.** Covering the ten categories does not end the interview, and no category — covered, deferred, or dismissed — authorizes skipping the design phase. A closed list invites being read as a stopping criterion. It is a stopping criterion for nothing: it is the minimum below which the interview was incomplete.
 
 ## Process Flow

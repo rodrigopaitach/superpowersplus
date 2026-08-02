@@ -104,7 +104,7 @@ Subagent (general-purpose):
 
     | Finding | Verdict |
     |---------|---------|
-    | No `## Coverage Map` section | BLOCKING — same treatment as the other required sections. An absent map and a map whose rows all say "not applicable, because …" must not look alike: the absent one is the spec that never asked |
+    | No `## Coverage Map` section | BLOCKING — same treatment as the other required sections. An absent map and a map whose rows all say "not applicable, because …" must not look alike: the absent one is the spec that never asked. **Report it as: "spec predates the requirement — regularize by building the map from the existing spec before proceeding."** The section became required after most specs were written; a spec that never had the chance to comply is not an author who skipped it, and the finding has to say which one it is or the author is left with a block and no way out |
     | A category with no recorded destination | BLOCKING — every category resolves to an `AC`/`IR` id, an item in `## Assumptions to Confirm`, or a stated reason it was already settled |
     | A state with no declared reason | BLOCKING — `Clear`, `Resolved`, `Deferred`, and `Outstanding` each carry why. A bare state cannot be told apart from a category nobody checked |
     | A question recorded with no recommendation | BLOCKING — the question handed a technical decision to someone with no basis to take it. That the answer arrived anyway does not repair it |
