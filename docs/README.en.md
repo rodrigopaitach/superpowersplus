@@ -49,6 +49,20 @@ Requires [Claude Code](https://claude.com/claude-code).
 
 **Why the plugin is called `superpowers` while the marketplace is `superpowersplus`:** the skills cross-reference each other by that prefix — `superpowers:brainstorming`, `superpowers:writing-plans`, `superpowers:final-branch-audit`, and so on, across dozens of points scattered through the skill files. Renaming the plugin would break every one of those references. It is the marketplace that needs its own name, so it does not collide with the upstream one.
 
+## Updating
+
+This fork is not on the official marketplace, so **nothing updates itself**. Two steps, in this order:
+
+1. **Rebase onto the upstream**, to bring in `obra/superpowers`'s changes. This is where the `plus.N` changes can conflict — and why they were written to touch as little as possible of the files the upstream edits often.
+2. **Refresh the installed plugin:**
+
+   ```
+   /plugin marketplace update superpowersplus
+   /reload-plugins
+   ```
+
+If you use the fork without tracking the upstream, only step 2 applies.
+
 ## How it works
 
 The flow is **spec → plan → tasks → audit**. You invoke nothing: the skills trigger on their own when you ask for something that involves building.

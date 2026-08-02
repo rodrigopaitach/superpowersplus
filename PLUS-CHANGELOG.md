@@ -10,6 +10,35 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.31 — a seção Updating descreve o fluxo real do fork
+
+A última afirmação do `README.md` que descrevia o upstream como se fosse este
+repositório: *"Superpowers updates are somewhat coding-agent dependent, but
+are often automatic."* Verdadeiro para quem instala do marketplace oficial;
+falso aqui. Quem lesse isso esperaria atualização automática e ficaria com uma
+cópia velha sem nenhum sinal — o modo de falha mais silencioso possível, já
+que um plugin desatualizado funciona.
+
+- **Uma linha trocada por uma linha** — o `README.md` é o arquivo de maior
+  superfície de conflito, e o diff fechou em `1 inserção, 1 remoção`. O texto
+  novo diz o que é falso hoje (nada se atualiza sozinho) e remete ao
+  procedimento; não o repete.
+- **O procedimento vive nos documentos por idioma** — `## Atualizando` e
+  `## Updating`, com os dois passos na ordem: rebasear sobre o upstream, e
+  então `/plugin marketplace update superpowersplus` seguido de
+  `/reload-plugins`. Quem não acompanha o upstream faz só o segundo. As
+  âncoras `#atualizando` e `#updating` foram conferidas nos destinos.
+- **O passo 1 nomeia o custo que o fork vinha pagando adiantado** — rebasear é
+  onde as alterações `plus.N` conflitam, e é a razão de tantas entradas
+  anteriores insistirem em tocar o mínimo dos arquivos que o upstream edita.
+  A seção de atualização é o primeiro lugar onde essa disciplina aparece como
+  benefício para quem lê, e não como regra interna de quem escreve.
+- **Os dois comandos entraram sob a palavra do operador do fork** — nem
+  `/plugin marketplace update` nem `/reload-plugins` aparecem em qualquer
+  arquivo deste repositório, então não há citação `arquivo:linha` que os
+  fundamente. São o procedimento que ele executa no próprio ambiente, e é
+  registrado aqui como tal: fonte declarada, não medida.
+
 ## plus.30 — README reflete o fork e orienta desligar a telemetria
 
 As três sobras do plus.29, todas no `README.md` — o arquivo de maior

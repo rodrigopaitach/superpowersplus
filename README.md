@@ -304,7 +304,7 @@ This fork is personal and does not take contributions. Contributing to the origi
 
 ## Updating
 
-Superpowers updates are somewhat coding-agent dependent, but are often automatic.
+This fork is not on the official marketplace, so nothing updates itself: rebase onto the upstream, then refresh the plugin from this marketplace. Full procedure in [Português](docs/README.pt-BR.md#atualizando) / [English](docs/README.en.md#updating).
 
 ## License
 

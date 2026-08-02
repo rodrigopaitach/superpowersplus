@@ -49,6 +49,20 @@ Requer o [Claude Code](https://claude.com/claude-code).
 
 **Por que o plugin se chama `superpowers` e o marketplace `superpowersplus`:** as skills se referenciam entre si por esse prefixo — `superpowers:brainstorming`, `superpowers:writing-plans`, `superpowers:final-branch-audit` e assim por diante, em dezenas de pontos espalhados pelos arquivos de skill. Renomear o plugin quebraria todas essas referências. O marketplace é que precisa de nome próprio, para não colidir com o do upstream.
 
+## Atualizando
+
+Este fork não está no marketplace oficial, então **nada se atualiza sozinho**. São dois passos, nesta ordem:
+
+1. **Rebasear sobre o upstream**, para trazer as mudanças do `obra/superpowers`. É aqui que as alterações `plus.N` podem conflitar — e é por isso que elas foram escritas para tocar o mínimo possível dos arquivos que o upstream edita com frequência.
+2. **Atualizar o plugin instalado:**
+
+   ```
+   /plugin marketplace update superpowersplus
+   /reload-plugins
+   ```
+
+Quem usa o fork sem acompanhar o upstream faz só o passo 2.
+
 ## Como funciona
 
 O fluxo é **spec → plano → tarefas → auditoria**. Você não invoca nada: as skills se ativam sozinhas quando você pede algo que envolva construir.
