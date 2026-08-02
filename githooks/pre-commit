@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# pre-commit — versioned repository hooks.
+#
+# Activate once per clone (.git/ is not versionable, so this cannot be
+# automatic):
+#   git config core.hooksPath githooks
+#
+# Add further checks below; this file is the single entry point.
+#
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+
+"$repo_root/scripts/check-docs-sync.sh"

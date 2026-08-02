@@ -4,7 +4,7 @@
 >
 > **Editar um exige editar o outro no MESMO commit.** Um commit que altera só um dos dois abre uma divergência que ninguém consegue ver depois: as duas versões continuam plausíveis, e nada indica qual envelheceu.
 >
-> Para a regra ser cobrada e não só declarada: `ln -s ../../scripts/check-docs-sync.sh .git/hooks/pre-commit`. O script é versionado no repositório; ativá-lo é decisão de cada clone.
+> Para a regra ser cobrada e não só declarada: `git config core.hooksPath githooks`. Os hooks são versionados em `githooks/`; ativá-los é decisão de cada clone, porque `.git/` não é versionável.
 
 ## O que é
 
