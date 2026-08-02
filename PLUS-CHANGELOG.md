@@ -3,6 +3,8 @@
 Mudanças deste fork ([rodrigopaitach/superpowersplus](https://github.com/rodrigopaitach/superpowersplus))
 sobre o upstream [obra/superpowers](https://github.com/obra/superpowers).
 Entradas `plus.N` são numeradas na ordem em que entraram no fork.
+O campo `version` em `.claude-plugin/plugin.json` e `package.json` espelha o
+upstream e não é alterado aqui — a numeração `plus.N` é independente dele.
 
 Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
