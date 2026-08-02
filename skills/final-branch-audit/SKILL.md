@@ -284,7 +284,12 @@ Traceability failures do not route like delivery gaps:
 | INVENTED SCOPE | Work exists that nobody specified. Your human partner decides: amend the spec to cover it, or remove it. Not the fixer's call. |
 | No spec cited, or the cited spec is missing/uncommitted | Stop and ask. There is nothing to trace against, and inferring a spec fabricates the baseline. |
 
-**Present these three to your human partner in the escalation format** — `skills/using-superpowers/references/escalation-format.md`: the consequence first, the options with their cost, and a recommendation with its source. The verdict names above are precise for the audit; they explain nothing to someone who does not read this repository, so they ride along in parentheses.
+**Present these three to your human partner in the shape below.** The verdict names above are precise for the audit; they explain nothing to someone who does not read this repository, so they ride along in parentheses.
+
+**Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
+1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
+2. **2–4 options with the cost of each**, always including doing nothing now.
+3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such — with no technical term left undefined in the sentence that uses it.
 
 ## Common Rationalizations
 

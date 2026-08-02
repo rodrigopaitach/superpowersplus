@@ -65,7 +65,12 @@ After all tasks complete and verified, and the audit PASSes:
 - You don't understand an instruction
 - Verification fails repeatedly
 
-**Ask for clarification rather than guessing.** Put the ask in the escalation format — `skills/using-superpowers/references/escalation-format.md`: what breaks if it is not decided, the options with their cost (including doing nothing now), and your recommendation with its source.
+**Ask for clarification rather than guessing.**
+
+**Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
+1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
+2. **2–4 options with the cost of each**, always including doing nothing now.
+3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such — with no technical term left undefined in the sentence that uses it.
 
 ## When to Revisit Earlier Steps
 

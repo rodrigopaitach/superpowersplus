@@ -79,7 +79,12 @@ open.
 spec's `## External Dependencies` or its architecture section, or to a
 manifest already in this repo — name which, `package.json:31`. A library
 appearing here for the first time is a design decision nobody approved:
-take it to your human partner instead of writing it in, in the escalation format (`skills/using-superpowers/references/escalation-format.md`).]
+take it to your human partner instead of writing it in.]
+
+**Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
+1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
+2. **2–4 options with the cost of each**, always including doing nothing now.
+3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such — with no technical term left undefined in the sentence that uses it.
 
 ## Global Constraints
 

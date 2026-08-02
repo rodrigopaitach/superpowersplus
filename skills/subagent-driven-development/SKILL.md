@@ -14,7 +14,12 @@ Execute plan by dispatching a fresh implementer subagent per task, a task review
 **Narration:** between tool calls, narrate at most one short line — the
 ledger and the tool results carry the record.
 
-**When you do escalate to your human partner** — the plan is wrong, an iteration cap was hit, residuals were parked — present it in the escalation format: `skills/using-superpowers/references/escalation-format.md`. A subagent's report to you is unchanged; that is machine to machine.
+**When you do escalate to your human partner** — the plan is wrong, an iteration cap was hit, residuals were parked — use the shape below. A subagent's report to you is unchanged; that is machine to machine.
+
+**Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
+1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
+2. **2–4 options with the cost of each**, always including doing nothing now.
+3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such — with no technical term left undefined in the sentence that uses it.
 
 **Continuous execution:** Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are: BLOCKED status you cannot resolve, ambiguity that genuinely prevents progress, or all tasks complete. "Should I continue?" prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.
 
@@ -347,8 +352,8 @@ Before the loop starts, two routes leave it immediately:
   never enter the loop.
 - A finding labeled plan-mandated — or any finding that conflicts with
   what the plan's text requires — is the human's decision, like any plan
-  contradiction: present the finding and the plan text in the escalation
-  format (`../using-superpowers/references/escalation-format.md`), and ask which governs.
+  contradiction: present the finding and the plan text, and ask which
+  governs, in the escalation shape above.
   Do not dismiss the finding because the plan mandates it, and do not
   dispatch a fix that contradicts the plan without asking.
 Everything else enters the loop. A fix round is one fix dispatch plus one
@@ -402,9 +407,9 @@ the cross-task context the reviewer lacks:
   a ruling that says it's real and deferred.
 - **Real and load-bearing** — a later task builds on it, or it reveals a
   plan defect: STOP. Append `Task <N>: BLOCKED — <reason>` and report to
-  your human partner in the escalation format (`../using-superpowers/references/escalation-format.md`) — the finding, the
-  plan text it collides with, and the fix history are the evidence behind
-  it, not the opening. Parking a structural failure lets every dependent task
+  your human partner in the escalation shape above — the finding, the plan
+  text it collides with, and the fix history are the evidence behind it,
+  not the opening. Parking a structural failure lets every dependent task
   build on it and hands the final review a problem it cannot fix either.
 
 Adjudicate only at the cap. Adjudicating earlier to end a loop is
