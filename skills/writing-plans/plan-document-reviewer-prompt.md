@@ -48,12 +48,21 @@ Subagent (general-purpose):
     under **Unverified External Calls** — never approved silently, because
     an unreachable source and a confirmed one look identical in the plan.
 
+    The citation and the code must be the same language: a JavaScript
+    source cannot ground a Python call, however real the line it points at.
+    A language mismatch between the comment and the code below it is a
+    citation that was never read.
+
     Example of a step that passes:
 
-        # stripe@14.21.0 (pinned at package-lock.json:1188)
-        # node_modules/stripe/src/resources/PaymentIntents.js:41 —
-        # create(params, options); idempotency key goes in options.
-        intent = stripe.PaymentIntent.create({...}, idempotency_key=key)
+        // stripe@19.1.0 — https://docs.stripe.com/api/idempotent_requests
+        // create(params, options): the idempotency key is a request option,
+        // never a param — RequestOptions.idempotencyKey sets the
+        // Idempotency-Key header.
+        const intent = await stripe.paymentIntents.create(
+          {amount: 1200, currency: 'brl'},
+          {idempotencyKey: key},
+        );
 
     ## What to Check
 

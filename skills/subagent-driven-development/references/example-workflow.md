@@ -29,7 +29,14 @@ Implementer: [Later]
 [Run review-package PLAN_FILE BASE HEAD; dispatch task reviewer with the printed path]
 Task reviewer: Spec ✅ - all requirements met, nothing extra.
   Test Evidence: `npm test test/hooks.test.js` exit 0 — 5 passed / 0 failed
-  (base: unknown); 3/3 brief criteria (T1.1, T1.2, T1.3) cited to a test file:line.
+  (base: unknown)
+
+  | Criterion | Test file:line | Assertion |
+  |-----------|----------------|-----------|
+  | T1.1 Installs the hook at user level | `test/hooks.test.js:12` | the file exists under ~/.config/superpowers/hooks/ after install |
+  | T1.2 `--force` overwrites an existing hook | `test/hooks.test.js:31` | second install rewrites the file, exit 0 |
+  | T1.3 Refuses to overwrite without `--force` | `test/hooks.test.js:48` | exits non-zero and the file is byte-identical |
+
   Strengths: Good test coverage, clean. Issues: None. Task quality: Approved.
 
 [Ledger: Task 1: complete (commits a1b2c3d..d4e5f6a, review clean)]
@@ -47,7 +54,14 @@ Implementer: [No questions]
 Task reviewer: Spec ❌:
   - Missing: Progress reporting (spec says "report every 100 items")
   Test Evidence: `npm test test/recovery.test.js` exit 0 — 8 passed / 0 failed
-  (base: 5); criterion T2.3 "reports every 100 items" — no test, row is `—`.
+  (base: 5)
+
+  | Criterion | Test file:line | Assertion |
+  |-----------|----------------|-----------|
+  | T2.1 Verify mode reports corrupt entries | `test/recovery.test.js:15` | every corrupt id is listed, exit 1 |
+  | T2.2 Repair mode rewrites corrupt entries | `test/recovery.test.js:37` | a corrupt entry re-reads as valid after repair |
+  | T2.3 Reports every 100 items | — | NONE |
+
   Issues (Important): Magic number (100)
 
 [Fix round 1: resume the implementer with both findings]

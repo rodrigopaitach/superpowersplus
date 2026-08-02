@@ -10,6 +10,43 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.16 — o exemplo de grounding citava fonte de outra linguagem
+
+Achados da varredura de exemplos duplicados do plus.15, corrigidos em vez de
+adiados.
+
+- **Fonte JavaScript fundamentando código Python** — o exemplo de
+  `## Code That Calls a Dependency` mostrava
+  `intent = stripe.PaymentIntent.create(...)` citando
+  `node_modules/stripe/src/resources/PaymentIntents.js:41`. O único exemplo
+  do fork cuja função é ensinar grounding correto ensinava o erro que a
+  seção existe para proibir: citação que não pode fundamentar o código
+  exibido. Agora é JavaScript com fonte JavaScript, e as duas cópias
+  (`writing-plans/SKILL.md` e `plan-document-reviewer-prompt.md`) são
+  idênticas caractere a caractere.
+- **Regra nova, nas duas faces** — "a citação e o código têm que ser a mesma
+  linguagem: uma fonte JavaScript não fundamenta uma chamada Python, por
+  mais real que seja a linha apontada". No revisor a linha fecha com
+  "descasamento de linguagem entre o comentário e o código abaixo dele é
+  citação que ninguém leu".
+- **Divergência sobre o idempotency key resolvida na fonte** — uma cópia
+  dizia "goes in options, never in params", a outra perdia o "never in
+  params", e o código passava `idempotency_key=key` como keyword argument,
+  que não é nem um nem outro. Verificado em `stripe-node`: `create(params,
+  options)`, e `idempotencyKey` é campo de `RequestOptions`, o segundo
+  argumento. A doc oficial (`https://docs.stripe.com/api/idempotent_requests`)
+  confirma: *"provide an additional `IdempotencyKey` element to the request
+  options"*. O exemplo passou a usar a forma de citação por doc oficial —
+  não a forma lockfile+linha — porque este repositório é zero-dependency e
+  não existe lockfile contra o qual confirmar um número de linha. Citação
+  que eu não pudesse verificar seria o próprio defeito sendo reintroduzido.
+- **Tabela obrigatória exibida no exemplo consumido** —
+  `references/example-workflow.md` resumia a Test Evidence em contagem de
+  prosa ("3/3 brief criteria … cited to a test file:line"), sem a coluna
+  `Assertion`, justamente a que existe para pegar teste que não afirma nada.
+  Os dois retornos de revisor do exemplo agora exibem a tabela de três
+  colunas, um deles com a linha `—`/`NONE` que dispara a rodada de correção.
+
 ## plus.15 — exemplos e faces divergentes
 
 Varredura de consistência achou quatro pontos onde a regra existe e a cópia
@@ -512,22 +549,14 @@ lacuna sem registro volta como descoberta.
   plano; a chamada entregue não é verificada por ninguém. É a fronteira
   plano → código, um degrau adiante da que o plus.13 fechou, e tem o tamanho
   de um pacote próprio.
-- **Exemplo da Test Evidence resumido no consumidor** —
-  `task-reviewer-prompt.md` exige tabela de três colunas
-  (`Criterion | Test file:line | Assertion`), uma linha por critério, e diz
-  que omiti-la é o próprio achado. O exemplo em
-  `subagent-driven-development/references/example-workflow.md:31-33`
-  renderiza isso como contagem em prosa ("3/3 brief criteria … cited to a
-  test file:line"), sem contrapartida para a coluna `Assertion` — a coluna
-  que existe para pegar teste que não afirma nada. A linha 49-50 do mesmo
-  exemplo já mostra uma linha `—`, então o exemplo conhece a tabela pela
-  metade.
-- **Exemplo do stripe cita fonte em outra linguagem** — em
-  `writing-plans/SKILL.md:284-291` e `plan-document-reviewer-prompt.md:53-56`
-  o mesmo trecho fundamenta código Python (`stripe.PaymentIntent.create`)
-  numa fonte JavaScript (`node_modules/stripe/src/resources/PaymentIntents.js:41`).
-  Um exemplo cuja única função é demonstrar grounding correto cita uma fonte
-  que não fundamenta o código exibido. As duas cópias também divergem entre
-  si: a do plano diz "the idempotency key goes in options, never in params"
-  e passa `idempotency_key=key` como keyword argument; a do revisor perde o
-  "never in params".
+- **Exemplos do stripe no brainstorming não acompanharam o plus.16** —
+  `brainstorming/SKILL.md:94` e `:163` seguem citando `stripe@14.21.0` com
+  `node_modules/stripe/src/resources/PaymentIntents.js:41` e
+  `node_modules/stripe/src/RequestSender.js:212`, enquanto os exemplos do
+  plano passaram a `stripe@19.1.0` com fonte verificada. Duas divergências
+  de uma vez: a versão, que agora difere entre skills do mesmo fork, e o
+  caminho, que aponta para `src/*.js` — no `stripe-node` o diretório `src/`
+  é TypeScript (`src/lib.ts`, `src/resources/*.ts`) e o pacote publicado
+  entrega `cjs/` e `esm/`, então esse caminho provavelmente não existe em
+  instalação nenhuma. Fora do escopo autorizado do plus.16, e é o mesmo
+  defeito: exemplo de citação que a própria regra reprovaria.

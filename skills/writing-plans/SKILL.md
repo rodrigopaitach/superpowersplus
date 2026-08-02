@@ -280,14 +280,18 @@ inverts the cost: it reaches the implementer as an exact value, the reviewer
 sees code that looks deliberate, and the disagreement surfaces at
 integration.
 
-```python
-# stripe@14.21.0 (pinned at package-lock.json:1188)
-# node_modules/stripe/src/resources/PaymentIntents.js:41 — create(params,
-# options); the idempotency key goes in options, never in params.
-intent = stripe.PaymentIntent.create(
-    {"amount": 1200, "currency": "brl"},
-    idempotency_key=key,
-)
+The citation and the code have to be the same language: a JavaScript source
+cannot ground a Python call, however real the line it points at.
+
+```javascript
+// stripe@19.1.0 — https://docs.stripe.com/api/idempotent_requests
+// create(params, options): the idempotency key is a request option,
+// never a param — RequestOptions.idempotencyKey sets the
+// Idempotency-Key header.
+const intent = await stripe.paymentIntents.create(
+  {amount: 1200, currency: 'brl'},
+  {idempotencyKey: key},
+);
 ```
 
 ## Plan Review
