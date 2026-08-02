@@ -212,7 +212,7 @@ When writing or changing any test, read [writing-good-tests.md](writing-good-tes
 ## What Counts as a Valid Test
 
 Know this before the reviewer charges it. The task reviewer re-runs your
-test command itself and fills a `Criterion | test file:line | assertion`
+test command itself and fills a `Criterion | Test file:line | Assertion`
 table from your tests — your reported run is a claim, not evidence, so
 report the exact command and its output for the two runs to be compared.
 

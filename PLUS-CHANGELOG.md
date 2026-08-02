@@ -10,6 +10,26 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.20 — exemplos alinhados às especificações que ilustram
+
+Divergências entre um exemplo e a especificação que ele ilustra, no mesmo
+arquivo. Nenhuma delas contradiz regra: cada uma demonstra uma variação da
+regra, e é a variação que o modelo copia.
+
+- **`Ready to merge`** — o Output Format do code reviewer pede
+  `**Ready to merge?** [Yes | No | With fixes]`; o Example Output do mesmo
+  arquivo escrevia `**Ready to merge: With fixes**`, com dois-pontos dentro
+  do negrito e sem a interrogação. Alinhado à pontuação da especificação.
+- **Rótulos dos buckets** — a especificação nomeia
+  `#### Important (Should Fix)` e `#### Minor (Nice to Have)`; o exemplo
+  escrevia `#### Important` e `#### Minor`. Os parênteses são o que diz ao
+  revisor o que cada severidade obriga; exemplo sem eles ensina a decidir
+  severidade sem o critério.
+- **Cabeçalho da tabela do revisor** — `test-driven-development` descrevia a
+  tabela como `Criterion | test file:line | assertion`, em minúsculas; o
+  cabeçalho real em `task-reviewer-prompt.md:163` é
+  `Criterion | Test file:line | Assertion`.
+
 ## plus.19 — exemplos que ensinavam comportamento impossível
 
 Varredura de exemplos por eixo novo: comparar cada exemplo contra a

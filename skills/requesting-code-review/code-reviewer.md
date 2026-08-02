@@ -155,7 +155,7 @@ Subagent (general-purpose):
 
 ### Issues
 
-#### Important
+#### Important (Should Fix)
 1. **Missing help text in CLI wrapper**
    - File: index-conversations:1-31
    - Issue: No --help flag, users won't discover --concurrency
@@ -166,7 +166,7 @@ Subagent (general-purpose):
    - Issue: Invalid dates silently return no results
    - Fix: Validate ISO format, throw error with example
 
-#### Minor
+#### Minor (Nice to Have)
 1. **Progress indicators**
    - File: indexer.ts:130
    - Issue: No "X of Y" counter for long operations
@@ -178,7 +178,7 @@ Subagent (general-purpose):
 
 ### Assessment
 
-**Ready to merge: With fixes**
+**Ready to merge?** With fixes
 
 **Reasoning:** Core implementation is solid with good architecture and tests. Important issues (help text, date validation) are easily fixed and don't affect core functionality.
 ```
