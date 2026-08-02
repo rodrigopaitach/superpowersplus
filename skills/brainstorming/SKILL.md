@@ -127,6 +127,15 @@ spoofed source: record it in `## Assumptions to Confirm` and treat the claim
 as ungrounded. This is the rule the spec reviewer applies to the same pages,
 stated there in full.
 
+**A central dependency past end-of-life, or with a deprecation the vendor has
+announced, is a finding — never a migration you start.** Verify it in the
+vendor's own documentation and cite it in the form above, then report it under
+`## Assumptions to Confirm` (or the equivalent section) for your human partner
+to decide. Do not migrate, upgrade, or rewrite around it, and do not fold the
+upgrade into the design as though it were part of the request. **Migrating a
+stack is a project of its own, not a gate on this one** — and choosing it costs
+money, time, and risk that belong to your partner, not to you.
+
 Cannot reach the docs and the dependency is not vendored locally? Then it is
 an assumption. Say so in `## Assumptions to Confirm`, with what you tried.
 
