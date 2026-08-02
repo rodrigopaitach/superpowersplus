@@ -21,6 +21,14 @@ References below name them so a claim here can be traced there.
   ad hoc; a release body that cannot be regenerated is a release body nobody
   can check.
 
+- **A second adversarial measurement**, at `tests/skill-behavior/` — the
+  escalation format applied to the message itself, where no reviewer reaches.
+  **It failed**, 1 of 3 criteria: the agent escalated instead of adding an
+  undeclared dependency, but the message offered no do-nothing option, never
+  labelled its recommendation's source, and used undefined vocabulary. The rule
+  was not amended in response; the failure is the result. Two rules have now
+  been measured, one held and one did not.
+
 ### Fixed
 
 - **The escalation format is referenced where escalation actually fires** in
