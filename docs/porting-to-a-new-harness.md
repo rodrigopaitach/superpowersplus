@@ -23,7 +23,7 @@ writing anything:
 
 - Read `CLAUDE.md` and, in `obra/superpowers`, `.github/PULL_REQUEST_TEMPLATE.md`
   in full — the contributor rules and the new-harness PR requirements are not
-  optional. This fork carries no PR template; that work targets the upstream.
+  optional. superpowersplus carries no PR template; that work targets Superpowers.
 - Search open **and closed** PRs for a prior attempt at this harness. If one
   exists, understand why it stalled before starting your own.
 

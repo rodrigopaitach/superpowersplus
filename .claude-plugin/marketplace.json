@@ -1,13 +1,13 @@
 {
   "name": "superpowersplus",
-  "description": "Marketplace pessoal do superpowersplus",
+  "description": "Marketplace do superpowersplus",
   "owner": {
     "name": "Rodrigo Lopes Paitach"
   },
   "plugins": [
     {
       "name": "superpowers",
-      "description": "Superpowers com specs fundamentadas no código real, matriz de cobertura de testes e auditoria final de branch. Fork de obra/superpowers (Jesse Vincent, MIT).",
+      "description": "superpowersplus — metodologia de desenvolvimento para agentes de código: spec fundamentada em citação arquivo:linha, matriz de cobertura de testes, revisor de tarefa que reexecuta a suíte e auditoria de conformidade no fim da branch. Obra derivada de Superpowers (Jesse Vincent, MIT).",
       "version": "6.2.0",
       "source": "./",
       "author": {

@@ -20,6 +20,52 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.33 — o projeto passa a se apresentar por si
+
+Até aqui o repositório se apresentava como fork: o README descrevia o
+Superpowers e falava na voz dele, com um bloco de fork por cima explicando o
+que era diferente. A identidade era negativa — definida pela distância em
+relação a outro projeto, e não pelo que este entrega.
+
+**A relação técnica não mudou.** O remote continua, e rebasear sobre o
+Superpowers segue sendo a forma de incorporar as melhorias deles. Mudou a
+apresentação e o tom.
+
+- **Crédito mais visível, não menos** — a linha de atribuição saiu de nota de
+  rodapé e foi para logo abaixo do título, no README e nos dois documentos por
+  idioma: baseado em Superpowers, de Jesse Vincent (Prime Radiant), sob MIT,
+  com link para o repositório original. A seção final atribui metodologia,
+  skills e fluxo a eles, e delimita o que é deste projeto. `LICENSE` não foi
+  tocada e o copyright permanece com Jesse Vincent. Derivar de MIT com crédito
+  é legítimo; apagar a origem não é, e a resposta a "isto agora é meu projeto"
+  foi creditar mais, não menos.
+- **"Diferenças em relação ao upstream" virou "O que acrescenta ao
+  Superpowers"** — a mesma lista de cinco eixos, com o sujeito trocado. Título
+  que enuncia distância obriga o leitor a conhecer o outro projeto antes de
+  entender este.
+- **Instalação de outros harnesses aponta para este repositório**, com a
+  ressalva declarada de que só o Claude Code é exercitado aqui e de que
+  problemas com os demais pertencem às issues deste repositório. Codex, Cursor
+  e Copilot CLI seguem descritos como marketplaces que carregam o Superpowers,
+  porque é o que carregam.
+- **Institucionais alinhados** — `CONTRIBUTING`, `CODE_OF_CONDUCT`,
+  `CLAUDE.md` e `RELEASE-NOTES` deixam de chamar o projeto de fork pessoal. O
+  código de conduta continua declarado como herdado verbatim, e o
+  redirecionamento ao `obra/superpowers` continua para o que for sobre o
+  Superpowers em si. A seção `Fork-specific changes` do `CLAUDE.md` virou
+  `Downstream-specific changes`: a regra do upstream continua valendo, com o
+  vocabulário certo.
+- **Metadados de plugin descrevem o projeto, o `name` não muda** — `plugin.json`
+  e `marketplace.json` passam a descrever o superpowersplus por si, mantendo
+  "Obra derivada de Superpowers (Jesse Vincent, MIT)". O campo `name` continua
+  `superpowers`: o prefixo é como as skills se referenciam entre si, em
+  centenas de pontos, e trocá-lo quebraria todas de uma vez.
+- **As entradas anteriores não foram reescritas** — de `plus.1` a `plus.32`
+  falam em "fork" porque era o vocabulário da época. Changelog é registro do
+  que aconteceu, não descrição do estado atual; reescrever o passado para
+  combinar com o presente apagaria justamente a mudança que esta entrada
+  documenta. A nota de status no topo do arquivo diz isso de uma vez.
+
 ## plus.32 — CI converte em falha visível o que hoje falha em silêncio
 
 O `githooks/pre-commit` do plus.28 só protege quem rodou
