@@ -58,6 +58,12 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **Four test suites CI never ran now run on every push** — `tests/shell-lint/`,
+  `tests/hooks/`, `tests/codex-plugin-sync/` and `tests/antigravity/`. They
+  existed, passed, and blocked nothing; three consecutive adversarial runs
+  surfaced them unprompted, which is how the gap was found. Each builds its own
+  temporary repository or reads files directly, so none depends on the
+  checkout's index. Suites that dispatch a live agent stay out on purpose.
 - **`scripts/check-docs-sync.sh` and `scripts/check-frozen-history.sh` missed
   deletions.** Both filtered staged paths with `--diff-filter=ACMR`, which
   excludes `D` — so `git rm` on one of the bilingual pair, or on the frozen

@@ -86,6 +86,6 @@ Bump with `scripts/bump-version.sh <version>`; the seven files carrying the fiel
 
 Skills are not prose — they are code that shapes agent behavior. Carefully-tuned content (Red Flags tables, rationalization lists, "human partner" language) is not reworded without evidence the change improves outcomes.
 
-Adversarial skill-behavior tests live at [`tests/skill-behavior/`](tests/skill-behavior/) — a fixture, the input carrying it, and a recorded result per rule. Read its `README.md` before adding one. Plugin-infrastructure tests are at `tests/`, run via each directory's own `run-*.sh`. CI runs the `brainstorm-server` suite, shell lint, and the bilingual-docs sync check on every push.
+Adversarial skill-behavior tests live at [`tests/skill-behavior/`](tests/skill-behavior/) — a fixture, the input carrying it, and a recorded result per rule. Read its `README.md` before adding one. Plugin-infrastructure tests are at `tests/`, run via each directory's own `run-*.sh`. CI runs, on every push: the `brainstorm-server`, `shell-lint`, `hooks`, `codex-plugin-sync` and `antigravity` suites, shell lint, the bilingual-docs sync check, and the integrity check on the adversarial records. Suites that dispatch a live agent are deliberately out — they cost tokens and are non-deterministic. A suite CI does not run blocks nothing; if you add one, add its step.
 
 Most rules in this project are reasoned, not measured. When you add one, say which it is.
