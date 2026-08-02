@@ -170,6 +170,21 @@ Identified and deliberately left open, each with the reason it was not closed.
 **This is the live list** — closing one updates it here. When each was opened is
 recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas).
 
+- **`tests/claude-code/test-subagent-driven-development.sh` is
+  non-deterministic and currently fails.** Its "Mentions loading plan"
+  assertion greps a live agent's free-form answer for the English phrases
+  `Load Plan|read.*plan|extract.*tasks`. In an environment configured to answer
+  in another language the agent describes plan-reading correctly and the grep
+  misses it — observed verbatim as *"Ler o plano e a spec citada"*. Not caused
+  by this project: the expected phrasing is present in
+  `skills/subagent-driven-development/SKILL.md:152` and in the upstream's copy
+  at the same positions, and our only edit there was additive
+  (`read plan` → `read plan + cited spec`), which still matches. Confirmed
+  failing at `b6b68ef` in a clean detached clone. Left unfixed: it is an
+  upstream test, and rewriting its regex would make it assert something other
+  than what it asserts. Treat a failure here as uninformative until the
+  assertion is language-agnostic.
+
 - **The TDD Iron Law has no verifying face.** The implementer prompt requires a
   test before code, but no verifier can prove the order: the only record that
   the test came first is a report section written by the party being audited. A
