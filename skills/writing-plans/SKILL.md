@@ -226,29 +226,35 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - Steps that describe what to do without showing how (code blocks required for code steps)
 - References to types, functions, or methods not defined in any task
 
-## Self-Review
+## Plan Review
 
-After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
+Save the complete plan, then dispatch a plan document reviewer subagent
+using the template at
+[plan-document-reviewer-prompt.md](plan-document-reviewer-prompt.md). The
+reviewer reads the file, not your context — save first.
 
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+**Do NOT review it inline yourself.** You wrote the plan; reading it again
+gives you the same blind spots that wrote it, and the checks that matter
+here are exactly the ones an author passes by assumption: that the spec
+path resolves, that every criterion has a task, that every task traces
+back, that the matrix names tests the steps actually create. The reviewer
+opens the spec and reads it against your plan — the same pass
+superpowers:final-branch-audit runs at the end of the branch, run now, when
+a gap costs a paragraph instead of a re-plan.
 
-**2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
+Hand it the plan file path and nothing else: the spec path comes from the
+plan's own header, and confirming it is part of what the reviewer checks.
 
-**3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
-
-**4. Auditable criteria:** Does every task have acceptance criteria, each one observable, settled by a citation, and naming its covering test? Read each one as the auditor will: could a `file:line` prove or disprove it? If not, rewrite it.
-
-**5. Traceability:** Does the header cite the spec's exact committed path, and does every task name the spec criterion it delivers? Item 1 reads spec → task; this one reads task → spec. A task naming no criterion is scope you invented while planning, and the audit charges it as INVENTED SCOPE. Without the path, the audit cannot run this pass at all.
-
-**6. Matrix coverage:** Does every acceptance criterion have a row in the Test Coverage Matrix, and does every row name a test some step actually creates? A row pointing at a test no step writes is a placeholder wearing a table.
-
-If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
+Fix every blocking issue the reviewer returns, then re-dispatch.
+Recommendations are advisory. If it reports a spec requirement with no
+task, add the task — never resolve a gap by narrowing the plan's stated
+scope.
 
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
+After the plan review passes, offer execution choice:
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
+**"Plan complete, reviewed, and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
 
 **1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
 

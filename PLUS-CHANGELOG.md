@@ -10,6 +10,31 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.6 — contrato do plano cobrado por subagente revisor
+
+O plus.5 armou o `plan-document-reviewer-prompt.md` com o contrato do plano,
+mas o arquivo continuava órfão: `writing-plans` declarava a revisão como
+"a checklist you run yourself — not a subagent dispatch". Autor revisando o
+próprio plano tem o mesmo defeito de autor revisando a própria spec, que o
+plus.1 já tinha resolvido despachando subagente.
+
+- **`## Self-Review` → `## Plan Review`** — os 6 itens de autorrevisão saíram
+  e no lugar entra o despacho do `plan-document-reviewer-prompt.md`, mesmo
+  padrão do `spec-document-reviewer`: salvar primeiro (o revisor lê o
+  arquivo, não o contexto), corrigir todo bloqueante, redespachar,
+  recomendação é advisory. Requisito da spec sem tarefa se resolve
+  acrescentando a tarefa, nunca estreitando o escopo declarado do plano.
+- **Origem amarrada** — o despacho passa só o caminho do plano. O caminho da
+  spec sai do cabeçalho do próprio plano, porque conferir isso é parte da
+  revisão.
+- **Nada de checagem perdida na troca** — os itens 1, 4, 5 e 6 do antigo
+  Self-Review já eram cobrados pelo `The Plan Contract`; o item 3
+  (consistência de tipos e assinaturas entre tarefas) virou a categoria
+  `Internal Consistency`, e o item 2 virou a lista explícita de placeholders
+  na categoria `Completeness` — o revisor é standalone e não lê a skill.
+- **Handoff** — as opções de execução são apresentadas depois que a revisão
+  passa, não logo após salvar.
+
 ## plus.5 — varredura de consistência do fork
 
 Varredura por REGRA, não por arquivo: regra introduzida aqui pode ter eco em

@@ -39,9 +39,10 @@ Subagent (general-purpose):
 
     | Category | What to Look For |
     |----------|------------------|
-    | Completeness | TODOs, placeholders, incomplete tasks, missing steps |
+    | Completeness | TODOs, placeholders, incomplete tasks, missing steps. Also these, which read as content but are not: "add appropriate error handling", "handle edge cases", "write tests for the above" with no test code, "similar to Task N" instead of the repeated code, a code step with no code block, a reference to a type or function no task defines |
     | Spec Alignment | Plan covers spec requirements, no scope creep — both directions are charged by the Plan Contract above |
     | Task Decomposition | Tasks have clear boundaries, steps are actionable |
+    | Internal Consistency | Types, signatures, and property names used in later tasks match what earlier tasks define. `clearLayers()` in Task 3 and `clearFullLayers()` in Task 7 is a bug the implementer inherits |
     | Buildability | Could an engineer follow this plan without getting stuck? |
 
     ## Calibration
