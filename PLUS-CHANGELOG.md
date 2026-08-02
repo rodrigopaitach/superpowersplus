@@ -10,6 +10,73 @@ Fio condutor das entradas: **evidence-or-zero** — toda afirmação sobre o
 código exige citação `caminho/arquivo:linha`, e quem verifica reexecuta a
 busca em vez de aceitar a palavra de quem escreveu.
 
+## plus.23 — mapa de cobertura com recomendação fundamentada
+
+O `brainstorming/SKILL.md` dizia COMO perguntar — uma por mensagem, múltipla
+escolha quando cabe — e nada sobre O QUE. A completude do levantamento era o
+que o modelo lembrasse naquele dia, e pergunta que não ocorreu a ninguém é
+lacuna que ninguém registrou. O segundo furo é maior: a pergunta devolvia ao
+parceiro humano uma decisão técnica sem lhe dar base para decidir. Quem não
+programa julga a ORIGEM de uma recomendação — abre o `arquivo:linha` e vê que
+existe — não a técnica.
+
+- **`coverage-map.md`** — arquivo irmão do `visual-companion.md`. Dez
+  categorias (escopo, modelo de domínio, fluxo de interação, atributos não
+  funcionais, integrações, casos de borda, restrições, terminologia, sinais de
+  conclusão, placeholders) e quatro estados por categoria — `Clear`,
+  `Resolved`, `Deferred`, `Outstanding` — cada um carregando seu motivo.
+  Estado sem motivo é inválido, pela mesma razão do plus.15 e do plus.21:
+  "não checado" e "não aplicável" não podem ter a mesma aparência.
+- **Filtro de admissão** — só vira pergunta o que muda arquitetura, modelagem
+  de dados, decomposição de tarefas, desenho de teste, comportamento de UX,
+  prontidão operacional ou conformidade. É ele que impede dez categorias de
+  virarem interrogatório num projeto pequeno; no digraph virou o losango
+  `Gap changes a decision?`, com saída para o design sem passar por pergunta.
+  O que sobra é ordenado por impacto × incerteza.
+- **Recomendação obrigatória, com fonte declarada** — toda pergunta sai com
+  recomendação, e a fonte é declarada em uma de três formas, nesta ordem:
+  padrão já existente no projeto citado como `arquivo:linha`; doc oficial da
+  dependência, conforme a seção "Where a Claim Comes From"; boa prática geral,
+  declarada explicitamente como tal para o parceiro saber que ali não houve
+  verificação. Padrão do projeto vem primeiro — consistência com o que existe
+  vale mais que a melhor prática abstrata. Recomendação sem fonte é inválida:
+  a declaração é o único componente que um não-programador consegue conferir.
+- **Forma da pergunta** — interrogativa completa terminada em `?`,
+  compreensível sozinha. Rótulo de tópico não é pergunta (forma inválida:
+  `Device matrix for acceptance (AC3)`). Abaixo, uma frase de consequência
+  prática — o que quebra, o que fica lento, o que custa caro depois — nunca o
+  mecanismo. Termo técnico só aparece definido na mesma frase.
+- **Integração incremental** — cada resposta aceita é aplicada à seção certa
+  da spec e o arquivo é salvo a cada integração, para o que já foi decidido
+  sobreviver à compactação. Resposta que invalida afirmação anterior
+  SUBSTITUI a afirmação: spec com a versão antiga ao lado da correção não tem
+  resposta. No digraph isso é a aresta de volta de `Ask clarifying questions`
+  para `Build coverage map` — o mapa é estado vivo, não lista montada uma vez.
+- **Sem mecanismo paralelo** — lacuna resolvida vira `AC` ou `IR` com id, pela
+  convenção já vigente; `Deferred` e `Outstanding` viram item em
+  `## Assumptions to Confirm` com o registro de busca que a seção já exige.
+  `## Coverage Map` entra na lista de seções obrigatórias da spec, com o
+  registro de decisão (pergunta, resposta, recomendação, fonte) abaixo da
+  tabela.
+- **Piso, não teto** — declarado explicitamente no `SKILL.md`: cobrir as dez
+  categorias não encerra o levantamento e nenhuma delas autoriza pular a fase
+  de design. Lista fechada convida o agente a tratá-la como critério de parada,
+  e este é o único parágrafo que fecha essa porta.
+- **Regra do par** — sete linhas bloqueantes no
+  `spec-document-reviewer-prompt.md`: seção ausente, categoria sem destino,
+  estado sem motivo, pergunta sem recomendação, recomendação sem fonte,
+  recomendação que cita padrão do projeto cuja citação não confere, e
+  afirmação contraditória remanescente após clarificação. O revisor abre o
+  `arquivo:linha` da recomendação — a citação é a única parte que o parceiro
+  poderia ter conferido, então é a que precisa se sustentar.
+- **Exemplo idêntico nos dois arquivos** — a tabela de cobertura completa e a
+  pergunta de ponta a ponta aparecem em `coverage-map.md` e no prompt do
+  revisor, com as linhas conferidas byte a byte. Exemplo divergente do outro
+  exemplo do mesmo formato é o que o plus.20 corrigiu.
+
+Deixado de fora por decisão: limite de número de perguntas, a tomar com uso
+real do fork.
+
 ## plus.22 — README declara o fork
 
 O README era o do upstream, íntegro: descrevia o Superpowers original e, na

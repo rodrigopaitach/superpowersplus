@@ -20,6 +20,7 @@ Subagent (general-purpose):
     |----------|------------------|
     | Groundedness | Open EVERY `file:line` cited in the spec, and check every claim about a library, external API, or third-party service against its cited source. Confirm each one exists and says what the spec claims. See below. |
     | Traceability | `## Acceptance Criteria` and `## Implicit Requirements` exist, numbered and addressable, one observable behavior per item. See below. |
+    | Coverage | `## Coverage Map` exists, every category carries a state with its reason and a recorded destination, and every question recorded carries a recommendation with a declared source. See below. |
     | Completeness | TODOs, placeholders, "TBD", incomplete sections |
     | Consistency | Internal contradictions, conflicting requirements |
     | Clarity | Requirements ambiguous enough to cause someone to build the wrong thing |
@@ -94,6 +95,60 @@ Subagent (general-purpose):
     notice it is missing. Judge them by the same bar as an `AC`; "it is
     non-functional" is not a reason for a weaker one.
 
+    ## Coverage Map (blocking)
+
+    The map records what the interview covered and what it did not. Its
+    failure mode is silence that reads as coverage: a category nobody
+    considered and a category deliberately dismissed produce the same
+    untroubled row unless the reason is written down.
+
+    | Finding | Verdict |
+    |---------|---------|
+    | No `## Coverage Map` section | BLOCKING — same treatment as the other required sections. An absent map and a map whose rows all say "not applicable, because …" must not look alike: the absent one is the spec that never asked |
+    | A category with no recorded destination | BLOCKING — every category resolves to an `AC`/`IR` id, an item in `## Assumptions to Confirm`, or a stated reason it was already settled |
+    | A state with no declared reason | BLOCKING — `Clear`, `Resolved`, `Deferred`, and `Outstanding` each carry why. A bare state cannot be told apart from a category nobody checked |
+    | A question recorded with no recommendation | BLOCKING — the question handed a technical decision to someone with no basis to take it. That the answer arrived anyway does not repair it |
+    | A recommendation with no declared source | BLOCKING — one of: a `file:line` pattern in this project, the dependency's official documentation, or general practice explicitly declared as such. Undeclared and invented are indistinguishable |
+    | A recommendation citing a project pattern whose `file:line` does not check out | BLOCKING — open the file. Do not trust the citation |
+    | A contradictory statement still present after a clarification | BLOCKING — an answer that invalidated an earlier claim had to replace it. Two versions in one spec means the spec has no answer |
+
+    **Open every `file:line` a recommendation cites**, exactly as under
+    Groundedness. A recommendation is the one thing in the spec the human
+    partner approved without being able to check the technique — the
+    citation is the only part they could verify, so it is the part that must
+    hold.
+
+    A conforming section looks like this:
+
+    ```markdown
+    ## Coverage Map
+
+    | Category | State | Where it landed |
+    |----------|-------|-----------------|
+    | Functional scope and behavior | Resolved | AC1, AC2, AC3 |
+    | Domain and data model | Resolved | AC4 (`User`, identified by email, no soft delete) |
+    | Interaction flow | Resolved | AC5, AC6 (error and loading states); IR2 (empty state) |
+    | Non-functional attributes | Resolved | IR1 (session lifetime), IR3 (failed-attempt logging) |
+    | Integrations and external dependencies | Clear | No external identity provider — auth is local, `src/auth/session.ts:12` |
+    | Edge cases and failures | Resolved | IR4 (concurrent sessions per user) |
+    | Constraints and tradeoffs | Clear | Single constraint, stated in the request: no new dependencies |
+    | Terminology | Resolved | "Session" means the server-side record, not the cookie — AC4 |
+    | Completion signals | Clear | Every AC and IR states one observable behavior |
+    | Placeholders and vague adjectives | Deferred | "Reasonable rate limiting" — the number belongs to the plan, where the endpoint exists. `## Assumptions to Confirm`, item 2 |
+
+    ### Decision record
+
+    **Q: How long should someone stay signed in before they have to enter their password again?**
+    Recommended: 14 days, renewed on each use — the pattern already in this
+    project at `src/auth/session.ts:47` (`maxAge: 14 * 24 * 60 * 60`).
+    Source: existing project pattern.
+    Answer: accepted the recommendation. → IR1
+    ```
+
+    Check that example's shape against the spec you are reviewing: every
+    category present, every state carrying its reason, every question
+    carrying its recommendation and that recommendation's source.
+
     ## Calibration
 
     **Only flag issues that would cause real problems during implementation planning.**
@@ -102,8 +157,8 @@ Subagent (general-purpose):
     stylistic preferences, and "sections less detailed than others" are not.
 
     Approve unless there are serious gaps that would lead to a flawed plan.
-    Any Groundedness or Traceability failure blocks approval regardless of
-    calibration.
+    Any Groundedness, Traceability, or Coverage Map failure blocks approval
+    regardless of calibration.
 
     ## Output Format
 

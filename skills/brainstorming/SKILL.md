@@ -22,20 +22,25 @@ Every project goes through this process. A todo list, a single-function utility,
 You MUST create a task for each of these items and complete them in order:
 
 1. **Investigate the codebase** — MANDATORY before ANY question to the user. Read the real code: files, tests, configs, recent commits. Record every finding as `path/file.ext:line` + the quoted snippet. This recorded output becomes the spec's `## Codebase Findings` section. Claims about a library, external API, or third-party service are grounded the same way, in the order and citation forms below — see "Where a Claim Comes From". No investigation output, no questions.
-2. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
-3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-7. **Dispatch spec reviewer subagent** — using `skills/brainstorming/spec-document-reviewer-prompt.md`; fix blocking issues (see below)
-8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+2. **Build the coverage map** — from the request and the investigation, before any question. Assign every category one of four states with its reason, apply the admission filter so only decision-changing gaps become questions, and order what remains by impact × uncertainty. Every question you then ask carries a recommendation with a declared source, and every accepted answer is written into the spec and saved as you go. See `skills/brainstorming/coverage-map.md`.
+3. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
+4. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
+5. **Propose 2-3 approaches** — with trade-offs and your recommendation
+6. **Present design** — in sections scaled to their complexity, get user approval after each section
+7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+8. **Dispatch spec reviewer subagent** — using `skills/brainstorming/spec-document-reviewer-prompt.md`; fix blocking issues (see below)
+9. **User reviews written spec** — ask user to review the spec file before proceeding
+10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+
+**The coverage map is a floor, not a ceiling.** Covering the ten categories does not end the interview, and no category — covered, deferred, or dismissed — authorizes skipping the design phase. A closed list invites being read as a stopping criterion. It is a stopping criterion for nothing: it is the minimum below which the interview was incomplete.
 
 ## Process Flow
 
 ```dot
 digraph brainstorming {
     "Investigate code + deps\n(cite file:line / pinned source)" [shape=box];
+    "Build coverage map\n(state + reason per category)" [shape=box];
+    "Gap changes a decision?" [shape=diamond];
     "Ask clarifying questions" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
@@ -46,8 +51,11 @@ digraph brainstorming {
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
 
-    "Investigate code + deps\n(cite file:line / pinned source)" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Propose 2-3 approaches";
+    "Investigate code + deps\n(cite file:line / pinned source)" -> "Build coverage map\n(state + reason per category)";
+    "Build coverage map\n(state + reason per category)" -> "Gap changes a decision?";
+    "Gap changes a decision?" -> "Ask clarifying questions" [label="yes, highest\nimpact x uncertainty first"];
+    "Gap changes a decision?" -> "Propose 2-3 approaches" [label="no, record\nstate + reason"];
+    "Ask clarifying questions" -> "Build coverage map\n(state + reason per category)" [label="integrate answer,\nsave spec"];
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
@@ -162,6 +170,7 @@ an assumption. Say so in `## Assumptions to Confirm`, with what you tried.
 | `## Codebase Findings` | Every claim about the existing system carries a `path/file.ext:line` citation plus the quoted snippet. No located citation, the claim does not go in the spec. |
 | `## External Dependencies` | Every claim about a library, external API, or third-party service, each carrying one of the two citation forms from "Where a Claim Comes From": the lockfile-pinned version plus the line you read inside the dependency, or the official doc URL for that version. Example: "The idempotency key is a request option, never a param — `stripe@19.1.0`, `https://docs.stripe.com/api/idempotent_requests`." No source, the claim does not go in the spec. If the design touches none, write "None". |
 | `## Assumptions to Confirm` | Everything you could NOT verify in the code. Never mix an assumption into verified facts. Each item records the search you ran (command/pattern + paths inspected) and why it could not be confirmed. Anything the code CAN answer is not an assumption — go verify it and cite it. If there are none, write "None". |
+| `## Coverage Map` | The compact table from `skills/brainstorming/coverage-map.md` — one row per category: `Category \| State \| Where it landed`. Every category appears, with one of `Clear`/`Resolved`/`Deferred`/`Outstanding` and the reason for that state; a state with no reason is invalid, because "not checked" and "not applicable" render identically. Where it landed is the `AC`/`IR` id, the `## Assumptions to Confirm` item, or what already settled it. Below the table, the decision record: each question asked, the answer, the recommendation you gave, and its declared source — this is what makes an approval auditable after the conversation is gone. Asked no questions? The table still appears, and every row says why none were needed. |
 
 **Spec Review:**
 After writing the spec document, dispatch a spec document reviewer subagent using the template at `skills/brainstorming/spec-document-reviewer-prompt.md`. Do NOT review it inline yourself.
