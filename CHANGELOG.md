@@ -9,6 +9,30 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **CI ran twice on every release commit. Resolved.** Measured before touching
+  anything, and the obvious hypothesis was wrong: it is not a `push` /
+  `pull_request` overlap. Both runs carried `event: push`, one with
+  `headBranch: main` and one with `headBranch: v<version>`. `push` fires per
+  pushed **ref**, not per commit, and a release pushes two refs at the same
+  commit. Reproducible at `e3692db`, `72d1ec7`, `5da8c43`, `c012d27` and
+  `767fb13` — every release — while a push carrying no tag produced exactly one
+  run. `pull_request` was never the cause and has never fired here at all: 34
+  push events and zero pull-request events across the 100 most recent runs,
+  which is what a repository with no PR process looks like.
+  The fix is `branches: ['**']` under `push` at `.github/workflows/ci.yml:7-15`.
+  Naming `branches:` at all excludes tag refs, which is what removes the second
+  run; `'**'` keeps every branch, so a work branch with no PR open is still
+  gated. **The narrower filter that suggests itself — `branches: [main]` plus
+  `tags:` — was measured and rejected twice over:** it keeps exactly the two
+  refs that duplicate, so it does not fix this, and it would leave a work branch
+  without an open PR passing through zero gates, since `pull_request` does not
+  fire in this repository. Coverage is worth more than a minute of CI.
+  **Do not re-investigate: the cause is measured and the fix is in place.**
+
 ## [1.3.0] - 2026-08-03
 
 ### Added
@@ -745,6 +769,13 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   the only real fix is teaching the script to stop at the link block, and that
   is not worth a change to the one script that decides what every release says.
   **Do not re-investigate: this is known and deliberate.** (opened 1.3.0)
+- **A tag cut on a commit outside `main` is never tested.** The residual hole
+  left by the CI trigger fix above: `push: branches: ['**']` excludes tag refs,
+  so nothing runs for the tag itself. Accepted, not overlooked — a tag here is
+  cut from the release commit `main` has just run green, so the tag run was
+  duplicating a result the same SHA already had. Nothing enforces that a tag
+  points at a commit on `main`; if that ever stops being the practice, this
+  becomes a real gap and the trigger needs revisiting. (opened 1.3.1)
 
 Most rules in this project are reasoned rather than measured. Two have been
 measured, over four adversarial runs: the external-content rule, which held on

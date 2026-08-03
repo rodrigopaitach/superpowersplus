@@ -3,7 +3,17 @@ name: CI
 # Turns into a visible failure what today fails silently when core.hooksPath
 # is not configured on the committer's machine.
 
-on: [push, pull_request]
+on:
+  push:
+    # `push` fires per pushed REF, not per commit. Without `branches:` a release
+    # ran twice on the same commit — once for main, once for the tag pushed
+    # right after it. Naming `branches:` excludes tag refs; `'**'` keeps every
+    # branch, so a work branch with no PR open is still gated.
+    # Accepted residual hole: a tag created on a commit outside main is never
+    # tested — acceptable because a tag here is cut from the release commit
+    # main has just run green.
+    branches: ['**']
+  pull_request:
 
 permissions:
   contents: read
