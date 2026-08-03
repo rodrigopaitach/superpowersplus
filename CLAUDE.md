@@ -151,6 +151,14 @@ The failure mode is why the rule covers reads. `gh run list --branch main` here 
 
 `gh release create` additionally takes `--verify-tag`, so a mistyped tag fails instead of being created.
 
+**Waiting on CI means waiting on a SHA, never on `gh run list --limit 1`.** The newest run is not the run you pushed: between the push and the query there is a gap in which the list still holds the *previous* run, already concluded, already green. That is what happened here — the answer read as a pass for a commit CI had not started on yet, and nothing about it looked wrong. Ask for the run whose `headSha` is the commit you pushed, and treat "no run yet" as *not yet*, not as failure:
+
+```bash
+sha="$(git rev-parse HEAD)"
+gh run list --repo rodrigopaitach/superpowersplus --commit "$sha" \
+  --json status,conclusion,headSha
+```
+
 ## Changing a skill
 
 Skills are not prose — they are code that shapes agent behavior. Carefully-tuned content (Red Flags tables, rationalization lists, "human partner" language) is not reworded without evidence the change improves outcomes.
@@ -158,5 +166,9 @@ Skills are not prose — they are code that shapes agent behavior. Carefully-tun
 Adversarial skill-behavior tests live at [`tests/skill-behavior/`](tests/skill-behavior/) — a fixture, the input carrying it, and a recorded result per rule. Read its `README.md` before adding one. Plugin-infrastructure tests are at `tests/`, run via each directory's own `run-*.sh`.
 
 **`tests/codex/test-package-codex-plugin.sh` only tells the truth on a clean tree.** The packager builds its archive from a git ref — `REF="HEAD"` at `scripts/package-codex-plugin.sh:15`, and `--allow-dirty` (which the test passes) permits a dirty tree while still packaging the ref. The test then reads its expected values from the *working tree*, at `tests/codex/test-package-codex-plugin.sh:175-176`, and compares the two at line 177. With anything uncommitted the two sources disagree and `archive manifest preserves source hooks` fails with no defect present — measured: staging a `9.9.9` version locally produced `expected: 9.9.9` against `actual: 1.2.0`, and reverting made it green. Run this suite after committing. It has cost two debugging detours already; it is upstream's file and is not fixed here. CI runs every static suite on every push: `brainstorm-server`, `shell-lint`, `hooks`, `codex-plugin-sync`, `antigravity`, `codex`, `systematic-debugging`, `kimi`, `opencode` and `pi`, plus shell lint, the bilingual-docs sync check, and the integrity check on the adversarial records. The three that stay out all dispatch a live agent — `claude-code`, `explicit-skill-requests`, `skill-behavior` — which costs tokens and is non-deterministic. A suite CI does not run blocks nothing; if you add one, add its step.
+
+**`dispatching-parallel-agents` is orphaned in the invocation graph on purpose.** No skill body names it, and a sweep for dead references will keep surfacing it. It fires on its description — the harness matches the work at hand against the frontmatter — which is how a skill that applies to *any* fan-out gets reached without every caller listing it. Do not "fix" it by wiring an invocation in: a reference from one skill would suggest that skill is where parallel dispatch belongs.
+
+**`escalation-format.md` is 61 lines against a ~60-line target — that is closed, not outstanding.** The remaining line was looked for and every block carries distinct normative content: the scope boundary, why the file exists, why item 4 is an action rather than a quality bar (the lesson that was measured failing twice), gate vocabulary, the self-test, and the worked example. Cutting to reach the number costs content the file exists to carry. It does not need re-reporting.
 
 Most rules in this project are reasoned, not measured. When you add one, say which it is.

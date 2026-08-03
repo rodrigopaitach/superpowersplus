@@ -52,6 +52,23 @@ References below name them so a claim here can be traced there.
   clicking it, and the project takes that over a network call per link that
   would turn CI red for reasons unrelated to the commit.
 
+- **`CLAUDE.md` records three things that were being re-derived, or re-reported
+  as outstanding, every session.** Waiting on CI anchors on the pushed
+  **SHA** — `gh run list --commit "$sha"` — never `--limit 1`: between a push
+  and the query the list still holds the *previous* run, concluded and green,
+  and it reads exactly like a pass for the commit CI has not started on yet.
+  Same failure class as the `--repo` rule above it, and the same reason reads
+  are covered: a wrong read is indistinguishable from a right one.
+  `dispatching-parallel-agents` is **orphaned in the invocation graph on
+  purpose** — it fires on its description, which is how a skill applying to any
+  fan-out is reached without every caller naming it; wiring an invocation in
+  would imply parallel dispatch belongs to whichever skill made the reference.
+  And `escalation-format.md` at **61 lines against a ~60 target is closed**:
+  every block was re-read and carries distinct normative content — the scope
+  boundary, why the file exists, why item 4 is an action rather than a quality
+  bar, gate vocabulary, the self-test, the worked example — so cutting to reach
+  the number costs the content the file exists to carry.
+
 - **The third-party link diet is a gate, not a convention.**
   `check-links.sh` now fails on a URL whose prefix is outside four allowed
   ones — `github.com/rodrigopaitach/`, `raw.githubusercontent.com/rodrigopaitach/`,
