@@ -101,7 +101,15 @@ know what is on `main` becomes reading the diff. It also loses entries: the
 commit-preparation rule and `check-skill-behavior-records.sh` both shipped
 without a changelog entry and were caught only when the version was cut.
 
-**A release body is generated, never hand-written:** `scripts/release-notes.sh <version>` builds it from `CHANGELOG.md` — the version's section, then Open gaps, then the footer. A body assembled by hand drifts from the changelog it claims to summarize. Publishing is `gh release create` with **both guards**: `--repo rodrigopaitach/superpowersplus` and `--verify-tag`. This checkout has an upstream remote, and `gh` has resolved to the wrong repository before.
+**A release body is generated, never hand-written:** `scripts/release-notes.sh <version>` builds it from `CHANGELOG.md` — the version's section, then Open gaps, then the footer. A body assembled by hand drifts from the changelog it claims to summarize. Publishing is `gh release create` with **both guards**: `--repo rodrigopaitach/superpowersplus` and `--verify-tag`.
+
+## Running `gh`
+
+**Every `gh` invocation in this checkout carries `--repo rodrigopaitach/superpowersplus` — reads included.** Not only the outward-facing ones. This repository has an upstream remote, and `gh` resolves against the remotes, not against your intent.
+
+The failure mode is why the rule covers reads. `gh run list --branch main` here returned runs from **`obra/superpowers`** — a month old, `conclusion: success`, formatted exactly like the answer being looked for. Nothing errors. Taken at face value it confirms a CI run that never happened, on a repository nobody pushed to. A wrong write announces itself; a wrong read is indistinguishable from a right one.
+
+`gh release create` additionally takes `--verify-tag`, so a mistyped tag fails instead of being created.
 
 ## Changing a skill
 

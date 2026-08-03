@@ -12,6 +12,17 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Changed
+
+- **`--repo` is required on every `gh` invocation, reads included.** The rule
+  covered outward-facing operations; it now covers all of them, in its own
+  `Running gh` section of `CLAUDE.md`. The case that widened it happened while
+  confirming the `1.2.1` release: `gh run list --branch main` returned runs
+  from `obra/superpowers` — a month old, `conclusion: success`, shaped exactly
+  like the answer being looked for. Nothing errored. Taken at face value it
+  would have confirmed a CI run that never happened. A wrong write announces
+  itself; a wrong read does not.
+
 ### Fixed
 
 - **The changelog and frozen-history gates are applied by CI, not only
