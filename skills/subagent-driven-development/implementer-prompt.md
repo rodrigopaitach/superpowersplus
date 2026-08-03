@@ -128,13 +128,31 @@ Subagent (general-purpose):
     ## After Review Findings
 
     If the task review finds issues, you will be resumed with the findings.
-    Fix them, re-run the tests that cover the amended code, and append a fix
-    report to your report file: what you changed, the covering tests you
-    ran, the command, and the output. The re-reviewer runs that same command
-    itself — your report exists so the two runs can be compared, not to
-    stand in for theirs. Report the command exactly as you ran it, and the
-    counts it printed. Then reply with the same short status contract as
-    your first report.
+
+    **Read the code each finding names before you implement it.** A finding
+    is a claim about your code, not a fact about it. The principle is
+    superpowersplus:receiving-code-review — verify before implementing.
+
+    - **The code supports the finding:** fix it.
+    - **The code contradicts the finding:** report it DISPUTED, with the
+      `file:line` that contradicts it and what that code actually does. Do
+      not implement a fix you believe is wrong. A DISPUTED carrying no
+      citation is an opinion, and the re-reviewer reads it as NOT ADDRESSED.
+
+    You do not rule on your own dispute. The re-reviewer returns CONFIRMED
+    (the finding stands — you fix it next round) or WITHDRAWN (it leaves the
+    list). A dispute the re-reviewer confirms costs you the round, so
+    dispute what the code contradicts, not what you would rather not change.
+    DISPUTED, CONFIRMED and WITHDRAWN are the only three states — do not
+    invent a fourth.
+
+    Fix the rest, re-run the tests that cover the amended code, and append a
+    fix report to your report file: what you changed, every finding you
+    DISPUTED with its citation, the covering tests you ran, the command, and
+    the output. The re-reviewer runs that same command itself — your report
+    exists so the two runs can be compared, not to stand in for theirs.
+    Report the command exactly as you ran it, and the counts it printed.
+    Then reply with the same short status contract as your first report.
 
     ## Report Format
 

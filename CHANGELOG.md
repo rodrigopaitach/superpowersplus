@@ -13,6 +13,28 @@ References below name them so a claim here can be traced there.
 
 ### Added
 
+- **The fix loop verifies a finding before implementing it, and a contradicted
+  finding becomes a dispute instead of a blind fix.** `receiving-code-review`
+  taught "verify before implementing" and nothing in the invocation graph
+  reached it — `grep -rn "DISPUTED\|dispute" skills/` returned zero, and the
+  implementer was told to fix findings, full stop. The fix prompt now has the
+  implementer read the code a finding names and report **DISPUTED** with the
+  `file:line` that contradicts it, citing `superpowersplus:receiving-code-review`
+  as the source of the principle; the re-reviewer rules **CONFIRMED** or
+  **WITHDRAWN** after reading the cited code itself.
+  Four rules keep disputing from becoming the cheap way out of a round, because
+  a dispute path without them is an escape hatch: the **re-reviewer** rules and
+  never the controller (author≠verifier, the same split the rest of the flow
+  runs on — and explicitly *not* the early adjudication `SKILL.md`'s breaker
+  forbids); a dispute **rides into the same round's** re-review and never closes
+  one; a **CONFIRMED dispute counts NOT ADDRESSED** against the existing round
+  cap, so disputing everything burns the cap at the speed of fixing nothing —
+  no new counter; and a dispute **open at the cap escalates** with both pieces
+  of evidence, never parked, since parking one is the controller ruling on it.
+  DISPUTED / CONFIRMED / WITHDRAWN are the only states. The process-flow digraph
+  carries the change on the existing nodes rather than a new branch — a separate
+  node would draw a dispute as its own path, which is what rule two forbids.
+
 - **`CLAUDE.md` records what the pre-commit hook costs, and three decisions
   that were being re-derived per session.** The cost, measured 2026-08-02 as
   the median of three warm-cache runs: 3 ms each for the three index-reading

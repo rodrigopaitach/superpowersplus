@@ -44,7 +44,9 @@ Subagent (general-purpose):
 
     ## Scope
 
-    Your scope is the findings list and the fix diff. Verdict every finding.
+    Your scope is the findings list and the fix diff. Verdict every finding,
+    including any the implementer marked DISPUTED — you rule on those, the
+    author does not rule on its own dispute.
     Inspect the fix diff for new problems the fix itself introduced. Do NOT
     re-review code the fix did not touch: if you notice an issue entirely
     outside the fix diff, report it under Out-of-Scope Observations — it
@@ -87,6 +89,14 @@ Subagent (general-purpose):
     - **[finding one-liner]** — ADDRESSED | NOT ADDRESSED, with file:line
       evidence. "Attempted" is not addressed: the specific defect must no
       longer exist.
+    - A finding the implementer marked **DISPUTED** gets CONFIRMED or
+      WITHDRAWN instead. Read the code at the implementer's citation
+      yourself and rule on what that code does — its argument is a pointer,
+      not evidence. **CONFIRMED:** the finding stands; say why the cited
+      code does not contradict it, and it stays open for the next round.
+      **WITHDRAWN:** the citation does contradict the finding; it leaves the
+      list. A DISPUTED carrying no file:line citation is NOT ADDRESSED, not
+      a dispute. These three are the only dispute states.
 
     ### New Breakage in the Fix Diff
 
@@ -101,7 +111,8 @@ Subagent (general-purpose):
     ### Verdict
 
     **Fix round:** [All findings addressed, no new Critical/Important
-    breakage | Findings remain open] — list the open ones.
+    breakage | Findings remain open] — list the open ones. A CONFIRMED
+    dispute is open; a WITHDRAWN one is not.
 ```
 
 **Placeholders:**
@@ -120,5 +131,6 @@ Subagent (general-purpose):
 - `[DIFF_FILE]` — the path `scripts/review-package PLAN_FILE FIX_BASE HEAD` printed
 
 **Re-reviewer returns:** its own test run (command, exit code, counts),
-per-finding verdicts (ADDRESSED / NOT ADDRESSED), new breakage in the fix
-diff, out-of-scope observations, and a round verdict.
+per-finding verdicts (ADDRESSED / NOT ADDRESSED, or CONFIRMED / WITHDRAWN
+for a disputed finding), new breakage in the fix diff, out-of-scope
+observations, and a round verdict.

@@ -66,8 +66,8 @@ digraph process {
         "Spec ✅ and quality approved?" [shape=diamond];
         "Finding conflicts with plan text?" [shape=diamond];
         "Ask human partner which governs" [shape=box];
-        "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [shape=box];
-        "Dispatch scoped re-review (./re-review-prompt.md)" [shape=box];
+        "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model" [shape=box];
+        "Dispatch scoped re-review (./re-review-prompt.md): verdict fixes, rule disputes" [shape=box];
         "All findings addressed?" [shape=diamond];
         "R = 5?" [shape=diamond];
         "Adjudicate each open finding" [shape=box];
@@ -98,13 +98,13 @@ digraph process {
     "Spec ✅ and quality approved?" -> "Append completion to ledger, mark todo complete" [label="yes"];
     "Spec ✅ and quality approved?" -> "Finding conflicts with plan text?" [label="no"];
     "Finding conflicts with plan text?" -> "Ask human partner which governs" [label="yes"];
-    "Ask human partner which governs" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model";
-    "Finding conflicts with plan text?" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no"];
-    "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" -> "Dispatch scoped re-review (./re-review-prompt.md)";
-    "Dispatch scoped re-review (./re-review-prompt.md)" -> "All findings addressed?";
+    "Ask human partner which governs" -> "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model";
+    "Finding conflicts with plan text?" -> "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no"];
+    "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model" -> "Dispatch scoped re-review (./re-review-prompt.md): verdict fixes, rule disputes";
+    "Dispatch scoped re-review (./re-review-prompt.md): verdict fixes, rule disputes" -> "All findings addressed?";
     "All findings addressed?" -> "Append completion to ledger, mark todo complete" [label="yes"];
     "All findings addressed?" -> "R = 5?" [label="no"];
-    "R = 5?" -> "Fix round R of 5: R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no - next round"];
+    "R = 5?" -> "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no - next round"];
     "R = 5?" -> "Adjudicate each open finding" [label="yes - breaker trips"];
     "Adjudicate each open finding" -> "Any load-bearing finding?";
     "Any load-bearing finding?" -> "STOP: report BLOCKED to human partner" [label="yes"];
@@ -380,6 +380,32 @@ the fix report contains the covering tests, the command run, and the
 output; dispatch the re-review once all three are present. Name the
 covering test files in the fix message — a one-line fix does not need the
 whole suite.
+
+**A finding the implementer disputes.** The fix prompt has the implementer
+read the code a finding names before implementing it, and report DISPUTED —
+with the `file:line` that contradicts it — rather than fix what the code
+says is not there. Four rules keep that from becoming the cheap way out of a
+round:
+
+- **The re-reviewer rules on a dispute, never you.** It reads the cited code
+  itself and returns CONFIRMED (the finding stands) or WITHDRAWN (it leaves
+  the list). This is not the early adjudication the breaker forbids below:
+  it is a reviewer's finding checked by a reviewer — the same
+  author≠verifier split the rest of this flow runs on. You still adjudicate
+  only at the cap. The author never rules on its own dispute.
+- **A dispute does not close a round.** It rides into the same round's
+  re-review alongside that round's fixes. There is no path where disputing
+  is cheaper than fixing.
+- **A dispute the re-reviewer rejects costs the round.** A CONFIRMED finding
+  counts NOT ADDRESSED against the round cap, like any finding still open —
+  no new counter, the existing cap covers it. Disputing everything burns the
+  cap at exactly the speed of fixing nothing.
+- **A dispute still open at the cap escalates.** Never park it: parking a
+  dispute is you ruling on it. Report it with the others in the escalation
+  shape above, carrying BOTH pieces of evidence — the finding and the
+  `file:line` contradiction — and let your human partner rule.
+
+DISPUTED, CONFIRMED and WITHDRAWN are the only dispute states.
 
 **The re-review is scoped.** Run `scripts/review-package PLAN_FILE FIX_BASE HEAD`
 where FIX_BASE is the head the previous review saw, and dispatch
