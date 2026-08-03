@@ -80,12 +80,14 @@ jobs:
       - name: Tests (pi extension)
         run: node tests/pi/test-pi-extension.mjs
 
-      # The two checks below reuse the repo's own scripts unchanged. Both read
-      # the git INDEX, because that is what the pre-commit hook reads. A fresh
+      # The checks below reuse the repo's own scripts unchanged. All read the
+      # git INDEX, because that is what the pre-commit hook reads. A fresh
       # CI checkout has an empty index, so they would inspect nothing.
       # `git reset --soft` rewinds HEAD to the base commit while leaving index
       # and working tree alone — the index then holds exactly what this push or
       # PR changed, and the scripts work as-is with no CI-specific variant.
+      # This is why neither gate below needed a --range mode: the range IS the
+      # index here.
       #
       # Scope note: the hook enforces the rule per COMMIT; this enforces it over
       # the pushed range as a whole. A push that edits one doc in commit A and
@@ -107,6 +109,20 @@ jobs:
 
       - name: Bilingual READMEs stay in sync
         run: scripts/check-docs-sync.sh
+
+      # Both gates lived only in the pre-commit hook, which a clone without
+      # `git config core.hooksPath githooks` never runs — the exact silent
+      # failure the header of this file says CI exists to make visible. CI
+      # tested the scripts and did not apply them.
+      #
+      # A rebase onto the upstream does not trip the changelog gate: the
+      # "Upstream base" line in CHANGELOG.md is updated at every rebase, so the
+      # file is always in the range.
+      - name: Content changes carry a changelog entry
+        run: scripts/check-changelog.sh
+
+      - name: The frozen changelog stays frozen
+        run: scripts/check-frozen-history.sh
 
       # Integrity of the adversarial records only. The tests themselves are
       # never re-run here: they dispatch a live agent, cost tokens, and are

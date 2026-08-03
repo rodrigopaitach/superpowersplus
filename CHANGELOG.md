@@ -10,6 +10,24 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The changelog and frozen-history gates are applied by CI, not only
+  tested.** Both lived exclusively in the pre-commit hook, which a clone
+  without `git config core.hooksPath githooks` never runs — the precise silent
+  failure the header of `.github/workflows/ci.yml` says CI exists to make
+  visible. CI ran their tests and did not run them. Neither needed a `--range`
+  mode: the workflow already rewinds the index to the pushed range with
+  `git reset --soft`, so for these scripts the range *is* the index, which is
+  what the existing `Put the pushed range in the index` step was built for.
+  Proven on a throwaway branch rather than asserted: a push whose range added
+  a skill file while `CHANGELOG.md` came out net-unchanged failed the gate, and
+  the follow-up push that carried the entry passed. A rebase onto the upstream
+  does not trip it — the "Upstream base" line is updated at every rebase, so
+  `CHANGELOG.md` is always in the range.
+
 ## [1.2.1] - 2026-08-02
 
 ### Added
