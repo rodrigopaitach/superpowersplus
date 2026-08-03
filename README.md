@@ -1,6 +1,6 @@
 # superpowersplus
 
-[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest) [![CI](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml/badge.svg)](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/rodrigopaitach/superpowersplus?style=flat-square&label=license)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest) [![CI](https://img.shields.io/github/actions/workflow/status/rodrigopaitach/superpowersplus/ci.yml?style=flat-square&label=ci)](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/rodrigopaitach/superpowersplus?style=flat-square&label=license)](LICENSE)
 
 A development methodology for coding agents, where every claim the agent makes about your code carries a `file:line` citation — and whoever verifies re-runs the search instead of taking the writer's word for it.
 

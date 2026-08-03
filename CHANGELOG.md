@@ -10,6 +10,18 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The CI badge matches the other two.** It was the Actions default
+  (`actions/workflows/ci.yml/badge.svg`), which takes no style parameter and
+  rendered taller than the shields badges beside it. Replaced by the shields
+  equivalent with `style=flat-square`, keeping the link to the Actions tab.
+  Note for whoever changes it next: the shields path takes the **workflow file
+  name** (`ci.yml`), not the workflow's `name:` field — verified rendering
+  `passing` before the swap. Applied to all three READMEs.
+
 ## [1.2.3] - 2026-08-02
 
 ### Added

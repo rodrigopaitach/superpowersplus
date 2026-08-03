@@ -1,6 +1,6 @@
 # superpowersplus — documentação em português
 
-[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest) [![CI](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml/badge.svg)](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml) [![Licença](https://img.shields.io/github/license/rodrigopaitach/superpowersplus?style=flat-square&label=licen%C3%A7a)](../LICENSE)
+[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest) [![CI](https://img.shields.io/github/actions/workflow/status/rodrigopaitach/superpowersplus/ci.yml?style=flat-square&label=ci)](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml) [![Licença](https://img.shields.io/github/license/rodrigopaitach/superpowersplus?style=flat-square&label=licen%C3%A7a)](../LICENSE)
 
 > **Este é o texto canônico.** A versão em inglês, [`README.en.md`](README.en.md), é a tradução dele — em qualquer divergência, este arquivo é o que vale.
 >
