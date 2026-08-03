@@ -93,6 +93,8 @@ Semver, from `1.0.0` on. **PATCH** for a fix that does not change how a skill be
 
 Bump with `scripts/bump-version.sh <version>`; the seven files carrying the field are declared in `.version-bump.json`. Never edit them by hand.
 
+**One class of bump-audit warning is a false positive: a version constant in an upstream test fixture.** The audit scans the repository for the new version string and reports files that carry it without being declared. A fixture holding an arbitrary version — today `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh:8`, `PACKAGE_VERSION="1.2.3"`, paired with `MANIFEST_VERSION="9.8.7"` — will eventually collide with the real version by coincidence. **Do not add the file to `audit.exclude` for this.** The warning undoes itself at the next bump, while an exclusion is permanent and blinds the whole file to a genuine leak later. Read the line, confirm it is a fixture constant, and carry on.
+
 **`[Unreleased]` does not survive more than one cycle of work.** When it tells a
 complete story — a measured correction closed, a set of leftovers cleared — cut
 the version. A fat `[Unreleased]` means `main` has drifted from the last
@@ -102,6 +104,18 @@ commit-preparation rule and `check-skill-behavior-records.sh` both shipped
 without a changelog entry and were caught only when the version was cut.
 
 **A release body is generated, never hand-written:** `scripts/release-notes.sh <version>` builds it from `CHANGELOG.md` — the version's section, then Open gaps, then the footer. A body assembled by hand drifts from the changelog it claims to summarize. Publishing is `gh release create` with **both guards**: `--repo rodrigopaitach/superpowersplus` and `--verify-tag`.
+
+## Documentation hierarchy
+
+Three README-shaped files, with different jobs. Measured, not assumed: `README.md` is 170 lines, each `docs/README.*` is 153, and `scripts/check-docs-sync.sh:14-15` names exactly two files.
+
+| File | Job | Gated by |
+|---|---|---|
+| `README.md` | **Showcase.** What somebody landing on the repository sees: what the project is, one measured example, how to install | `check-links.sh` only |
+| `docs/README.pt-BR.md` | **Canonical reference documentation.** The full text; on any divergence, this file is the one that holds | `check-docs-sync.sh` + `check-links.sh` |
+| `docs/README.en.md` | **Translation of the canonical one.** Never edited alone | `check-docs-sync.sh` + `check-links.sh` |
+
+**Structural divergence between the showcase and the documentation is deliberate** — different sections, different order, different depth, because they answer different questions. Do not "harmonize" them; the sync gate covers the bilingual pair only, and extending it to the root would force the showcase to mirror a reference document. What ties the three together is their links, and those are verified: `scripts/check-links.sh` also covers the five files in `docs/` that no gate reached before.
 
 ## Running `gh`
 

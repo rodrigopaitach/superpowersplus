@@ -40,6 +40,22 @@ References below name them so a claim here can be traced there.
     slug, keeping fenced code, and treating `https` as local each broke exactly
     the one test that targets it.
 
+### Changed
+
+- **`CLAUDE.md` declares the documentation hierarchy and one class of false
+  positive**, both of which were being rediscovered per session. The hierarchy,
+  measured rather than assumed: `README.md` is the showcase (170 lines),
+  `docs/README.pt-BR.md` is the canonical reference (153), `docs/README.en.md`
+  is its translation, and `scripts/check-docs-sync.sh:14-15` gates exactly
+  those last two. **Structural divergence between showcase and documentation is
+  deliberate** — they answer different questions — so nobody should
+  "harmonize" them; what ties them together is their links, now verified.
+  The false positive: the bump audit will eventually flag a version constant in
+  an upstream test fixture that collided with the real version by coincidence
+  (`tests/codex-plugin-sync/test-sync-to-codex-plugin.sh:8` at `1.2.3`). The
+  warning undoes itself at the next bump; an `audit.exclude` entry is permanent
+  and would blind the whole file to a genuine leak later.
+
 ### Fixed
 
 - **The CI badge matches the other two.** It was the Actions default
