@@ -67,6 +67,12 @@ Subagent (general-purpose):
     **Production readiness:** migration strategy if schema changed? Backward
     compatibility considered? Documentation complete? No obvious bugs?
 
+    **A finding is a class, not a case.** A finding whose root cause you can
+    name has siblings. Before you write it up, sweep the scope under review
+    for the other members of that cause and report them as one finding, with
+    file:line for each member. A sweep that found no siblings says so — "no
+    other cases" and "did not look" read the same in a report.
+
     ## Calibration
 
     Categorize issues by actual severity. Not everything is Critical.
@@ -104,7 +110,7 @@ Subagent (general-purpose):
     same to whoever gets this report.
 
     For each issue:
-    - File:line reference
+    - File:line reference — one per member when the finding covers a class
     - What's wrong
     - Why it matters
     - How to fix (if not obvious)
@@ -167,11 +173,14 @@ None.
    - File: index-conversations:1-31
    - Issue: No --help flag, users won't discover --concurrency
    - Fix: Add --help case with usage examples
+   - Swept for siblings: no other CLI entry point in this range
 
-2. **Date validation missing**
-   - File: search.ts:25-27
-   - Issue: Invalid dates silently return no results
-   - Fix: Validate ISO format, throw error with example
+2. **Date validation missing — one cause, three entry points**
+   - Files: search.ts:25-27, indexer.ts:88, cli.ts:142
+   - Issue: every caller assumes the string parses; an invalid date silently
+     returns no results. Same missing guard at all three.
+   - Fix: validate ISO format in the shared parse helper, throw with an
+     example — one guard, not three
 
 #### Minor (Nice to Have)
 1. **Progress indicators**

@@ -9,6 +9,47 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **A finding whose root cause the reviewer can name is reported as a class,
+  not as one case.** This came out of use, not analysis: two rounds of review
+  of the same plan surfaced two broken tests with the **same** root cause — a
+  payload change that invalidated assertions about a removed field — one per
+  round. The second one appeared because the reviewer happened to be diligent,
+  not because any rule asked for it: `grep` over the four review prompts found
+  no instruction to look for the remaining members of a finding's class, and
+  the closest thing that existed
+  (`task-reviewer-prompt.md`, "one focused check per named risk") fires on a
+  risk named *before* any finding exists.
+  Both first-round gates now sweep the scope under review for the other
+  members of the cause and report them as one finding with `file:line` per
+  member, and a sweep that found no siblings declares it — "no other cases"
+  and "did not look" read the same in a report. The wording is one sentence
+  and the same hinge in both, "the scope under review", which each file has
+  already bound to its own reach: the task diff at
+  `task-reviewer-prompt.md:41-46`, the branch range at `code-reviewer.md:25-31`.
+  In the task reviewer the sentence names the call sites of a cross-cutting
+  cause as part of the sweep rather than a separate excursion — without that
+  clause the rule misses the very case that produced it, because a payload
+  change leaves its broken assertions in files the task diff never touched.
+  `code-reviewer.md`'s worked example now shows a grouped finding and a
+  declared negative — an example showing only isolated findings teaches
+  isolated reporting.
+  Three per-finding phrasings that competed with grouping were reconciled in
+  the same pass, found by sweeping the new rule over its own diff:
+  `task-reviewer-prompt.md:133` (the shallow-test litmus said "report each"),
+  `task-reviewer-prompt.md:207` and `code-reviewer.md:112` (both described one
+  `file:line` per issue). One cause, three members, one entry.
+  **Two of the four review scopes deliberately do not get this rule.**
+  `re-review-prompt.md:50-54` forbids re-reviewing code the fix did not touch,
+  and that prohibition is what bounds the fix loop; a class sweep there would
+  collide with it head-on, and is unnecessary once the first round sweeps.
+  `final-branch-audit` already enumerates exhaustively — one row per criterion,
+  none omissible — so sweeping by cause visits nothing its table does not
+  already visit. This keeps the four scopes distinct, as `CLAUDE.md` requires.
+
 ## [1.2.5] - 2026-08-02
 
 ### Added

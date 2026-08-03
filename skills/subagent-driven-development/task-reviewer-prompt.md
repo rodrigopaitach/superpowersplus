@@ -49,6 +49,20 @@ Subagent (general-purpose):
     Cross-cutting changes are legitimate named risks — lock ordering, a
     function or API contract, shared mutable state: check the call sites.
 
+    A finding whose root cause you can name is a class, not a case. Before
+    you write it up, sweep the scope under review for the other members of
+    that cause — and when the cause is one of the cross-cutting risks above,
+    its call sites are part of that sweep, not a separate excursion — and
+    report them as one finding, with `file:line` for each member. A sweep
+    that found no siblings says so — "no other cases" and "did not look"
+    read the same in a report.
+
+    This adds to the paragraph above, it does not replace it: there the
+    trigger is a risk you name before any finding exists; here it is a
+    finding you already have. It also leaves the ⚠️ rule in Part 1 intact —
+    that one is about a requirement this diff cannot settle, not about a
+    finding whose cause you have already named.
+
     Your review is read-only on this checkout. Do not mutate the working
     tree, the index, HEAD, or branch state in any way.
 
@@ -118,7 +132,8 @@ Subagent (general-purpose):
     | Happy path only, while the brief, the spec criterion it names, or the global constraints list edge cases. An `IR` criterion is where edge cases, concurrency, failure modes and limits live — its listed cases are the requirement | BLOCKING |
 
     A passing suite made of these tests is a passing suite that proves
-    nothing. Report each as Critical, cited at `file:line`.
+    nothing. Report each as Critical, cited at `file:line` — grouped by cause
+    when they share one.
 
     **The inverse check, same weight:** every new or changed test maps to a
     requirement in the brief. A test that maps to nothing is invented
@@ -190,7 +205,8 @@ Subagent (general-purpose):
     #### Minor (Nice to Have)
 
     For each issue: file:line, what's wrong, why it matters, how to fix
-    (if not obvious).
+    (if not obvious). A finding covering several members of one cause carries
+    a file:line per member.
 
     ### Assessment
 
