@@ -736,6 +736,15 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   lockfile — this repository is zero-dependency and the line varies per project
   anyway. Closing it would need an example project with a versioned lockfile
   inside the repo. (opened plus.1)
+- **A generated release body carries the changelog's link-reference block.**
+  `scripts/release-notes.sh` slices from Open gaps to end of file, and the
+  version-to-tag link definitions live there, so every release body ends with
+  the full list of them. Measured, not assumed: the published v1.2.5 body
+  carries the same eight lines. It renders as literal text on GitHub and breaks nothing.
+  Left as is on purpose — a release body is generated, never hand-written, so
+  the only real fix is teaching the script to stop at the link block, and that
+  is not worth a change to the one script that decides what every release says.
+  **Do not re-investigate: this is known and deliberate.** (opened 1.3.0)
 
 Most rules in this project are reasoned rather than measured. Two have been
 measured, over four adversarial runs: the external-content rule, which held on
