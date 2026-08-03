@@ -10,7 +10,7 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.2.4] - 2026-08-02
 
 ### Added
 
@@ -558,6 +558,7 @@ measured, over four adversarial runs: the external-content rule, which held on
 its first run, and the escalation format, which took two corrections and three
 runs to hold.
 
+[1.2.4]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.4
 [1.2.3]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.3
 [1.2.2]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.2
 [1.2.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.1
