@@ -50,6 +50,9 @@ jobs:
       - name: Tests (changelog gate)
         run: tests/hooks/test-check-changelog.sh
 
+      - name: Tests (link checker)
+        run: tests/hooks/test-check-links.sh
+
       - name: Tests (codex plugin sync)
         run: tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 
@@ -123,6 +126,11 @@ jobs:
 
       - name: The frozen changelog stays frozen
         run: scripts/check-frozen-history.sh
+
+      # Whole-tree, not range-scoped: a link breaks when its destination is
+      # removed, which can happen in a commit that touches no scanned file.
+      - name: Local links and anchors resolve
+        run: scripts/check-links.sh
 
       # Integrity of the adversarial records only. The tests themselves are
       # never re-run here: they dispatch a live agent, cost tokens, and are

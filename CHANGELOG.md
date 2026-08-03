@@ -12,6 +12,34 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **`scripts/check-links.sh` — local links and their anchors are verified in
+  the hook and in CI.** It scans `README.md`, `CONTRIBUTING.md`, `SECURITY.md`,
+  `CODE_OF_CONDUCT.md`, `CHANGELOG.md` and every `docs/*.md`: the destination
+  file exists, and where a link carries an anchor, a heading with that slug
+  exists in the destination. **It is green today** — 36 local links across 12
+  files, none broken. It closes a coverage gap rather than a defect:
+  `check-docs-sync.sh` only ever looked at the two bilingual READMEs, so the
+  other five files in `docs/` had no gate at all.
+  - Anchors follow GitHub's rules, calibrated against headings this repository
+    actually has: accents survive (`#pendências-conhecidas`), an em dash
+    surrounded by spaces leaves **two** hyphens, emoji strip to a leading
+    hyphen, backticks come off, and duplicate headings get the `-1` suffix.
+  - **`http`/`https` links are ignored on purpose**, with the reason in the
+    script: a network call per link turns a deterministic gate into one that
+    goes red when a third-party site is slow or rate-limits CI, and a gate that
+    goes red for reasons unrelated to the commit stops being read.
+  - **It runs on the whole tree, not on the staged range.** A link breaks when
+    its *destination* disappears, and `README.md` cites
+    `tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md`, which is not
+    one of the scanned files — gating on "a scanned file is staged" would miss
+    the commit that renames it. Measured at 30ms for the whole repository.
+  - Covered by `tests/hooks/test-check-links.sh`, 16 cases in throwaway trees.
+    Each positive case was confirmed by mutation: stripping accents from the
+    slug, keeping fenced code, and treating `https` as local each broke exactly
+    the one test that targets it.
+
 ### Fixed
 
 - **The CI badge matches the other two.** It was the Actions default

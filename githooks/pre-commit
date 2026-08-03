@@ -15,3 +15,12 @@ repo_root="$(git rev-parse --show-toplevel)"
 "$repo_root/scripts/check-docs-sync.sh"
 "$repo_root/scripts/check-frozen-history.sh"
 "$repo_root/scripts/check-changelog.sh"
+
+# Unlike the three above, this one does not read the index: it scans the whole
+# tree, because a link breaks when its DESTINATION disappears, not only when
+# the markdown holding it changes. README.md cites
+# tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md, which is not one
+# of the scanned files — gating on "a scanned file is staged" would miss a
+# commit that renames it. Measured at 30ms for the whole repository, which is
+# cheaper than the bookkeeping that ignoring it would need.
+"$repo_root/scripts/check-links.sh" >/dev/null
