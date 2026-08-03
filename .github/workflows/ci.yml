@@ -47,6 +47,9 @@ jobs:
       - name: Tests (session-start hook)
         run: tests/hooks/test-session-start.sh
 
+      - name: Tests (changelog gate)
+        run: tests/hooks/test-check-changelog.sh
+
       - name: Tests (codex plugin sync)
         run: tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 

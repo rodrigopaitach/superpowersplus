@@ -12,6 +12,22 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **`scripts/check-changelog.sh` — the changelog rule now has a gate.** A
+  commit staging anything under `skills/`, `scripts/`, `githooks/`, `.github/`
+  or `hooks/` without `CHANGELOG.md` fails in the pre-commit hook, naming the
+  offending files and `git commit --no-verify` as the way out for a change
+  genuinely not worth an entry. The rule existed in `CLAUDE.md` and broke
+  inside the cycle that wrote it: `ab1cf41` shipped that rule and
+  `check-skill-behavior-records.sh` with no changelog line, and the omission
+  surfaced only when `1.2.0` was cut. Covered by
+  `tests/hooks/test-check-changelog.sh`, which runs in CI — its first red
+  caught the gate matching nothing at all, because a variable expanded in a
+  `case` pattern is a glob but its `|` is not alternation, so the five prefixes
+  were being compared as one literal string. A gate that never fires passes
+  every commit silently.
+
 ### Fixed
 
 - **CI covers every static test suite, not the five it happened to name.** The

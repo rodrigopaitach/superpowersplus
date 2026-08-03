@@ -76,6 +76,17 @@ This is not hypothetical. A `CHANGELOG.md` edit failed on a wrong anchor, the
 commit and the push ran anyway, and the change shipped without its changelog
 entry — the failure was invisible because nothing was chained to it.
 
+**A staged change under `skills/`, `scripts/`, `githooks/`, `.github/` or
+`hooks/` needs `CHANGELOG.md` staged with it**, and `scripts/check-changelog.sh`
+in the pre-commit hook enforces it. The rule was written above and broke inside
+the same cycle: `ab1cf41` shipped that very rule *and*
+`check-skill-behavior-records.sh` with no changelog line, and nobody noticed
+until the version was cut and the entry had to be reconstructed from the diff.
+A rule nothing enforces holds until the first busy commit. Genuinely
+entry-less changes — a typo in a comment, whitespace — are what
+`git commit --no-verify` is for; the gate cannot tell them apart and does not
+try.
+
 ## Versioning
 
 Semver, from `1.0.0` on. **PATCH** for a fix that does not change how a skill behaves; **MINOR** for a new skill or a compatible new rule; **MAJOR** for anything that breaks existing artifacts or invocations — the namespace rename would have been MAJOR.

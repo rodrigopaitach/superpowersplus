@@ -14,3 +14,4 @@ repo_root="$(git rev-parse --show-toplevel)"
 
 "$repo_root/scripts/check-docs-sync.sh"
 "$repo_root/scripts/check-frozen-history.sh"
+"$repo_root/scripts/check-changelog.sh"
