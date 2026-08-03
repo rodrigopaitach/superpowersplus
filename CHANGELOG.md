@@ -26,6 +26,29 @@ References below name them so a claim here can be traced there.
 - **CI and license badges next to the release badge**, both dynamic: the
   Actions workflow badge for `ci.yml` and the license badge resolved from the
   repository. A release badge alone says a version exists, not that it builds.
+- **`SECURITY.md`.** Supported version (the latest release only — one line of
+  work, no backports), the two reporting channels, and the telemetry posture in
+  one place: this project collects nothing, and the one inherited exception is
+  named with the three environment variables that disable it and the line that
+  honors them, `skills/brainstorming/scripts/server.cjs:107-112`. It also states
+  what the threat surface actually is, since "plugin" suggests more than a set
+  of Markdown skills and shell scripts with no dependencies.
+
+### Changed
+
+- **`CONTRIBUTING.md` covers working on the code, not only the refusal to take
+  contributions.** It went from 20 lines stating there is no PR process to also
+  carrying: how to report, development setup (including
+  `git config core.hooksPath githooks`, without which none of the gates run for
+  you), the full list of runnable suites with the clean-tree warning on the
+  Codex packaging one, and release discipline **by reference** to `CLAUDE.md`
+  rather than duplicated — a second copy of a rule is a copy that goes stale.
+- **`CODE_OF_CONDUCT.md` says who "community leaders" are here.** The inherited
+  Contributor Covenant text is unchanged; the header now states that
+  superpowersplus is its own project, that "community leaders" means this
+  repository's maintainer, and that "community spaces" means this repository's
+  issues — the only place the document can apply, given that the project takes
+  no outside contributions.
 
 ## [1.2.2] - 2026-08-02
 

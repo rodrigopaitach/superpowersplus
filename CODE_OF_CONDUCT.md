@@ -4,6 +4,13 @@
 > [Superpowers](https://github.com/obra/superpowers)**, the project
 > superpowersplus derives from, and it governs this project unchanged.
 >
+> **superpowersplus is its own project**, maintained independently of the
+> upstream. Two consequences for the text below: "community leaders" means the
+> maintainer of this repository, and "community spaces" means this repository —
+> its issues, and nothing else. superpowersplus takes no outside contributions
+> (see [`CONTRIBUTING.md`](CONTRIBUTING.md)), so in practice this document
+> governs how people are treated in an issue thread.
+>
 > **Anything concerning superpowersplus is raised as an issue here**, on
 > `rodrigopaitach/superpowersplus`. Do not contact Superpowers' maintainers
 > about this project: they have no authority over it, no visibility into it,
