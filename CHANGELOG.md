@@ -9,7 +9,7 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.4.0] - 2026-08-03
 
 ### Added
 
@@ -21,6 +21,17 @@ References below name them so a claim here can be traced there.
   nothing in the skill distinguished the two. Before this, the audit's universe
   was fixed at every task in the plan and the only axis was having a citation
   or not.
+  **What the investigation found underneath was a deadlock, not just a missing
+  state.** The branch's last tasks were merge, deploy and a hand-run smoke —
+  the normal shape of a plan in this flow — and those two rules cannot both be
+  satisfied: `finishing-a-development-branch/SKILL.md:32-33` presents no merge
+  option until the audit returns PASS, and the audit's PASS rule (then at
+  `final-branch-audit/SKILL.md:237-239`, now at `:285-286`) required every task
+  row DELIVERED, merge included. The merge waited for the PASS and the PASS
+  waited for the merge. The `Fixed` entry below closes that half by taking
+  those tasks out of the plan; this entry closes the half that survives a
+  correct dispatch, since a task dispatched before its turn is not always an
+  operational one.
   - A dispatch slot at `final-branch-audit/SKILL.md:211`,
     `**Tasks outside this execution's scope:**`, default `none`.
   - A verdict of its own, OUT OF SCOPE — DECLARED (`:134`), distinct from NOT
@@ -850,6 +861,7 @@ measured, over four adversarial runs: the external-content rule, which held on
 its first run, and the escalation format, which took two corrections and three
 runs to hold.
 
+[1.4.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.4.0
 [1.3.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.3.0
 [1.2.5]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.5
 [1.2.4]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.4
