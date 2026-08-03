@@ -54,6 +54,16 @@ References below name them so a claim here can be traced there.
   package's own name, not an upstream decision. The `.pi/` exception in
   `CLAUDE.md` protects the internal *path* `.pi/extensions/superpowers.ts`,
   which the same test checks and which passes untouched.
+- **The HEAD/worktree trap in the Codex packaging suite is written down.**
+  `tests/codex/test-package-codex-plugin.sh` reads its expected values from the
+  working tree (lines 175-176) while the packager builds the archive from a git
+  ref (`scripts/package-codex-plugin.sh:15`, `REF="HEAD"`; `--allow-dirty`
+  permits a dirty tree but still packages the ref). With anything uncommitted
+  the two disagree and the suite fails with no defect present — measured, a
+  local `9.9.9` produced `expected: 9.9.9` against `actual: 1.2.0`, green again
+  once reverted. It cost two debugging detours before being named. `CLAUDE.md`
+  now says to run that suite after committing; the file is upstream's and is
+  not changed here.
 - **`CLAUDE.md` claimed two tests were left failing on purpose.** Both pass —
   `db91242` updated them. A rule whose example is false competes with the rule
   itself; the sentence now states the line it actually draws (a test watching
