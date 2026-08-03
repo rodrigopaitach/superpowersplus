@@ -11,6 +11,25 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **`CLAUDE.md` records what the pre-commit hook costs, and three decisions
+  that were being re-derived per session.** The cost, measured 2026-08-02 as
+  the median of three warm-cache runs: 3 ms each for the three index-reading
+  checks, 29 ms for `check-links.sh`, 41 ms for the hook end to end. The table
+  carries its method and its condition, because an independent measurement the
+  same day came out roughly 7× higher — almost all of `check-links.sh` is
+  `python3` startup, which moves with the machine. **No automatic timer**, on
+  purpose: it would report a number nobody reads on every commit. If a commit
+  ever visibly drags, timing the checks one at a time is the first step and
+  that table is the baseline.
+  The three decisions: `check-links.sh` stops at the root institutional files
+  plus `docs/` because `skills/**` is upstream text whose relative links move
+  at every rebase; third-party links stay at the attribution minimum; and
+  third-party links are **not** verified — a dead external link is found by
+  clicking it, and the project takes that over a network call per link that
+  would turn CI red for reasons unrelated to the commit.
+
 ### Changed
 
 - **Third-party links cut to what attribution requires: 65 → 43 across the

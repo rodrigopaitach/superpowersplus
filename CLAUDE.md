@@ -117,6 +117,28 @@ Three README-shaped files, with different jobs. Measured, not assumed: `README.m
 
 **Structural divergence between the showcase and the documentation is deliberate** — different sections, different order, different depth, because they answer different questions. Do not "harmonize" them; the sync gate covers the bilingual pair only, and extending it to the root would force the showcase to mirror a reference document. What ties the three together is their links, and those are verified: `scripts/check-links.sh` also covers the five files in `docs/` that no gate reached before.
 
+**`check-links.sh` scans the institutional files at the root plus `docs/`, and stops there — that boundary is deliberate.** `skills/**` is mostly upstream text whose relative links move whenever a rebase lands, so a gate there would report churn this project did not cause and cannot fix without editing files it should not touch.
+
+**Third-party links are kept to what attribution requires** (decided 2026-08-02, applied in the same cycle: 65 → 43 across the seven documents this project owns). One link to `obra/superpowers` per document where the attribution appears; the repository's own infrastructure; nothing else. Everything a reader could want to look up is named in text instead — a name and a version identify a source without depending on somebody else's URL scheme.
+
+**Third-party links are deliberately not verified.** `check-links.sh` ignores `http`/`https` entirely. A dead external link is discovered by clicking it, and this project accepts that in exchange for zero surveillance: the alternative is a network call per link on every push, which makes a gate go red for reasons that have nothing to do with the commit. The link diet is what makes this cheap — there is little left to rot.
+
+## What the pre-commit hook costs
+
+Measured 2026-08-02, median of three runs each on a warm cache, invoking each script directly:
+
+| Check | Cost |
+|---|---|
+| `check-docs-sync.sh` | 3 ms |
+| `check-frozen-history.sh` | 3 ms |
+| `check-changelog.sh` | 3 ms |
+| `check-links.sh` | 29 ms |
+| **`githooks/pre-commit` end to end** | **41 ms** |
+
+**The condition matters more than the number.** Almost all of `check-links.sh` is `python3` startup, which moves with the machine and with whether the interpreter is in cache — an independent measurement the same day reported roughly 7× these figures. Treat the table as a baseline taken this way, on this machine, not as a constant.
+
+**There is deliberately no automatic timer.** A stopwatch around the hook is one more thing to maintain, and it reports on every commit a number nobody reads. If a commit ever visibly drags, timing the checks one at a time is the first step, and the table above is what to compare against.
+
 ## Running `gh`
 
 **Every `gh` invocation in this checkout carries `--repo rodrigopaitach/superpowersplus` — reads included.** Not only the outward-facing ones. This repository has an upstream remote, and `gh` resolves against the remotes, not against your intent.
