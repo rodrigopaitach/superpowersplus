@@ -39,7 +39,7 @@ Essa parte é desenho, não acaso. Um parceiro que não programa não consegue j
 
 ## Instalação
 
-Requer o [Claude Code](https://claude.com/claude-code).
+Requer o Claude Code.
 
 ```bash
 /plugin marketplace add rodrigopaitach/superpowersplus
@@ -148,6 +148,6 @@ Buracos identificados e deliberadamente não fechados estão registrados em [Ope
 
 MIT — ver [`LICENSE`](../LICENSE).
 
-O superpowersplus é **obra derivada do [Superpowers](https://github.com/obra/superpowers)**, criação de [Jesse Vincent](https://blog.fsck.com) e do pessoal da [Prime Radiant](https://primeradiant.com). A metodologia, as skills e o fluxo são deles; a camada de verificação descrita acima é deste projeto. O copyright permanece com Jesse Vincent, e a obra derivada é distribuída sob os mesmos termos.
+O superpowersplus é **obra derivada do Superpowers**, criação de Jesse Vincent e do pessoal da Prime Radiant. A metodologia, as skills e o fluxo são deles; a camada de verificação descrita acima é deste projeto. O copyright permanece com Jesse Vincent, e a obra derivada é distribuída sob os mesmos termos.
 
 Este projeto **não tem vínculo com o autor, com a Prime Radiant ou com a Anthropic**, e não fala por nenhum deles. Problemas causados pelo superpowersplus não são problema deles: relate aqui, não no repositório original.

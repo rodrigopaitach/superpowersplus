@@ -147,7 +147,7 @@ All of it is git-versioned files, readable without any tooling. The decision rec
 
 ## Contributing
 
-superpowersplus does not take contributions. Contributing to Superpowers itself happens at [obra/superpowers](https://github.com/obra/superpowers), under its own process — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+superpowersplus does not take contributions. Contributing to Superpowers itself happens at `obra/superpowers`, under its own process — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Updating
 
@@ -161,9 +161,9 @@ Brainstorming's optional visual companion loads the Prime Radiant logo from thei
 
 ## Origin and credit
 
-superpowersplus is a derivative work of [Superpowers](https://github.com/obra/superpowers), built by [Jesse Vincent](https://blog.fsck.com) and the folks at [Prime Radiant](https://primeradiant.com). The methodology, the skills, and the workflow are theirs; the verification layer described under "What it adds" is this project's. Read [the original release announcement](https://blog.fsck.com/2025/10/09/superpowers/).
+superpowersplus is a derivative work of Superpowers, built by Jesse Vincent and the folks at Prime Radiant. The methodology, the skills, and the workflow are theirs; the verification layer described under "What it adds" is this project's.
 
-Superpowers' own community — Discord, issues, release announcements — is at [obra/superpowers](https://github.com/obra/superpowers). Anything about superpowersplus goes to [this repository's issues](https://github.com/rodrigopaitach/superpowersplus/issues).
+Superpowers' own community — Discord, issues, release announcements — is at `obra/superpowers`. Anything about superpowersplus goes to [this repository's issues](https://github.com/rodrigopaitach/superpowersplus/issues).
 
 ## License
 

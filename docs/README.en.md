@@ -39,7 +39,7 @@ That part is design, not accident. A partner who does not program cannot judge w
 
 ## Installation
 
-Requires [Claude Code](https://claude.com/claude-code).
+Requires Claude Code.
 
 ```bash
 /plugin marketplace add rodrigopaitach/superpowersplus
@@ -148,6 +148,6 @@ Gaps identified and deliberately left open are recorded in [Open gaps](../CHANGE
 
 MIT — see [`LICENSE`](../LICENSE).
 
-superpowersplus is a **derivative work of [Superpowers](https://github.com/obra/superpowers)**, built by [Jesse Vincent](https://blog.fsck.com) and the folks at [Prime Radiant](https://primeradiant.com). The methodology, the skills, and the workflow are theirs; the verification layer described above is this project's. Copyright remains with Jesse Vincent, and this derivative work is distributed under the same terms.
+superpowersplus is a **derivative work of Superpowers**, built by Jesse Vincent and the folks at Prime Radiant. The methodology, the skills, and the workflow are theirs; the verification layer described above is this project's. Copyright remains with Jesse Vincent, and this derivative work is distributed under the same terms.
 
 This project **has no affiliation with the author, with Prime Radiant, or with Anthropic**, and speaks for none of them. Problems caused by superpowersplus are not their problem: report them here, not on the original repository.

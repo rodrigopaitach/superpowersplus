@@ -1,14 +1,40 @@
 # Changelog
 
 All notable changes to this project are documented here. The format follows
-[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
-adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Keep a Changelog 1.1.0, and this project adheres to Semantic Versioning 2.0.0.
 
-**Upstream base:** [`44c9b2d`](https://github.com/obra/superpowers/commit/44c9b2d) (2026-07-27) — the last [Superpowers](https://github.com/obra/superpowers) commit incorporated. Update this line at every rebase; it replaces the mirrored upstream `version` this project used before `1.0.0`.
+**Upstream base:** [`44c9b2d`](https://github.com/obra/superpowers/commit/44c9b2d) (2026-07-27) — the last Superpowers commit incorporated. Update this line at every rebase; it replaces the mirrored upstream `version` this project used before `1.0.0`.
 
 The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
+
+## [Unreleased]
+
+### Changed
+
+- **Third-party links cut to what attribution requires: 65 → 43 across the
+  seven documents this project owns.** Everything that remains is either the
+  repository's own infrastructure (badges, releases, Actions, issues, security
+  advisories, clone and install commands — 38 of the 43) or attribution: one
+  link to `obra/superpowers` per document where the attribution appears
+  (`README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and both
+  `docs/README.*`), plus the `44c9b2d` commit that records the rebase base and
+  is functional rather than decorative.
+  - Turned into plain text, identifying without linking: repeated
+    `obra/superpowers` mentions, `blog.fsck.com` and `primeradiant.com` (the
+    credit line already names Jesse Vincent and Prime Radiant), the
+    `claude.com/claude-code` requirement line in both `docs/README.*`,
+    `keepachangelog.com` and `semver.org` (naming the format and version does
+    the same work), and the four `contributor-covenant.org` URLs plus the
+    Mozilla one in `CODE_OF_CONDUCT.md`, where "Contributor Covenant,
+    version 2.0" preserves the attribution the license asks for.
+  - Removed outright: the 2025 release-announcement link, which supported
+    neither attribution nor a working instruction.
+  - Left alone on purpose: `docs/README.kimi.md` and `docs/README.opencode.md`
+    are upstream text, where editing buys a rebase conflict and nothing else,
+    and `docs/PLUS-CHANGELOG-historico.md` is frozen — `check-frozen-history.sh`
+    rejects it regardless.
 
 ## [1.2.4] - 2026-08-02
 
