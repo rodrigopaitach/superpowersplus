@@ -7,14 +7,18 @@
 # five files in docs/ had no gate at all, and a broken link in a showcase
 # README is invisible until somebody clicks it.
 #
-# http/https links are IGNORED on purpose. Checking them means a network call
-# per link on every push: it turns a deterministic gate into one that fails
-# when a third-party site is slow, rate-limits CI, or is briefly down. A gate
-# that goes red for reasons unrelated to the commit gets ignored, and then it
-# guards nothing. Local links are the ones this repository can actually break.
+# An http/https link is never FETCHED. Checking one means a network call per
+# link on every push: it turns a deterministic gate into one that fails when a
+# third-party site is slow, rate-limits CI, or is briefly down. A gate that
+# goes red for reasons unrelated to the commit gets ignored, and then it
+# guards nothing. A dead allowed link is still found by clicking it.
+#
+# Its DOMAIN is checked, which costs no network at all — that is the link diet
+# below, and it is a different question from whether the link resolves.
 #
 # Usage:
-#   check-links.sh    Exit 1 if any local link or anchor does not resolve
+#   check-links.sh    Exit 1 if a local link or anchor does not resolve, or if
+#                     a URL names a host outside the link diet
 #
 set -euo pipefail
 
@@ -37,6 +41,32 @@ FENCE = re.compile(r"^\s*(```|~~~)")
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 LINK = re.compile(r"(?<!\!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 EXTERNAL = re.compile(r"^(https?:|mailto:|tel:|ftp:)", re.IGNORECASE)
+
+# --- The third-party link diet ---------------------------------------------
+# Policy: one link to obra/superpowers per document where the attribution
+# appears, this repository's own infrastructure, and nothing else. Anything a
+# reader might want to look up is named in text instead — a name and a version
+# identify a source without depending on somebody else's URL scheme.
+#
+# The diet is what makes not fetching links cheap: there is little left to rot.
+URL = re.compile(r"https?://[^\s)\]\"'<>`]+")
+ALLOWED_PREFIXES = (
+    "https://github.com/rodrigopaitach/",
+    "https://raw.githubusercontent.com/rodrigopaitach/",   # this repo's raw files
+    "https://img.shields.io/",                             # this repo's badges
+    "https://github.com/obra/superpowers",                 # attribution only
+)
+
+# Unlike the local-link pass, this reads RAW lines — fenced blocks included.
+# An install command inside a ```block``` is exactly where a URL naming the
+# wrong repository hides, and that is the defect this gate exists to catch.
+#
+# The frozen history is exempt from the DIET ONLY. It cannot acquire a new
+# link by construction: check-frozen-history.sh refuses any change to it, so
+# watching it for new domains is a check with no function. Its local links and
+# anchors stay checked below — freezing a file does not freeze the files it
+# points at, and a moved destination breaks it exactly like any other.
+DIET_EXEMPT = {"docs/PLUS-CHANGELOG-historico.md"}
 
 
 def strip_fences(text):
@@ -103,7 +133,9 @@ def anchors_cached(path):
 
 
 problems = []
+offdiet = []
 checked = 0
+scanned = 0
 
 for name in TARGETS:
     source = pathlib.Path(name)
@@ -111,7 +143,16 @@ for name in TARGETS:
         problems.append(f"{name}: target file listed by this script does not exist")
         continue
 
-    for number, line in enumerate(strip_fences(source.read_text(encoding="utf-8")), 1):
+    raw = source.read_text(encoding="utf-8")
+
+    if name not in DIET_EXEMPT:
+        for number, line in enumerate(raw.splitlines(), 1):
+            for url in URL.findall(line):
+                scanned += 1
+                if not url.startswith(ALLOWED_PREFIXES):
+                    offdiet.append(f"{name}:{number}: {url}")
+
+    for number, line in enumerate(strip_fences(raw), 1):
         for target in LINK.findall(line):
             if EXTERNAL.match(target):
                 continue
@@ -153,7 +194,27 @@ if problems:
     print(f"Checked {checked} local link(s) across {len(TARGETS)} file(s).", file=sys.stderr)
     print("Anchors follow GitHub's rules: lowercase, punctuation dropped,", file=sys.stderr)
     print("spaces to hyphens, accents kept.", file=sys.stderr)
+
+if offdiet:
+    print("check-links: URL(s) outside the third-party link diet.", file=sys.stderr)
+    print("", file=sys.stderr)
+    for entry in offdiet:
+        print(f"  {entry}", file=sys.stderr)
+    print("", file=sys.stderr)
+    print("Policy: one link to obra/superpowers per document where the", file=sys.stderr)
+    print("attribution appears, this repository's own infrastructure, and", file=sys.stderr)
+    print("nothing else. Name the source in text instead — a name and a", file=sys.stderr)
+    print("version identify it without depending on somebody else's URL", file=sys.stderr)
+    print("scheme. Allowed prefixes:", file=sys.stderr)
+    for prefix in ALLOWED_PREFIXES:
+        print(f"  {prefix}", file=sys.stderr)
+    print("", file=sys.stderr)
+    print("A URL naming the upstream repository as an INSTALL source is not", file=sys.stderr)
+    print("an allowlist gap — fix the document, do not widen the list.", file=sys.stderr)
+
+if problems or offdiet:
     sys.exit(1)
 
-print(f"check-links: {checked} local link(s) across {len(TARGETS)} file(s) resolve.")
+print(f"check-links: {checked} local link(s) across {len(TARGETS)} file(s) resolve; "
+      f"{scanned} URL(s) on the diet.")
 PY

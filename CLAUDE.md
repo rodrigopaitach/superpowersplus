@@ -121,7 +121,11 @@ Three README-shaped files, with different jobs. Measured, not assumed: `README.m
 
 **Third-party links are kept to what attribution requires** (decided 2026-08-02, applied in the same cycle: 65 → 43 across the seven documents this project owns). One link to `obra/superpowers` per document where the attribution appears; the repository's own infrastructure; nothing else. Everything a reader could want to look up is named in text instead — a name and a version identify a source without depending on somebody else's URL scheme.
 
-**Third-party links are deliberately not verified.** `check-links.sh` ignores `http`/`https` entirely. A dead external link is discovered by clicking it, and this project accepts that in exchange for zero surveillance: the alternative is a network call per link on every push, which makes a gate go red for reasons that have nothing to do with the commit. The link diet is what makes this cheap — there is little left to rot.
+**A third-party link is never fetched, but its domain is checked.** These are different questions and `check-links.sh` answers only the second. It makes no network call: a dead external link is still discovered by clicking it, and this project accepts that in exchange for a gate that cannot go red because somebody else's site is slow. The link diet is what makes this cheap — there is little left to rot.
+
+**The diet is a gate, not a convention.** `check-links.sh` fails on a URL whose prefix is not one of four: `github.com/rodrigopaitach/`, `raw.githubusercontent.com/rodrigopaitach/`, `img.shields.io/`, and `github.com/obra/superpowers` for attribution. It reads **raw lines, fenced blocks included** — an install command naming the wrong repository is the defect this catches, and it lives inside a ```` ``` ```` block that the local-link pass blanks out. When it fails, fix the document; a URL pointing at the upstream as an install source is not a gap in the allowlist.
+
+**`docs/PLUS-CHANGELOG-historico.md` is exempt from the diet only.** It cannot acquire a new link by construction — `check-frozen-history.sh` refuses any change to it — so watching it for new domains is a check with no function. Its local links and anchors stay checked: freezing a file does not freeze the files it points at.
 
 ## What the pre-commit hook costs
 

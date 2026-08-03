@@ -123,8 +123,54 @@ assert_run 0 "duplicate headings get GitHub's -1 suffix" "$T"
 
 echo "Test: what is deliberately not checked"
 T="$(new_tree)"
-printf '# Doc\n\n[dead](https://example.invalid/nope) and [also](http://x.invalid).\n' > "$T/README.md"
-assert_run 0 "http and https links are ignored" "$T"
+printf '# Doc\n\n[latest](https://github.com/rodrigopaitach/superpowersplus/releases/latest).\n' > "$T/README.md"
+assert_run 0 "an allowed http(s) link is never fetched, only its domain read" "$T"
+
+echo "Test: the third-party link diet"
+T="$(new_tree)"
+printf '# Doc\n\nSee [the tracker](https://example.invalid/nope).\n' > "$T/README.md"
+assert_run 1 "a URL outside the allowlist fails" "$T" "outside the third-party link diet"
+
+T="$(new_tree)"
+printf '# Doc\n\nSee [the tracker](https://example.invalid/nope).\n' > "$T/README.md"
+assert_run 1 "the failure names the policy, not just the URL" "$T" "do not widen the list"
+
+T="$(new_tree)"
+printf '# Doc\n\n[Superpowers](https://github.com/obra/superpowers) by Jesse Vincent.\n' > "$T/README.md"
+assert_run 0 "the attribution link to the upstream is allowed" "$T"
+
+T="$(new_tree)"
+printf '# Doc\n\n![CI](https://img.shields.io/github/license/x?style=flat-square)\n' > "$T/README.md"
+assert_run 0 "a badge from img.shields.io is allowed" "$T"
+
+T="$(new_tree)"
+printf '# Doc\n\nFetch https://raw.githubusercontent.com/rodrigopaitach/superpowersplus/refs/heads/main/x.md\n' > "$T/README.md"
+assert_run 0 "raw.githubusercontent for this owner is this repo's own infrastructure" "$T"
+
+# The defect this gate exists to catch: an install command naming the wrong
+# repository. It lives inside a fenced block, which the local-link pass blanks
+# out — so the diet pass has to read raw lines or it would miss exactly this.
+T="$(new_tree)"
+printf '# Doc\n\n```text\n/plugins install https://github.com/obra/superpowers\n```\n' > "$T/README.md"
+assert_run 0 "an upstream URL is allowed even in a fenced block (attribution prefix)" "$T"
+
+T="$(new_tree)"
+printf '# Doc\n\n```json\n{"plugin": ["x@git+https://gitlab.invalid/x.git"]}\n```\n' > "$T/README.md"
+assert_run 1 "an install URL inside a fenced block is still caught" "$T" "gitlab.invalid"
+
+T="$(new_tree)"
+printf '# Doc\n\nSee http://plain.invalid/x\n' > "$T/README.md"
+assert_run 1 "a bare http URL is off the diet too" "$T" "plain.invalid"
+
+echo "Test: the frozen history is exempt from the diet only"
+T="$(new_tree)"
+printf '# Hist\n\nSee [Stripe](https://docs.stripe.com/api/idempotent_requests).\n' \
+    > "$T/docs/PLUS-CHANGELOG-historico.md"
+assert_run 0 "a third-party domain in the frozen history is exempt" "$T"
+
+T="$(new_tree)"
+printf '# Hist\n\nSee [gone](moved.md).\n' > "$T/docs/PLUS-CHANGELOG-historico.md"
+assert_run 1 "a broken LOCAL link in the frozen history is still caught" "$T" "no such file"
 
 T="$(new_tree)"
 printf '# Doc\n\n```bash\n# A comment, not a heading\ncat [not](a/link.md)\n```\n' > "$T/README.md"

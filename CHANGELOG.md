@@ -52,6 +52,28 @@ References below name them so a claim here can be traced there.
   clicking it, and the project takes that over a network call per link that
   would turn CI red for reasons unrelated to the commit.
 
+- **The third-party link diet is a gate, not a convention.**
+  `check-links.sh` now fails on a URL whose prefix is outside four allowed
+  ones — `github.com/rodrigopaitach/`, `raw.githubusercontent.com/rodrigopaitach/`,
+  `img.shields.io/`, and `github.com/obra/superpowers` for attribution. Still
+  **zero network calls**: fetching a link and reading its domain are different
+  questions, and this answers only the second, so the gate cannot go red
+  because somebody else's site is slow.
+  It reads **raw lines, fenced blocks included** — deliberately unlike the
+  local-link pass, which blanks them out. The defect that motivated this gate
+  was an install command naming the wrong repository, and an install command
+  lives inside a fenced block; a diet that skipped them would have missed the
+  only thing it was built for. `docs/PLUS-CHANGELOG-historico.md` is exempt
+  from the **diet only**: `check-frozen-history.sh` already refuses any change
+  to it, so it cannot acquire a new link by construction, and watching the
+  immutable is a check with no function. Its local links and anchors stay
+  checked — freezing a file does not freeze the files it points at.
+  Twelve new cases in `tests/hooks/test-check-links.sh` cover both branches,
+  each verified by the mutation that attacks its own mechanism: disabling the
+  diet, dropping the frozen-history exemption, making the diet skip fenced
+  blocks, and removing each allowlist prefix in turn. Measured green across the
+  twelve scanned files: 38 local links resolve, 50 URLs on the diet.
+
 ### Fixed
 
 - **The harness guides installed the upstream project.** `docs/README.kimi.md`
