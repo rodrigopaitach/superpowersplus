@@ -1,35 +1,54 @@
-# Testing Superpowers
+# Testing superpowersplus
 
-Superpowers has two distinct kinds of tests, each in its own directory:
+> Derived from the original Superpowers testing guide by Jesse Vincent (Prime Radiant), under the MIT license.
 
-- **`tests/`** — does the plugin's non-LLM code work? Bash + node + python integration tests for brainstorm-server JS, OpenCode plugin loading, codex-plugin sync, and analysis utilities.
-- **`evals/`** — do agents behave correctly on real LLM sessions? Python harness driving real tmux sessions of Claude Code / Codex / Gemini CLI, with an LLM actor and verifier judging skill compliance.
+Two distinct kinds of tests. Only one of them lives in this repository:
+
+- **`tests/`** — does the plugin's non-LLM code work? Bash + node + python
+  checks for manifests, plugin loading, hooks, sync scripts, and skill
+  behavior. This is what you run and what CI runs.
+- **`evals/`** — do agents behave correctly on real LLM sessions? **Not in this
+  checkout.** The eval harness is a separate repository, cloned into `evals/`
+  for local use and excluded by `.gitignore:13`. Nothing here depends on it, so
+  a missing `evals/` breaks nothing.
 
 ## Plugin tests
 
-Live in `tests/`. Currently:
+Thirteen directories under `tests/`. There is no single entry point and no
+`npm test` at the repository root — each suite is invoked the way its own
+directory expects, which is `run-tests.sh` for some and a named `test-*.sh` for
+others. `.github/workflows/ci.yml` holds the exact command for every one of
+them and is the reference when you are unsure.
 
-- `tests/brainstorm-server/` — node test suite for the brainstorm server JS code.
-- `tests/opencode/` — bash tests for OpenCode plugin loading, bootstrap caching, and tool registration.
-- `tests/codex-plugin-sync/` — bash sync verification.
-- `tests/kimi/` — bash/Python checks for Kimi plugin manifest wiring.
-- `tests/claude-code/test-helpers.sh`, `analyze-token-usage.py` — utilities used by remaining bash tests.
-- `tests/claude-code/test-subagent-driven-development.sh` — agent-can-describe-SDD test (no drill counterpart; tests description-recall, not behavior).
-- `tests/claude-code/test-subagent-driven-development-integration.sh` — extended SDD integration with token analysis (drill covers the YAGNI subset; bash adds commit-count, Claude Code task-tracking, and token telemetry assertions).
-- `tests/claude-code/test-worktree-native-preference.sh` — RED-GREEN-REFACTOR validation for worktree skill (drill covers the PRESSURE phase; bash also covers RED/GREEN baselines).
-- `tests/explicit-skill-requests/` — Haiku-specific, multi-turn, and skill-name-prompted tests not covered by drill.
+**CI runs ten of the thirteen on every push:** `antigravity`,
+`brainstorm-server`, `codex`, `codex-plugin-sync`, `hooks`, `kimi`, `opencode`,
+`pi`, `shell-lint` and `systematic-debugging`.
 
-Run plugin tests via the relevant directory's `run-*.sh` or `npm test`.
+**Three stay out**, because each dispatches a live agent — that costs tokens
+and is non-deterministic, so re-running one is a human decision:
 
-## Skill behavior evals
+- `tests/claude-code/` — agent-behavior tests driving Claude Code sessions.
+- `tests/explicit-skill-requests/` — multi-turn and skill-name-prompted tests.
+- `tests/skill-behavior/` — the adversarial records: a fixture, the input
+  carrying it, and a recorded result per rule. Read its `README.md` before
+  adding one. CI checks that these records are well formed; it never re-runs
+  the tests behind them.
 
-Live in `evals/`. Drill is the harness; scenarios live at `evals/scenarios/*.yaml`. See `evals/README.md` for setup. Quick start:
+A suite CI does not run blocks nothing. If you add a suite, add its CI step.
 
-```bash
-cd evals
-uv sync --extra dev
-export ANTHROPIC_API_KEY=sk-...
-uv run drill run triggering-test-driven-development -b claude
-```
+## Gates CI runs beyond the suites
 
-Drill scenarios are slow (3-30+ minutes each) and run real LLM sessions. They are not part of CI today; the natural follow-up is a tiered model (fast subset on PR, full sweep nightly + on-demand).
+The same scripts the pre-commit hook runs, applied to the pushed range:
+`lint-shell.sh`, `check-docs-sync.sh`, `check-changelog.sh`,
+`check-frozen-history.sh`, `check-links.sh` and
+`check-skill-behavior-records.sh`.
+
+## Two caveats that have cost debugging time
+
+- **`tests/codex/test-package-codex-plugin.sh` only tells the truth on a clean
+  tree.** The packager builds its archive from a git ref while the test reads
+  its expected values from the working tree, so anything uncommitted makes the
+  two disagree and fails a test with no defect present. Run it after
+  committing.
+- **Do not edit an upstream test to assert the opposite of what it asserts.** A
+  test rewritten to match this project stops detecting the upstream's changes.

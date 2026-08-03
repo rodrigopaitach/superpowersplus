@@ -1,14 +1,16 @@
-# Superpowers for OpenCode
+# superpowersplus for OpenCode
 
-Complete guide for using Superpowers with [OpenCode.ai](https://opencode.ai).
+> Derived from the original Superpowers guide by Jesse Vincent (Prime Radiant), under the MIT license.
+
+Complete guide for using superpowersplus with OpenCode.
 
 ## Installation
 
-Add superpowers to the `plugin` array in your `opencode.json` (global or project-level):
+Add superpowersplus to the `plugin` array in your `opencode.json` (global or project-level):
 
 ```json
 {
-  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"]
+  "plugin": ["superpowersplus@git+https://github.com/rodrigopaitach/superpowersplus.git"]
 }
 ```
 
@@ -82,16 +84,17 @@ Create project-specific skills in `.opencode/skills/` within your project.
 
 ## Updating
 
-OpenCode installs Superpowers through a git-backed package spec. Some OpenCode
+OpenCode installs superpowersplus through a git-backed package spec. Some OpenCode
 and Bun versions pin that resolved git dependency in a lockfile or cache, so a
-restart may not pick up the newest Superpowers commit. If updates do not appear,
+restart may not pick up the newest commit. If updates do not appear,
 clear OpenCode's package cache or reinstall the plugin.
 
-To pin a specific version, use a branch or tag:
+To pin a specific version, append a branch or a release tag — the tags are on
+the repository's releases page:
 
 ```json
 {
-  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git#v5.0.3"]
+  "plugin": ["superpowersplus@git+https://github.com/rodrigopaitach/superpowersplus.git#<tag>"]
 }
 ```
 
@@ -134,14 +137,14 @@ the plugin, try installing with system npm and pointing OpenCode at the local
 package:
 
 ```powershell
-npm install superpowers@git+https://github.com/obra/superpowers.git --prefix "$HOME\.config\opencode"
+npm install superpowersplus@git+https://github.com/rodrigopaitach/superpowersplus.git --prefix "$HOME\.config\opencode"
 ```
 
 Then use the installed package path in `opencode.json`:
 
 ```json
 {
-  "plugin": ["~/.config/opencode/node_modules/superpowers"]
+  "plugin": ["~/.config/opencode/node_modules/superpowersplus"]
 }
 ```
 
@@ -158,6 +161,6 @@ Then use the installed package path in `opencode.json`:
 
 ## Getting Help
 
-- Report issues: https://github.com/obra/superpowers/issues
-- Main documentation: https://github.com/obra/superpowers
-- OpenCode docs: https://opencode.ai/docs/
+- Report issues: https://github.com/rodrigopaitach/superpowersplus/issues
+- Main documentation: [`docs/README.en.md`](README.en.md) — Portuguese: [`docs/README.pt-BR.md`](README.pt-BR.md)
+- OpenCode's own documentation is on the OpenCode site

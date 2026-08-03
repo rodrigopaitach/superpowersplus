@@ -52,6 +52,41 @@ References below name them so a claim here can be traced there.
   clicking it, and the project takes that over a network call per link that
   would turn CI red for reasons unrelated to the commit.
 
+### Fixed
+
+- **The harness guides installed the upstream project.** `docs/README.kimi.md`
+  and `docs/README.opencode.md` are installation instructions, and both told the
+  reader to fetch `obra/superpowers` — the OpenCode one pinned to `v5.0.3`, a
+  release of a different project. `README.md:91` links them as the "detailed
+  docs" for those two harnesses, so a reader followed a correct instruction into
+  a wrong one. `.opencode/INSTALL.md` already carried the right spec
+  (`superpowersplus@git+…/superpowersplus.git`); only these two were left
+  behind. Clone URLs, issue links and the package name now name this
+  repository; the version pin is a `#<tag>` placeholder rather than a number,
+  which would rot at every release or become an eighth file for
+  `bump-version.sh` to carry.
+  Two adjacent defects of the same class, found in the sweep: the Kimi guide
+  routed installs through `Marketplace` > `Superpowers`, which is the upstream's
+  listing and not this project's, and its three diagnostic commands read
+  `/plugins info superpowers` while `.kimi-plugin/plugin.json` declares
+  `superpowersplus` — inspecting a plugin that does not exist here. `dev` became
+  `main`, this repository having no `dev` branch.
+
+- **`docs/testing.md` documented a directory that is not in this checkout.** It
+  described `evals/` as one of the repository's two test suites and gave a
+  runnable `cd evals && uv sync` quick start; `evals/` is a separate repository,
+  excluded by `.gitignore:13`, and absent. The file also listed six `tests/`
+  directories where there are **thirteen**, naming none of the ten CI actually
+  runs. Both corrected against `.github/workflows/ci.yml`, with the invocation
+  claim dropped rather than guessed — only five of the thirteen have a
+  `run-*.sh`, and there is no root `npm test`.
+
+- **`docs/porting-to-a-new-harness.md` was swept for the same defect and is
+  clean** — no change. Its `obra/superpowers` reference at line 24 is already
+  labelled ("superpowersplus carries no PR template; that work targets
+  Superpowers"), and line 734's "template to clone" is a script, not a
+  repository.
+
 ### Changed
 
 - **Third-party links cut to what attribution requires: 65 → 43 across the
