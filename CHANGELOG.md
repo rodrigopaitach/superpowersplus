@@ -10,7 +10,7 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.2.3] - 2026-08-02
 
 ### Added
 
@@ -43,6 +43,15 @@ References below name them so a claim here can be traced there.
   you), the full list of runnable suites with the clean-tree warning on the
   Codex packaging one, and release discipline **by reference** to `CLAUDE.md`
   rather than duplicated — a second copy of a rule is a copy that goes stale.
+- **Repository metadata filled in, and the issue channel actually opened.**
+  Description, homepage pointing at the latest release, ten topics, wiki and
+  projects off. The finding while doing it: **issues were disabled**
+  (`has_issues: false`), while `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` had
+  been naming issues as the single reporting channel — every one of those links
+  led nowhere. Private vulnerability reporting was off too, which
+  `SECURITY.md` depends on. Both are on now. A documented channel that does not
+  exist is worse than none: it reads as an invitation and silently drops
+  whoever accepts it.
 - **`CODE_OF_CONDUCT.md` says who "community leaders" are here.** The inherited
   Contributor Covenant text is unchanged; the header now states that
   superpowersplus is its own project, that "community leaders" means this
@@ -493,6 +502,7 @@ measured, over four adversarial runs: the external-content rule, which held on
 its first run, and the escalation format, which took two corrections and three
 runs to hold.
 
+[1.2.3]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.3
 [1.2.2]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.2
 [1.2.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.1
 [1.2.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.2.0
