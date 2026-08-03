@@ -59,12 +59,14 @@ References below name them so a claim here can be traced there.
 ### Fixed
 
 - **The CI badge matches the other two.** It was the Actions default
-  (`actions/workflows/ci.yml/badge.svg`), which takes no style parameter and
-  rendered taller than the shields badges beside it. Replaced by the shields
-  equivalent with `style=flat-square`, keeping the link to the Actions tab.
-  Note for whoever changes it next: the shields path takes the **workflow file
-  name** (`ci.yml`), not the workflow's `name:` field — verified rendering
-  `passing` before the swap. Applied to all three READMEs.
+  (`actions/workflows/ci.yml/badge.svg`), which takes no style parameter and so
+  rendered in a different shape than the shields badges beside it — rounded
+  corners and a fixed 90px width against `flat-square`'s square corners and
+  fitted width. Replaced by the shields equivalent with `style=flat-square`,
+  keeping the link to the Actions tab. Two notes for whoever changes it next:
+  the shields path takes the **workflow file name** (`ci.yml`), not the
+  workflow's `name:` field, and rendering was verified as `passing` before the
+  swap. Applied to all three READMEs.
 
 ## [1.2.3] - 2026-08-02
 
