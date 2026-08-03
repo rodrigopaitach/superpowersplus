@@ -12,6 +12,15 @@ with the plan file path, the branch range (MERGE_BASE = `git merge-base main
 HEAD`), and this plan's ledger path. It walks every task and verdicts every
 acceptance criterion against located evidence.
 
+Fill its `**Tasks outside this execution's scope:**` slot yourself — `none`
+when every task ran, which is the case here, since this file opens only once
+the last task's completion line is in the ledger. It is yours to declare
+because you dispatched the audit: the plan cannot declare it (a plan editing
+itself to stop asking) and neither can the ledger's silence, which reads the
+same for a task whose turn had not come and a task the loop skipped. What you
+declare is searched anyway — code found for a declared-out-of-scope task is a
+finding against the declaration.
+
 It runs BEFORE the code review: a reviewer cannot flag a task nobody
 implemented — absent code produces no diff. An audit FAIL does not skip the
 code review; its gaps and FALSE COMPLETION findings join the review's

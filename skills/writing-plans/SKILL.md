@@ -48,15 +48,17 @@ deliverable needs them; split only where a reviewer could meaningfully
 reject one task while approving its neighbor. Each task ends with an
 independently testable deliverable.
 
-**Merge, deploy, and post-merge smoke are not tasks.** They belong to
-superpowersplus:finishing-a-development-branch, which runs after the
-conformance audit returns PASS — and both execution skills already hand the
-branch to it there (superpowersplus:subagent-driven-development's Finish
-section, superpowersplus:executing-plans' Step 4). Written into the plan
-they deadlock that skill against the audit: no merge option is presented
-until the audit PASSes, and the audit cannot PASS while a task nobody could
-have run yet carries no evidence. The plan ends at the last task that leaves
-a tested deliverable in the branch.
+**Work that leaves nothing in the repository is not a task.** The test is the
+one the audit already runs: does this task leave something a
+`path/file.ext:line` citation can prove? Merging, deploying, applying a
+migration to a real environment, publishing a release, a smoke run somebody
+performs by hand, watching a metric after rollout — none of them do. They
+happen after the conformance audit returns PASS, outside the plan: the merge
+through superpowersplus:finishing-a-development-branch, the rest in your
+human partner's hands. Written into the plan they deadlock that skill against
+the audit: no merge option is presented until the audit PASSes, and the audit
+cannot PASS while a task nobody could have run yet carries no evidence. The
+plan ends at the last task that leaves a tested deliverable in the branch.
 
 ## Bite-Sized Task Granularity
 

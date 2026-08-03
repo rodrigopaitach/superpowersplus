@@ -11,24 +11,75 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **The conformance audit accepts a scope declared by whoever dispatches it.**
+  Found in real use: an audit was dispatched on a branch whose last tasks
+  could not have been delivered yet, and it returned FAIL entirely because of
+  them. The report body had it right — "not started, as determined" — and the
+  verdict collapsed *promised and absent* into *its turn has not come*, because
+  nothing in the skill distinguished the two. Before this, the audit's universe
+  was fixed at every task in the plan and the only axis was having a citation
+  or not.
+  - A dispatch slot at `final-branch-audit/SKILL.md:211`,
+    `**Tasks outside this execution's scope:**`, default `none`.
+  - A verdict of its own, OUT OF SCOPE — DECLARED (`:134`), distinct from NOT
+    DELIVERED, which `:285-286` now accepts for PASS.
+  - **The declarant is whoever dispatches, never the plan and never the
+    ledger.** A plan declaring its own tasks out of scope is the plan edited to
+    stop asking, which Handling the Result already forbids; and ledger silence
+    reads identically for a task whose turn had not come and one the loop
+    skipped in silence — collapsing those two is the distinction the audit
+    exists to hold. `subagent-driven-development/references/final-review.md:15`
+    tells the controller to fill it.
+  - **The declaration is searched, never believed** (`:156-160`). Code found
+    for a declared-out-of-scope task means the declaration is false: that task
+    is audited normally and the false declaration reported separately. Without
+    this the slot is absolution by assertion and evidence-or-zero falls.
+  - **The state is terminal, and that is the point.** An out-of-scope task is
+    not a promise to become DELIVERED in a later audit — it leaves this
+    execution's table as a named pending item for the human partner. Scope
+    alone would only have postponed the FAIL: a hand-run smoke that later
+    happens still produces no test citation, and
+    `final-branch-audit/SKILL.md:130` would charge it the moment it re-entered
+    the table. That is a different axis from scope, and the terminal state is
+    what keeps the two from being confused.
+  - **No weaker kind of evidence was invented for human verification.** A
+    record of who ran a manual check and when is the executor's own word,
+    which the skill refuses from everyone else. The auditable universe shrinks
+    and says so; nothing is absolved. A PASS carrying declared pending items
+    presents them beside the verdict, before any merge option (`:342`).
+
+  **Not covered, by standing decision:** an acceptance criterion a human
+  judges — visual, UX, copy, a screen-reader pass. `writing-plans/SKILL.md:201`
+  requires a criterion a citation can settle, and that remains the project's
+  position rather than an open gap.
+
 ### Fixed
 
-- **Merge, deploy and post-merge smoke are not plan tasks — the three skills
-  now say so in one voice.** They already belonged to
-  `finishing-a-development-branch`: `subagent-driven-development/SKILL.md:474`
-  and `executing-plans/SKILL.md:53-57` both hand the branch over to it after
-  the last task, and it presents no merge option until the conformance audit
-  returns PASS (`finishing-a-development-branch/SKILL.md:32-33`).
-  `writing-plans` said nothing either way, so a plan whose last tasks were
-  merge, deploy and a manual smoke deadlocked the pair: the merge waits for a
-  PASS, and the PASS waits for tasks that could not have run yet —
-  `final-branch-audit/SKILL.md:237-239` grants PASS only when every task row
-  is DELIVERED, and `:121-122` writes a row with `—` for a task it cannot
-  locate. Observed on a real audit: FAIL caused entirely by those tasks, with
-  the report body correctly recording them as not started. Stated in
-  `writing-plans` under Task Right-Sizing and charged as a blocking row by
-  `plan-document-reviewer-prompt.md`. Alignment, not a new gate — no skill
-  changed what it does.
+- **Work that leaves nothing in the repository is not a plan task.** The rule
+  is the audit's own test, not a new one: does the task leave something a
+  `path/file.ext:line` citation can prove? Merging, deploying, applying a
+  migration to a real environment, publishing a release, a hand-run smoke,
+  watching a metric after rollout — none do. Stated at
+  `writing-plans/SKILL.md:51` and charged as a blocking row by
+  `plan-document-reviewer-prompt.md:33`. **Named as a category with those six
+  as instances, deliberately:** a closed list silently accepts the instance
+  nobody predicted, and a bare category is undecidable for a blocking gate —
+  the citation test is what makes it decidable.
+  Written into the plan, those tasks deadlock the flow: the merge waits for a
+  PASS (`finishing-a-development-branch/SKILL.md:32-33` presents no option
+  before it) and, undeclared, the PASS waits for tasks nobody could have run
+  yet (`final-branch-audit/SKILL.md:285-286`). Observed on a real audit: FAIL
+  caused entirely by those tasks, with the report body correctly recording
+  them as not started. **The destination is stated precisely because the first
+  draft of this entry got it wrong:** it said the work "belongs to
+  `finishing-a-development-branch`", and that skill has **zero** occurrences
+  of `deploy`, `smoke`, `staging`, `release`, `publish`, `canary` or `monitor`
+  — measured, `grep -c`. Its seven steps end at merge, PR, or keep-as-is. The
+  work happens after the PASS, outside the plan: the merge through that skill,
+  the rest in your human partner's hands. A rule pointing at an empty house
+  sends the next reader looking for what is not there.
 
 - **CI ran twice on every release commit. Resolved.** Measured before touching
   anything, and the obvious hypothesis was wrong: it is not a `push` /

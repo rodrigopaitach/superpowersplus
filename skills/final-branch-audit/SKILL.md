@@ -131,11 +131,46 @@ working code the spec never asked for is still a finding.
 | Cited line exists but does not do what the criterion states | NOT DELIVERED |
 | Criterion delivered somewhere other than the plan said | DELIVERED — note the real location in the row |
 | Task marked complete in the plan or the ledger, no evidence found | NOT DELIVERED + **CRITICAL — FALSE COMPLETION** |
+| Task the dispatch declared outside this execution's scope, no code found | OUT OF SCOPE — DECLARED (see below) |
 
 **FALSE COMPLETION is the maximum-severity finding of this audit.** A ticked
 checkbox or a `Task N: complete` ledger line that no evidence supports is
 worse than an open task: it is a gap that already reported itself as closed.
 Report each one separately from the ordinary gaps.
+
+## Tasks Outside This Execution's Scope
+
+A plan's last tasks are sometimes dispatched before they could have run. The
+dispatch names those tasks, and their rows take OUT OF SCOPE — DECLARED
+instead of NOT DELIVERED. "Promised and absent" and "its turn has not come"
+are different findings, and charging them identically is what makes an audit
+FAIL on work nobody was supposed to have done yet.
+
+**Whoever dispatches the audit declares them, and nobody else.** Not the plan:
+a plan declaring its own tasks out of scope is the plan edited to stop asking,
+which Handling the Result forbids. Not the ledger either — a task with no
+`complete` line is either one whose turn has not come or one the loop skipped
+in silence, and the ledger cannot tell you which. Collapsing those two is the
+distinction this audit exists to hold.
+
+**The declaration is checked, never believed.** Search for the task's
+implementation exactly as for any other. Code found for a task declared out of
+scope means the declaration is false: audit that task normally, give its rows
+their ordinary verdicts, and report the false declaration separately. A slot
+nobody verifies is absolution by assertion.
+
+**The state is terminal.** An out-of-scope task is not a promise to become
+DELIVERED in a later audit — it leaves this execution's table and is reported
+to your human partner as a named pending item. That is what stops the FAIL
+from simply migrating to the next execution: a hand-run smoke that later
+happens still produces no test citation, and "untested is undelivered" would
+charge it the moment it re-entered the table.
+
+**No weaker evidence was invented for it.** A human-run verification could
+have been "cited" by a record of who ran it and when — and that record is the
+executor's own word, which this skill refuses from everyone else. The
+auditable universe shrinks instead, and it shrinks out loud: nothing is
+absolved, one thing is named as not audited.
 
 ## The Auditor Re-Runs the Searches
 
@@ -173,6 +208,9 @@ Subagent (general-purpose):
     **Plan (an artifact under audit):** [PLAN_FILE_PATH]
     **Branch range:** [MERGE_BASE]..[HEAD]
     **Ledger (claims under audit, not evidence):** [LEDGER_PATH or "none"]
+    **Tasks outside this execution's scope:** [TASK_NUMBERS or "none"] —
+    declared by whoever dispatched this audit. Never taken from the plan and
+    never inferred from the ledger's silence.
 
     The source spec is not passed to you: its path comes from the plan, and
     confirming that path is part of the audit.
@@ -226,6 +264,15 @@ Subagent (general-purpose):
     A task marked complete with no evidence is a CRITICAL — FALSE COMPLETION
     finding: report it separately, it is the maximum severity here.
 
+    A task the dispatch named outside this execution's scope takes OUT OF
+    SCOPE — DECLARED on its rows instead of NOT DELIVERED, and that state is
+    terminal: it is a named pending item for the human partner, never a
+    promise to become DELIVERED in a later audit. Search for its
+    implementation anyway. Code found means the declaration is false — audit
+    that task normally, give its rows their ordinary verdicts, and report the
+    false declaration separately. A declaration nobody checks absolves by
+    assertion.
+
     If the plan states a task's criteria vaguely enough that no citation could
     settle them, say so in the row instead of inventing a verdict.
 
@@ -236,7 +283,7 @@ Subagent (general-purpose):
     **Spec:** [path cited by the plan] — exists: yes/no, committed: yes/no
     **Verdict:** PASS | FAIL
     (PASS only when every traceability row is TRACED AND every task row is
-    DELIVERED)
+    DELIVERED or OUT OF SCOPE — DECLARED)
 
     ### Traceability
 
@@ -248,7 +295,7 @@ Subagent (general-purpose):
 
     | Task | Criterion | Implementation | Test | Verdict |
     |------|-----------|----------------|------|---------|
-    | ... | ... | `path:line` | `path:line` | DELIVERED / NOT DELIVERED |
+    | ... | ... | `path:line` | `path:line` | DELIVERED / NOT DELIVERED / OUT OF SCOPE — DECLARED |
 
     ### Traceability Failures (blocking)
     - LOST IN TRANSLATION — <spec criterion>: no task covers it. Searched:
@@ -267,6 +314,15 @@ Subagent (general-purpose):
     ### Unauditable Criteria
     - Task N: <criterion> — why no citation could settle it.
 
+    ### Out of Scope — Declared (pending, not audited)
+    - Task N: <criterion> — declared outside this execution's scope by the
+      dispatch. Searched for it anyway: <what you ran> — no implementation
+      found. Not audited by this run; it is your human partner's to schedule.
+
+    ### False Scope Declarations
+    - Task N: declared outside this execution's scope, but its implementation
+      is at `path:line`. Audited normally above; the declaration was wrong.
+
     Return this report only. Do not propose patches.
 ```
 
@@ -283,6 +339,7 @@ Traceability failures do not route like delivery gaps:
 | LOST IN TRANSLATION | The plan is incomplete. Adding the missing work is a plan change — take it to your human partner with the spec text beside the plan's silence. |
 | INVENTED SCOPE | Work exists that nobody specified. Your human partner decides: amend the spec to cover it, or remove it. Not the fixer's call. |
 | No spec cited, or the cited spec is missing/uncommitted | Stop and ask. There is nothing to trace against, and inferring a spec fabricates the baseline. |
+| OUT OF SCOPE — DECLARED | Not a gap for the fix wave — a pending item. It rides with the verdict: present it to your human partner beside the PASS, before any merge option is on the table. A PASS that quietly carries unaudited tasks is the same collapse running the other way. |
 
 **Present these three to your human partner in the shape below.** The verdict names above are precise for the audit; they explain nothing to someone who does not read this repository, so they ride along in parentheses.
 
@@ -306,4 +363,6 @@ Traceability failures do not route like delivery gaps:
 | "The plan was written from the spec, so tracing them is redundant" | The plan is the artifact under audit. A requirement lost while writing it leaves no trace in it — that is exactly the gap the traceability table exists to catch. |
 | "The plan doesn't cite a spec, I'll find the obvious one in docs/" | Inferring the spec means auditing against a document nobody approved for this plan. Report the missing citation as blocking. |
 | "Task 7 isn't in the spec but it's clearly needed" | Then the spec needed amending and nobody did it. INVENTED SCOPE is a finding, not a judgment call about usefulness. |
+| "Task 9 has no ledger line, so its turn clearly hadn't come" | The ledger is silent for a task nobody dispatched yet and for a task the loop skipped. Only the dispatch declares scope; ledger silence is not a declaration. |
+| "The dispatch says Task 9 is out of scope, so there's nothing to search" | Search anyway. Code found means the declaration is false, and a slot nobody checks is absolution by assertion. |
 | "IR3 is non-functional — it's not really a deliverable criterion" | The spec gave it an id, which makes it a criterion. Implicit requirements are the ones that quietly disappear between spec and plan; that is exactly why they carry ids and get charged here. |
