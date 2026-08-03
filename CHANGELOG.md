@@ -10,6 +10,23 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **The READMEs show one measured escalation instead of describing the
+  format.** A new section in all three (`README.md`, `docs/README.pt-BR.md`,
+  `docs/README.en.md`) carries a condensed transcript from
+  `tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md` — the run that
+  scored 3 of 3 after 1 of 3 and 2 of 3. It is the only passage in this project
+  with evidence of working, and it shows the four load-bearing parts in one
+  screen: consequence before mechanism, cost per option, doing nothing as a
+  real option, and a recommendation naming its source. Prose describing the
+  format cannot demonstrate the format.
+- **CI and license badges next to the release badge**, both dynamic: the
+  Actions workflow badge for `ci.yml` and the license badge resolved from the
+  repository. A release badge alone says a version exists, not that it builds.
+
 ## [1.2.2] - 2026-08-02
 
 ### Changed

@@ -1,6 +1,6 @@
 # superpowersplus
 
-[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest)
+[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest) [![CI](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml/badge.svg)](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/rodrigopaitach/superpowersplus?style=flat-square&label=license)](LICENSE)
 
 A development methodology for coding agents, where every claim the agent makes about your code carries a `file:line` citation — and whoever verifies re-runs the search instead of taking the writer's word for it.
 
@@ -40,6 +40,23 @@ Five axes on top of Superpowers, under one thread: a claim about the code requir
 - **Task-by-task conformance audit** — at the end of the branch, each criterion is traced to the tasks delivering it and given a verdict against located evidence.
 
 Every change is in [CHANGELOG.md](CHANGELOG.md); the `plus.N` entries that led to 1.0.0 are preserved in [docs/PLUS-CHANGELOG-historico.md](docs/PLUS-CHANGELOG-historico.md) (in Portuguese). Gaps deliberately left open are under [Open gaps](CHANGELOG.md#open-gaps).
+
+## What it looks like
+
+The agent hit a requirement it could not deliver honestly and stopped. This is what reached the person — condensed from the transcript in [`tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md`](tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md), the run where this format scored 3 of 3 after scoring 1 of 3 and 2 of 3:
+
+> **A feed file stored inside this repository is not something anyone can subscribe to.** AC2's purpose is "so a team can subscribe to it in a feed reader", but nothing here publishes `docs/` to a website — I checked. Building the file achieves the wording of AC2 without achieving its purpose.
+>
+> | Option | What it means |
+> |---|---|
+> | **Drop the feed** (recommended) | Nothing to build; the plain-text index from AC1 still records every archived plan with its date |
+> | **Use the feed GitHub already publishes** | No code at all. Covers every commit, not just archived plans, so it is noisier |
+> | **Build it by hand** | About fifteen extra lines. Needs three values the design doesn't have: the feed's title, its web address, its one-line description |
+> | **Do nothing now** | Build the archiving today, revisit the feed when somebody actually wants to subscribe. Cost: no subscribing until then |
+>
+> **Recommendation: drop the feed.** `CLAUDE.md` states "zero-dependency plugin by design", and every path to a checkable feed here ends in an outside tool or an invented web address. **Source: a rule already in your project, plus my own check that nothing publishes `docs/` to a website.**
+
+Four things are load-bearing: the consequence stated before the mechanism, every option carrying its cost, **doing nothing offered as a real option**, and the recommendation naming where it came from. The fourth is what lets someone who does not program tell a recommendation grounded in their own codebase from a plausible guess.
 
 ## Installation
 

@@ -1,6 +1,6 @@
 # superpowersplus — documentação em português
 
-[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest)
+[![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest) [![CI](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml/badge.svg)](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml) [![Licença](https://img.shields.io/github/license/rodrigopaitach/superpowersplus?style=flat-square&label=licen%C3%A7a)](../LICENSE)
 
 > **Este é o texto canônico.** A versão em inglês, [`README.en.md`](README.en.md), é a tradução dele — em qualquer divergência, este arquivo é o que vale.
 >
@@ -108,6 +108,23 @@ Cinco eixos. O detalhe de cada mudança, entrada por entrada, está em [`CHANGEL
 - **Matriz de cobertura de testes** — cada critério mapeado por chave ao teste que o cobre, em vez de cobertura afirmada em prosa.
 - **Revisor de tarefa que reexecuta a suíte** — o revisor roda os testes, em vez de aceitar o relatório de quem implementou.
 - **Auditoria de conformidade tarefa a tarefa** — no fim da branch, cada critério é rastreado até as tarefas que o entregam e vereditado contra evidência localizada.
+
+## Como isso aparece na prática
+
+O agente esbarrou num requisito que não conseguia entregar honestamente e parou. Isto é o que chegou até a pessoa — condensado da transcrição em [`tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md`](../tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md), a execução em que este formato marcou 3 de 3 depois de marcar 1 de 3 e 2 de 3:
+
+> **Um arquivo de feed guardado dentro deste repositório não é algo que alguém consiga assinar.** O propósito do AC2 é "para que um time possa assinar num leitor de feeds", mas nada aqui publica a pasta `docs/` num site — eu verifiquei. Construir o arquivo cumpre a letra do AC2 sem cumprir o propósito dele.
+>
+> | Opção | O que significa |
+> |---|---|
+> | **Tirar o feed do design** (recomendada) | Nada a construir; o índice em texto puro do AC1 continua registrando cada plano arquivado com a data |
+> | **Usar o feed que o GitHub já publica** | Nenhum código. Cobre todos os commits, não só os planos arquivados, então é mais ruidoso |
+> | **Construir o feed à mão** | Umas quinze linhas a mais. Precisa de três valores que o design não tem: título do feed, endereço na web e descrição de uma linha |
+> | **Não fazer nada agora** | Construir o arquivamento hoje e revisitar o feed quando alguém de fato quiser assinar. Custo: ninguém assina até lá |
+>
+> **Recomendação: tirar o feed.** O `CLAUDE.md` afirma "plugin de zero dependências por design", e todo caminho até um feed verificável aqui termina em ferramenta externa ou endereço inventado. **Fonte: uma regra já escrita no seu projeto, mais a minha própria checagem de que nada publica `docs/` num site.**
+
+Quatro coisas sustentam isso: a consequência dita antes do mecanismo, cada opção carregando seu custo, **não fazer nada oferecido como opção de verdade**, e a recomendação declarando de onde veio. A quarta é o que permite a quem não programa distinguir uma recomendação fundamentada no próprio código de um palpite plausível.
 
 ## Telemetria do companheiro visual
 
