@@ -48,6 +48,16 @@ deliverable needs them; split only where a reviewer could meaningfully
 reject one task while approving its neighbor. Each task ends with an
 independently testable deliverable.
 
+**Merge, deploy, and post-merge smoke are not tasks.** They belong to
+superpowersplus:finishing-a-development-branch, which runs after the
+conformance audit returns PASS — and both execution skills already hand the
+branch to it there (superpowersplus:subagent-driven-development's Finish
+section, superpowersplus:executing-plans' Step 4). Written into the plan
+they deadlock that skill against the audit: no merge option is presented
+until the audit PASSes, and the audit cannot PASS while a task nobody could
+have run yet carries no evidence. The plan ends at the last task that leaves
+a tested deliverable in the branch.
+
 ## Bite-Sized Task Granularity
 
 **Each step is one action (2-5 minutes):**

@@ -13,6 +13,23 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **Merge, deploy and post-merge smoke are not plan tasks — the three skills
+  now say so in one voice.** They already belonged to
+  `finishing-a-development-branch`: `subagent-driven-development/SKILL.md:474`
+  and `executing-plans/SKILL.md:53-57` both hand the branch over to it after
+  the last task, and it presents no merge option until the conformance audit
+  returns PASS (`finishing-a-development-branch/SKILL.md:32-33`).
+  `writing-plans` said nothing either way, so a plan whose last tasks were
+  merge, deploy and a manual smoke deadlocked the pair: the merge waits for a
+  PASS, and the PASS waits for tasks that could not have run yet —
+  `final-branch-audit/SKILL.md:237-239` grants PASS only when every task row
+  is DELIVERED, and `:121-122` writes a row with `—` for a task it cannot
+  locate. Observed on a real audit: FAIL caused entirely by those tasks, with
+  the report body correctly recording them as not started. Stated in
+  `writing-plans` under Task Right-Sizing and charged as a blocking row by
+  `plan-document-reviewer-prompt.md`. Alignment, not a new gate — no skill
+  changed what it does.
+
 - **CI ran twice on every release commit. Resolved.** Measured before touching
   anything, and the obvious hypothesis was wrong: it is not a `push` /
   `pull_request` overlap. Both runs carried `event: push`, one with
