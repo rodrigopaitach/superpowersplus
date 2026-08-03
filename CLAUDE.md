@@ -51,7 +51,9 @@ The upstream remote stays, and rebasing onto `obra/superpowers` is how their imp
 
 **Touch the minimum of the files the upstream edits often.** Every line rewritten in a file they also maintain is a conflict at the next rebase. Prefer additive blocks in regions they do not touch; when a line must change, change that line and not its neighbors. `README.md` is this project's own now, but the rule still holds for `skills/`, `RELEASE-NOTES.md`, and everything under `tests/` that came from them.
 
-**Do not edit an upstream test to assert the opposite of what it asserts.** A test rewritten to match this project stops detecting the upstream's changes — it conflicts *and* loses the signal. Two currently fail because of the namespace rename (`tests/codex/test-marketplace-manifest.sh:36`, `tests/kimi/test-plugin-manifest.sh:24`); they are left failing on purpose.
+**Do not edit an upstream test to assert the opposite of what it asserts.** A test rewritten to match this project stops detecting the upstream's changes — it conflicts *and* loses the signal.
+
+The line to draw is what the assertion *watches*. A test asserting this package's own name held an obsolete fact after the rename and watched nothing upstream decides — `db91242` updated both (`tests/codex/test-marketplace-manifest.sh`, `tests/kimi/test-plugin-manifest.sh`) and they pass. A test asserting an upstream *decision* — telemetry, a default, a policy — is the one to leave failing.
 
 ## What does not belong here
 
@@ -94,6 +96,6 @@ without a changelog entry and were caught only when the version was cut.
 
 Skills are not prose — they are code that shapes agent behavior. Carefully-tuned content (Red Flags tables, rationalization lists, "human partner" language) is not reworded without evidence the change improves outcomes.
 
-Adversarial skill-behavior tests live at [`tests/skill-behavior/`](tests/skill-behavior/) — a fixture, the input carrying it, and a recorded result per rule. Read its `README.md` before adding one. Plugin-infrastructure tests are at `tests/`, run via each directory's own `run-*.sh`. CI runs, on every push: the `brainstorm-server`, `shell-lint`, `hooks`, `codex-plugin-sync` and `antigravity` suites, shell lint, the bilingual-docs sync check, and the integrity check on the adversarial records. Suites that dispatch a live agent are deliberately out — they cost tokens and are non-deterministic. A suite CI does not run blocks nothing; if you add one, add its step.
+Adversarial skill-behavior tests live at [`tests/skill-behavior/`](tests/skill-behavior/) — a fixture, the input carrying it, and a recorded result per rule. Read its `README.md` before adding one. Plugin-infrastructure tests are at `tests/`, run via each directory's own `run-*.sh`. CI runs every static suite on every push: `brainstorm-server`, `shell-lint`, `hooks`, `codex-plugin-sync`, `antigravity`, `codex`, `systematic-debugging`, `kimi`, `opencode` and `pi`, plus shell lint, the bilingual-docs sync check, and the integrity check on the adversarial records. The three that stay out all dispatch a live agent — `claude-code`, `explicit-skill-requests`, `skill-behavior` — which costs tokens and is non-deterministic. A suite CI does not run blocks nothing; if you add one, add its step.
 
 Most rules in this project are reasoned, not measured. When you add one, say which it is.

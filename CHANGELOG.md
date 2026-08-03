@@ -10,6 +10,40 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **CI covers every static test suite, not the five it happened to name.** The
+  previous cycle wired four suites and reported two as still uncovered; the
+  measurement was wrong — `kimi`, `opencode` and `pi` were orphaned too, for a
+  real total of six. All are in `.github/workflows/ci.yml` now: `codex` (two
+  scripts), `systematic-debugging`, `kimi`, `opencode` (without
+  `--integration`, whose two tests need OpenCode installed) and `pi`. The only
+  suites left out dispatch a live agent — `claude-code`,
+  `explicit-skill-requests`, `skill-behavior` — which costs tokens and is
+  non-deterministic. `CLAUDE.md` carries the full list so the next omission is
+  visible rather than inferred.
+- **`actions/checkout` and `actions/setup-node` moved from `v4` to `v7`.** The
+  `v4` majors still run on the Node 20 runtime, whose removal GitHub has
+  announced; CI was already annotating every run about it. Neither major
+  breaks this workflow: checkout `v7` restricts fork PRs under
+  `pull_request_target`/`workflow_run` and this one triggers on `push` and
+  `pull_request`; setup-node `v7` adds cache outputs and drops a dummy
+  `NODE_AUTH_TOKEN` nothing here reads.
+- **`tests/pi/test-pi-extension.mjs` asserted the package's old name.** It
+  expected `package.json` to declare `superpowers`; the rename at `ec529ee`
+  made it `superpowersplus` deliberately. Same case `db91242` fixed for the
+  Codex and Kimi manifests: the assertion reported an obsolete fact about this
+  package's own name, not an upstream decision. The `.pi/` exception in
+  `CLAUDE.md` protects the internal *path* `.pi/extensions/superpowers.ts`,
+  which the same test checks and which passes untouched.
+- **`CLAUDE.md` claimed two tests were left failing on purpose.** Both pass —
+  `db91242` updated them. A rule whose example is false competes with the rule
+  itself; the sentence now states the line it actually draws (a test watching
+  an upstream *decision* stays failing; one reporting an obsolete fact about
+  this package gets updated) instead of naming two files that contradict it.
+
 ## [1.2.0] - 2026-08-02
 
 ### Added

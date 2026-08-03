@@ -12,11 +12,17 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Pinned to the floating major tag, not a patch: v4 was still running on
+      # the Node 20 runtime, whose removal GitHub had already announced. v7 of
+      # both is ESM on the current runtime. Neither major breaks this workflow —
+      # checkout v7 restricts fork PRs under `pull_request_target`/`workflow_run`
+      # and this one triggers on push and pull_request; setup-node v7 only adds
+      # cache outputs and drops a dummy NODE_AUTH_TOKEN nothing here reads.
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -26,12 +32,12 @@ jobs:
           npm install
           npm test
 
-      # The four suites below existed and were run by nobody: a test that no
-      # automated check runs does not block anything, which is the whole point
-      # of having it. Each builds its own temporary repository or reads files
-      # directly, so none depends on the checkout's index — they are safe
-      # before the rewind below. Live-agent suites stay out on purpose: they
-      # cost tokens and are non-deterministic.
+      # Every static suite in tests/ runs here: a test that no automated check
+      # runs does not block anything, which is the whole point of having it.
+      # Each builds its own temporary repository, stubs its own binaries, or
+      # reads files directly, so none depends on the checkout's index — they
+      # are safe before the rewind below. Live-agent suites stay out on
+      # purpose: they cost tokens and are non-deterministic.
       # Invoked through `bash` because this one file is not executable in git
       # (mode 100644) and it is upstream's — a mode change here is a rebase
       # conflict on a file we do not otherwise touch.
@@ -46,6 +52,30 @@ jobs:
 
       - name: Tests (antigravity)
         run: tests/antigravity/run-tests.sh
+
+      # The Codex packager reads a git ref, never the working tree. On a CI
+      # checkout the two always agree; locally they diverge whenever something
+      # is uncommitted, which is why this suite is documented as a
+      # run-after-commit one in CLAUDE.md.
+      - name: Tests (codex marketplace manifest)
+        run: tests/codex/test-marketplace-manifest.sh
+
+      - name: Tests (codex plugin packaging)
+        run: tests/codex/test-package-codex-plugin.sh
+
+      - name: Tests (systematic-debugging find-polluter)
+        run: tests/systematic-debugging/test-find-polluter.sh
+
+      - name: Tests (kimi)
+        run: tests/kimi/run-tests.sh
+
+      # Without --integration the runner skips the two tests that need OpenCode
+      # itself installed; the two that remain build their own isolated HOME.
+      - name: Tests (opencode)
+        run: tests/opencode/run-tests.sh
+
+      - name: Tests (pi extension)
+        run: node tests/pi/test-pi-extension.mjs
 
       # The two checks below reuse the repo's own scripts unchanged. Both read
       # the git INDEX, because that is what the pre-commit hook reads. A fresh
