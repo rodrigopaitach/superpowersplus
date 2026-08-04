@@ -67,6 +67,41 @@ References below name them so a claim here can be traced there.
 
 ### Changed
 
+- **`check-links.sh` now scans `skills/` too, closing the open gap about the
+  fork's own cross-references — and the design it was waiting on turned out not
+  to be needed.** The gap said the fix was not "extend the scan" but "tell a
+  link this project owns from one the upstream owns", because a gate on
+  `skills/**` would report rebase churn this project did not cause. That was
+  reasoned, never measured. **Measured now:** the 21 markdown links under
+  `skills/` all resolve, upstream's included, so extending the scan is two
+  lines and goes green — 38 files and 38 links before, 56 and 59 after. The
+  ownership question dissolves with it: a link upstream wrote and broke is
+  broken for this project's users exactly like one written here.
+  **`skills/**` is exempt from the link diet, and that exemption is measured
+  too.** All 40 URLs under `skills/` are off-diet — 11 to `platform.claude.com`
+  in upstream's vendored best-practices, 3 to `docs.stripe.com` inside this
+  fork's own worked example of a citation comment, the rest the same shape. The
+  diet is a policy about the seven documents this project hands to a reader; a
+  skill body pointing at the vendor doc that grounds a call is the citation
+  rule working. Links and anchors are checked there; only the domain policy
+  stops at the directory boundary.
+  **What stays uncovered is the other convention, and the reason is not cost.**
+  A path in backticks, in prose, appears 78 times under `skills/` and 34 of
+  those resolve to nothing — **and none of the 34 is a defect**: placeholders
+  (`<workspace>/progress.md`), artifact paths inside the partner's own project
+  (`docs/superpowers/specs/…`), self-references (`SKILL.md` meaning the file
+  you are reading), and upstream's illustrative examples. A gate there reports
+  34 non-problems on every commit, which is how a gate stops being read. The
+  one thing the closed gap recorded as an accepted consequence still holds and
+  is unaffected: the escalation block in `brainstorming/SKILL.md` cites a
+  relative path so it stays byte-identical to the other five carriers, while
+  the rest of that file cites from the repository root.
+  Four cases were added to `tests/hooks/test-check-links.sh`, including the
+  pair that pins the diet boundary in both directions — the same
+  `docs.stripe.com` URL passes inside `skills/` and fails in a root document.
+  Cost: `check-links.sh` went 29 → 42 ms, the hook 62 → 68 ms; `CLAUDE.md`'s
+  table says so.
+
 - **`subagent-driven-development/SKILL.md` moved 107 lines into two reference
   files, and neither is reachable by accident.** 564 → 457 lines, counted
   before and after. What left is what a run does not need until it needs it,
@@ -1229,22 +1264,6 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   than what it asserts. Treat a failure here as uninformative until the
   assertion is language-agnostic.
 
-- **The fork's own cross-references inside `skills/` are covered by no gate.**
-  `check-links.sh` scans the institutional files at the root plus `docs/` and
-  stops there, and that boundary was drawn when `skills/` was mostly upstream
-  text whose relative links move at every rebase — a gate there would report
-  churn this project did not cause. The premise has aged: this fork now creates
-  its own references inside `skills/`, and they are exactly the ones a rebase
-  will not touch and nothing will catch. Deliberately not closed now, because
-  the fix is not "extend the scan" but "tell a link this project owns from one
-  the upstream owns", and that costs a real design against a problem that has
-  not yet occurred. One consequence is already accepted on purpose: the path
-  convention inside `skills/brainstorming/SKILL.md` is mixed — the escalation
-  block uses a relative path so it stays byte-identical to the other five
-  carriers, while the rest of the file cites from the repository root. Identity
-  across the carriers is worth more than consistency within one file. Revisit
-  when the number of the fork's own references in `skills/` grows, or the first
-  time one of them breaks in a rebase.
 - **The TDD Iron Law has no verifying face.** The implementer prompt requires a
   test before code, but no verifier can prove the order: the only record that
   the test came first is a report section written by the party being audited. A

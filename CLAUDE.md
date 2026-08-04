@@ -117,7 +117,9 @@ Three README-shaped files, with different jobs. Measured, not assumed: `README.m
 
 **Structural divergence between the showcase and the documentation is deliberate** — different sections, different order, different depth, because they answer different questions. Do not "harmonize" them; the sync gate covers the bilingual pair only, and extending it to the root would force the showcase to mirror a reference document. What ties the three together is their links, and those are verified: `scripts/check-links.sh` also covers the five files in `docs/` that no gate reached before.
 
-**`check-links.sh` scans the institutional files at the root plus `docs/`, and stops there — that boundary is deliberate.** `skills/**` is mostly upstream text whose relative links move whenever a rebase lands, so a gate there would report churn this project did not cause and cannot fix without editing files it should not touch.
+**`check-links.sh` scans the institutional files at the root, `docs/`, and every markdown file under `skills/`.** `skills/**` was left out while the fear was rebase churn — upstream text whose relative links move when their side changes. Measured instead of assumed, 2026-08-03: the 21 markdown links under `skills/` all resolve, upstream's included, so the scan simply covers them and no design to tell a fork-owned link from an upstream one was needed. A link upstream wrote and broke is broken for this project's users exactly like one written here.
+
+**The other convention in `skills/` is deliberately not checked, and the reason is measured, not cost.** A path in backticks, in prose, appears 78 times under `skills/` and 34 of those resolve to nothing — **none of the 34 a defect**: placeholders (`<workspace>/progress.md`), artifact paths inside your partner's own project (`docs/superpowers/specs/…`), self-references (`SKILL.md` meaning the one you are reading), and upstream's illustrative examples. A gate there reports 34 non-problems on every commit, which is how a gate stops being read. Markdown-link syntax is unambiguous; backticked prose is not.
 
 **Third-party links are kept to what attribution requires** (decided 2026-08-02, applied in the same cycle: 65 → 43 across the seven documents this project owns). One link to `obra/superpowers` per document where the attribution appears; the repository's own infrastructure; nothing else. Everything a reader could want to look up is named in text instead — a name and a version identify a source without depending on somebody else's URL scheme.
 
@@ -126,6 +128,8 @@ Three README-shaped files, with different jobs. Measured, not assumed: `README.m
 **The diet is a gate, not a convention.** `check-links.sh` fails on a URL whose prefix is not one of four: `github.com/rodrigopaitach/`, `raw.githubusercontent.com/rodrigopaitach/`, `img.shields.io/`, and `github.com/obra/superpowers` for attribution. It reads **raw lines, fenced blocks included** — an install command naming the wrong repository is the defect this catches, and it lives inside a ```` ``` ```` block that the local-link pass blanks out. When it fails, fix the document; a URL pointing at the upstream as an install source is not a gap in the allowlist.
 
 **`docs/PLUS-CHANGELOG-historico.md` is exempt from the diet only.** It cannot acquire a new link by construction — `check-frozen-history.sh` refuses any change to it — so watching it for new domains is a check with no function. Its local links and anchors stay checked: freezing a file does not freeze the files it points at.
+
+**`skills/**` is exempt from the diet too, for a different reason: a skill legitimately cites vendor documentation.** All 40 URLs under `skills/` are off-diet — 11 to `platform.claude.com` in upstream's vendored best-practices, 3 to `docs.stripe.com` inside this fork's own worked example of a citation comment, the rest the same shape. The diet governs the seven documents this project hands to a reader; a skill body pointing at the vendor doc that grounds a call is the citation rule working. Their **links and anchors are checked** — only the domain policy stops at the directory boundary.
 
 ## What the pre-commit hook costs
 
@@ -136,11 +140,11 @@ Measured 2026-08-02, median of three runs each on a warm cache, invoking each sc
 | `check-docs-sync.sh` | 3 ms |
 | `check-frozen-history.sh` | 3 ms |
 | `check-changelog.sh` | 3 ms |
-| `check-links.sh` | 29 ms |
+| `check-links.sh` | 42 ms |
 | `check-skill-size.sh` | 15 ms |
-| **`githooks/pre-commit` end to end** | **62 ms** |
+| **`githooks/pre-commit` end to end** | **68 ms** |
 
-`check-skill-size.sh` and the end-to-end figure were measured 2026-08-03 the same way; the other four rows are unchanged from the run above. It starts no interpreter — the 15 ms is fifteen `wc` processes and nothing else, which is why the hook grew by half rather than by another `check-links.sh`.
+`check-links.sh`, `check-skill-size.sh` and the end-to-end figure were re-measured 2026-08-03 the same way; the other three rows are unchanged from the run above. `check-skill-size.sh` starts no interpreter — its 15 ms is fifteen `wc` processes and nothing else. `check-links.sh` went 29 → 42 ms when its scan grew from 12 files to 56; the extra 13 ms is reading and parsing, not another `python3` start.
 
 **The condition matters more than the number.** Almost all of `check-links.sh` is `python3` startup, which moves with the machine and with whether the interpreter is in cache — an independent measurement the same day reported roughly 7× these figures. Treat the table as a baseline taken this way, on this machine, not as a constant.
 

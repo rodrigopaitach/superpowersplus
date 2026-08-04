@@ -190,6 +190,36 @@ T="$(new_tree)"
 printf '# Doc\n\nSee [outside](../../etc/passwd).\n' > "$T/README.md"
 assert_run 1 "a path escaping the repository is rejected" "$T" "escapes the repository"
 
+echo "Test: skills/ is scanned for links and exempt from the diet"
+
+T="$(new_tree)"
+mkdir -p "$T/skills/a-skill/references"
+printf '# A skill\n\nSee [the reference](references/detail.md).\n' \
+    > "$T/skills/a-skill/SKILL.md"
+printf '# Detail\n' > "$T/skills/a-skill/references/detail.md"
+assert_run 0 "a resolving link inside skills/ passes" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/skills/a-skill"
+printf '# A skill\n\nSee [the reference](references/gone.md).\n' \
+    > "$T/skills/a-skill/SKILL.md"
+assert_run 1 "a broken link inside skills/ is caught" "$T" "skills/a-skill/SKILL.md"
+
+# A skill citing the vendor doc that grounds a call is the citation rule
+# working. The diet governs the documents this project hands to a reader, and
+# a skill body is not one of them — so this must PASS while the same URL in
+# README.md fails.
+T="$(new_tree)"
+mkdir -p "$T/skills/a-skill"
+printf '# A skill\n\n<!-- https://docs.stripe.com/api -->\n' \
+    > "$T/skills/a-skill/SKILL.md"
+assert_run 0 "an off-diet URL inside skills/ is allowed" "$T"
+
+T="$(new_tree)"
+printf '# Doc\n\n<!-- https://docs.stripe.com/api -->\n' > "$T/README.md"
+assert_run 1 "the same URL in a root document is still off-diet" \
+    "$T" "outside the third-party link diet"
+
 echo
 if [ "$FAILURES" -eq 0 ]; then
     echo "All check-links tests passed"

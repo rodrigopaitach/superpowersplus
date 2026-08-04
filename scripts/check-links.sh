@@ -2,10 +2,25 @@
 #
 # check-links.sh — every local markdown link points at something that exists.
 #
-# Covers the repository's outward-facing documents plus everything in docs/.
-# check-docs-sync.sh only ever looked at the two bilingual READMEs; the other
-# five files in docs/ had no gate at all, and a broken link in a showcase
-# README is invisible until somebody clicks it.
+# Covers the repository's outward-facing documents, everything in docs/, and
+# every markdown file under skills/. check-docs-sync.sh only ever looked at the
+# two bilingual READMEs; the other five files in docs/ had no gate at all, and
+# a broken link in a showcase README is invisible until somebody clicks it.
+#
+# skills/ was left out while the fear was rebase churn — upstream text whose
+# relative links move when their side changes. Measured instead of assumed:
+# the 21 markdown links under skills/ all resolve, upstream's included, so the
+# scan covers them and no design to tell a fork-owned link from an upstream one
+# was needed. A link upstream wrote and broke is broken for this project's
+# users exactly like one written here.
+#
+# What stays uncovered is the OTHER convention: a path in backticks, in prose.
+# Also measured, and the reason is not cost — 78 of those exist under skills/
+# and 34 resolve to nothing, none of which is a defect. They are placeholders
+# (`<workspace>/progress.md`), artifact paths inside the partner's own project
+# (`docs/superpowers/specs/…`), self-references (`SKILL.md` meaning this one),
+# and upstream's illustrative examples. A gate there reports 34 non-problems on
+# every commit.
 #
 # An http/https link is never FETCHED. Checking one means a network call per
 # link on every push: it turns a deterministic gate into one that fails when a
@@ -36,6 +51,7 @@ ROOT = pathlib.Path(".").resolve()
 TARGETS = ["README.md", "CONTRIBUTING.md", "SECURITY.md",
            "CODE_OF_CONDUCT.md", "CHANGELOG.md"]
 TARGETS += sorted(str(p) for p in pathlib.Path("docs").glob("*.md"))
+TARGETS += sorted(str(p) for p in pathlib.Path("skills").rglob("*.md"))
 
 FENCE = re.compile(r"^\s*(```|~~~)")
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
@@ -66,7 +82,17 @@ ALLOWED_PREFIXES = (
 # watching it for new domains is a check with no function. Its local links and
 # anchors stay checked below — freezing a file does not freeze the files it
 # points at, and a moved destination breaks it exactly like any other.
+#
+# Everything under skills/ is exempt from the DIET too, and for a reason the
+# frozen history does not share: a skill legitimately cites vendor
+# documentation. All 40 URLs under skills/ are off-diet — 11 to
+# platform.claude.com in upstream's vendored best-practices, 3 to
+# docs.stripe.com inside this fork's own worked example of a citation comment,
+# and the rest the same shape. The diet is a policy about the seven documents
+# this project owns and hands to a reader; a skill body pointing at the vendor
+# doc that grounds a call is the citation rule working, not a leak.
 DIET_EXEMPT = {"docs/PLUS-CHANGELOG-historico.md"}
+DIET_EXEMPT |= {str(p) for p in pathlib.Path("skills").rglob("*.md")}
 
 
 def strip_fences(text):
