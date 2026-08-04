@@ -11,6 +11,35 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **The changelog gate now checks the edit, not only that one happened.**
+  `scripts/check-changelog.sh` proved an entry was staged and never that it was
+  correct. One session produced three defects it could not have caught: an entry
+  title replaced instead of preceded — an edit anchored on the *next* entry's
+  heading, which leaves the file reading perfectly with one entry silently gone
+  — and two `file:line` anchors that pointed nowhere, one copied from a diff's
+  context instead of the file, one invalidated four lines later by an edit
+  earlier in the same file. All three were caught by reading the diff before
+  committing, which is the step a busy commit skips; that is the same reasoning
+  that produced this gate in the first place.
+  Three structural checks, each decidable by a machine: a `## ` heading count
+  that never decreases between HEAD and the index; no duplicated version heading
+  and at most one `[Unreleased]`; and every `path:line` anchor **added by this
+  commit** naming a file that exists and is long enough to have that line.
+  **The anchor check resolves in a cascade because this changelog's path
+  convention is genuinely mixed** — measured across the 35 anchors already in
+  the file: repo-root (`scripts/check-docs-sync.sh:14-15`), relative to
+  `skills/` (`writing-plans/SKILL.md:51`), and bare basenames the surrounding
+  sentence disambiguates (`code-reviewer.md:118`). It tries the three in that
+  order. A basename several files share — `SKILL.md:63` matches fifteen — is
+  **skipped, not failed**: a gate that guessed there would go red on entries
+  that are correct, and a gate red for a wrong reason gets bypassed.
+  **Two limits are declared in the script's own header** so nobody assumes
+  coverage that is not there: an anchor pointing at the wrong line of a file
+  that exists and is long enough still passes, because deciding that needs the
+  claim's meaning; and prose accuracy is not checked at all.
+
 ### Fixed
 
 - **The read-only reconciliation reached two of the three review prompts.**
