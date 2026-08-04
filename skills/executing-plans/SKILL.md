@@ -13,6 +13,30 @@ Load plan, review critically, execute all tasks, report when complete.
 
 **Note:** Tell your human partner that Superpowers works much better with access to subagents (Claude Code, Codex CLI, Codex App, Copilot CLI, and Gemini CLI all qualify; see the per-platform tool refs in `../using-superpowers/references/`). If subagents are available, use superpowersplus:subagent-driven-development instead of this skill.
 
+**Progress reports.** Report to your human partner at four fixed points, one
+line each:
+
+- **Starting:** how many tasks the plan has, that this is the inline path,
+  and that the record is this session's todo list.
+- **Each task done:** `task N of M complete — <short title>`, and what
+  comes next.
+- **Going back to fix something** — a verification that failed, an audit
+  that came back FAIL: what failed, and that you are fixing it. This path
+  runs no numbered fix rounds, so there is no round count to give; do not
+  invent one.
+- **Finishing:** what was delivered, and which gate runs next.
+
+A report asks nothing and waits for nothing — you keep going in the same
+breath. It carries no gate vocabulary either: `NOT DELIVERED` and the rest
+belong to the audit's own report, not to a line telling your partner where
+the work is. Past two lines it has become a status summary; shorten it. When
+you actually need a decision, that is an escalation, and the shape for it is
+below.
+
+**No gate can check any of this, and none is asked to.** These reports
+happen in the chat, which the audit does not read. Do not build a verifier
+for them later.
+
 ## The Process
 
 ### Step 1: Load and Review Plan

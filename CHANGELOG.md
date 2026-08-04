@@ -11,6 +11,25 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **Progress reaches the partner on both execution paths.** Neither path said
+  anything between "starting" and "done": `subagent-driven-development` ruled
+  out check-ins and progress summaries, and `executing-plans` moved todos the
+  partner cannot see. Executing without stopping was being read as executing in
+  silence. Both skills now report at four fixed points — starting (task count,
+  which path, where the record lives), each task done, entering a fix round,
+  finishing — one line each. A report asks nothing and waits for nothing, so it
+  does not reopen the check-ins that were ruled out for good reason, and it
+  carries no gate vocabulary: `NOT DELIVERED` and its siblings stay in the
+  machine-to-machine reports where they are precise.
+- **Recorded that no gate can check those reports.** They happen in the chat,
+  which no reviewer, audit or re-review reads. Both skills say so at the point
+  the rule is written, and say not to mirror the reports into the ledger to
+  make a verifier possible — the ledger exists to resume work, not to prove
+  somebody was told. Without this, the next reader finds an unenforced rule and
+  builds the enforcement it appears to be missing.
+
 ### Fixed
 
 - **The execution offer carries what decides it.** It presented two option

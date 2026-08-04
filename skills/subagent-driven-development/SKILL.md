@@ -24,6 +24,29 @@ ledger and the tool results carry the record.
 
 **Continuous execution:** Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are: BLOCKED status you cannot resolve, ambiguity that genuinely prevents progress, or all tasks complete. "Should I continue?" prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.
 
+**Progress reports.** Executing without stopping is not executing in
+silence. Report to your human partner at four fixed points, one line each:
+
+- **Starting:** how many tasks, that this is the subagent path, and the
+  ledger path where progress lives.
+- **Each task done:** `task N of M complete — <short title>`, and what
+  comes next.
+- **Entering a fix round:** which round, of five, and why in a few words.
+- **Finishing:** what was delivered, and which gate runs next.
+
+These are not the check-ins the paragraph above forbids. A report asks
+nothing and waits for nothing — you keep going in the same breath. It also
+carries no gate vocabulary: `NOT DELIVERED`, `INVENTED SCOPE`, severity
+labels and the rest stay in the machine-to-machine reports where they are
+precise. Past two lines it has become the progress summary that paragraph
+rules out; shorten it.
+
+**No gate can check any of this, and none is asked to.** These reports
+happen in the chat, which no reviewer, audit or re-review ever reads. Do not
+build a verifier for them, and do not mirror them into the ledger so that
+one becomes possible — the ledger exists to resume work, not to prove
+somebody was told.
+
 ## When to Use
 
 ```dot
