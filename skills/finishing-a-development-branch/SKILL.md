@@ -36,10 +36,12 @@ returned PASS.
 |-------|--------|
 | Audit ran, verdict PASS | Continue to Step 3 |
 | Audit ran, verdict FAIL | Stop. Report the NOT DELIVERED rows. The branch is not finished — route the gaps into a fix wave. |
+| Audit ran, verdict FAIL, and every NOT DELIVERED row is a residual the fix wave parked with a ruling at its cap | Continue to Step 3 and present those rows beside the options, as named pending items — the treatment OUT OF SCOPE — DECLARED already gets at `../final-branch-audit/SKILL.md:342`. The row above routes to a fix wave that is exhausted: three iterations, `../subagent-driven-development/references/final-review.md`. **Check the parking, never believe it** — each row carries its ruling and the ledger shows the cap was reached. A parking nobody checks is absolution by assertion. |
 | No audit was run (e.g. the branch came through superpowersplus:executing-plans, or by hand) | Run it now: dispatch superpowersplus:final-branch-audit with the plan file, `git merge-base <base-branch> HEAD`..HEAD, and any ledger. Then apply the rows above. |
 | No plan exists for this branch | Say so explicitly and ask your human partner whether to proceed without the audit. Do not decide this yourself. |
 
 A FALSE COMPLETION finding always stops here, whatever else the audit said.
+It is never parked either, so it can never arrive by the row above.
 
 ## Step 3: Detect Environment
 
@@ -209,7 +211,7 @@ place. If your platform provides a workspace-exit tool, use it.
 | "Tests passed earlier this session" | Run the suite on the tree you are about to integrate. A green run only proves the tree it ran on. |
 | "The suite is green, so the plan is delivered" | Green proves the code that exists works. A task nobody built breaks no test. Run the audit. |
 | "This branch came through executing-plans, there's no audit step there" | That is exactly why Step 2 runs it here. The path without a final review is the one that most needs the gate. |
-| "The audit failed on one row, that's close enough to merge" | FAIL means the branch did not deliver the plan. Present no menu until it PASSes. |
+| "The audit failed on one row, that's close enough to merge" | FAIL means the branch did not deliver the plan. The only FAIL that reaches the menu is the one whose every open row the fix wave already parked with a ruling at its cap, and those rows are presented beside the options. Deciding here that a row is close enough is the parking the cap exists to prevent. |
 | "They obviously want it merged" | Integration is your human partner's decision. Present the menu and wait. |
 | "They seem done with this feature — I'll offer to discard it" | The menu is complete as written. Discard happens only when your human partner asks for it in so many words. |
 | "'Yeah, get rid of it' counts as confirmation" | Only the typed word `discard` authorizes deletion. |

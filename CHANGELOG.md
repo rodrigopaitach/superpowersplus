@@ -13,6 +13,41 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The merge/PASS deadlock `1.4.0` closed reappeared on a second pair of
+  files.** Same anatomy, different collision: after the final fix wave's third
+  iteration `subagent-driven-development/references/final-review.md:59-65`
+  parks what is still open and promises those residuals reach the partner
+  "when finishing-a-development-branch presents the options" — while
+  `finishing-a-development-branch/SKILL.md:32-33` presents no option before the
+  audit returns PASS and `:38` routes a FAIL back into a fix wave that is
+  exhausted at its own cap of three. A parked audit gap leaves its row NOT
+  DELIVERED, so the verdict never turns, and the promised presentation could
+  not happen by any route. Nobody noticed because each file is correct read
+  alone.
+  **Closed with the existing mechanism, and no new state was invented.**
+  `parked with a ruling` already exists — the task loop's breaker at
+  `subagent-driven-development/SKILL.md:495-505` — and it already has the four
+  properties `1.4.0` established for a state that leaves the FAIL computation:
+  declared by a named actor, terminal, checked rather than believed, and
+  riding beside the verdict as a named pending item. What was missing is that
+  `finishing-a-development-branch` never learned to read it. It now carries a
+  fourth row: a FAIL whose every open row is a parked residual continues to the
+  menu with those rows presented beside the options — the treatment
+  OUT OF SCOPE — DECLARED already gets at `final-branch-audit/SKILL.md:342` —
+  and the parking is checked, never believed (each row carries its ruling, the
+  ledger shows the cap was reached), because a parking nobody checks is
+  absolution by assertion.
+  **OUT OF SCOPE — DECLARED was considered for reuse and rejected.** It means
+  *its turn has not come*; a parked residual means *promised, absent, and three
+  waves could not close it*. Collapsing those is the exact distinction `1.4.0`
+  exists to hold. The mechanism was reused; the verdict name was not.
+  Two collisions the fix surfaced were repaired in the same pass: the
+  rationalization row "the audit failed on one row, that's close enough to
+  merge" said "present no menu until it PASSes", which the new row contradicts
+  head-on — it now names the one FAIL that reaches the menu and keeps the
+  guard against deciding it yourself. And a reader of that table alone could
+  not see that FALSE COMPLETION cannot arrive by the new row; it is never
+  parked, and the table now says so.
 - **The third uncapped correction loop now has a ceiling.** `executing-plans`
   Step 3 said "audit FAIL: fix and re-run" with no limit — the same anatomy
   `1.5.0` closed in `brainstorming` and `writing-plans`. Three, derived and not
