@@ -13,6 +13,18 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **`executing-plans` offered a route its own premise excludes.** Shipped one
+  commit earlier, in the `**Execution:**` reader: on a plan whose header names
+  the subagent path, `SKILL.md:63` told you to present switching to
+  `subagent-driven-development` as a choice — while `:14` defines this skill as
+  the path for when subagents are **not** available. Two ways reach this skill,
+  and the offer is real for only one of them: the partner who chose inline on a
+  harness that has subagents can switch, and the harness that has none cannot.
+  The offer is now conditioned on subagents actually being available, and the
+  situation is stated out loud either way, because "no subagents here" and "I
+  did not check" read identically in silence. The ledger read moves ahead of the
+  branch and happens in both cases — it holds the exact resume point regardless
+  of which path continues.
 - **The merge/PASS deadlock `1.4.0` closed reappeared on a second pair of
   files.** Same anatomy, different collision: after the final fix wave's third
   iteration `subagent-driven-development/references/final-review.md:59-65`

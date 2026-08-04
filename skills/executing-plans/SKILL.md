@@ -63,14 +63,19 @@ built on it.
 3. Read the plan header's `**Execution:**` field — it records the path this
    plan was handed to and where its progress was being kept. If it names the
    subagent path, you are resuming by a different route than the one it started
-   on: read the ledger it names first, because it may still be on disk and it
-   holds the exact resume point, then present the choice in the escalation shape
-   below before executing anything. Switching to
+   on: read the ledger it names first, whatever else follows — it may still be
+   on disk and it holds the exact resume point. Then the choice, **but only
+   where subagents are actually available**: present it in the escalation shape
+   below before executing anything, since switching to
    superpowersplus:subagent-driven-development keeps that record and the
-   per-task reviews; continuing here abandons a record that exists and can be
-   read, for todos that will not outlive this session. A plan with no such field
-   is a plan written before the field existed — not an error: proceed, and write
-   the path you are taking into it.
+   per-task reviews, while continuing here abandons a record that exists and can
+   be read, for todos that will not outlive this session. Where they are not,
+   there is no choice to present — this skill is the path for exactly that case
+   (the Note above), and offering a route the harness cannot take spends your
+   partner's turn on a decision they cannot make. Say which of the two you are
+   in: "no subagents here" and "I did not check" read the same otherwise. A plan
+   with no such field is a plan written before the field existed — not an error:
+   proceed, and write the path you are taking into it.
 4. Read the spec the plan cites — the plan is a translation of it, and
    superpowersplus:final-branch-audit traces one against the other at the end. A
    plan citing no spec is an entry blocker: get the path from your human
