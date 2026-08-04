@@ -230,6 +230,13 @@ way the brief and the reviewer's table are (`T3.1`). A test mapping to
 nothing is invented scope — the reviewer reports it as Extra, exactly like
 unrequested production code.
 
+**No plan, no matrix — and the rule still holds.** This skill runs outside a
+plan too: superpowersplus:systematic-debugging invokes it for a bug fix, where
+the requirement is the reported bug and the mapping is the test that
+reproduces it. What the rule forbids is a test mapping to *nothing*. The
+matrix is where the mapping is written down when a plan exists; it is not the
+only thing a test can map to, and its absence is not a licence.
+
 Deleting or skipping a test to get green is the same finding: the reviewer
 compares the test count against the base and reads the diff for tests newly
 marked skipped, `xfail`, or `.only`.
@@ -318,8 +325,8 @@ Before marking work complete:
 - [ ] Tests use real code (mocks only if unavoidable)
 - [ ] Edge cases and errors covered
 - [ ] No test in this change trips the shallow-test litmus above
-- [ ] Every test maps to a row in the plan's Test Coverage Matrix — the row
-      for the task criterion it covers, one row per test
+- [ ] Every test maps to a requirement — a row in the plan's Test Coverage
+      Matrix where a plan exists, the reported bug where one does not
 - [ ] No test was deleted, renamed away, or newly skipped to reach green
 - [ ] The exact test command and its output are in your report
 

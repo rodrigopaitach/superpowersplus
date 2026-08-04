@@ -13,6 +13,19 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A legitimate bug fix could not close the TDD checklist.**
+  `test-driven-development/SKILL.md` required every test to map to a row in
+  **the plan's** Test Coverage Matrix and closed with "Can't check all boxes?
+  You skipped TDD. Start over." — while `systematic-debugging/SKILL.md:177`
+  invokes this skill for a bug fix, where there is no plan and no matrix. The
+  box named an artifact that does not exist on that path, so the instruction
+  was to start over on work that was correct.
+  **The exception is declared where it is read**, in both places the rule
+  appears: what it forbids is a test mapping to *nothing*, and the matrix is
+  where the mapping is written down when a plan exists — on a bug fix the
+  requirement is the reported bug and the mapping is the test that reproduces
+  it. The absence of a matrix is not a licence, which is why the rule is
+  restated rather than exempted.
 - **The fix-round report named one cap while two exist.**
   `subagent-driven-development/SKILL.md:34` told you to report "which round, of
   five" with no condition, and the final fix wave is capped at three
