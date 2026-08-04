@@ -375,15 +375,38 @@ task caught between them, and take it to your partner.
 
 ## Execution Handoff
 
-After the plan review passes, offer execution choice:
+After the plan review passes, offer the execution choice **in the escalation
+shape above** — it is a decision of your partner's, crossing the machine →
+human boundary, and the two option names alone do not carry what decides it.
 
-**"Plan complete, reviewed, and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
+**Count the tasks in the plan first and say the number.** "Two options" tells
+your partner nothing about the size of what they are agreeing to; "eleven
+tasks" tells them whether this fits in one sitting.
 
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
+**Say the difference that actually decides it: what survives an interruption.**
+The subagent path writes progress to a file — `.superpowers/sdd/<plan>/progress.md`
+— and a session that ends mid-plan is resumed from it. The inline path tracks
+with session todos, which do not outlive the session: an interruption there
+means reconstructing where things stood from git and the plan. This is the one
+difference neither option name hints at, and it is the one your partner will
+care about after it costs them.
 
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
+The offer, filled in from the plan:
 
-**Which approach?"**
+> **"Plan complete, reviewed, and saved to `docs/superpowers/plans/<filename>.md`. It has <N> tasks. How should I run it?**
+>
+> | Option | What it costs | What survives an interruption |
+> |---|---|---|
+> | **Subagent-driven** | A fresh subagent per task, plus a review between tasks — more tokens, and each task starts without the last one's context | Progress is written to a file. Stopping mid-plan and resuming later works |
+> | **Inline** | Runs here, in this session — cheapest, and the whole plan stays in one context | Session todos only. If this session ends mid-plan, where things stood has to be rebuilt from git and the plan |
+>
+> **Recommend: subagent-driven when the plan will not finish in one sitting, or when a task's context would crowd out the next one — roughly, more than a handful of tasks. Inline when the plan is short enough to finish now and you want it done in this conversation.** Source: general practice, not something measured in your project.
+>
+> **Which one?"**
+
+State which side of that criterion **this** plan falls on, using the count you
+just took. A recommendation that recites the rule without applying it to the
+plan in front of you leaves your partner doing the arithmetic you already did.
 
 **If Subagent-Driven chosen:**
 - **REQUIRED SUB-SKILL:** Use superpowersplus:subagent-driven-development

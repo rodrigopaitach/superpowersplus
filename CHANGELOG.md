@@ -9,6 +9,22 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The execution offer carries what decides it.** It presented two option
+  names and one line each, and withheld the difference that matters most: the
+  subagent path writes progress to a file and is resumable after an
+  interruption, while the inline path tracks with session todos that do not
+  outlive the session. Neither option name hints at that, and it is what a
+  partner discovers only after it costs them. The offer now goes in the
+  escalation shape the skill already carries, states the plan's real task count
+  taken from the plan, gives each option's cost in one line, and declares the
+  criterion behind the recommendation instead of the bare word "recommended" —
+  then says which side of that criterion this plan falls on, so the partner is
+  not left doing arithmetic already done.
+
 ## [1.5.0] - 2026-08-03
 
 ### Fixed
