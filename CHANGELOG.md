@@ -9,6 +9,29 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The brainstorming user-review gate presents the pending decisions instead
+  of asking for a file to be read.** The gate prescribed exactly one utterance —
+  the spec was written, please review it — while the spec at that moment holds
+  open decisions in three places: every item of `## Assumptions to Confirm`,
+  every `Deferred` or `Outstanding` row of `## Coverage Map`, and any
+  end-of-life dependency finding. The instruction for that last one already said
+  it was "for your human partner to decide", and its verb was still *report
+  under a section*. All three now go to the partner in the escalation shape,
+  carried at the point of use as the other five trigger points carry it, before
+  approval is requested. One message with every escalation, not one message each:
+  at this gate the decisions are frozen in the document, so nothing reorders
+  anything, and serializing would turn the gate into a second interview after the
+  design was approved. The list is not truncated — it is ordered by impact ×
+  uncertainty, the criterion the interview already uses. Nothing pending is said
+  in words, for the reason a state carries its reason: "there was nothing" and "I
+  did not look" must not render identically. The reviewer is deliberately not
+  made to audit this — it runs at step 8, one step *before* the gate, so charging
+  it would be charging a future event.
+
 ## [1.4.0] - 2026-08-03
 
 ### Added

@@ -29,7 +29,7 @@ You MUST create a task for each of these items and complete them in order:
 6. **Present design** — in sections scaled to their complexity, get user approval after each section
 7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
 8. **Dispatch spec reviewer subagent** — using `skills/brainstorming/spec-document-reviewer-prompt.md`; fix blocking issues (see below)
-9. **User reviews written spec** — ask user to review the spec file before proceeding
+9. **Present the pending decisions, then the user reviews the spec** — every decision the spec leaves open goes to your partner in the escalation shape, in one message, before you ask for approval. None open is itself something you say. See "User Review Gate" below.
 10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 **Resuming a spec written before the map was required?** Build it from what the spec already contains — every criterion, finding, and assumption already there fills a row — and mark `Outstanding` only what the spec does not answer. Do not re-run the interview from scratch: the decisions were already made and approved, and reopening them costs your human partner the work twice.
@@ -53,6 +53,7 @@ digraph brainstorming {
     "Write design doc" [shape=box];
     "Dispatch spec reviewer\nsubagent" [shape=box];
     "Reviewer approves?" [shape=diamond];
+    "Present pending decisions\n(escalation shape, one message)" [shape=box];
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
 
@@ -73,7 +74,8 @@ digraph brainstorming {
     "Write design doc" -> "Dispatch spec reviewer\nsubagent";
     "Dispatch spec reviewer\nsubagent" -> "Reviewer approves?";
     "Reviewer approves?" -> "Write design doc" [label="blocking issues"];
-    "Reviewer approves?" -> "User reviews spec?" [label="yes"];
+    "Reviewer approves?" -> "Present pending decisions\n(escalation shape, one message)" [label="yes"];
+    "Present pending decisions\n(escalation shape, one message)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
     "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
 }
@@ -205,7 +207,43 @@ After writing the spec document, dispatch a spec document reviewer subagent usin
 Fix every blocking issue the reviewer returns, then re-dispatch. Recommendations are advisory.
 
 **User Review Gate:**
-After the spec review loop passes, ask the user to review the written spec before proceeding:
+After the spec review loop passes, **present every decision the spec leaves
+open, then ask for approval** — in that order, in one message. Asking someone
+to read a file is not presenting a decision: the decisions are the part of the
+spec they are best placed to settle and least likely to find on their own.
+
+Three places hold them, and all three are sources:
+
+| Source | What is pending there |
+|--------|----------------------|
+| `## Assumptions to Confirm` | Every item — each one is something you could not verify and your partner can |
+| `## Coverage Map` | Every row in state `Deferred` or `Outstanding`, carrying the reason that state already requires |
+| The dependency findings | A central dependency the vendor documents as end-of-life or deprecated, per "Where a Claim Comes From". Reporting it in a section is not the same as putting it in front of a person |
+
+**Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
+1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
+2. **2–4 options with the cost of each**, always including doing nothing now.
+3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.
+4. **Before sending, reread the whole message once**, looking for terms someone outside this project would not know. Rewrite each in plain language, or define it in the sentence that uses it. A gate verdict name (`LOST IN TRANSLATION`, `INVENTED SCOPE`, …) appears only in parentheses, never carrying the explanation.
+
+**One message carrying every escalation — never one message each.** Here the
+decisions are already frozen in the document: no answer reorders another, which
+is the only reason the interview asks one question at a time. Serializing them
+turns the gate into a second interview after the design was approved.
+
+**Present all of them; do not truncate.** Order by impact × uncertainty — the
+criterion the interview already uses, in `skills/brainstorming/coverage-map.md`
+— so the heaviest is read first. A long list is a fact about the spec, not a
+problem with the message, and the item cut for length is the one your partner
+would never have found.
+
+**Nothing pending? Say so, in words.** For example: "No decisions are pending —
+`## Assumptions to Confirm` is empty and no category is `Deferred` or
+`Outstanding`." Silence makes "there was nothing to decide" and "I did not look"
+render identically, which is the reason every state carries its reason and every
+empty section writes `None`.
+
+The approval request closes the message, after the decisions:
 
 > "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
 
