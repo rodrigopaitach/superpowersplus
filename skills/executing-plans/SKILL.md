@@ -37,6 +37,24 @@ below.
 happen in the chat, which the audit does not read. Do not build a verifier
 for them later.
 
+**Resuming after an interruption.** This path records progress in session
+todos, and session todos do not outlive the session — compaction inside one
+loses them just as well. There is no ledger here to fall back on, and this
+skill does not create one: inline execution exists for work that finishes in
+one sitting, and a plan that keeps outliving its session is telling you it
+belonged on the subagent path. Say the limitation out loud when you start,
+in the first report above, rather than letting your partner meet it later.
+
+When you do have to resume, reconstruct — do not guess. Read the plan, then
+read `git log` for the branch: commits map to tasks by what they touch and by
+what each task's steps named. Rebuild the todo list from those two sources,
+state which tasks you believe are done and the evidence for each, and get
+your partner's confirmation before executing anything — in the escalation
+shape below, since being wrong costs them either way. Re-running a finished
+task duplicates or reverts work already committed; skipping an unfinished one
+ships a gap that surfaces at the Step 3 audit, after everything downstream was
+built on it.
+
 ## The Process
 
 ### Step 1: Load and Review Plan

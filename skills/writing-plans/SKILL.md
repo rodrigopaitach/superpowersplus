@@ -93,6 +93,13 @@ manifest already in this repo — name which, `package.json:31`. A library
 appearing here for the first time is a design decision nobody approved:
 take it to your human partner instead of writing it in.]
 
+**Execution:** [Blank until your partner picks a path at the end of this
+skill. Then: `subagent-driven` or `inline`, and where progress is recorded —
+the ledger path for the first, `session todos (not persisted)` for the
+second. Whoever picks this plan up after an interruption reads this line
+before anything else; without it they cannot tell a plan that never started
+from one whose record was thrown away with the session.]
+
 **Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
 2. **2–4 options with the cost of each**, always including doing nothing now.
@@ -407,6 +414,11 @@ The offer, filled in from the plan:
 State which side of that criterion **this** plan falls on, using the count you
 just took. A recommendation that recites the rule without applying it to the
 plan in front of you leaves your partner doing the arithmetic you already did.
+
+**Write the answer into the plan header's `**Execution:**` field** — the path
+they chose and where its progress will be recorded — before handing off. The
+answer is otherwise held only in this conversation, which is the thing an
+interruption takes away, and the plan file is what survives it.
 
 **If Subagent-Driven chosen:**
 - **REQUIRED SUB-SKILL:** Use superpowersplus:subagent-driven-development

@@ -180,6 +180,40 @@ a ledger file, not only in todos.
 - `git clean -fdx` will destroy the workspace (it's git-ignored scratch); if
   that happens, recover from `git log`.
 
+**Resuming after an interruption.** A ledger that already carries completion
+lines is not an edge case — compaction, a closed session and a killed
+harness all land here. Before dispatching anything:
+
+1. **Find the resume point** by the ledger rules above.
+2. **Check it against `git log`.** The ledger claims; git holds. A completion
+   line naming commits the branch does not contain, or commits past the last
+   line the ledger recorded, means the two disagree — and what git contains
+   is what happened.
+3. **Present the resume point to your human partner and wait for one answer**,
+   in the escalation shape above: what the branch already has, where you would
+   resume, what resuming in the wrong place costs (a second implementation of
+   finished work, at full task price, or a gap every later task builds on),
+   and your recommendation with that evidence behind it. This is the one
+   moment continuous execution does not cover — everything after it rests on
+   a starting point nobody checked.
+
+Two shapes the rules above cannot describe, because in both the ledger is
+what is missing:
+
+- **No ledger, but the branch has work.** The workspace is git-ignored
+  scratch and `git clean -fdx` deletes it. Never read an absent ledger as an
+  unstarted plan — that is exactly the re-dispatch of a completed sequence
+  this section exists to prevent. Rebuild from `git log` and the plan: map
+  commits to tasks by what they touch, write only the lines the commits
+  support, and mark each reconstructed one as reconstructed. Then present it
+  as above — a mapping you inferred is the kind of claim your partner should
+  get the chance to correct.
+- **A task with no completion line and no report.** The interruption landed
+  inside a dispatch. Read the task's report file — an implementer that got
+  partway may have written it — and the commits since that task's BASE,
+  before deciding anything. An implementer that committed and then lost its
+  controller leaves work that a blind re-dispatch duplicates or reverts.
+
 Read the plan once, note its context and Global Constraints, and create a
 todo per task.
 

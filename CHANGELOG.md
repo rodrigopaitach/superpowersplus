@@ -29,6 +29,30 @@ References below name them so a claim here can be traced there.
   make a verifier possible — the ledger exists to resume work, not to prove
   somebody was told. Without this, the next reader finds an unenforced rule and
   builds the enforcement it appears to be missing.
+- **A declared resume route on both execution paths.**
+  `subagent-driven-development` knew how to read a ledger but never said what
+  to do with the reading: the resume point is now checked against `git log`
+  (the ledger claims, git holds) and presented to the partner in the escalation
+  shape before anything is dispatched — the one moment continuous execution
+  does not cover, since everything after it rests on a starting point nobody
+  checked. Two shapes the ledger rules could not describe, because in both the
+  ledger is what is missing, are now covered: no ledger with work already in
+  the branch (a `git clean -fdx` away, and read as an unstarted plan it becomes
+  the re-dispatch of a finished sequence), and a task with neither a completion
+  line nor a report, where the interruption landed inside a dispatch.
+- **`executing-plans` declares its own limitation instead of leaving it to be
+  discovered.** Session todos do not outlive the session, and no ledger is
+  invented here to pretend otherwise — this path is for work that finishes in
+  one sitting, and a plan that keeps outliving its session is saying it belonged
+  on the other path. The skill now says that out loud at the start and gives the
+  route when it happens anyway: reconstruct from `git log` and the plan, state
+  the evidence per task, and get the partner's confirmation before executing.
+- **The plan header records which path was chosen.** New `**Execution:**` field
+  — the path and where progress is recorded — filled at the handoff, since the
+  answer was otherwise held only in the conversation an interruption takes away.
+  The plan review does not check it and is not asked to: the review runs at
+  `writing-plans` Plan Review and the field is filled at Execution Handoff,
+  after it, so charging it would charge a future event.
 
 ### Fixed
 
