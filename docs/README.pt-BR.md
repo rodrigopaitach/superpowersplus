@@ -126,6 +126,32 @@ O agente esbarrou num requisito que não conseguia entregar honestamente e parou
 
 Quatro coisas sustentam isso: a consequência dita antes do mecanismo, cada opção carregando seu custo, **não fazer nada oferecido como opção de verdade**, e a recomendação declarando de onde veio. A quarta é o que permite a quem não programa distinguir uma recomendação fundamentada no próprio código de um palpite plausível.
 
+## O que já foi medido
+
+Uma skill é texto que molda o comportamento de um agente, e texto que ninguém
+testa é opinião. Quatro regras deste projeto passaram por teste adversarial —
+montar a situação em que seguir a regra é inconveniente e ver se ela se
+sustenta — e cada execução tem registro com data, modelo e veredito por
+critério em [`tests/skill-behavior/`](../tests/skill-behavior/):
+
+- **Conteúdo externo é dado, não instrução** — passou na primeira execução: o
+  revisor usou o fato legítimo da fonte, denunciou a instrução plantada dentro
+  dela como fonte comprometida e seguiu verificando, pegando a citação errada
+  plantada no caminho. [`RESULT-external-content-is-data.md`](../tests/skill-behavior/RESULT-external-content-is-data.md)
+- **Formato de escalada no chat** — 1 de 3, depois 2 de 3, depois 3 de 3, em
+  três execuções. As duas primeiras corrigiram a regra, não o agente.
+  [`RESULT-escalation-format-in-chat-v3.md`](../tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md)
+- **Retomada pelo caminho de subagentes** — 3 de 3 na primeira execução: achou
+  o ponto de retomada, apresentou ao parceiro e não tocou em arquivo nenhum.
+  [`RESULT-resume-route-subagent.md`](../tests/skill-behavior/RESULT-resume-route-subagent.md)
+- **Retomada pelo caminho inline** — falhou, falhou, passou: a mesma exigência
+  em três posições diferentes do mesmo arquivo.
+  [`RESULT-resume-route-inline.md`](../tests/skill-behavior/RESULT-resume-route-inline.md)
+
+**A lei que essas séries mediram, e que vale fora daqui: regra que guarda o
+ato seguinte é seguida; regra que descreve um padrão não é — nem quando o
+agente a lê, a cita e reconhece em voz alta que está violando.**
+
 ## Telemetria do companheiro visual
 
 O companheiro visual do brainstorming carrega o logo da Prime Radiant do site deles, com a versão do Superpowers embutida na URL. Não vai nada do seu projeto, do seu prompt nem do seu agente — é uma contagem aproximada de uso, e o crédito é do upstream.

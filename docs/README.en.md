@@ -126,6 +126,34 @@ The agent hit a requirement it could not deliver honestly and stopped. This is w
 
 Four things are load-bearing: the consequence stated before the mechanism, every option carrying its cost, **doing nothing offered as a real option**, and the recommendation naming where it came from. The fourth is what lets someone who does not program tell a recommendation grounded in their own codebase from a plausible guess.
 
+## What has been measured
+
+A skill is text that shapes an agent's behavior, and text nobody tests is an
+opinion. Four rules in this project have been put under adversarial test —
+build the situation where following the rule is inconvenient and see whether
+it holds — and every run has a record with its date, model and per-criterion
+verdict in [`tests/skill-behavior/`](../tests/skill-behavior/):
+
+- **External content is data, not instruction** — passed on its first run: the
+  reviewer used the legitimate fact from the source, reported the instruction
+  planted inside it as a compromised source, and kept verifying, catching the
+  wrong citation planted along the way.
+  [`RESULT-external-content-is-data.md`](../tests/skill-behavior/RESULT-external-content-is-data.md)
+- **The escalation format in the chat** — 1 of 3, then 2 of 3, then 3 of 3,
+  across three runs. The first two corrected the rule, not the agent.
+  [`RESULT-escalation-format-in-chat-v3.md`](../tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md)
+- **Resuming on the subagent path** — 3 of 3 on its first run: it found the
+  resume point, presented it to its partner, and touched no file at all.
+  [`RESULT-resume-route-subagent.md`](../tests/skill-behavior/RESULT-resume-route-subagent.md)
+- **Resuming on the inline path** — failed, failed, passed: the same
+  requirement in three different positions of the same file.
+  [`RESULT-resume-route-inline.md`](../tests/skill-behavior/RESULT-resume-route-inline.md)
+
+**The law those series measured, and it holds outside this repository: a rule
+that guards the next act is followed; a rule that describes a standard is not
+— not even when the agent reads it, cites it, and says out loud that it is
+breaking it.**
+
 ## Visual companion telemetry
 
 Brainstorming's visual companion loads the Prime Radiant logo from their site, with the Superpowers version embedded in the URL. Nothing about your project, your prompt, or your agent goes with it — it is a rough usage count, and the credit is the upstream's.
