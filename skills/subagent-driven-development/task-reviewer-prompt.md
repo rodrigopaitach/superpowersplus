@@ -115,13 +115,9 @@ Subagent (general-purpose):
     DRY without premature abstraction? Edge cases handled?
 
     **Simplification (Minor unless it breaks something):** could this
-    criterion be met with less code — reusing something already in the repo,
-    the standard library, or a platform feature instead of the new function,
-    class, layer, or abstraction the diff introduces? Name the smaller
-    version concretely; "this could be simpler" with no replacement is not a
-    finding. A new dependency or generalization beyond the criterion is not
-    Minor — those are the existing dependency-approval and invented-scope
-    rules, at their own severity.
+    criterion be met with less code, and what exactly is the smaller
+    version? Stated once in superpowersplus:writing-plans, "Pick the
+    smallest structure that meets the criterion" — apply it to the diff.
 
     **Tests — the shallow-test litmus. Each row is blocking:**
 

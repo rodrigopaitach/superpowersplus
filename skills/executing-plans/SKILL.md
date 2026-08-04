@@ -109,15 +109,7 @@ After the last task, before finishing: the conformance audit is mandatory.
   re-run the audit. Never resolve a gap by editing the plan to stop asking.
 
 **Three audit rounds maximum.** A round is one fix pass plus one re-run of the
-audit. Three and not the task loop's five: those five exist because rounds 4–5
-change the actor — a fresh implementer on a more capable model, at
-`../subagent-driven-development/SKILL.md`. This path has no such escalation and
-cannot acquire one; it is the path for when subagents are not available, and it
-names no dispatch and no model anywhere. The same actor fixes and re-audits
-every round, reading the same plan against the same branch, so nothing about
-round four differs from round three. Its match is the constant-actor final fix
-wave, capped at three, in
-`../subagent-driven-development/references/final-review.md`.
+audit.
 
 **At the cap, escalate — do not open a fourth round.** In the escalation shape
 below: which rows are still NOT DELIVERED, why three rounds did not close them,

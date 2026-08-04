@@ -40,6 +40,36 @@ References below name them so a claim here can be traced there.
   that exists and is long enough still passes, because deciding that needs the
   claim's meaning; and prose accuracy is not checked at all.
 
+### Changed
+
+- **Three rules that were written more than once are now written once.**
+  Measured across the fork's own additions, not estimated; net **−26 lines**
+  across six files, and every rule that governs behavior survives at its
+  trigger point.
+  - **The derivation of the three-round cap left the skills.** Each of the
+    three capped loops carried seven to ten lines explaining *why three and
+    not the task loop's five* — that rounds 4–5 swap in a fresh implementer on
+    a more capable model and these loops keep one actor. It is an argument
+    addressed to a reader, not an instruction anyone follows: nothing an agent
+    does changes with it present or absent. The cap and "at the cap, escalate
+    — do not open a fourth round" stay in all three. The reasoning is in this
+    changelog under `1.5.0` and `[Unreleased]`, which is where a reader
+    looking for *why a number is that number* goes.
+  - **"The map is a floor, not a ceiling" was stated twice, near-verbatim.**
+    It stays in `skills/brainstorming/coverage-map.md`, the file it is about,
+    and leaves `brainstorming/SKILL.md`, which already points there.
+  - **Four statements of the simplification rule became one.** `writing-plans`
+    holds it, where the size of the answer is actually decided; the task
+    reviewer, the plan reviewer and the implementer each keep their own
+    one-line action and point at it. **The substance moved, the action did
+    not** — deliberately, because three of the four are subagent prompt
+    templates and one of them forbids crawling the codebase, so replacing an
+    action with a bare cross-reference would have left a check nobody runs.
+    What is now stated once is what *smaller* means, that naming the
+    replacement concretely is what makes it a finding, and the two things the
+    rule must not soften: a new dependency needs approval, and generalizing
+    beyond the criterion is invented scope.
+
 ### Fixed
 
 - **The read-only reconciliation reached two of the three review prompts.**

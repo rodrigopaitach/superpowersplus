@@ -72,14 +72,14 @@ Subagent (general-purpose):
     The gates prove the criterion was asked for and is tested. None of them
     governs how big your answer is — that part is yours.
 
-    - Write the least code that meets the criterion. Before creating a new
-      function, class, layer, or abstraction, check whether existing code in
-      this repo, the standard library, or a platform feature already does it.
-      Reuse before writing; duplicate only as a last resort.
-    - A new dependency still needs approval — that rule lives in the plan,
-      and this does not relax it.
-    - Generalizing for a future case no criterion asks for is invented scope,
-      under the rule you are already held to. Build the case in front of you.
+    Write the least code that meets the criterion. Before creating a new
+    function, class, layer, or abstraction, check whether existing code in
+    this repo, the standard library, or a platform feature already does it —
+    reuse before writing, duplicate only as a last resort. The rule is stated
+    once in superpowersplus:writing-plans, "Pick the smallest structure that
+    meets the criterion", including the two things it does not soften: a new
+    dependency still needs approval, and generalizing beyond the criterion is
+    invented scope.
 
     ## When You're in Over Your Head
 

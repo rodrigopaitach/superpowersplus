@@ -35,6 +35,8 @@ This structure informs the task decomposition. Each task should produce self-con
 
 **Pick the smallest structure that meets the criterion.** The plan is where the size of the answer is decided — an implementer handed a new layer builds the layer, and every gate downstream passes it, because the gates charge whether the criterion was asked for and tested, never how much was built to meet it.
 
+**This is the one statement of the rule; the reviewers, the plan reviewer and the implementer each apply it and none restates it.** *Smaller* means something already in this repo, the standard library, or a platform feature, in place of the new function, class, layer, module, or abstraction. Naming that replacement concretely is what makes it a finding — "this could be simpler" with nothing named is not one. Two things it is **not**, because they carry their own severity and this rule must not soften them: a new dependency needs approval, and generalizing for a case no criterion asks for is invented scope.
+
 - Before putting a new layer, module, or abstraction in the plan, check whether structure that already exists in this project meets the criterion. Reusing it means citing it the way every other claim about this codebase is cited — `path/file.ext:line` for the structure you are reusing.
 - A new layer, module, or abstraction carries a one-line justification naming the criterion that forces it. One that names no criterion is invented scope under the rule the plan is already held to.
 - **That justification line is also where a refused simplification lands.** When the plan reviewer proposes a smaller version and you keep the larger one, the reason goes on that line, in the same form the Coverage Map requires of a `Deferred` or `Outstanding` state: one line, stated, in the document. Refusing is yours to do; refusing silently leaves a structure nobody can tell was questioned from one nobody ever looked at.
@@ -359,13 +361,6 @@ task, add the task — never resolve a gap by narrowing the plan's stated
 scope.
 
 **Three review rounds maximum.** A round is one fix pass plus one re-dispatch.
-This loop keeps one actor throughout — the same prompt, handed the same file
-path, reading the same document every round — so nothing about a fourth round
-differs from the third. That is why it is not the task loop's five: those exist
-because rounds 4–5 swap in a fresh implementer on a more capable model, an
-escalation this loop does not have. Its match is the constant-actor final fix
-wave, capped at three, in
-`skills/subagent-driven-development/references/final-review.md`.
 
 **At the cap, escalate — do not open a fourth round.** In the escalation shape
 above: what is still blocking, why three rounds did not close it, and the
