@@ -13,6 +13,13 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The fix-round report named one cap while two exist.**
+  `subagent-driven-development/SKILL.md:34` told you to report "which round, of
+  five" with no condition, and the final fix wave is capped at three
+  (`references/final-review.md:56`). Inside that wave the mandated report stated
+  a denominator that does not exist, telling the partner they had two rounds
+  left when they had none. The report now takes the cap of the loop it is in and
+  says which, since the whole point of the line is where the work stands.
 - **`executing-plans` offered a route its own premise excludes.** Shipped one
   commit earlier, in the `**Execution:**` reader: on a plan whose header names
   the subagent path, `SKILL.md:63` told you to present switching to

@@ -31,7 +31,11 @@ silence. Report to your human partner at four fixed points, one line each:
   ledger path where progress lives.
 - **Each task done:** `task N of M complete — <short title>`, and what
   comes next.
-- **Entering a fix round:** which round, of five, and why in a few words.
+- **Entering a fix round:** which round, out of the cap of the loop you are
+  in — five in the task loop below, three in the final fix wave
+  (`references/final-review.md`) — and why in a few words. There are two
+  caps and one report; naming the wrong one tells your partner they have
+  more rounds left than they do.
 - **Finishing:** what was delivered, and which gate runs next.
 
 These are not the check-ins the paragraph above forbids. A report asks
