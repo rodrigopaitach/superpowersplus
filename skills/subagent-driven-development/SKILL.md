@@ -217,6 +217,18 @@ what is missing:
 Read the plan once, note its context and Global Constraints, and create a
 todo per task.
 
+Read the plan header's `**Execution:**` field. It records the path this plan
+was handed to and where its progress was being kept. If it names the inline
+path, you are resuming by a different route than the one it started on — stop
+and present that before dispatching anything, in the escalation shape above.
+What it costs either way: switching to the recorded path gives up the ledger
+and the per-task reviews, and buys continuity with a record that does not
+outlive the session it was written in — which is gone, or you would not be
+here. Continuing here starts a ledger from nothing, so what is already done has
+to be established from `git log` and the plan by the resume route above, never
+assumed. A plan with no such field is a plan written before the field existed;
+that is not an error — proceed, and write the path you are taking into it.
+
 Read the spec the plan cites in its `**Source spec:**` header line. The plan
 is a translation of it, and the conformance audit at the end traces one
 against the other. A plan citing no spec is an entry blocker: get the path

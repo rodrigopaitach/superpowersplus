@@ -26,6 +26,19 @@ References below name them so a claim here can be traced there.
   fixed escalates immediately, because either two criteria collide or the
   criterion is one no evidence can settle — and rounds only re-run the
   collision.
+- **The `**Execution:**` field now has a reader.** `1.6.0` added it to the plan
+  header so whoever resumes a plan would not have to guess which path it was
+  started on, and then neither execution skill consulted it — a rule with no
+  reader. Both now read it at setup. A field naming the other path means the
+  plan is being resumed by a divergent route, and that goes to the partner in
+  the escalation shape before anything runs, with what each side costs: from
+  `executing-plans`, the ledger the field names may still be on disk and holds
+  the exact resume point, so continuing inline abandons a record that exists and
+  can be read; from `subagent-driven-development`, switching to the recorded
+  inline path buys continuity with a record that did not outlive its session,
+  while continuing means the ledger starts empty and what is already done has to
+  come from `git log` and the plan. A plan with no such field predates the field
+  and is not an error: proceed, and write in the path being taken.
 
 ## [1.6.0] - 2026-08-03
 

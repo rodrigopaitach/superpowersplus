@@ -60,18 +60,29 @@ built on it.
 ### Step 1: Load and Review Plan
 1. Ensure an isolated workspace: use superpowersplus:using-git-worktrees to create one or verify the existing one
 2. Read plan file
-3. Read the spec the plan cites — the plan is a translation of it, and
+3. Read the plan header's `**Execution:**` field — it records the path this
+   plan was handed to and where its progress was being kept. If it names the
+   subagent path, you are resuming by a different route than the one it started
+   on: read the ledger it names first, because it may still be on disk and it
+   holds the exact resume point, then present the choice in the escalation shape
+   below before executing anything. Switching to
+   superpowersplus:subagent-driven-development keeps that record and the
+   per-task reviews; continuing here abandons a record that exists and can be
+   read, for todos that will not outlive this session. A plan with no such field
+   is a plan written before the field existed — not an error: proceed, and write
+   the path you are taking into it.
+4. Read the spec the plan cites — the plan is a translation of it, and
    superpowersplus:final-branch-audit traces one against the other at the end. A
    plan citing no spec is an entry blocker: get the path from your human
    partner before Step 2, never start and sort it out later.
-4. Review critically - identify any questions or concerns about the plan
-5. Check every task carries acceptance criteria verifiable by located
+5. Review critically - identify any questions or concerns about the plan
+6. Check every task carries acceptance criteria verifiable by located
    evidence — one observable behavior each, settled by a `file:line`
    citation, naming its covering test (the format superpowersplus:writing-plans
    specifies). A task whose criteria no citation could settle is a concern:
    the audit in Step 3 will charge exactly what the plan wrote.
-6. If concerns: Raise them with your human partner before starting
-7. If no concerns: Create todos for the plan items and proceed
+7. If concerns: Raise them with your human partner before starting
+8. If no concerns: Create todos for the plan items and proceed
 
 ### Step 2: Execute Tasks
 
