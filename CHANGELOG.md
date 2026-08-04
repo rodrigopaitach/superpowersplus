@@ -46,7 +46,6 @@ References below name them so a claim here can be traced there.
   only re-run the collision. The Process Flow carries the cap too, so the
   flowchart and the prose in one file do not disagree — the divergence `plus.24`
   had to repair.
-
 - **The escalation format's list of carriers matches the measurement.** It
   named four skills; six files across five skills carry the four-item block —
   `subagent-driven-development` carries it twice, in its `SKILL.md` and in
@@ -56,13 +55,20 @@ References below name them so a claim here can be traced there.
   for something that is in six. Now listed in pipeline order, so the list can be
   checked against the workflow rather than against memory. The file stays at 61
   lines.
-
-### Known gaps
-
-- `skills/writing-plans/SKILL.md` carries the identical uncapped sentence for
-  the plan reviewer — "Fix every blocking issue the reviewer returns, then
-  re-dispatch." Same defect, deliberately left for its own change rather than
-  bundled here.
+- **The plan-review loop has the same ceiling, derived the same way.** It
+  carried the identical unbounded sentence for the plan reviewer. Measured
+  before choosing a number: this loop keeps one actor — the same prompt, handed
+  the plan file path and nothing else, reading the same document every round,
+  with no model selection or fresh-versus-resume distinction anywhere in the
+  skill. Constant actor means the task loop's five do not apply, and the match
+  is again the final fix wave at three. Its blocking surface is smaller than the
+  spec reviewer's — one blocking section and eleven verdicts against three and
+  twenty-five — which lowers the odds of a collision without changing what the
+  number rests on. At the cap the open blockers go to the partner in the
+  escalation shape the file already carries, with the options and their cost:
+  accept with the gap on the task's justification line, rewrite the section, or
+  go back to the spec. A blocker that reappears escalates immediately. Nothing
+  to synchronize in a flowchart here — `writing-plans` has no `dot` graph.
 
 ## [1.4.0] - 2026-08-03
 

@@ -351,6 +351,28 @@ Recommendations are advisory. If it reports a spec requirement with no
 task, add the task — never resolve a gap by narrowing the plan's stated
 scope.
 
+**Three review rounds maximum.** A round is one fix pass plus one re-dispatch.
+This loop keeps one actor throughout — the same prompt, handed the same file
+path, reading the same document every round — so nothing about a fourth round
+differs from the third. That is why it is not the task loop's five: those exist
+because rounds 4–5 swap in a fresh implementer on a more capable model, an
+escalation this loop does not have. Its match is the constant-actor final fix
+wave, capped at three, in
+`skills/subagent-driven-development/references/final-review.md`.
+
+**At the cap, escalate — do not open a fourth round.** In the escalation shape
+above: what is still blocking, why three rounds did not close it, and the
+options with their cost — accept the plan with the gap recorded on the task's
+justification line, rewrite the section the findings keep landing in, or go back
+to the spec. A plan that three rounds could not settle is a finding about the
+plan, and a fourth round spends a subagent to report it later.
+
+**A blocking issue that returns after being fixed escalates immediately,
+whatever the round.** Two of the reviewer's contract rules are pulling against
+each other — every fix satisfies one and breaks the other — and rounds cannot
+settle that, because each one re-runs the collision. Name the two rules and the
+task caught between them, and take it to your partner.
+
 ## Execution Handoff
 
 After the plan review passes, offer execution choice:
