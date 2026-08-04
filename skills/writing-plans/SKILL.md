@@ -402,7 +402,11 @@ The offer, filled in from the plan:
 > | **Subagent-driven** | A fresh subagent per task, plus a review between tasks — more tokens, and each task starts without the last one's context | Progress is written to a file. Stopping mid-plan and resuming later works |
 > | **Inline** | Runs here, in this session — cheapest, and the whole plan stays in one context | Session todos only. If this session ends mid-plan, where things stood has to be rebuilt from git and the plan |
 >
-> **Recommend: subagent-driven when the plan will not finish in one sitting, or when a task's context would crowd out the next one — roughly, more than a handful of tasks. Inline when the plan is short enough to finish now and you want it done in this conversation.** Source: general practice, not something measured in your project.
+> **Measured, 2026-08-04 — resuming was tested adversarially on both paths, and they did not come back the same:**
+> - **Subagent-driven:** a fresh agent given an interrupted run found the resume point, presented it, and waited without touching a file — 3 of 3 criteria on the first run.
+> - **Inline:** two runs, two fixtures. Both reconstructed the resume point correctly and then executed the rest of the plan before saying anything — the "stop and confirm first" criterion failed both times.
+>
+> **Recommend: subagent-driven when the plan will not finish in one sitting, or when a task's context would crowd out the next one — roughly, more than a handful of tasks. Inline when the plan is short enough to finish now and you want it done in this conversation.** Source: general practice for the sizing, plus this project's own adversarial runs for the resuming difference above.
 >
 > **Which one?"**
 

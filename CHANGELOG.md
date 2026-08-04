@@ -11,6 +11,20 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **The measured difference between the two execution paths now appears in
+  the offer that asks your partner to pick one** (`writing-plans/SKILL.md:405-407`).
+  Two lines, one per path, dated: the subagent path's resume held 3 of 3 on
+  its first adversarial run; the inline path failed the stop-and-confirm
+  criterion on both of its two. The offer already said what *survives* an
+  interruption — a file versus session todos. What it did not say is that
+  only one of the two was ever put under test, and that the other one failed.
+  A partner choosing between them is choosing between a measured behavior and
+  an unmeasured one, and now the offer says which is which. The recommendation
+  line's `Source:` label was widened to match: general practice for the
+  sizing advice, this project's own runs for the resuming difference.
+
 ### Changed
 
 - **Step 1 of the ladder: the confirmation requirement moved out of prose and
