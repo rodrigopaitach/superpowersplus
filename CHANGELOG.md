@@ -31,6 +31,28 @@ References below name them so a claim here can be traced there.
   did not look" must not render identically. The reviewer is deliberately not
   made to audit this — it runs at step 8, one step *before* the gate, so charging
   it would be charging a future event.
+- **The brainstorming spec-review loop has a ceiling and an escalation.** It
+  said to fix every blocking issue and re-dispatch, with no bound, against a
+  reviewer carrying three blocking sections and twenty-five individual blocking
+  verdicts — a fix satisfying one can trip another, and each round costs a fresh
+  subagent. Capped at **three rounds**, and the number is derived rather than
+  picked: the task loop's five exist because rounds 4–5 swap in a fresh
+  implementer on a more capable model, an escalation this loop does not have, so
+  it matches the constant-actor final fix wave, which is three. At the cap the
+  open blockers go to the human partner in the escalation shape with the options
+  and their cost — accept with the gap declared, rewrite the section, or stop.
+  A blocking issue that reappears after being fixed escalates immediately
+  regardless of the round: two reviewer rules are colliding, and further rounds
+  only re-run the collision. The Process Flow carries the cap too, so the
+  flowchart and the prose in one file do not disagree — the divergence `plus.24`
+  had to repair.
+
+### Known gaps
+
+- `skills/writing-plans/SKILL.md` carries the identical uncapped sentence for
+  the plan reviewer — "Fix every blocking issue the reviewer returns, then
+  re-dispatch." Same defect, deliberately left for its own change rather than
+  bundled here.
 
 ## [1.4.0] - 2026-08-03
 

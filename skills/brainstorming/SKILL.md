@@ -53,6 +53,8 @@ digraph brainstorming {
     "Write design doc" [shape=box];
     "Dispatch spec reviewer\nsubagent" [shape=box];
     "Reviewer approves?" [shape=diamond];
+    "Round = 3, or a fixed\nblocker came back?" [shape=diamond];
+    "Escalate the open blockers\n(escalation shape)" [shape=box];
     "Present pending decisions\n(escalation shape, one message)" [shape=box];
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
@@ -73,7 +75,11 @@ digraph brainstorming {
     "User approves design?" -> "Write design doc" [label="yes"];
     "Write design doc" -> "Dispatch spec reviewer\nsubagent";
     "Dispatch spec reviewer\nsubagent" -> "Reviewer approves?";
-    "Reviewer approves?" -> "Write design doc" [label="blocking issues"];
+    "Reviewer approves?" -> "Round = 3, or a fixed\nblocker came back?" [label="blocking issues"];
+    "Round = 3, or a fixed\nblocker came back?" -> "Write design doc" [label="no, fix and\nre-dispatch"];
+    "Round = 3, or a fixed\nblocker came back?" -> "Escalate the open blockers\n(escalation shape)" [label="yes"];
+    "Escalate the open blockers\n(escalation shape)" -> "Write design doc" [label="rewrite the section"];
+    "Escalate the open blockers\n(escalation shape)" -> "Present pending decisions\n(escalation shape, one message)" [label="accept, gap declared in\n## Assumptions to Confirm"];
     "Reviewer approves?" -> "Present pending decisions\n(escalation shape, one message)" [label="yes"];
     "Present pending decisions\n(escalation shape, one message)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
@@ -205,6 +211,30 @@ an assumption. Say so in `## Assumptions to Confirm`, with what you tried.
 After writing the spec document, dispatch a spec document reviewer subagent using the template at `skills/brainstorming/spec-document-reviewer-prompt.md`. Do NOT review it inline yourself.
 
 Fix every blocking issue the reviewer returns, then re-dispatch. Recommendations are advisory.
+
+**Three review rounds maximum.** A round is one fix pass plus one re-dispatch.
+Three and not five: the task loop's five exist because rounds 4–5 change the
+actor — a fresh implementer on a more capable model, at
+`skills/subagent-driven-development/SKILL.md`. This loop declares no such
+escalation; the same prompt reads the same document every round, so nothing
+about round four differs from round three. Its match is the final fix wave,
+constant-actor and capped at three, in
+`skills/subagent-driven-development/references/final-review.md`.
+
+**At the cap, escalate — do not open a fourth round.** In the escalation shape
+below: what is still blocking, why three rounds did not close it, and the
+options with their cost — accept the spec with the gap declared in
+`## Assumptions to Confirm`, rewrite the section the findings keep landing in,
+or stop here. Three rounds that did not converge is a finding about the spec,
+and hiding it behind a fourth round spends a subagent to report the same thing
+later.
+
+**A blocking issue that returns after being fixed escalates immediately,
+whatever the round.** It means two of the reviewer's rules are pulling against
+each other — every fix satisfies one and breaks the other — and rounds cannot
+settle that, because each one re-runs the collision. Name the two rules and the
+statement caught between them, and take it to your partner. Waiting for the cap
+buys two more subagents and the same message.
 
 **User Review Gate:**
 After the spec review loop passes, **present every decision the spec leaves
