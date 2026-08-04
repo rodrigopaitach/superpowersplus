@@ -147,9 +147,9 @@ e.g. `AC4 Refresh rotates the token`, `IR2 Concurrent refreshes rotate
 once`. A task with no spec criterion is scope you invented while planning.]
 
 **Files:**
-- Create: `src/auth/verify.py`
-- Modify: `src/auth/middleware.py:123-145`
-- Test: `tests/auth/test_verify.py`
+- Create: `exact/path/to/file.py`
+- Modify: `exact/path/to/existing.py:123-145`
+- Test: `tests/exact/path/to/test.py`
 
 **Interfaces:**
 - Consumes: [what this task uses from earlier tasks — exact signatures]
@@ -161,38 +161,38 @@ once`. A task with no spec criterion is scope you invented while planning.]
 the spec's ids and never a task's — the audit reads one table by spec id and
 another by task label, and the same string in both is how it conflates them.]
 - TN.1: [one observable behavior, stated so a `file:line` citation can settle
-  it] — test: `tests/auth/test_verify.py::test_rejects_expired`
-- TN.2: [next behavior] — test: `tests/auth/test_verify.py::test_logs_one_rejection`
+  it] — test: `tests/exact/path/to/test.py::test_first_behavior`
+- TN.2: [next behavior] — test: `tests/exact/path/to/test.py::test_next_behavior`
 
 - [ ] **Step 1: Write the failing test**
 
 ```python
-def test_rejects_expired():
-    assert verify_token(expires_at=0, now=1) is False
+def test_first_behavior():
+    assert total([]) == 0
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `pytest tests/auth/test_verify.py::test_rejects_expired -v`
-Expected: FAIL — `NameError: name 'verify_token' is not defined`
+Run: `pytest tests/exact/path/to/test.py::test_first_behavior -v`
+Expected: FAIL — `NameError: name 'total' is not defined`
 
 - [ ] **Step 3: Write minimal implementation**
 
 ```python
-def verify_token(expires_at, now):
-    return expires_at > now
+def total(items):
+    return sum(items)
 ```
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `pytest tests/auth/test_verify.py::test_rejects_expired -v`
+Run: `pytest tests/exact/path/to/test.py::test_first_behavior -v`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add tests/auth/test_verify.py src/auth/verify.py
-git commit -m "feat(auth): reject expired tokens"
+git add tests/exact/path/to/test.py exact/path/to/file.py
+git commit -m "feat: <what this task delivers>"
 ```
 ````
 

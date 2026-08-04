@@ -70,6 +70,57 @@ References below name them so a claim here can be traced there.
     rule must not soften: a new dependency needs approval, and generalizing
     beyond the criterion is invented scope.
 
+### Removed
+
+- **Three examples that taught how to solve a problem, not what shape to
+  produce.** Each cut names the interface that is now the sole source of that
+  form, because an example removed without one reads as a rule deleted.
+  - **`subagent-driven-development/references/example-workflow.md` (95
+    lines).** A full session transcript. **Audited rule by rule before
+    cutting** — all 24 things it demonstrated are specified elsewhere: setup
+    and the ledger line formats in `subagent-driven-development/SKILL.md`
+    (`:158`, `:168`, `:221`, `:304`, `:336`, `:494`, `:525`); the implementer's
+    obligations in `implementer-prompt.md` (`:26`, `:35`, `:101`); the review
+    output in `task-reviewer-prompt.md` (`:172`, `:180`, `:183`) and
+    `re-review-prompt.md` (`:66`, `:83`, `:89`); the two final gates in
+    `references/final-review.md` (`:10`, `:36`) and
+    `final-branch-audit/SKILL.md:285`. **The one thing only a transcript
+    carried was the sequence, and the `dot` graph already holds it** — which
+    is what made the file cuttable rather than merely long.
+    Sources now: the `**Command:** … **exit:** … **counts:** …` block for the
+    test evidence, the `Criterion | Test file:line | Assertion` table for
+    coverage, `ADDRESSED / NOT ADDRESSED` for the fix round, and the graph for
+    the order. **One mapping from the plan for this cut did not survive
+    contact with the file:** the three severity buckets were named as a source
+    and the transcript never showed them — it renders task-reviewer output,
+    which has no buckets. The buckets remain `code-reviewer.md`'s own.
+  - **The second copy of the Stripe example**, in
+    `writing-plans/plan-document-reviewer-prompt.md`. Two copies of a worked
+    idempotency call taught idempotency; what the reviewer needs is the shape
+    of the citation comment. The copy in `writing-plans/SKILL.md` stays — the
+    author writes the plan, the reviewer checks it — and the reviewer now
+    describes the shape and points at it.
+  - **The domain in the task-structure walkthrough.** It had been made
+    concrete (`verify_token`, `src/auth/`, expiry semantics) and taught auth
+    to whoever was planning something else. **Reverting to the upstream
+    generic collided with a rule this fork added:** "a code block is code that
+    runs as shown", and upstream's `function(input)` / `return expected` does
+    not run. Resolved by keeping the code runnable and removing the domain —
+    paths return to slots, the code became a two-line function with no
+    subject. The interface line that distinguishes a slot from runnable code
+    is untouched.
+
+- **Declared divergence from the general advice — the first one recorded
+  here.** `requesting-code-review/code-reviewer.md` keeps the worked example
+  of a grouped finding, against the guidance that examples narrow the space an
+  agent explores. It stays because **its reason was measured**: `1.3.0` was
+  written after two rounds of review of one plan each surfaced one member of
+  the same root cause, and the example was added then with the finding that an
+  example showing only isolated findings teaches isolated reporting. Observed
+  defect beats general principle — that is the same filter every other rule in
+  this fork is held to, and applying it selectively when it argues *for*
+  keeping something would make it a preference rather than a rule.
+
 ### Fixed
 
 - **The read-only reconciliation reached two of the three review prompts.**

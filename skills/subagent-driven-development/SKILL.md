@@ -561,10 +561,4 @@ Use superpowersplus:finishing-a-development-branch.
 | "Every task was reviewed, the final audit is redundant" | Task reviews see one diff each. None of them can see a task that was never dispatched — that task has no diff and no reviewer. |
 | "The audit gap is minor, I'll park it now" | Parking happens after fix wave 3, never before. FALSE COMPLETION is never parked at all. |
 
-## Example Workflow
-
-A full session transcript — setup, a clean task, a task through a fix round,
-and both final gates — is in
-[references/example-workflow.md](references/example-workflow.md). Open it to
-see the loop's shape end to end.
 

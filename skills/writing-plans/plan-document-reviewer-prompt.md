@@ -66,16 +66,10 @@ Subagent (general-purpose):
     A language mismatch between the comment and the code below it is a
     citation that was never read.
 
-    Example of a step that passes:
-
-        // stripe@19.1.0 — https://docs.stripe.com/api/idempotent_requests
-        // create(params, options): the idempotency key is a request option,
-        // never a param — RequestOptions.idempotencyKey sets the
-        // Idempotency-Key header.
-        const intent = await stripe.paymentIntents.create(
-          {amount: 1200, currency: 'brl'},
-          {idempotencyKey: key},
-        );
+    A passing step carries the source as a comment directly above the call:
+    the pinned `name@version`, the vendor doc URL for that version, and the
+    one fact the call rests on. That is the shape the plan author was given,
+    in this skill's `SKILL.md` under "Code That Calls a Dependency".
 
     ## What to Check
 
