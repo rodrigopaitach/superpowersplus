@@ -42,6 +42,39 @@ References below name them so a claim here can be traced there.
 
 ### Changed
 
+- **`subagent-driven-development/SKILL.md` moved 107 lines into two reference
+  files, and neither is reachable by accident.** 564 → 457 lines, counted
+  before and after. What left is what a run does not need until it needs it,
+  and every trigger stayed behind — moving one would have made this a deletion
+  rather than a move.
+  - **`references/resuming.md`.** How to read a ledger, how to check it against
+    `git log`, the three-step resume, the two shapes where the ledger itself is
+    what is missing, and what each side costs when the plan's `**Execution:**`
+    field names the other path. Every line of it is conditional on the run
+    being a resumption; a first run reads none of it. The Setup bullet now
+    carries the condition out loud — a ledger is there, **or** the branch
+    already has commits you did not make this session — and sends you to the
+    file *before dispatching anything*. The `**Execution:**` field is still
+    read in the same paragraph it was read in before, with only the cost
+    analysis moved: that reader shipped one release ago and is not weakened
+    here.
+  - **`references/process-graph.md`.** The process digraph. `## The Process`
+    keeps a short prose summary of the order and an instruction to open the
+    graph before dispatching Task 1.
+    **Checked before moving it, because the graph became load-bearing when
+    `references/example-workflow.md` was cut above:** with the transcript gone
+    the graph is the only *picture* of the flow — but not its only record. The
+    order is independently carried by the section headings that run it,
+    `### 1. Dispatch the implementer` through `## Finish`, in execution order.
+    What only the graph shows is where each loop returns to and where each cap
+    breaks out, which is why the pointer is an instruction rather than a
+    mention.
+    The relative paths inside the node labels were rewritten for the new depth
+    (`./implementer-prompt.md` → `../implementer-prompt.md`); they are strings
+    inside a `dot` block that no gate resolves, so they were checked by hand.
+  Five `file:line` anchors elsewhere in this file pointed into the moved region.
+  All five were re-measured against the new file, never shifted by arithmetic.
+
 - **Three rules that were written more than once are now written once.**
   Measured across the fork's own additions, not estimated; net **−26 lines**
   across six files, and every rule that governs behavior survives at its
@@ -198,7 +231,7 @@ References below name them so a claim here can be traced there.
   alone.
   **Closed with the existing mechanism, and no new state was invented.**
   `parked with a ruling` already exists — the task loop's breaker at
-  `subagent-driven-development/SKILL.md:499-509` — and it already has the four
+  `subagent-driven-development/SKILL.md:392-402` — and it already has the four
   properties `1.4.0` established for a state that leaves the FAIL computation:
   declared by a named actor, terminal, checked rather than believed, and
   riding beside the verdict as a named pending item. What was missing is that
@@ -1161,9 +1194,11 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   in another language the agent describes plan-reading correctly and the grep
   misses it — observed verbatim as *"Ler o plano e a spec citada"*. Not caused
   by this project: the expected phrasing is present in
-  `skills/subagent-driven-development/SKILL.md:152` and in the upstream's copy
-  at the same positions, and our only edit there was additive
-  (`read plan` → `read plan + cited spec`), which still matches. Confirmed
+  `skills/subagent-driven-development/SKILL.md:118` and in the upstream's copy
+  of the same instruction, and our only edit to it was additive
+  (`read plan` → `read plan + cited spec`, now in
+  `skills/subagent-driven-development/references/process-graph.md`), which
+  still matches. Confirmed
   failing at `b6b68ef` in a clean detached clone. Left unfixed: it is an
   upstream test, and rewriting its regex would make it assert something other
   than what it asserts. Treat a failure here as uninformative until the
@@ -1242,11 +1277,11 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   |------|-------|
   | The three-round cap | `brainstorming/SKILL.md:213`, `writing-plans/SKILL.md:363`, `executing-plans/SKILL.md:111` |
   | A blocker that returns escalates immediately | `brainstorming/SKILL.md:223`, `writing-plans/SKILL.md:372`, `executing-plans/SKILL.md:122` |
-  | The four rules guarding the dispute protocol | `subagent-driven-development/SKILL.md:457` |
+  | The four rules guarding the dispute protocol | `subagent-driven-development/SKILL.md:350` |
   | Progress reports at four fixed points | `subagent-driven-development/SKILL.md:27`, `executing-plans/SKILL.md:16` |
   | "No gate can check any of this" | `subagent-driven-development/SKILL.md:48`, `executing-plans/SKILL.md:36` |
-  | The `**Execution:**` field and its two readers | `writing-plans/SKILL.md:98`, `subagent-driven-development/SKILL.md:224`, `executing-plans/SKILL.md:63` |
-  | The resume routes | `subagent-driven-development/SKILL.md:187`, `executing-plans/SKILL.md:40` |
+  | The `**Execution:**` field and its two readers | `writing-plans/SKILL.md:98`, `subagent-driven-development/SKILL.md:121`, `executing-plans/SKILL.md:63` |
+  | The resume routes | `subagent-driven-development/references/resuming.md` (reached from `SKILL.md:111`), `executing-plans/SKILL.md:40` |
 
   **Cutting them by argument would be the same move that wrote them.** They
   were reasoned into existence and would be reasoned out of it, with nothing

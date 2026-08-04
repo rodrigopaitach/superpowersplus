@@ -79,78 +79,15 @@ digraph when_to_use {
 
 ## The Process
 
-```dot
-digraph process {
-    rankdir=TB;
+Setup, then per task: dispatch an implementer, review the task, fix-loop what
+the review opened, log the completion. After the last one, two whole-branch
+gates and a fix wave. Each of those is a section below, in the order it runs.
 
-    subgraph cluster_per_task {
-        label="Per Task";
-        "Dispatch implementer subagent (./implementer-prompt.md)" [shape=box];
-        "Implementer asks questions?" [shape=diamond];
-        "Answer questions, provide context" [shape=box];
-        "Implementer implements, tests, commits, self-reviews" [shape=box];
-        "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)" [shape=box];
-        "Spec ✅ and quality approved?" [shape=diamond];
-        "Finding conflicts with plan text?" [shape=diamond];
-        "Ask human partner which governs" [shape=box];
-        "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model" [shape=box];
-        "Dispatch scoped re-review (./re-review-prompt.md): verdict fixes, rule disputes" [shape=box];
-        "All findings addressed?" [shape=diamond];
-        "R = 5?" [shape=diamond];
-        "Adjudicate each open finding" [shape=box];
-        "Any load-bearing finding?" [shape=diamond];
-        "STOP: report BLOCKED to human partner" [shape=box];
-        "Park findings in ledger with rulings" [shape=box];
-        "Append completion to ledger, mark todo complete" [shape=box];
-    }
-
-    "Setup: worktree, ledger check, read plan + cited spec, pre-flight review" [shape=box];
-    "More tasks remain?" [shape=diamond];
-    "Dispatch conformance audit (superpowersplus:final-branch-audit)" [shape=box];
-    "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" [shape=box];
-    "Audit gaps + review findings all addressed?" [shape=diamond];
-    "Fix wave iteration I of 3?" [shape=diamond];
-    "Fix wave iteration: ONE fix dispatch (audit gaps + findings), one scoped re-review" [shape=box];
-    "Adjudicate residuals (FALSE COMPLETION is never parked)" [shape=box];
-    "Final gates clean: delete this plan's workspace" [shape=box];
-    "Use superpowersplus:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
-
-    "Setup: worktree, ledger check, read plan + cited spec, pre-flight review" -> "Dispatch implementer subagent (./implementer-prompt.md)";
-    "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer asks questions?";
-    "Implementer asks questions?" -> "Answer questions, provide context" [label="yes"];
-    "Answer questions, provide context" -> "Implementer implements, tests, commits, self-reviews";
-    "Implementer asks questions?" -> "Implementer implements, tests, commits, self-reviews" [label="no"];
-    "Implementer implements, tests, commits, self-reviews" -> "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)";
-    "Generate review package, dispatch task reviewer (./task-reviewer-prompt.md)" -> "Spec ✅ and quality approved?";
-    "Spec ✅ and quality approved?" -> "Append completion to ledger, mark todo complete" [label="yes"];
-    "Spec ✅ and quality approved?" -> "Finding conflicts with plan text?" [label="no"];
-    "Finding conflicts with plan text?" -> "Ask human partner which governs" [label="yes"];
-    "Ask human partner which governs" -> "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model";
-    "Finding conflicts with plan text?" -> "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no"];
-    "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model" -> "Dispatch scoped re-review (./re-review-prompt.md): verdict fixes, rule disputes";
-    "Dispatch scoped re-review (./re-review-prompt.md): verdict fixes, rule disputes" -> "All findings addressed?";
-    "All findings addressed?" -> "Append completion to ledger, mark todo complete" [label="yes"];
-    "All findings addressed?" -> "R = 5?" [label="no"];
-    "R = 5?" -> "Fix round R of 5 (fix, or DISPUTE with file:line): R≤3 resume implementer; R≥4 fresh implementer, more capable model" [label="no - next round"];
-    "R = 5?" -> "Adjudicate each open finding" [label="yes - breaker trips"];
-    "Adjudicate each open finding" -> "Any load-bearing finding?";
-    "Any load-bearing finding?" -> "STOP: report BLOCKED to human partner" [label="yes"];
-    "Any load-bearing finding?" -> "Park findings in ledger with rulings" [label="no"];
-    "Park findings in ledger with rulings" -> "Append completion to ledger, mark todo complete";
-    "Append completion to ledger, mark todo complete" -> "More tasks remain?";
-    "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
-    "More tasks remain?" -> "Dispatch conformance audit (superpowersplus:final-branch-audit)" [label="no"];
-    "Dispatch conformance audit (superpowersplus:final-branch-audit)" -> "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)";
-    "Dispatch final code reviewer (../requesting-code-review/code-reviewer.md)" -> "Audit gaps + review findings all addressed?";
-    "Audit gaps + review findings all addressed?" -> "Final gates clean: delete this plan's workspace" [label="yes"];
-    "Audit gaps + review findings all addressed?" -> "Fix wave iteration I of 3?" [label="no"];
-    "Fix wave iteration I of 3?" -> "Fix wave iteration: ONE fix dispatch (audit gaps + findings), one scoped re-review" [label="I < 3 - next iteration"];
-    "Fix wave iteration I of 3?" -> "Adjudicate residuals (FALSE COMPLETION is never parked)" [label="I = 3 - cap"];
-    "Fix wave iteration: ONE fix dispatch (audit gaps + findings), one scoped re-review" -> "Audit gaps + review findings all addressed?";
-    "Adjudicate residuals (FALSE COMPLETION is never parked)" -> "Final gates clean: delete this plan's workspace";
-    "Final gates clean: delete this plan's workspace" -> "Use superpowersplus:finishing-a-development-branch";
-}
-```
+**The whole flow drawn as one graph is in
+[references/process-graph.md](references/process-graph.md) — open it before
+dispatching Task 1.** The sections below run in order but cannot show where a
+loop returns to or where a cap breaks out; that is what the graph is for, and
+it is the only place the shape is visible at once.
 
 ## Setup
 
@@ -169,54 +106,14 @@ a ledger file, not only in todos.
   directory (`<repo-root>/.superpowers/sdd/<plan-basename>/`), home to
   every artifact for THIS plan: ledger, briefs, reports, review packages.
   Another plan's directory is never yours to read or write.
-- Check for this plan's ledger at `<workspace>/progress.md`. If its first
-  line names your plan file, tasks with a `Task <N>: complete` line are DONE
-  — do not re-dispatch them; resume at the first task without one. A task
-  whose last line is a fix round is mid-loop: resume the loop at the next
-  round. A ledger whose first line names a different plan file — or a stray
-  ledger at the old flat path `.superpowers/sdd/progress.md` — is another
-  plan's progress: leave it in place and start your own, fresh.
-- Create the ledger with its identity as the first line:
-  `# SDD ledger — plan: <plan file path>`.
-- The ledger is your recovery map: the commits it names exist in git even
-  when your context no longer remembers creating them. After compaction,
-  trust the ledger and `git log` over your own recollection.
-- `git clean -fdx` will destroy the workspace (it's git-ignored scratch); if
-  that happens, recover from `git log`.
-
-**Resuming after an interruption.** A ledger that already carries completion
-lines is not an edge case — compaction, a closed session and a killed
-harness all land here. Before dispatching anything:
-
-1. **Find the resume point** by the ledger rules above.
-2. **Check it against `git log`.** The ledger claims; git holds. A completion
-   line naming commits the branch does not contain, or commits past the last
-   line the ledger recorded, means the two disagree — and what git contains
-   is what happened.
-3. **Present the resume point to your human partner and wait for one answer**,
-   in the escalation shape above: what the branch already has, where you would
-   resume, what resuming in the wrong place costs (a second implementation of
-   finished work, at full task price, or a gap every later task builds on),
-   and your recommendation with that evidence behind it. This is the one
-   moment continuous execution does not cover — everything after it rests on
-   a starting point nobody checked.
-
-Two shapes the rules above cannot describe, because in both the ledger is
-what is missing:
-
-- **No ledger, but the branch has work.** The workspace is git-ignored
-  scratch and `git clean -fdx` deletes it. Never read an absent ledger as an
-  unstarted plan — that is exactly the re-dispatch of a completed sequence
-  this section exists to prevent. Rebuild from `git log` and the plan: map
-  commits to tasks by what they touch, write only the lines the commits
-  support, and mark each reconstructed one as reconstructed. Then present it
-  as above — a mapping you inferred is the kind of claim your partner should
-  get the chance to correct.
-- **A task with no completion line and no report.** The interruption landed
-  inside a dispatch. Read the task's report file — an implementer that got
-  partway may have written it — and the commits since that task's BASE,
-  before deciding anything. An implementer that committed and then lost its
-  controller leaves work that a blind re-dispatch duplicates or reverts.
+- Check for this plan's ledger at `<workspace>/progress.md`. **A ledger is
+  there, or the branch already carries commits you did not make this session?
+  You are resuming: read [references/resuming.md](references/resuming.md) and
+  follow it before dispatching anything.** How to read the ledger, how to
+  check it against `git log`, and the two shapes where the ledger is the thing
+  missing are all there.
+- No ledger and no prior work: create it with its identity as the first line,
+  `# SDD ledger — plan: <plan file path>`, and continue here.
 
 Read the plan once, note its context and Global Constraints, and create a
 todo per task.
@@ -224,14 +121,10 @@ todo per task.
 Read the plan header's `**Execution:**` field. It records the path this plan
 was handed to and where its progress was being kept. If it names the inline
 path, you are resuming by a different route than the one it started on — stop
-and present that before dispatching anything, in the escalation shape above.
-What it costs either way: switching to the recorded path gives up the ledger
-and the per-task reviews, and buys continuity with a record that does not
-outlive the session it was written in — which is gone, or you would not be
-here. Continuing here starts a ledger from nothing, so what is already done has
-to be established from `git log` and the plan by the resume route above, never
-assumed. A plan with no such field is a plan written before the field existed;
-that is not an error — proceed, and write the path you are taking into it.
+and present that before dispatching anything, in the escalation shape above,
+with what each side costs from `references/resuming.md`. A plan with no such
+field is a plan written before the field existed; that is not an error —
+proceed, and write the path you are taking into it.
 
 Read the spec the plan cites in its `**Source spec:**` header line. The plan
 is a translation of it, and the conformance audit at the end traces one
