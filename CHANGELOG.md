@@ -72,7 +72,7 @@ References below name them so a claim here can be traced there.
 
 ### Removed
 
-- **Three examples that taught how to solve a problem, not what shape to
+- **Four examples that taught how to solve a problem, not what shape to
   produce.** Each cut names the interface that is now the sole source of that
   form, because an example removed without one reads as a rule deleted.
   - **`subagent-driven-development/references/example-workflow.md` (95
@@ -109,6 +109,20 @@ References below name them so a claim here can be traced there.
     paths return to slots, the code became a two-line function with no
     subject. The interface line that distinguishes a slot from runnable code
     is untouched.
+  - **The worked example in `brainstorming/coverage-map.md` (33 lines).** A
+    completed coverage map for a sign-in feature, plus one clarifying question
+    asked end to end. **Audited item by item before cutting** — twelve rules
+    demonstrated, all twelve specified above it in the same file: ten
+    categories in order and named without their gloss (`:28`), every state
+    carrying its reason (`:36`, `:41`), each outcome's destination (`:99-101`),
+    the question's form (`:57`, `:59`), the recommendation line and its source
+    order (`:73`, `:83`), the options table and "yes" accepting (`:84-85`).
+    Sources now: the empty `Category | State | Where it landed` table at
+    `coverage-map.md:105-106` for the map, and `Question form`,
+    `The recommendation, and where it comes from` and `Presentation` for the
+    question. The one thing the example carried that no rule states is the
+    `(recommended)` label inside an option row; the rest was a sign-in tutorial
+    read by whoever was specifying something else.
 
 - **Declared divergence from the general advice — the first one recorded
   here.** `requesting-code-review/code-reviewer.md` keeps the worked example
@@ -1263,6 +1277,18 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   Coverage Matrix`, a specific artifact that is genuinely absent, which is why
   that one was a defect and this one is a note. Revisit if a bug-fix run is
   ever observed stalling on it. (opened [Unreleased])
+
+- **Four mentions in the frozen history now name a file that no longer
+  exists**, and they stay. `references/example-workflow.md` was cut above;
+  `docs/PLUS-CHANGELOG-historico.md` describes it at `:778`, `:965`, `:1011`
+  and `:1026`. Three reasons, all of which have to hold and do: the file is
+  frozen — `check-frozen-history.sh` refuses any change to it, by design; each
+  mention describes correctly what was true when it was written, which is what
+  a historical record is for; and nothing goes red, because all four are
+  backticked prose rather than markdown links, so `check-links.sh` never
+  resolves them. Measured, not assumed: the full static suite is green with the
+  file gone. **This is a known consequence, not a finding — do not re-report it
+  as a broken reference.** (opened [Unreleased])
 
 Most rules in this project are reasoned rather than measured. Two have been
 measured, over four adversarial runs: the external-content rule, which held on

@@ -105,39 +105,6 @@ The map enters the spec as a compact table under `## Coverage Map`:
 | Category | State | Where it landed |
 |----------|-------|-----------------|
 
-## Example
-
-A spec for adding sign-in to an internal tool. The completed map:
-
-| Category | State | Where it landed |
-|----------|-------|-----------------|
-| Functional scope and behavior | Resolved | AC1, AC2, AC3 |
-| Domain and data model | Resolved | AC4 (`User`, identified by email, no soft delete) |
-| Interaction flow | Resolved | AC5, AC6 (error and loading states); IR2 (empty state) |
-| Non-functional attributes | Resolved | IR1 (session lifetime), IR3 (failed-attempt logging) |
-| Integrations and external dependencies | Clear | No external identity provider — auth is local, `src/auth/session.ts:12` |
-| Edge cases and failures | Resolved | IR4 (concurrent sessions per user) |
-| Constraints and tradeoffs | Clear | Single constraint, stated in the request: no new dependencies |
-| Terminology | Resolved | "Session" means the server-side record, not the cookie — AC4 |
-| Completion signals | Clear | Every AC and IR states one observable behavior |
-| Placeholders and vague adjectives | Deferred | "Reasonable rate limiting" — the number belongs to the plan, where the endpoint exists. `## Assumptions to Confirm`, item 2 |
-
-And one question end to end, as it was asked:
-
-> **How long should someone stay signed in before they have to enter their password again?**
->
-> Too short and people get signed out in the middle of what they were doing and stop trusting the tool. Too long and a laptop left on a train stays signed in for weeks.
->
-> **Recommend: 14 days, renewed on each use** — that is what this project already does for the admin area, at `src/auth/session.ts:47` (`maxAge: 14 * 24 * 60 * 60`). Source: a pattern already in your project.
->
-> | Option | What you get |
-> |--------|--------------|
-> | 14 days, renewed on use (recommended) | Same behavior as the admin area — one rule to explain, one to maintain. Active users effectively never sign in again |
-> | 8 hours, fixed | Everyone signs in each morning. Safest of the three; also the one people complain about |
-> | 90 days | Almost nobody ever sees the sign-in screen. A stolen or shared laptop keeps working for three months |
->
-> Reply "yes" to take the recommendation.
-
 ## Red flags
 
 | What you are about to do | What it actually is |
