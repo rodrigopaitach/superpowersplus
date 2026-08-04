@@ -15,7 +15,7 @@ References below name them so a claim here can be traced there.
 
 - **The third uncapped correction loop now has a ceiling.** `executing-plans`
   Step 3 said "audit FAIL: fix and re-run" with no limit — the same anatomy
-  `1.6.0` closed in `brainstorming` and `writing-plans`. Three, derived and not
+  `1.5.0` closed in `brainstorming` and `writing-plans`. Three, derived and not
   copied: the task loop's five exist because rounds 4–5 change the actor, and
   this path cannot change actor at all — it is the path for when subagents are
   not available, and it names no dispatch and no model anywhere, so the same
