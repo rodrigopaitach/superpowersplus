@@ -13,6 +13,31 @@ References below name them so a claim here can be traced there.
 
 ### Added
 
+- **A `SKILL.md` line ceiling, declared in `CLAUDE.md` and enforced by
+  `scripts/check-skill-size.sh`.** 500 lines, and **the number is borrowed, not
+  measured here**: "Keep SKILL.md body under 500 lines for optimal performance"
+  is Anthropic's own guidance, vendored in this checkout at
+  `skills/writing-skills/anthropic-best-practices.md:241` and repeated at
+  `:1109` as a checklist item nothing ever ran. What this project adds is the
+  running of it. No stricter number was invented: there is no measurement here
+  that would justify one, and picking a tighter limit by argument is the move
+  the measurement queue below refuses on seven other rules.
+  **Proved against the real tree, not only in the tests:** at the commit before
+  the extraction above it exits 1 and names
+  `subagent-driven-development/SKILL.md` at 564 lines; at the commit after, it
+  exits 0. `tests/hooks/test-check-skill-size.sh` covers nine cases, and three
+  mutations were run against it — dropping the empty-glob guard, turning the
+  comparison into `-ge`, and emptying the exemption list — each killing exactly
+  one distinct assertion.
+  **One file is exempt and it is the only entry:** `writing-skills/SKILL.md` is
+  679 lines here and 679 upstream, and the only two lines this fork changed in
+  it are the namespace rename. Cutting it means rewriting a file the upstream
+  maintains, for a gain that belongs in somebody else's repository.
+  Wired into `githooks/pre-commit` and into CI as its own step, since a gate
+  only in the hook does not run in a clone that never set `core.hooksPath`.
+  It cost the hook 15 ms — no interpreter starts, just `wc` — taking it from
+  41 ms to 62 ms end to end, and `CLAUDE.md`'s cost table now says so.
+
 - **The changelog gate now checks the edit, not only that one happened.**
   `scripts/check-changelog.sh` proved an entry was staged and never that it was
   correct. One session produced three defects it could not have caught: an entry

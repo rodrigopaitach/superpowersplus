@@ -24,3 +24,7 @@ repo_root="$(git rev-parse --show-toplevel)"
 # commit that renames it. Measured at 30ms for the whole repository, which is
 # cheaper than the bookkeeping that ignoring it would need.
 "$repo_root/scripts/check-links.sh" >/dev/null
+
+# Whole-tree for the same reason, and cheap for a different one: no
+# interpreter starts, just wc over fifteen files.
+"$repo_root/scripts/check-skill-size.sh"

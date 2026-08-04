@@ -63,6 +63,9 @@ jobs:
       - name: Tests (link checker)
         run: tests/hooks/test-check-links.sh
 
+      - name: Tests (skill size gate)
+        run: tests/hooks/test-check-skill-size.sh
+
       - name: Tests (codex plugin sync)
         run: tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 
@@ -141,6 +144,12 @@ jobs:
       # removed, which can happen in a commit that touches no scanned file.
       - name: Local links and anchors resolve
         run: scripts/check-links.sh
+
+      # Whole-tree like the link checker, and for the same reason it is not
+      # range-scoped: a SKILL.md is over the ceiling or it is not, regardless
+      # of which commit put it there.
+      - name: Every SKILL.md stays under the line ceiling
+        run: scripts/check-skill-size.sh
 
       # Integrity of the adversarial records only. The tests themselves are
       # never re-run here: they dispatch a live agent, cost tokens, and are
