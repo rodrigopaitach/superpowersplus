@@ -55,11 +55,23 @@ References below name them so a claim here can be traced there.
   **The anchor check resolves in a cascade because this changelog's path
   convention is genuinely mixed** — measured across the 35 anchors already in
   the file: repo-root (`scripts/check-docs-sync.sh:14-15`), relative to
-  `skills/` (`writing-plans/SKILL.md:51`), and bare basenames the surrounding
-  sentence disambiguates (`code-reviewer.md:118`). It tries the three in that
-  order. A basename several files share — `SKILL.md:63` matches fifteen — is
+  `skills/` (`writing-plans/SKILL.md:51`), relative to the directory being
+  discussed (`references/final-review.md:56`, written from inside a skill), and
+  bare basenames the surrounding sentence disambiguates
+  (`code-reviewer.md:118`). It tries the first two in that order, then falls
+  back to a suffix match against the tracked files, which covers the last two
+  at once. Matching several files — `SKILL.md:63` matches fifteen — is
   **skipped, not failed**: a gate that guessed there would go red on entries
   that are correct, and a gate red for a wrong reason gets bypassed.
+  **The fourth convention was missing on the first push and CI caught it**,
+  which is the gate working in the direction nobody wants. The pre-commit hook
+  sees one commit's diff; CI puts the whole pushed range in the index, so
+  `references/final-review.md:56` — written in an earlier commit, before this
+  gate existed, and correct the whole time — reached the check for the first
+  time and was charged as a file that does not exist. The resolver now ends in
+  a suffix match, and an anchor that matches several files is skipped there too
+  rather than reported as missing. Four cases added, two of them verified red
+  against the script as it was.
   **Two limits are declared in the script's own header** so nobody assumes
   coverage that is not there: an anchor pointing at the wrong line of a file
   that exists and is long enough still passes, because deciding that needs the

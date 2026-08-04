@@ -28,11 +28,14 @@
 #   * An anchor pointing at the WRONG LINE of a file that exists and is long
 #     enough. Deciding that needs the claim's meaning, which is a reader's job.
 #     `path.md:40` where the subject moved to :44 passes this gate.
-#   * An anchor whose path is a bare basename shared by several files —
-#     `SKILL.md:63` matches fifteen. Those are skipped, not failed: this
-#     changelog's path convention is genuinely mixed (repo-root, relative to
-#     skills/, and bare basenames resolved by the surrounding sentence), and a
-#     gate that guessed would go red on correct entries.
+#   * An anchor matching several files — `SKILL.md:63` matches fifteen. Those
+#     are skipped, not failed: this changelog's path convention is genuinely
+#     mixed (repo-root; relative to skills/; relative to the directory being
+#     discussed, as in `references/final-review.md`; and bare basenames
+#     resolved by the surrounding sentence), and a gate that guessed would go
+#     red on correct entries. That fourth convention is why the resolver ends
+#     in a suffix match: charging it as nonexistent took CI red on 1.7.0, on an
+#     anchor written before this gate existed and correct the whole time.
 #   * Prose accuracy of any kind. This is a structural check, not a reviewer.
 #
 # Usage:
@@ -61,12 +64,16 @@ structure_fail() {
     structure_failed=1
 }
 
-# resolve_anchor <path> — echo the file the anchor names, or nothing.
+# resolve_anchor <path> — echo every tracked file the anchor could name.
 # Cascade, in the order a reader resolves them: as written from the repository
-# root, then under skills/, then a unique basename anywhere tracked. Several
-# basename matches is ambiguous and resolves to nothing, which the caller skips.
+# root, then under skills/, then anywhere tracked whose path ENDS with it. That
+# last step covers two conventions at once — a bare basename (`SKILL.md`) and a
+# path relative to the directory of the file being discussed
+# (`references/final-review.md`, read from inside a skill). Counting the
+# matches is the caller's job: one is a resolution, several is an ambiguity to
+# skip, none is a claim to charge.
 resolve_anchor() {
-    local path="$1" matches
+    local path="$1"
     if [ -f "$path" ]; then
         printf '%s\n' "$path"
         return
@@ -75,12 +82,7 @@ resolve_anchor() {
         printf '%s\n' "skills/$path"
         return
     fi
-    case "$path" in
-        */*) return ;;
-    esac
-    matches="$(git ls-files "*/$path" "$path" 2>/dev/null || true)"
-    [ "$(printf '%s' "$matches" | grep -c .)" -eq 1 ] || return
-    printf '%s\n' "$matches"
+    git ls-files "*/$path" 2>/dev/null || true
 }
 
 check_structure() {
@@ -115,20 +117,27 @@ check_structure() {
 
     # (c) Anchors added by this commit name a real file, long enough to have
     #     the line. See the header for what this deliberately does not check.
-    local added anchor path line target length
+    local added anchor path line matches count target length
     added="$(git diff --cached -U0 -- "$CHANGELOG" | grep '^+' | grep -v '^+++' || true)"
     while IFS= read -r anchor; do
         [ -n "$anchor" ] || continue
         path="${anchor%:*}"
         line="${anchor##*:}"
         line="${line%%-*}"
-        target="$(resolve_anchor "$path")"
-        if [ -z "$target" ]; then
+        matches="$(resolve_anchor "$path")"
+        count="$(printf '%s' "$matches" | grep -c . || true)"
+        if [ "$count" -eq 0 ]; then
+            # Only a path-shaped anchor is specific enough to charge. A bare
+            # name matching nothing is prose, not a claim about a file.
             case "$path" in
                 */*) structure_fail "anchor names a file that does not exist: $anchor" ;;
             esac
             continue
         fi
+        # Several: `SKILL.md` names fifteen files. Picking one needs the
+        # sentence around the anchor, so this skips instead of guessing.
+        [ "$count" -eq 1 ] || continue
+        target="$matches"
         length="$(wc -l <"$target")"
         if [ "$line" -gt "$length" ]; then
             structure_fail \

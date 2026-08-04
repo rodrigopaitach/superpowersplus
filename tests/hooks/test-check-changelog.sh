@@ -261,6 +261,45 @@ assert_structure 1 "a unique basename past the end blocks" "$TWO_HEADINGS" '## [
 
 - **B.** text' deep/dir/only.md
 
+# A path relative to the directory of the file being discussed — the fourth
+# convention this changelog uses, and the one that took CI red on 1.7.0:
+# `references/final-review.md:56`, written from inside a skill, resolved at
+# neither the repository root nor under skills/ and was charged as a file that
+# does not exist.
+#
+# Two of the four were verified RED against the script as it was: the
+# resolution and the ambiguity skip. The other two assert that the fix did not
+# widen the hole — they exit 1 either way, and they are here as regression
+# guards, not as evidence.
+assert_structure 0 "a path relative to a skill directory resolves" "$TWO_HEADINGS" '## [Unreleased]
+
+- **A.** see `references/detail.md:2`
+
+## [1.0.0] - 2026-01-01
+
+- **B.** text' skills/demo/references/detail.md
+assert_structure 1 "that path is range-checked like any other" "$TWO_HEADINGS" '## [Unreleased]
+
+- **A.** see `references/detail.md:99`
+
+## [1.0.0] - 2026-01-01
+
+- **B.** text' skills/demo/references/detail.md
+assert_structure 1 "a path-shaped anchor naming nothing still blocks" "$TWO_HEADINGS" '## [Unreleased]
+
+- **A.** see `references/ghost.md:1`
+
+## [1.0.0] - 2026-01-01
+
+- **B.** text' skills/demo/references/detail.md
+assert_structure 0 "an ambiguous path-shaped anchor is skipped, not charged" "$TWO_HEADINGS" '## [Unreleased]
+
+- **A.** see `references/detail.md:99`
+
+## [1.0.0] - 2026-01-01
+
+- **B.** text' skills/one/references/detail.md skills/two/references/detail.md
+
 echo "Test: (c) the declared limits stay open, so nobody assumes coverage"
 assert_structure 0 "an ambiguous basename is skipped, not failed" "$TWO_HEADINGS" '## [Unreleased]
 
