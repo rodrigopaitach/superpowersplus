@@ -13,6 +13,22 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The read-only reconciliation reached two of the three review prompts.**
+  When the fork made reviewers run the tests instead of trusting a report, two
+  prompts got the clause that settles the collision with read-only —
+  `task-reviewer-prompt.md:92` and `re-review-prompt.md:70`, "run the tests,
+  never checkout, stash, or reset". `code-reviewer.md` got the run-the-suite
+  rule without it, and its read-only paragraph is the *widest* of the three:
+  upstream text that explicitly sanctions `git worktree add` for reading
+  another revision. Run-the-tests plus a sanctioned second worktree is a route
+  to a tree where the suite is greener, and nothing said not to take it.
+  Now applied equally. **Added as its own bullet inside the fork's test block
+  rather than by rewriting the upstream paragraph** — that paragraph is a file
+  the upstream maintains, and a line changed there is a conflict at the next
+  rebase for no gain.
+  This is one rule applied unevenly, not the four review scopes converging:
+  `CLAUDE.md` keeps those distinct by what each one *runs*, and none of the
+  three may leave the checkout it was handed.
 - **A legitimate bug fix could not close the TDD checklist.**
   `test-driven-development/SKILL.md` required every test to map to a row in
   **the plan's** Test Coverage Matrix and closed with "Can't check all boxes?
@@ -58,7 +74,7 @@ References below name them so a claim here can be traced there.
   alone.
   **Closed with the existing mechanism, and no new state was invented.**
   `parked with a ruling` already exists — the task loop's breaker at
-  `subagent-driven-development/SKILL.md:495-505` — and it already has the four
+  `subagent-driven-development/SKILL.md:499-509` — and it already has the four
   properties `1.4.0` established for a state that leaves the FAIL computation:
   declared by a named actor, terminal, checked rather than believed, and
   riding beside the verdict as a named pending item. What was missing is that

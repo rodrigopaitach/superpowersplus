@@ -54,6 +54,11 @@ Subagent (general-purpose):
       one; otherwise derive it from the runner config (`package.json`
       scripts, `Makefile`, `pytest.ini`, the CI workflow) and say which you
       ran and where you found it.
+    - **Running them keeps you read-only: never checkout, stash, or reset to
+      get a suite to pass.** The paragraph above allows a separate temporary
+      worktree for *reading* another revision; it is not a route to a tree
+      where the tests are greener. You run the tests on the range you were
+      handed, and a failure there is the finding.
     - Does this range delete, rename away, or newly mark any test as
       skipped, `xfail`, or `.only`? A green run over a shrunken suite is not
       a green branch — report it as an issue on its own.
