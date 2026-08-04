@@ -59,8 +59,14 @@ built on it.
 
 ### Step 1: Load and Review Plan
 1. Ensure an isolated workspace: use superpowersplus:using-git-worktrees to create one or verify the existing one
-2. Read plan file
-3. Read the plan header's `**Execution:**` field — it records the path this
+2. Run `git log` and `git status` before reading anything else. **Commits on
+   this branch you did not make this session, or uncommitted work in the
+   tree? You are resuming: go back to "Resuming after an interruption" above
+   and follow it before executing anything.** There is no ledger on this
+   path, so those two commands are the whole record — nothing else here will
+   tell you the plan was already started.
+3. Read plan file
+4. Read the plan header's `**Execution:**` field — it records the path this
    plan was handed to and where its progress was being kept. If it names the
    subagent path, you are resuming by a different route than the one it started
    on: read the ledger it names first, whatever else follows — it may still be
@@ -76,18 +82,18 @@ built on it.
    in: "no subagents here" and "I did not check" read the same otherwise. A plan
    with no such field is a plan written before the field existed — not an error:
    proceed, and write the path you are taking into it.
-4. Read the spec the plan cites — the plan is a translation of it, and
+5. Read the spec the plan cites — the plan is a translation of it, and
    superpowersplus:final-branch-audit traces one against the other at the end. A
    plan citing no spec is an entry blocker: get the path from your human
    partner before Step 2, never start and sort it out later.
-5. Review critically - identify any questions or concerns about the plan
-6. Check every task carries acceptance criteria verifiable by located
+6. Review critically - identify any questions or concerns about the plan
+7. Check every task carries acceptance criteria verifiable by located
    evidence — one observable behavior each, settled by a `file:line`
    citation, naming its covering test (the format superpowersplus:writing-plans
    specifies). A task whose criteria no citation could settle is a concern:
    the audit in Step 3 will charge exactly what the plan wrote.
-7. If concerns: Raise them with your human partner before starting
-8. If no concerns: Create todos for the plan items and proceed
+8. If concerns: Raise them with your human partner before starting
+9. If no concerns: Create todos for the plan items and proceed
 
 ### Step 2: Execute Tasks
 
