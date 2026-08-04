@@ -59,6 +59,8 @@ npm test --prefix tests/brainstorm-server
 bash tests/shell-lint/test-lint-shell.sh
 tests/hooks/test-session-start.sh
 tests/hooks/test-check-changelog.sh
+tests/hooks/test-check-links.sh
+tests/hooks/test-check-skill-size.sh
 tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 tests/antigravity/run-tests.sh
 tests/codex/test-marketplace-manifest.sh
@@ -94,9 +96,22 @@ live in [`CLAUDE.md`](CLAUDE.md) and are enforced, not merely stated:
 | Content changes carry their `CHANGELOG.md` entry | `## Preparing a commit` |
 | Preparation and `git commit` are never chained in one `&&` | `## Preparing a commit` |
 
-The last two are enforced by `scripts/check-changelog.sh` in the pre-commit
-hook and again by CI over the pushed range, so a clone that skipped
-`core.hooksPath` still gets caught.
+**The changelog row is enforced** by `scripts/check-changelog.sh`, in the
+pre-commit hook and again by CI over the pushed range, so a clone that skipped
+`core.hooksPath` still gets caught. **The chaining row is not, and cannot be**
+— no script can see that an edit and a `git commit` were two separate
+decisions rather than one `&&`. It is a rule you follow, and the reason it is
+written down is that it was broken once and the failure was invisible: a
+`CHANGELOG.md` edit failed on a wrong anchor, the commit and the push ran
+anyway.
+
+**Five gates run locally** — `check-docs-sync.sh`, `check-frozen-history.sh`,
+`check-changelog.sh`, `check-links.sh` and `check-skill-size.sh`, all wired
+into `githooks/pre-commit`. **CI runs those five plus
+`check-skill-behavior-records.sh` and `lint-shell.sh`** over the pushed range.
+The records check has no local counterpart because it never fails on a normal
+edit — it guards the shape of `tests/skill-behavior/`, which most commits do
+not touch.
 
 What superpowersplus adds is recorded in [`CHANGELOG.md`](CHANGELOG.md).
 Documentation in [Portuguese](docs/README.pt-BR.md) and
