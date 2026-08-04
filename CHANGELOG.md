@@ -1216,10 +1216,58 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   points at a commit on `main`; if that ever stops being the practice, this
   becomes a real gap and the trigger needs revisiting. (opened 1.3.1)
 
+- **Seven rules are precaution with no recorded symptom, and the queue to
+  settle them is measurement, not deletion.** A category sweep classified every
+  rule this fork added: those that constrain what may be *asserted*, those that
+  name a *state*, and those that decide something an agent would decide well on
+  its own. The third group splits by provenance — born of a defect observed in
+  real use, or born of our own caution — and only the second half is a
+  candidate for anything. These seven are that half:
+
+  | Rule | Where |
+  |------|-------|
+  | The three-round cap | `brainstorming/SKILL.md:213`, `writing-plans/SKILL.md:363`, `executing-plans/SKILL.md:111` |
+  | A blocker that returns escalates immediately | `brainstorming/SKILL.md:223`, `writing-plans/SKILL.md:372`, `executing-plans/SKILL.md:122` |
+  | The four rules guarding the dispute protocol | `subagent-driven-development/SKILL.md:457` |
+  | Progress reports at four fixed points | `subagent-driven-development/SKILL.md:27`, `executing-plans/SKILL.md:16` |
+  | "No gate can check any of this" | `subagent-driven-development/SKILL.md:48`, `executing-plans/SKILL.md:36` |
+  | The `**Execution:**` field and its two readers | `writing-plans/SKILL.md:98`, `subagent-driven-development/SKILL.md:224`, `executing-plans/SKILL.md:63` |
+  | The resume routes | `subagent-driven-development/SKILL.md:187`, `executing-plans/SKILL.md:40` |
+
+  **Cutting them by argument would be the same move that wrote them.** They
+  were reasoned into existence and would be reasoned out of it, with nothing
+  measured either way — and a rule removed on an argument is as unfalsifiable
+  as one added on one. The honest conversion is an adversarial test in
+  `tests/skill-behavior/`: build the situation where following the rule is
+  inconvenient, and see whether it holds. That is what moved the escalation
+  format from *reasoned* to *measured*, and it corrected the rule twice on the
+  way.
+  **The resume routes and the progress reports go first** — the two most
+  expensive in lines and the two easiest to build a fixture for, since both
+  have an observable output. "No gate can check any of this" is the hardest and
+  may be untestable by construction, which is itself worth recording.
+  **One rule was considered for this queue and excluded: the declared
+  preference about the visual companion** (`brainstorming/SKILL.md:282`). It
+  came from the owner asking for it in so many words, not from our caution. A
+  stated preference is already the evidence; an adversarial test would measure
+  whether the agent obeys an instruction, which is not what these tests are
+  for. (opened [Unreleased])
+
+- **`test-driven-development/SKILL.md:331` asks for a report that may not
+  exist, and was left alone deliberately.** Found while closing the checklist
+  item next to it: the box reads "the exact test command and its output are in
+  your report", and on a bug fix run from the main session there is no report
+  file — that artifact belongs to the subagent path. It was not changed because
+  "your report" is generic and resolves to the message to the partner, which is
+  a real thing that always exists. Its neighbour named `the plan's Test
+  Coverage Matrix`, a specific artifact that is genuinely absent, which is why
+  that one was a defect and this one is a note. Revisit if a bug-fix run is
+  ever observed stalling on it. (opened [Unreleased])
+
 Most rules in this project are reasoned rather than measured. Two have been
 measured, over four adversarial runs: the external-content rule, which held on
 its first run, and the escalation format, which took two corrections and three
-runs to hold.
+runs to hold. Seven more are queued for measurement in the gap above.
 
 [1.6.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.6.0
 [1.5.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.5.0
