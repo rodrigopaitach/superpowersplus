@@ -9,6 +9,67 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [1.7.3] - 2026-08-04
+
+Documentation only. No skill body, script, hook or manifest changed behavior —
+the version exists because three documents were describing a repository that
+had moved past them.
+
+### Changed
+
+- **The showcase documentation described one measurement as if it were the
+  only one.** `docs/README.pt-BR.md` and `docs/README.en.md` cited the
+  escalation format's third run and nothing else. Four rules have now been
+  measured across eight runs, and each gets a line with its verdict and a link
+  to its record: external content is data (passed first run), the escalation
+  format (1/3 → 2/3 → 3/3), resuming on the subagent path (3/3), and resuming
+  on the inline path (FAIL → FAIL → PASS). **No transcript was copied in** —
+  the link is the record, and duplicating it is how two versions of the same
+  run start to disagree.
+  The transferable finding is now stated once outside the changelog: **a rule
+  that guards the next act is followed; a rule that describes a standard is
+  not, even when the agent reads it, cites it, and says out loud that it is
+  breaking it.** Three measured series produced it and it is the most portable
+  thing this repository has learned.
+  `README.md` at the root was **not touched**: it was checked and it claims no
+  count — its one reference to a record is the source of a condensed
+  transcript and is still exact. Every line edited there is a rebase conflict.
+
+- **`docs/testing.md` described `tests/skill-behavior/` in the singular** — "a
+  fixture, the input carrying it, and a recorded result per rule". Measured:
+  five `FIXTURE-*.md`, six `RESULT-*.md`, a `spec-under-test.md` and the
+  directory's `README.md`, and one rule can carry several records. The policy
+  that governs them was practice and not written anywhere: **these never run
+  in CI**, because each dispatches a live agent, and what CI checks instead is
+  the *integrity* of the records — verified against what
+  `check-skill-behavior-records.sh` actually asserts, not against memory.
+
+### Fixed
+
+- **`CONTRIBUTING.md:97-99` carried a false claim about enforcement** *(line
+  numbers as the file read before this version).* It said
+  the last two rows of its release-discipline table are "enforced by
+  `scripts/check-changelog.sh`". The changelog row is. The row saying
+  preparation and `git commit` are never chained is not, and **no script can
+  check it** — a shell cannot see that two commands were two decisions. The
+  only `&&` in that script is at `check-changelog.sh:99` and it is ordinary
+  shell. Now stated as a rule you follow, with the invisible failure that
+  produced it.
+
+- **Two of the four suites in `tests/hooks/` were missing from
+  `CONTRIBUTING.md`'s test list** — `test-check-links.sh` and
+  `test-check-skill-size.sh`, both of which CI runs. A contributor following
+  that list ran a subset and had no way to know.
+
+- **`docs/testing.md`'s list of CI gates omitted `check-skill-size.sh`.**
+  Found while editing the section above it.
+
+- **The gate counts are now written down**, because nothing stated them and
+  they are not the same number: **five** run locally in `githooks/pre-commit`,
+  and CI runs those five plus `check-skill-behavior-records.sh` and
+  `lint-shell.sh`. The records check has no local counterpart on purpose —
+  most commits do not touch the directory it guards.
+
 ## [1.7.2] - 2026-08-04
 
 **Why PATCH.** The confirmation requirement is not new and was not removed —
@@ -1633,6 +1694,7 @@ to hold; and the resume route, which split — the subagent half held on its fir
 run, the inline half failed twice and held on the third after one structural
 change. Six remain queued in the gap above.
 
+[1.7.3]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.3
 [1.7.2]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.2
 [1.7.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.1
 [1.7.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.0
