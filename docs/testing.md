@@ -29,10 +29,25 @@ and is non-deterministic, so re-running one is a human decision:
 
 - `tests/claude-code/` — agent-behavior tests driving Claude Code sessions.
 - `tests/explicit-skill-requests/` — multi-turn and skill-name-prompted tests.
-- `tests/skill-behavior/` — the adversarial records: a fixture, the input
-  carrying it, and a recorded result per rule. Read its `README.md` before
-  adding one. CI checks that these records are well formed; it never re-runs
-  the tests behind them.
+- `tests/skill-behavior/` — the adversarial records. Today: **five
+  `FIXTURE-*.md`, six `RESULT-*.md`**, one `spec-under-test.md` carrying a
+  fixture into a reviewer, and the directory's own `README.md`, which is the
+  entry point — read it before adding anything. A rule can hold more than one
+  result: the escalation format has three, one per run, and the inline resume
+  route has one file covering its three runs.
+
+  **These never run in CI, and that is deliberate.** Each one dispatches a
+  live agent: real tokens, minutes of wall clock, and a non-deterministic
+  answer. A suite like that on every push is a suite people learn to ignore
+  when it goes red for the third time on nothing. **What CI checks is the
+  integrity of the records** — `check-skill-behavior-records.sh` verifies that
+  every `FIXTURE-*` says in its own text that it is a test fixture, so nobody
+  mistakes one for a real document, and that every `RESULT-*` carries a
+  **Date** row, a **Model** row, a **Verdict** row and at least one
+  per-criterion `PASS`/`FAIL`/`PARTIAL`. A record missing those cannot be
+  compared against a later run, which is the only thing it exists for.
+  **Re-running one is a human decision**, taken when the rule under test
+  changes — not something that happens on a push.
 
 A suite CI does not run blocks nothing. If you add a suite, add its CI step.
 
@@ -40,7 +55,7 @@ A suite CI does not run blocks nothing. If you add a suite, add its CI step.
 
 The same scripts the pre-commit hook runs, applied to the pushed range:
 `lint-shell.sh`, `check-docs-sync.sh`, `check-changelog.sh`,
-`check-frozen-history.sh`, `check-links.sh` and
+`check-frozen-history.sh`, `check-links.sh`, `check-skill-size.sh` and
 `check-skill-behavior-records.sh`.
 
 ## Two caveats that have cost debugging time
