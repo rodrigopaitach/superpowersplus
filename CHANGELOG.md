@@ -872,6 +872,22 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   than what it asserts. Treat a failure here as uninformative until the
   assertion is language-agnostic.
 
+- **The fork's own cross-references inside `skills/` are covered by no gate.**
+  `check-links.sh` scans the institutional files at the root plus `docs/` and
+  stops there, and that boundary was drawn when `skills/` was mostly upstream
+  text whose relative links move at every rebase — a gate there would report
+  churn this project did not cause. The premise has aged: this fork now creates
+  its own references inside `skills/`, and they are exactly the ones a rebase
+  will not touch and nothing will catch. Deliberately not closed now, because
+  the fix is not "extend the scan" but "tell a link this project owns from one
+  the upstream owns", and that costs a real design against a problem that has
+  not yet occurred. One consequence is already accepted on purpose: the path
+  convention inside `skills/brainstorming/SKILL.md` is mixed — the escalation
+  block uses a relative path so it stays byte-identical to the other five
+  carriers, while the rest of the file cites from the repository root. Identity
+  across the carriers is worth more than consistency within one file. Revisit
+  when the number of the fork's own references in `skills/` grows, or the first
+  time one of them breaks in a rebase.
 - **The TDD Iron Law has no verifying face.** The implementer prompt requires a
   test before code, but no verifier can prove the order: the only record that
   the test came first is a report section written by the party being audited. A
