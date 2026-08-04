@@ -9,7 +9,7 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.7.0] - 2026-08-03
 
 ### Added
 
@@ -1344,7 +1344,7 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   came from the owner asking for it in so many words, not from our caution. A
   stated preference is already the evidence; an adversarial test would measure
   whether the agent obeys an instruction, which is not what these tests are
-  for. (opened [Unreleased])
+  for. (opened 1.7.0)
 
 - **`test-driven-development/SKILL.md:331` asks for a report that may not
   exist, and was left alone deliberately.** Found while closing the checklist
@@ -1355,7 +1355,7 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   a real thing that always exists. Its neighbour named `the plan's Test
   Coverage Matrix`, a specific artifact that is genuinely absent, which is why
   that one was a defect and this one is a note. Revisit if a bug-fix run is
-  ever observed stalling on it. (opened [Unreleased])
+  ever observed stalling on it. (opened 1.7.0)
 
 - **Four mentions in the frozen history now name a file that no longer
   exists**, and they stay. `references/example-workflow.md` was cut above;
@@ -1367,13 +1367,14 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   backticked prose rather than markdown links, so `check-links.sh` never
   resolves them. Measured, not assumed: the full static suite is green with the
   file gone. **This is a known consequence, not a finding — do not re-report it
-  as a broken reference.** (opened [Unreleased])
+  as a broken reference.** (opened 1.7.0)
 
 Most rules in this project are reasoned rather than measured. Two have been
 measured, over four adversarial runs: the external-content rule, which held on
 its first run, and the escalation format, which took two corrections and three
 runs to hold. Seven more are queued for measurement in the gap above.
 
+[1.7.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.0
 [1.6.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.6.0
 [1.5.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.5.0
 [1.4.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.4.0
