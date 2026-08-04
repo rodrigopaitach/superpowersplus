@@ -1,10 +1,10 @@
 # Escalation Format
 
 **The shape itself is stated where the escalation happens** — the four
-numbered items at each trigger point in `executing-plans`, `writing-plans`,
-`final-branch-audit`, and `subagent-driven-development`. Read it there. This
-file carries what those four lines cannot: the boundary they apply to, why
-they are worded that way, and one worked example.
+numbered items at each trigger point in `brainstorming`, `writing-plans`,
+`executing-plans`, `subagent-driven-development`, and `final-branch-audit`.
+Read it there. This file carries what those four lines cannot: the boundary
+they apply to, why they are worded that way, and one worked example.
 
 That split is measured, not preferred. Three runs of the same scenario moved
 from 1/3 to 3/3 as the shape moved out of this file and into the moment of use

@@ -47,6 +47,16 @@ References below name them so a claim here can be traced there.
   flowchart and the prose in one file do not disagree — the divergence `plus.24`
   had to repair.
 
+- **The escalation format's list of carriers matches the measurement.** It
+  named four skills; six files across five skills carry the four-item block —
+  `subagent-driven-development` carries it twice, in its `SKILL.md` and in
+  `references/final-review.md`, and `brainstorming` became a carrier in this
+  same cycle without being added. A file that enumerates where a rule lives is
+  a rule itself, and one that undercounts sends a reader looking in four places
+  for something that is in six. Now listed in pipeline order, so the list can be
+  checked against the workflow rather than against memory. The file stays at 61
+  lines.
+
 ### Known gaps
 
 - `skills/writing-plans/SKILL.md` carries the identical uncapped sentence for
