@@ -92,6 +92,33 @@ After the last task, before finishing: the conformance audit is mandatory.
 - Verdict FAIL: the branch is not done. Fix the NOT DELIVERED rows and
   re-run the audit. Never resolve a gap by editing the plan to stop asking.
 
+**Three audit rounds maximum.** A round is one fix pass plus one re-run of the
+audit. Three and not the task loop's five: those five exist because rounds 4–5
+change the actor — a fresh implementer on a more capable model, at
+`../subagent-driven-development/SKILL.md`. This path has no such escalation and
+cannot acquire one; it is the path for when subagents are not available, and it
+names no dispatch and no model anywhere. The same actor fixes and re-audits
+every round, reading the same plan against the same branch, so nothing about
+round four differs from round three. Its match is the constant-actor final fix
+wave, capped at three, in
+`../subagent-driven-development/references/final-review.md`.
+
+**At the cap, escalate — do not open a fourth round.** In the escalation shape
+below: which rows are still NOT DELIVERED, why three rounds did not close them,
+and the options with their cost — finish with the gaps recorded and named to
+your partner, implement what the audit keeps asking for as its own task, or go
+back to the plan, which is where a criterion nothing can satisfy usually comes
+from. Three rounds that did not converge is a finding about the plan, not about
+the last fix.
+
+**A row that returns to NOT DELIVERED after being fixed escalates immediately,
+whatever the round.** Either two criteria are pulling against each other —
+every fix satisfies one and breaks the other — or it is a criterion no evidence
+could settle, which is the concern Step 1 asks you to raise before starting.
+Rounds settle neither, because each one re-runs the same collision. Name the
+criterion, the fix that moved it, and what moved it back, and take it to your
+partner.
+
 ### Step 4: Complete Development
 
 After all tasks complete and verified, and the audit PASSes:

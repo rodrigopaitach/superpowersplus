@@ -9,6 +9,24 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The third uncapped correction loop now has a ceiling.** `executing-plans`
+  Step 3 said "audit FAIL: fix and re-run" with no limit — the same anatomy
+  `1.6.0` closed in `brainstorming` and `writing-plans`. Three, derived and not
+  copied: the task loop's five exist because rounds 4–5 change the actor, and
+  this path cannot change actor at all — it is the path for when subagents are
+  not available, and it names no dispatch and no model anywhere, so the same
+  agent fixes and re-audits every round. Its structural match is the
+  constant-actor final fix wave, also three. The two sibling rules came with
+  it: at the cap the open rows go to the partner in the escalation shape rather
+  than into a fourth round, and a row that returns to NOT DELIVERED after being
+  fixed escalates immediately, because either two criteria collide or the
+  criterion is one no evidence can settle — and rounds only re-run the
+  collision.
+
 ## [1.6.0] - 2026-08-03
 
 ### Added
