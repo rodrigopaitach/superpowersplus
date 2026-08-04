@@ -9,6 +9,29 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **Step 1 of the ladder: the confirmation requirement moved out of prose and
+  into the action it governs.** `executing-plans/SKILL.md:101-114` now opens
+  Step 2 with a resume lock — three numbered acts before the first edit: stop,
+  present the reconstructed resume point in the escalation shape, wait for the
+  answer. The paragraph at `:40-57` keeps the reasoning (how to reconstruct,
+  why being wrong costs the partner either way) and now points at the lock
+  instead of carrying the requirement itself; the sentence that used to end
+  *"and get your partner's confirmation before executing anything"* is gone
+  from there. **No duplication:** the prose names the lock, the lock does not
+  restate the prose.
+  **The hypothesis being tested is distance.** Two runs failed this criterion
+  with the requirement sitting at the end of a paragraph above `## The
+  Process`, while the next act on this path is an edit. On the subagent path
+  the equivalent rule sits in Setup guarding a dispatch, and it held 3 of 3.
+  This moves the inline requirement to the same structural position: the door
+  the agent has to walk through.
+  **Applied and not yet measured at the time of this line.** Its measurement
+  is below, and if the result is not there, the step is unproven.
+
 ## [1.7.1] - 2026-08-04
 
 **Why PATCH and not MINOR.** The only skill edit in this version is a routing
@@ -53,6 +76,7 @@ first, and the candidate cause named and marked untested.
 
 - **The resume route on the inline path failed twice, on the same criterion,
   and the second run was worse than the first.** `executing-plans/SKILL.md:51-52`
+  *(as it read at 1.7.1; the requirement moved into Step 2 afterwards)*
   asks a resuming agent to "state which tasks you believe are done and the
   evidence for each, and get your partner's confirmation before executing
   anything". Two runs, two different fixtures, same model, same neutral
@@ -83,7 +107,8 @@ first, and the candidate cause named and marked untested.
   designed to test it** — it is not a finding, and the next round needs a
   design, not another attempt.
 
-- **A routing step at `skills/executing-plans/SKILL.md:62`, and the
+- **A routing step at `skills/executing-plans/SKILL.md:62` *(line 63 after
+  1.7.1)*, and the
   remeasurement DEMOLISHED the diagnosis that produced it.** The step mirrors
   what the subagent path's Setup already does: run `git log` and `git status`
   before reading anything else, and treat work you did not do this session as
@@ -1448,12 +1473,12 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
 
   | Rule | Where |
   |------|-------|
-  | The three-round cap | `brainstorming/SKILL.md:213`, `writing-plans/SKILL.md:363`, `executing-plans/SKILL.md:117` |
-  | A blocker that returns escalates immediately | `brainstorming/SKILL.md:223`, `writing-plans/SKILL.md:372`, `executing-plans/SKILL.md:128` |
+  | The three-round cap | `brainstorming/SKILL.md:213`, `writing-plans/SKILL.md:363`, `executing-plans/SKILL.md:133` |
+  | A blocker that returns escalates immediately | `brainstorming/SKILL.md:223`, `writing-plans/SKILL.md:372`, `executing-plans/SKILL.md:144` |
   | The four rules guarding the dispute protocol | `subagent-driven-development/SKILL.md:350` |
   | Progress reports at four fixed points | `subagent-driven-development/SKILL.md:27`, `executing-plans/SKILL.md:16` |
   | "No gate can check any of this" | `subagent-driven-development/SKILL.md:48`, `executing-plans/SKILL.md:36` |
-  | The `**Execution:**` field and its two readers | `writing-plans/SKILL.md:98`, `subagent-driven-development/SKILL.md:121`, `executing-plans/SKILL.md:69` |
+  | The `**Execution:**` field and its two readers | `writing-plans/SKILL.md:98`, `subagent-driven-development/SKILL.md:121`, `executing-plans/SKILL.md:70` |
   | The resume route on the inline path — **half of this entry; the subagent half left the queue measured** | `executing-plans/SKILL.md:40` |
 
   **Cutting them by argument would be the same move that wrote them.** They
@@ -1509,7 +1534,7 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   inline path's next act is an edit and its rule sits in prose above the
   process. Untested either way.
   **The obvious repair was tried and measured as not the repair.** A routing
-  step was added at `executing-plans/SKILL.md:62` between the two runs on the
+  step was added at `executing-plans/SKILL.md:63` between the two runs on the
   theory that detection was failing. It was not: both agents opened with the
   same `git log`/`git status` command without it, and both read the whole
   skill file. The step stays as an explicit entry condition; nothing measured

@@ -47,13 +47,14 @@ in the first report above, rather than letting your partner meet it later.
 
 When you do have to resume, reconstruct — do not guess. Read the plan, then
 read `git log` for the branch: commits map to tasks by what they touch and by
-what each task's steps named. Rebuild the todo list from those two sources,
-state which tasks you believe are done and the evidence for each, and get
-your partner's confirmation before executing anything — in the escalation
-shape below, since being wrong costs them either way. Re-running a finished
-task duplicates or reverts work already committed; skipping an unfinished one
-ships a gap that surfaces at the Step 3 audit, after everything downstream was
-built on it.
+what each task's steps named. Rebuild the todo list from those two sources
+and state which tasks you believe are done and the evidence for each.
+**The confirmation this needs is the resume lock at the top of Step 2** —
+that is where it fires, and it fires before the first edit rather than after
+it because being wrong costs your partner either way: re-running a finished
+task duplicates or reverts work already committed, and skipping an unfinished
+one ships a gap that surfaces at the Step 3 audit, after everything
+downstream was built on it.
 
 ## The Process
 
@@ -96,6 +97,21 @@ built on it.
 9. If no concerns: Create todos for the plan items and proceed
 
 ### Step 2: Execute Tasks
+
+**The resume lock — it fires before the first edit, not after.** Step 1's
+check found commits or uncommitted work you did not make this session? Then
+do these three, in order, before touching a file:
+
+1. **STOP.** Edit nothing yet — not one line, not a todo list you intend to
+   act on.
+2. **Present the reconstructed resume point** to your human partner in the
+   escalation shape below: which tasks you believe are done, the evidence for
+   each, and where you would resume.
+3. **Wait for their answer.** The first edit happens after it. Not before,
+   and not alongside a message announcing what you already did.
+
+How to reconstruct, and why being wrong costs your partner either way, is in
+"Resuming after an interruption" above — this lock does not repeat it.
 
 For each task:
 1. Mark as in_progress
