@@ -1,6 +1,6 @@
 {
   "name": "superpowersplus",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "superpowersplus — metodologia de desenvolvimento para agentes de código: spec fundamentada em citação arquivo:linha, matriz de cobertura de testes, revisor de tarefa que reexecuta a suíte e auditoria de conformidade no fim da branch. Obra derivada de Superpowers (Jesse Vincent, MIT).",
   "author": {
     "name": "Rodrigo Lopes Paitach",
