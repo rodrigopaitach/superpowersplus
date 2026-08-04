@@ -93,6 +93,37 @@ escalation-translator subagent specified as the fallback was **not built** —
 three measurements settled that the problem was *when* the check happened, not
 *who* performed it.
 
+### The resume route, on both execution paths
+
+**Rule under test:** what an agent does when it picks up a plan whose
+execution was interrupted. It is two rules, not one — 79 lines in
+`subagent-driven-development/references/resuming.md`, reached from that
+skill's Setup, and 18 lines at `executing-plans/SKILL.md:40-57`. Measuring
+them apart is what showed they were two.
+
+| File | What it is |
+|------|-----------|
+| `FIXTURE-interrupted-run.md` | How the interrupted state is built, the four repos it was built in, and the one-line dispatch |
+| `RESULT-resume-route-subagent.md` | The subagent path: one run, 3 of 3 |
+| `RESULT-resume-route-inline.md` | The inline path: three runs, FAIL → FAIL → PASS |
+
+**The subagent path passed on its first run.** It read the ledger, checked it
+against `git log`, located the interruption to the step, escalated, and
+touched nothing.
+
+**The inline path took two failures and one structural change.** Both early
+runs reconstructed the resume point correctly and then executed the rest of
+the plan before saying a word. Run 2 is the one worth reading: it **named the
+rule it was breaking and broke it anyway**, which is a worse result than run
+1's silence — the text reached the agent and lost. The intervention between
+those two runs was aimed at detection and measured as irrelevant: both agents
+opened with the same `git log`/`git status` command before reading any skill.
+Run 3 passed after the confirmation clause moved out of prose and into three
+numbered acts at the top of the step that executes — the same structural
+position the subagent path's rule already had.
+
+Runs 1 and 2 did not amend the rule; recording the failure was the result.
+
 ## What CI does, and does not
 
 CI checks that these records are **well formed** —

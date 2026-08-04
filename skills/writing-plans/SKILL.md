@@ -404,7 +404,7 @@ The offer, filled in from the plan:
 >
 > **Measured, 2026-08-04 — resuming was tested adversarially on both paths, and they did not come back the same:**
 > - **Subagent-driven:** a fresh agent given an interrupted run found the resume point, presented it, and waited without touching a file — 3 of 3 criteria on the first run.
-> - **Inline:** two runs, two fixtures. Both reconstructed the resume point correctly and then executed the rest of the plan before saying anything — the "stop and confirm first" criterion failed both times.
+> - **Inline:** three runs, three fixtures. The first two reconstructed the resume point correctly and then executed the rest of the plan before saying anything. The third stopped and waited, after the confirmation requirement was moved into the step that executes — one run, against two failures.
 >
 > **Recommend: subagent-driven when the plan will not finish in one sitting, or when a task's context would crowd out the next one — roughly, more than a handful of tasks. Inline when the plan is short enough to finish now and you want it done in this conversation.** Source: general practice for the sizing, plus this project's own adversarial runs for the resuming difference above.
 >

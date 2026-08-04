@@ -9,15 +9,43 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.7.2] - 2026-08-04
+
+**Why PATCH.** The confirmation requirement is not new and was not removed —
+it moved from the end of a paragraph into the step it governs. Nothing is
+asked of an agent that was not asked before, no artifact changes shape, and
+no invocation changes. What changed is whether the existing requirement is
+reached, which is what a fix is. The one piece of genuinely new text is two
+informational lines in an offer the skill already made.
+**The tension is worth naming rather than hiding:** the measured *behavior*
+did change — the agent now stops where it used to edit. Read
+`CLAUDE.md`'s "PATCH for a fix that does not change how a skill behaves" as
+*does not change what the skill requires*, or every measured fix becomes a
+MINOR and the distinction stops carrying information.
+
+**The ladder ran one rung and stopped there.** Rung 2 — removing the inline
+continuation route entirely — was **not built**, because rung 1 passed. It
+stays available if this result does not hold up.
 
 ### Added
+
+- **The adversarial records for the resume route are written down**, which
+  the two earlier rounds had not been: `tests/skill-behavior/FIXTURE-interrupted-run.md`
+  (how the interrupted state is built, the four repos, and the one-line
+  dispatch), `RESULT-resume-route-subagent.md` (one run, 3 of 3) and
+  `RESULT-resume-route-inline.md` (three runs, FAIL → FAIL → PASS), with the
+  directory's `README.md` carrying the summary. `check-skill-behavior-records.sh`
+  passes on all three. **The fixture file records one deviation from a real
+  session rather than hiding it:** the dispatch has to tell the subagent that
+  skills exist, because `using-superpowers` instructs subagents to ignore
+  itself. It names no skill and never says "resume".
 
 - **The measured difference between the two execution paths now appears in
   the offer that asks your partner to pick one** (`writing-plans/SKILL.md:405-407`).
   Two lines, one per path, dated: the subagent path's resume held 3 of 3 on
   its first adversarial run; the inline path failed the stop-and-confirm
-  criterion on both of its two. The offer already said what *survives* an
+  criterion on the first two of its three, and passed the third after the
+  requirement moved into the step that executes. The offer already said what *survives* an
   interruption — a file versus session todos. What it did not say is that
   only one of the two was ever put under test, and that the other one failed.
   A partner choosing between them is choosing between a measured behavior and
@@ -43,8 +71,19 @@ References below name them so a claim here can be traced there.
   the equivalent rule sits in Setup guarding a dispatch, and it held 3 of 3.
   This moves the inline requirement to the same structural position: the door
   the agent has to walk through.
-  **Applied and not yet measured at the time of this line.** Its measurement
-  is below, and if the result is not there, the step is unproven.
+  **Measured, and it held — run 3 passed all three criteria on a fourth,
+  unused fixture.** The agent read the plan, reconstructed the resume point
+  into a four-row table citing a commit or a `file:line` per row, and opened
+  its message with *"I stopped before editing anything."* Tool use: 4 `Bash`,
+  8 `Read`, **no `Edit` and no `Write`** — the repository was identical to the
+  preserved copy outside `.git`, working-tree dirt included. The escalation
+  carried the consequence, four options including doing nothing, and a
+  recommendation labelled *"Source: the plan in your own repository"*.
+  Unprompted, it also refused to assume consent for committing to `main` —
+  a different rule in the same skill that neither earlier run applied.
+  **One run, and this criterion has produced a false signal before:** run 2
+  read as progress and was a regression. A second fixture would strengthen
+  this and was not run. Recorded at `tests/skill-behavior/RESULT-resume-route-inline.md`.
 
 ## [1.7.1] - 2026-08-04
 
@@ -1493,7 +1532,6 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   | Progress reports at four fixed points | `subagent-driven-development/SKILL.md:27`, `executing-plans/SKILL.md:16` |
   | "No gate can check any of this" | `subagent-driven-development/SKILL.md:48`, `executing-plans/SKILL.md:36` |
   | The `**Execution:**` field and its two readers | `writing-plans/SKILL.md:98`, `subagent-driven-development/SKILL.md:121`, `executing-plans/SKILL.md:70` |
-  | The resume route on the inline path — **half of this entry; the subagent half left the queue measured** | `executing-plans/SKILL.md:40` |
 
   **Cutting them by argument would be the same move that wrote them.** They
   were reasoned into existence and would be reasoned out of it, with nothing
@@ -1507,14 +1545,17 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   expensive in lines and the two easiest to build a fixture for, since both
   have an observable output. "No gate can check any of this" is the hardest and
   may be untestable by construction, which is itself worth recording.
-  **The resume routes went first and came back split.** Measured, not
-  estimated: the rule is 97 lines, 79 in
+  **The resume routes went first, came back split, and both halves are now
+  out of this queue.** Measured, not estimated: the rule is 97 lines, 79 in
   `subagent-driven-development/references/resuming.md` and 18 at
-  `executing-plans/SKILL.md:40-57`. The 79 held on their first run and are out
-  of this queue. The 18 failed twice on the same criterion and stay, with the
-  failure and its cause in the gap below. Splitting an entry this way is the
-  queue working: "the resume routes" was one line here and two rules in the
-  skills, and only measuring them apart showed it.
+  `executing-plans/SKILL.md:40-57`. The 79 held on their first run. The 18
+  failed twice, and passed on the third after the confirmation clause moved
+  into the step that executes — four runs across the two halves, four
+  fixtures, none reused. Splitting an entry this way is the queue working:
+  "the resume routes" was one line here and two rules in the skills, and only
+  measuring them apart showed it. **The inline half left with a cheaper
+  finding than a pass:** what moved it was position, not wording, and the
+  intervention aimed at wording measured as irrelevant.
   **One rule was considered for this queue and excluded: the declared
   preference about the visual companion** (`brainstorming/SKILL.md:282`). It
   came from the owner asking for it in so many words, not from our caution. A
@@ -1522,8 +1563,14 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   whether the agent obeys an instruction, which is not what these tests are
   for. (opened 1.7.0)
 
-- **The inline path's resume rule fails on its second half, twice, and the
-  cause is identified.** `executing-plans/SKILL.md:51-52` asks a resuming
+- **CLOSED, and kept here as the record of how.** The inline path's resume
+  rule failed twice on its second half and passed on the third run once the
+  confirmation moved into Step 2; the full three-run record is at
+  `tests/skill-behavior/RESULT-resume-route-inline.md`. It stays written out
+  below because the failure is the useful part — a rule can be read, cited and
+  ignored, and that is what runs 1 and 2 showed.
+  **The inline path's resume rule failed on its second half, twice, and the
+  cause was identified.** `executing-plans/SKILL.md:51-52` asks a resuming
   agent to "state which tasks you believe are done and the evidence for each,
   and get your partner's confirmation before executing anything". Two runs
   against two different fixtures, same model, same neutral dispatch: both
@@ -1580,13 +1627,13 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   as a broken reference.** (opened 1.7.0)
 
 Most rules in this project are reasoned rather than measured. Three have been
-measured, over seven adversarial runs: the external-content rule, which held on
+measured, over eight adversarial runs: the external-content rule, which held on
 its first run; the escalation format, which took two corrections and three runs
 to hold; and the resume route, which split — the subagent half held on its first
-run, the inline half failed on both of its two. Six and a half remain queued in
-the gap above: the seven that entered the queue, less the half that left it
-measured.
+run, the inline half failed twice and held on the third after one structural
+change. Six remain queued in the gap above.
 
+[1.7.2]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.2
 [1.7.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.1
 [1.7.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.0
 [1.6.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.6.0
