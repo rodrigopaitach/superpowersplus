@@ -9,6 +9,22 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The review dispatch no longer teaches the base it forbids elsewhere.**
+  `requesting-code-review/SKILL.md` opened with `BASE_SHA=$(git rev-parse
+  HEAD~1)` — the exact form `subagent-driven-development/SKILL.md:229` names as
+  a defect ("silently drops all but the last commit of a multi-commit task")
+  and `scripts/review-package` documents as the reason it takes an explicit
+  BASE. Now `git merge-base <base-branch> HEAD`, with the trap stated in one
+  line above it. The worked example took the same fix: its base came from
+  `git log --oneline | grep "Task 1" | head -1 | awk`, which stops matching the
+  day a commit message is reworded, and now uses the BASE recorded before the
+  task was dispatched — the same `a7981ec` the example already passes to the
+  reviewer four lines later.
+
 ## [1.7.3] - 2026-08-04
 
 Documentation only. No skill body, script, hook or manifest changed behavior —

@@ -27,7 +27,9 @@ Dispatch a code reviewer subagent to catch issues before they cascade. The revie
 
 **1. Get git SHAs:**
 ```bash
-BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
+# Never HEAD~1: a task with more than one commit loses all but the last,
+# silently. Use the BASE recorded before the work started, or the fork point.
+BASE_SHA=$(git merge-base <base-branch> HEAD)
 HEAD_SHA=$(git rev-parse HEAD)
 ```
 
@@ -54,7 +56,9 @@ Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md
 
 You: Let me request code review before proceeding.
 
-BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
+# The BASE recorded before Task 2 was dispatched — not a grep over commit
+# subjects, which stops matching the day a message is reworded.
+BASE_SHA=a7981ec
 HEAD_SHA=$(git rev-parse HEAD)
 
 [Dispatch code reviewer subagent]
