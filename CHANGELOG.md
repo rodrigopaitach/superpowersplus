@@ -13,6 +13,34 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The two process graphs said things their own prose contradicts.** Seven
+  divergences, found by reading each graph against the section it draws.
+  - `brainstorming/SKILL.md`: the escalation at the review cap offers **three**
+    options in prose (`:217-219`) and the graph drew **two** — "stop here" had
+    no edge and therefore no existence. It has a terminal node now. And the
+    spec's **commit** was invisible: the node said "Write design doc" while
+    `:196` requires committing it and `final-branch-audit/SKILL.md:46` blocks
+    the whole traceability pass on an uncommitted spec. The node names both acts.
+  - `references/process-graph.md`: **Minor findings had no route** — the skill
+    says they go to the ledger and never enter the fix loop, and the graph sent
+    every non-approval straight at the loop. **The human's ruling had no route
+    either**: "Ask human partner which governs" fed the fix round
+    unconditionally, so the graph could not express the plan governing. Both are
+    diamonds now. The node reached after adjudicating residuals called itself
+    "Final gates clean" for a state `final-review.md:68-71` defines as the audit
+    **staying at FAIL** — it is "Gates settled — clean, or residuals ruled". And
+    the **resume gate was missing entirely**, though it is the one route in this
+    skill that has been measured (3 of 3,
+    `tests/skill-behavior/RESULT-resume-route-subagent.md`).
+  - That file opened with "The whole flow in one picture", which was false
+    before these fixes and would stay imprecise after them. It now states its
+    real cut: everything except the four implementer statuses of "Handle the
+    report", which are responses to one node's output rather than paths, and are
+    named as the deliberate omission.
+  - Checked after editing, both graphs: every declared node appears in an edge
+    and every node in an edge is declared — 19 nodes in `brainstorming`, 32 in
+    `process-graph`, zero orphans and zero undeclared in each.
+
 - **`executing-plans`' Step 2 carried two lists numbered from 1** — the resume
   lock's three acts and the four steps of the per-task loop, seven lines apart,
   so "step 2" named two different things inside one section. The step now holds

@@ -48,11 +48,12 @@ digraph brainstorming {
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
-    "Write design doc" [shape=box];
+    "Write design doc,\ncommit it" [shape=box];
     "Dispatch spec reviewer\nsubagent" [shape=box];
     "Reviewer approves?" [shape=diamond];
     "Round = 3, or a fixed\nblocker came back?" [shape=diamond];
     "Escalate the open blockers\n(escalation shape)" [shape=box];
+    "Stop here: partner ends\nthe spec at this gap" [shape=doublecircle];
     "Present pending decisions\n(escalation shape, one message)" [shape=box];
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
@@ -70,17 +71,18 @@ digraph brainstorming {
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write design doc" [label="yes"];
-    "Write design doc" -> "Dispatch spec reviewer\nsubagent";
+    "User approves design?" -> "Write design doc,\ncommit it" [label="yes"];
+    "Write design doc,\ncommit it" -> "Dispatch spec reviewer\nsubagent";
     "Dispatch spec reviewer\nsubagent" -> "Reviewer approves?";
     "Reviewer approves?" -> "Round = 3, or a fixed\nblocker came back?" [label="blocking issues"];
-    "Round = 3, or a fixed\nblocker came back?" -> "Write design doc" [label="no, fix and\nre-dispatch"];
+    "Round = 3, or a fixed\nblocker came back?" -> "Write design doc,\ncommit it" [label="no, fix and\nre-dispatch"];
     "Round = 3, or a fixed\nblocker came back?" -> "Escalate the open blockers\n(escalation shape)" [label="yes"];
-    "Escalate the open blockers\n(escalation shape)" -> "Write design doc" [label="rewrite the section"];
+    "Escalate the open blockers\n(escalation shape)" -> "Write design doc,\ncommit it" [label="rewrite the section"];
     "Escalate the open blockers\n(escalation shape)" -> "Present pending decisions\n(escalation shape, one message)" [label="accept, gap declared in\n## Assumptions to Confirm"];
+    "Escalate the open blockers\n(escalation shape)" -> "Stop here: partner ends\nthe spec at this gap" [label="stop here"];
     "Reviewer approves?" -> "Present pending decisions\n(escalation shape, one message)" [label="yes"];
     "Present pending decisions\n(escalation shape, one message)" -> "User reviews spec?";
-    "User reviews spec?" -> "Write design doc" [label="changes requested"];
+    "User reviews spec?" -> "Write design doc,\ncommit it" [label="changes requested"];
     "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
 }
 ```
