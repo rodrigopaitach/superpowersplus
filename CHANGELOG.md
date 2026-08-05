@@ -13,6 +13,19 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The implementer was being graded against a document the dispatch never
+  handed it.** `subagent-driven-development/SKILL.md:216` says a fresh subagent
+  needs "its task, the interfaces it touches, and the global constraints", and
+  the numbered list of what a dispatch contains — four lines above it — named
+  five parts, none of them the constraints. `implementer-prompt.md` had no slot
+  for them either, while asking the implementer to self-check against "the
+  global constraints list edge cases". The reviewer, meanwhile, receives them by
+  slot (`task-reviewer-prompt.md:26`) and reports a happy-path test as
+  **blocking** when they list edge cases (`:128`). One side of that gate had the
+  document and the other did not. The dispatch list now carries them as item 3
+  and the implementer template has the matching slot, so both roles read the
+  same block.
+
 - **A branch that left `executing-plans` by its own escalation had no row in
   the merge gate.** `finishing-a-development-branch`'s Step 2 table charged a
   FAIL two ways: route it into a fix wave, or match the row for residuals *the

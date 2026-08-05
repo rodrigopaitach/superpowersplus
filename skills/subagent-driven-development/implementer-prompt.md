@@ -19,6 +19,14 @@ Subagent (general-purpose):
 
     [Scene-setting: where this fits, dependencies, architectural context]
 
+    ## Global Constraints
+
+    [GLOBAL_CONSTRAINTS — the plan's project-wide requirements, copied
+    verbatim from its Global Constraints section or the spec: exact values,
+    exact formats, and the stated relationships between components. They bind
+    this task exactly like its own acceptance criteria. The task reviewer is
+    handed this same block and charges it — see the self-review below.]
+
     ## Before You Begin
 
     Unclear on the requirements, the acceptance criteria, the approach,

@@ -200,9 +200,12 @@ and fix-round diffs need it.
   requirements. Your dispatch should contain: (1) one line on where this
   task fits in the project; (2) the brief path, introduced as "read this
   first — it is your requirements, with the exact values to use verbatim";
-  (3) interfaces and decisions from earlier tasks that the brief cannot
-  know; (4) your resolution of any ambiguity you noticed in the brief;
-  (5) the report-file path and report contract. Exact values (numbers,
+  (3) the plan's Global Constraints, copied verbatim — the same block the
+  task reviewer is handed, so the implementer is held to what it was given
+  and not to a document it never saw; (4) interfaces and decisions from
+  earlier tasks that the brief cannot know; (5) your resolution of any
+  ambiguity you noticed in the brief; (6) the report-file path and report
+  contract. Exact values (numbers,
   magic strings, signatures, test cases) appear only in the brief. Never
   make a subagent read the whole plan file.
 - **Report file:** name the implementer's report file after the brief
