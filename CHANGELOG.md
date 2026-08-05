@@ -11,6 +11,22 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Five anchors in the measurement queue slid, three of them inside this
+  cycle.** The digraph fix added two lines to `brainstorming/SKILL.md` above the
+  review cap, the Step 2 renumbering added one to `executing-plans/SKILL.md`
+  above the audit cap, and the dispatch-list item added three to
+  `subagent-driven-development/SKILL.md` above the dispute rules. Every queue
+  anchor below each insertion point moved by exactly that much: the three-round
+  cap `213 → 215` and `133 → 134`, the returning-blocker rule `223 → 225` and
+  `144 → 145`, the dispute protocol `350 → 353`. Two of the five landed on
+  lines that read plausibly — `brainstorming:213` is now "Fix every blocking
+  issue the reviewer returns", one line above the cap it claims. This is the
+  second time in three releases (`1.6.0` recorded the first, same mechanism,
+  same file); `check-changelog.sh` cannot catch it, because an anchor whose file
+  exists and is long enough passes by construction.
+
 ### Added
 
 - **The plan reviewer now charges Global Constraints, which nothing verified.**
@@ -1738,9 +1754,9 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
 
   | Rule | Where |
   |------|-------|
-  | The three-round cap | `brainstorming/SKILL.md:213`, `writing-plans/SKILL.md:363`, `executing-plans/SKILL.md:133` |
-  | A blocker that returns escalates immediately | `brainstorming/SKILL.md:223`, `writing-plans/SKILL.md:372`, `executing-plans/SKILL.md:144` |
-  | The four rules guarding the dispute protocol | `subagent-driven-development/SKILL.md:350` |
+  | The three-round cap | `brainstorming/SKILL.md:215`, `writing-plans/SKILL.md:363`, `executing-plans/SKILL.md:134` |
+  | A blocker that returns escalates immediately | `brainstorming/SKILL.md:225`, `writing-plans/SKILL.md:372`, `executing-plans/SKILL.md:145` |
+  | The four rules guarding the dispute protocol | `subagent-driven-development/SKILL.md:353` |
   | Progress reports at four fixed points | `subagent-driven-development/SKILL.md:27`, `executing-plans/SKILL.md:16` |
   | "No gate can check any of this" | `subagent-driven-development/SKILL.md:48`, `executing-plans/SKILL.md:36` |
   | The `**Execution:**` field and its two readers | `writing-plans/SKILL.md:98`, `subagent-driven-development/SKILL.md:121`, `executing-plans/SKILL.md:70` |
