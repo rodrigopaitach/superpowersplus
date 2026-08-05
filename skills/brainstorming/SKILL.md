@@ -44,6 +44,17 @@ graph is for, and it is the only place the shape is visible at once.
 
 **The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
 
+**This does not contradict `using-superpowers`, which says process skills come
+first and implementation skills carry the work out. It says WHERE in the chain
+they do it.** The chain is **brainstorming → writing-plans → an execution path
+→ the implementation skill**, and every arrow is a handoff someone else makes:
+writing-plans offers the execution choice, and the execution path dispatches
+the implementer that reaches for `frontend-design` when the task in front of it
+is a frontend task. So `frontend-design` is not forbidden — it is **two
+handoffs away**, and invoking it from here skips the plan, which is the only
+artifact that says what to build. "Not yet, and not by you" is the rule; "never"
+is not.
+
 ## Where a Claim Comes From
 
 Every factual claim the spec makes — about this repository or about anything

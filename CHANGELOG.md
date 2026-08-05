@@ -56,6 +56,25 @@ References below name them so a claim here can be traced there.
   the graph, and it is recorded here rather than fixed inside a change about
   something else.
 
+- **`brainstorming` writes the chain instead of leaving two skills
+  contradicting each other.** `using-superpowers` — the skill in context every
+  session — says process skills come first and implementation skills
+  (`frontend-design`, etc.) carry the work out. `brainstorming` said "Do NOT
+  invoke frontend-design". Both name the same example skill and instruct the
+  opposite, and the side that loses is the one always in context.
+  They are not incompatible; what was missing is where in the chain each acts.
+  The chain is now written out — **brainstorming → writing-plans → an execution
+  path → the implementation skill** — with every arrow named as a handoff
+  somebody else makes. `frontend-design` is not forbidden, it is two handoffs
+  away, and invoking it from brainstorming skips the plan, the only artifact
+  that says what to build. **"Not yet, and not by you" is the rule; "never" is
+  not.**
+  Written in `brainstorming` rather than in `using-superpowers`, and the reason
+  is measured: `brainstorming/SKILL.md` had 164 lines diverged from upstream
+  and now has 174, while `using-superpowers/SKILL.md` has exactly one — the
+  Gemini note. Putting the chain in the fork-owned file costs nothing at the
+  next rebase and lands where the hard stop it explains actually lives.
+
 ## [1.10.0] - 2026-08-05
 
 ### Added
