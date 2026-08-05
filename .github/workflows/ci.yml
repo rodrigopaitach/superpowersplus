@@ -69,6 +69,9 @@ jobs:
       - name: Tests (evidence line gate)
         run: tests/hooks/test-check-evidence-line.sh
 
+      - name: Tests (escalation shape gate)
+        run: tests/hooks/test-check-escalation-shape.sh
+
       - name: Tests (codex plugin sync)
         run: tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 
@@ -159,6 +162,12 @@ jobs:
       # in place" is just "copied".
       - name: The evidence line is the same line everywhere
         run: scripts/check-evidence-line.sh
+
+      # The second copied form, and the reason it needed its own gate: six
+      # carriers across five skills, so counting skills undercounts the files
+      # that have to agree.
+      - name: The escalation shape is the same shape everywhere
+        run: scripts/check-escalation-shape.sh
 
       # Integrity of the adversarial records only. The tests themselves are
       # never re-run here: they dispatch a live agent, cost tokens, and are

@@ -33,3 +33,7 @@ repo_root="$(git rev-parse --show-toplevel)"
 # evidence line are edited one at a time, so a range-scoped check would read
 # the one being changed and never the four it must match.
 "$repo_root/scripts/check-evidence-line.sh"
+
+# The same reason again, for the second form this project copies on purpose.
+# Six carriers across five skills — subagent-driven-development holds it twice.
+"$repo_root/scripts/check-escalation-shape.sh"

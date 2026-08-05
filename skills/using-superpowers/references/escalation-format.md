@@ -1,10 +1,21 @@
 # Escalation Format
 
 **The shape itself is stated where the escalation happens** — the four
-numbered items at each trigger point in `brainstorming`, `writing-plans`,
-`executing-plans`, `subagent-driven-development`, and `final-branch-audit`.
-Read it there. This file carries what those four lines cannot: the boundary
-they apply to, why they are worded that way, and one worked example.
+numbered items at each trigger point. Read it there. This file carries what
+those four lines cannot: the boundary they apply to, why they are worded that
+way, and one worked example.
+
+**Five skills, six carriers, and the difference is the point.**
+`brainstorming`, `writing-plans`, `executing-plans`, `final-branch-audit`, and
+`subagent-driven-development` — which holds the shape **twice**: once in its
+`SKILL.md`, and once in
+[final-review.md](../../subagent-driven-development/references/final-review.md),
+where the two end-of-branch gates escalate. A list of skill names undercounts
+the files that have to agree, which is how that sixth carrier stayed off every
+enumeration until somebody counted files instead.
+[check-escalation-shape.sh](../../../scripts/check-escalation-shape.sh) is the
+gate: it reads all six, fails when their items diverge, and tolerates
+formatting. A seventh carrier is added there, by hand, on purpose.
 
 That split is measured, not preferred. Three runs of the same scenario moved
 from 1/3 to 3/3 as the shape moved out of this file and into the moment of use

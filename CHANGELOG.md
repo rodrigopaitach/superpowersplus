@@ -11,6 +11,49 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **`scripts/check-escalation-shape.sh` — the second copied form finally has a
+  gate.** This project copies two forms on purpose rather than extracting them,
+  for the reason `escalation-format.md` records: a shape that guards what
+  reaches a person measured 1/3 behind a link and 3/3 once it returned to the
+  point of use. `CLAUDE.md` states the consequence — **without the gate,
+  "unified in place" is just "copied"** — and until now only one of the two
+  forms had one. The test-evidence line was gated across five carriers; the
+  escalation shape was copied across six and compared by nobody.
+  The new gate is the sibling, with the same contract: it reads all six
+  carriers, extracts each item's number and bold lead, and fails when they
+  diverge, while tolerating formatting. **Proved in both states, not by a
+  verdict in one** — rewording item 3 on one carrier, dropping item 4, adding a
+  fifth item, and rewording the marker each turn it red; re-indenting an item,
+  wrapping it across three lines, changing the prose after each bold lead, and
+  collapsing the whole shape onto one line each leave it green.
+  `tests/hooks/test-check-escalation-shape.sh` carries those nine cases, and
+  both the pre-commit hook and CI run the gate.
+  Its header states what it does not cover, in the same terms as its sibling:
+  the prose after each lead, whether a carrier fires at the right moment, and
+  whether the six are still the right six — that list is declared, not
+  discovered.
+
+### Changed
+
+- **`escalation-format.md` now names its sixth carrier, and the correction is
+  not the one that was expected.** The file was reported as enumerating five
+  trigger points where there are six. **Measured before editing: it writes no
+  number at all.** It lists five *skill* names, and by skill five is right —
+  the six carriers live in five skills, because `subagent-driven-development`
+  holds the shape twice, in its `SKILL.md` and in
+  `references/final-review.md`. So the sentence was not wrong; what it was
+  missing is that a list of skills undercounts the files that have to agree,
+  which is exactly how the sixth carrier stayed off every enumeration until
+  somebody counted files instead. The file now says "five skills, six
+  carriers", names the second one in `subagent-driven-development` as a link,
+  and points at the gate that reads all six.
+  This grew the file from 61 to 72 lines. It was already recorded as sitting
+  just over its length target by decision; it now sits further over, and the
+  eleven lines are the carrier asymmetry and the gate — the two things a reader
+  auditing carriers cannot get anywhere else.
+
 ### Fixed
 
 - **The review worktree pointed outside every policy that would clean it up.**
