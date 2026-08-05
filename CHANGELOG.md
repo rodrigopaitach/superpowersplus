@@ -70,6 +70,29 @@ References below name them so a claim here can be traced there.
   places in this skill say "per `SKILL.md` Model Selection" and all six still
   resolve.
 
+### Fixed
+
+- **Two real references written in backticks are now verifiable links.** A path
+  in backticks is invisible to `check-links.sh`, which resolves markdown-link
+  syntax and nothing else — so `skills/using-superpowers/references/gemini-tools.md`
+  named `implementer-prompt.md` and `code-reviewer.md` for years with no gate
+  ever reading either. **The paths were measured, not assumed:** the `./` in
+  both was relative to the *skill being named*, not to the file holding the
+  sentence, so the working links are `../../subagent-driven-development/…` and
+  `../../requesting-code-review/…`. Proved in both states — the scan goes 71 →
+  73 resolved links, and pointing one at a file that does not exist fails with
+  the file and line named. Both lines already diverged from the upstream for the
+  namespace rename, so the correction opens no new conflict surface.
+
+- **`CLAUDE.md` states the rule the case produced**, rewritten into the existing
+  paragraph rather than appended — the file is at its 200-line ceiling exactly.
+  A pointer to a file of this repository is a **markdown link, never backticks**;
+  backticks are reserved for the paths that do not resolve on purpose —
+  placeholders, artifact paths in your partner's own project, self-references,
+  and the `❌ Bad` examples `writing-skills` teaches you not to write — and
+  those are **never "corrected"**. The 78/34 measurement it already carried now
+  states its date rather than reading as a current count.
+
 - **`CLAUDE.md` records the distinction this case produced**, in the rule about
   a third occurrence: a form that *cannot* be extracted is unified in place
   **and charged by a gate**. Written by rewriting the existing paragraph rather
@@ -1953,6 +1976,25 @@ by entry.
 Identified and deliberately left open, each with the reason it was not closed.
 **This is the live list** — closing one updates it here. When each was opened is
 recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas) (in Portuguese).
+
+- **`final-branch-audit/SKILL.md` is not one long document — it is two, and
+  that is a named candidate rather than a pending item.** At 368 lines it is
+  the only `SKILL.md` over 300 with nothing extracted at all, and the 2026-08-05
+  section-by-section pass found why: roughly 142 lines are a rulebook the
+  controller reads to *interpret* the verdict (the traceability table, the audit
+  table, the verdict rules, out-of-scope tasks, re-running the searches), and
+  134 are the dispatch prompt that restates them to *produce* it. **Neither of
+  the two exits is free.** Extracting the rulebook leaves the controller reading
+  only the prompt — and the prompt does not carry the rationale; the reason a
+  human-run verification gets no weaker evidence invented for it exists in the
+  rulebook and nowhere else, so a rule that guarded the reading of a verdict
+  would become material of consultation, which is exactly what
+  `tests/skill-behavior/RESULT-resume-route-inline.md` measured failing.
+  Merging the two is a rewrite, not an extraction, and it would need a gate
+  against the copies drifting — the same problem the evidence line cost one.
+  It stays at 368: 132 under the ceiling, authored entirely by this fork, so
+  nothing about it is urgent. Recorded so the next size pass does not
+  re-derive it.
 
 - **`tests/claude-code/test-subagent-driven-development.sh` is
   non-deterministic and currently fails.** Its "Mentions loading plan"
