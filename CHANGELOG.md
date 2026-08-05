@@ -13,6 +13,22 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A branch that left `executing-plans` by its own escalation had no row in
+  the merge gate.** `finishing-a-development-branch`'s Step 2 table charged a
+  FAIL two ways: route it into a fix wave, or match the row for residuals *the
+  fix wave parked with a ruling at its cap*. The inline path has neither —
+  `executing-plans/SKILL.md:26` says in so many words that it runs no numbered
+  fix rounds — so a branch that hit the cap of three audit rounds and escalated
+  exactly as `:136-142` prescribes arrived at the gate with no applicable row.
+  It now has one, with the same terminal treatment the parked residuals get and
+  the same refusal to take it on faith: the audit report names the rows and
+  `git log` shows a fix pass between each run, or it is the plain FAIL row.
+  **The parenthesis in the row below it was wrong in the other direction** — it
+  offered `executing-plans` as an example of a branch arriving with no audit,
+  while that skill's Step 3 makes the audit mandatory (`:124`). Both execution
+  paths do; what arrives unaudited is a branch built by hand or an execution
+  that stopped short of its own audit step.
+
 - **The review dispatch no longer teaches the base it forbids elsewhere.**
   `requesting-code-review/SKILL.md` opened with `BASE_SHA=$(git rev-parse
   HEAD~1)` — the exact form `subagent-driven-development/SKILL.md:229` names as
