@@ -9,6 +9,53 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **`dispatching-parallel-agents` now declares the boundary it never had, and
+  its example demonstrates the case that is left.** The file forbade nothing
+  while `subagent-driven-development` forbids dispatching implementation
+  subagents in parallel outright — and it is reachable from inside a plan run,
+  because it fires on its own description with no skill routing to it. The
+  owner's decision, taken on the evidence: **parallel implementation stays
+  forbidden**; the risk of two agents in one file does not pay for itself.
+  A boundary block at the top says so at the point of decision, with the two
+  reasons: edit conflict, and a task reviewer whose base test count and diff
+  range both depend on the previous task having finished.
+  **The example was the reason the boundary was invisible, and it was
+  evaluated before it was touched.** The file *framed* itself as investigation
+  and *demonstrated* correction: the goal was "make these tests pass", all
+  three dispatch labels began with "Fix", the template's step 3 was "Fix by:",
+  the return contract asked "what you fixed", and step 4 was "Integrate all
+  changes" — a merge step that only exists because the agents produced diffs.
+  The prescriptive parts — what an agent copies — now demonstrate diagnosis:
+  read-only constraints, dispatch labels that say "Diagnose", and a return
+  contract of root cause with `file:line`, the fix the agent *would* make, and
+  every file it would touch, so the controller can tell an overlap from three
+  independent changes. Step 4 became **"Read and Sequence"**, and it is the
+  line that closes the conflict: **the fixes are applied one at a time**, for
+  the same reason the other skill gives.
+  **The `Real Example from Session` is untouched, by decision.** It records a
+  run that happened under the earlier boundary; converting a record of what
+  was done into the format now prescribed would invent a session nobody had.
+  It carries a note saying what it is and how the case divides today —
+  diagnosis in parallel, correction in sequence. Marked, not converted.
+  One line beyond the agreed list was changed and it is called out here:
+  `Common Mistakes` offered `"Do NOT change production code" or "Fix tests
+  only"` as the model constraint, which directly contradicted the read-only
+  rule three sections above. Leaving it would have shipped a skill that says
+  read-only in one place and "fix tests" in another.
+  **The rebase cost, counted because this project schedules it rather than
+  avoiding it:** the file was at **0 lines diverged** from `upstream/main` and
+  is now at **78** (+79/−27). That is the whole expense of the change, stated
+  so the next rebase is not a surprise.
+  Pre-existing and untouched, found by the graph check and confirmed against
+  upstream: the `When to Use` graph declares a node — `One agent per problem
+  domain` — that no edge uses. It is upstream's, this change does not touch
+  the graph, and it is recorded here rather than fixed inside a change about
+  something else.
+
 ## [1.10.0] - 2026-08-05
 
 ### Added
