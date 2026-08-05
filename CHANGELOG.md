@@ -13,6 +13,25 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **Three of the four review-face anchors in `CLAUDE.md` pointed somewhere
+  else.** Measured by opening each destination: `task-reviewer-prompt.md:69` is
+  the heading "Do Not Trust the Report" and the `[TEST_COMMAND]` run is at
+  `:83`; `re-review-prompt.md:58` is the context sentence and the imperative
+  "Re-run them" is at `:60`; `final-branch-audit/SKILL.md:221` is a line about
+  the spec being committed, while the face it claims — no tests at all, re-run
+  the *searches* — is the section at `:175`. Only `code-reviewer.md:52` was
+  right. A section that exists to keep four gates from being harmonized was
+  citing lines that do not show what makes them different.
+  **The evidence-block paragraph below it was wrong twice over:** its two
+  anchors named `:81` and `:85` (real: `:83` and `:96`), and it said "two
+  occurrences" when there are **three**, in three wordings — the third being
+  `task-reviewer-prompt.md:180`. Its own extraction trigger has therefore been
+  crossed, and the paragraph now says so, together with why the obvious
+  extraction is the wrong move here: this block lives inside a subagent's
+  `## Output Format`, so a pointer would make the subagent fetch a file at
+  runtime, which is precisely what `escalation-format.md:9-11` measured failing
+  and reversed. Unifying the three wordings in place is the open item.
+
 - **The two process graphs said things their own prose contradicts.** Seven
   divergences, found by reading each graph against the section it draws.
   - `brainstorming/SKILL.md`: the escalation at the review cap offers **three**

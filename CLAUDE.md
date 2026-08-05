@@ -35,15 +35,20 @@ reach of three gates at once. Do not harmonize.
 
 | Face | What it actually runs |
 |---|---|
-| `subagent-driven-development/task-reviewer-prompt.md:69` | The **task's** test command, `[TEST_COMMAND]`, reported verbatim |
+| `subagent-driven-development/task-reviewer-prompt.md:83` | The **task's** test command, `[TEST_COMMAND]`, reported verbatim |
 | `requesting-code-review/code-reviewer.md:52` | The **project's** suite, with a fallback to the command the dispatch named |
-| `subagent-driven-development/re-review-prompt.md:58` | **Re-runs** what already ran, reporting command, exit code, and counts |
-| `final-branch-audit/SKILL.md:221` | **No tests at all** — re-runs the *searches* against the spec |
+| `subagent-driven-development/re-review-prompt.md:60` | **Re-runs** what already ran, reporting command, exit code, and counts |
+| `final-branch-audit/SKILL.md:175` | **No tests at all** — re-runs the *searches* against the spec |
 
 The evidence block `**Command:** [verbatim] — **exit:** [code] — **counts:** …`
-appears in `re-review-prompt.md:81` and `code-reviewer.md:85` and must stay
-identical in both. Two occurrences do not justify extraction; at a third,
-extract it.
+appears **three** times, in three wordings: `task-reviewer-prompt.md:180`
+(suffix `base:`), `re-review-prompt.md:83` (suffix `previous:`) and
+`code-reviewer.md:96` (`[verbatim, and where you got it]`, no suffix). The
+extraction trigger written here — two do not justify it, a third does — has
+been crossed, and the resolution is open: this block sits inside a subagent's
+`## Output Format`, so replacing it with a pointer makes the subagent fetch a
+file at runtime, which is the failure `escalation-format.md:9-11` measured and
+reversed. Unify the wording in place before considering anything else.
 
 ## Rebase relationship with Superpowers
 
