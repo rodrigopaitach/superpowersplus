@@ -52,9 +52,18 @@ References below name them so a claim here can be traced there.
   command, the baseline and the red count; run 2 gave a bare "Suite green,
   6/6". Both reports were checked against `git diff` and a suite run by the
   measurer before scoring.
-  **No skill was edited on the strength of it**, and the scope is stated in the
-  record: one model, two runs, a suite that finishes in 122 ms — the easiest
-  possible case for running a check. `RESULT-verification-before-completion.md`.
+  **What the skill adds is the shape of the evidence, not the running of the
+  verification** — so the shape went to the two points where the completion
+  claim is made, and the 120 lines were left alone (Open gaps below carries the
+  condition for revisiting them). Measured, not assumed: the unified evidence
+  line from `1.8.1` lives in three *reviewer* prompts, and a reviewer is not
+  the party making the claim. The party making it asked for the failing form
+  outright — `implementer-prompt.md` wanted a *"One-line test summary (e.g.
+  `14/14 passing, output pristine`)"*, a count with no instrument, which is
+  exactly what run 2 produced. Both claim points now carry
+  `**Command:** … — **exit:** … — **counts:** …`, unified in place rather than
+  linked, per the measured exception in `references/escalation-format.md:9-11`.
+  `RESULT-verification-before-completion.md`.
 
 ### Fixed
 
@@ -1895,6 +1904,17 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   than what it asserts. Treat a failure here as uninformative until the
   assertion is language-agnostic.
 
+- **`verification-before-completion` is measured but not settled.** Two runs
+  found the verification happening without it, including with no rule
+  reachable; its contribution was the shape of the evidence, and that was
+  extracted to the two claim points (`1.9.0`). The 120 lines stay. **The scope
+  that was measured is narrow and says so:** one model, two runs, a 122 ms
+  suite, and none of the conditions the skill's own Red Flags name — a long
+  session, an expensive or slow suite, wanting the work over. Cutting on this
+  evidence would be the argument-instead-of-measurement move the measurement
+  avoided. **The condition for cutting is a second measurement that builds
+  those conditions**, not a decision taken without one.
+  `tests/skill-behavior/RESULT-verification-before-completion.md`.
 - **The stable-anchor gate reaches `CLAUDE.md` and nothing else.**
   `scripts/check-links.sh:72` sets `SECTION_TARGETS = ["CLAUDE.md"]`, so the
   `` `path/file.md`, section "Exact Heading" `` form is verified only there.

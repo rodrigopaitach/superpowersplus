@@ -182,7 +182,12 @@ Subagent (general-purpose):
       correctness) | BLOCKED (cannot complete) | NEEDS_CONTEXT (information
       wasn't provided). Never silently produce work you're unsure about.
     - Commits created (short SHA + subject)
-    - One-line test summary (e.g. "14/14 passing, output pristine")
+    - The test evidence, one line, from the run you made after your last
+      edit — never a count you are carrying from earlier:
+      **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/
+      failed/skipped]. A bare count ("6/6 green") does not say which
+      instrument produced it, and the controller cannot tell a fresh run
+      from a remembered one.
     - Your concerns, if any
     - The report file path
 

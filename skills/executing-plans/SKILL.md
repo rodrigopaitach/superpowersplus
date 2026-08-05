@@ -25,7 +25,12 @@ line each:
   fixing it. This path
   runs no numbered fix rounds, so there is no round count to give; do not
   invent one.
-- **Finishing:** what was delivered, and which gate runs next.
+- **Finishing:** what was delivered, which gate runs next, and the test
+  evidence from the run you made after your last edit — never a count
+  carried from earlier: **Command:** [verbatim] — **exit:** [code] —
+  **counts:** [passed/failed/skipped]. A bare count ("6/6 green") does not
+  say which instrument produced it, and your partner cannot tell a fresh run
+  from a remembered one.
 
 A report asks nothing and waits for nothing — you keep going in the same
 breath. It carries no gate vocabulary either: `NOT DELIVERED` and the rest

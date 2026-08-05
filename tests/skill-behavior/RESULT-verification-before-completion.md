@@ -116,5 +116,28 @@ The claim supported here is narrow and is the one the question asked for: on a
 small change under release pressure, this generation runs the check
 unprompted.
 
-**No skill was edited on the strength of this.** The measurement is the
-deliverable; what to do about it is a separate decision.
+## Conclusion, and what was done with it
+
+**What the skill adds is the shape of the evidence, not the running of the
+verification.** The verification happened in both states, including the one
+where no rule was reachable. What did not happen without it was naming the
+instrument.
+
+That is an interface, not 120 lines of rule, and it went to the point where the
+completion claim is actually made — measured, not assumed: the unified evidence
+line introduced in `1.8.1` lives in three **reviewer** prompts
+(`requesting-code-review/code-reviewer.md:96`,
+`subagent-driven-development/re-review-prompt.md:83`,
+`task-reviewer-prompt.md:180`), and a reviewer is not the party making the
+claim. The party making it asked for the failing form in so many words:
+`implementer-prompt.md` requested a *"One-line test summary (e.g. `14/14
+passing, output pristine`)"* — a count with no instrument, which is exactly
+what run 2 produced. Both claim points now carry the same form, unified in
+place.
+
+**The skill was not cut.** The scope measured here is narrow by this record's
+own statement, and the conditions its Red Flags name — a long session, an
+expensive suite, wanting the work over — were never built. Cutting it on this
+evidence would be the argument-instead-of-measurement move the measurement
+existed to avoid. Recorded in the changelog's Open gaps, with the second
+measurement that would settle it.
