@@ -9,6 +9,30 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The skill that decides the merge now checks both gates, and until now it
+  checked one.** `finishing-a-development-branch`'s Step 2 was titled "Verify
+  the Conformance Audit" and its table had six rows, every one of them a state
+  of the audit. Nothing in it asked whether the whole-branch code review had
+  run — while four documents declare that review mandatory before merge to
+  main (`requesting-code-review`, both execution paths, and the subagent
+  path's final-review reference). **The skill's own Common Rationalizations
+  table already claimed the check existed** — *"Step 2 here does not re-run
+  them; it checks that they ran and what they returned"* — which is the shape
+  this project treats as the most silent failure there is: a rule stated in the
+  producer, absent from the verifier, with no contradiction for anyone to find.
+  The concrete path: a branch built by hand hit the "no audit was run" row, ran
+  the audit, and reached the menu with no review at all.
+  Step 2 is now "Verify the Two Gates", split into 2a (the audit, rows
+  unchanged) and 2b (the review), and 2b carries the state the gap was made of
+  — **"No review was run"** — plus the base-too-narrow case (`HEAD~1` instead of
+  the fork point, which hands a reviewer the last task and calls it the branch)
+  and the no-subagent-available case, which is a decision for the human partner
+  rather than a gate to close by reviewing your own diff.
+
 ## [1.9.5] - 2026-08-05
 
 ### Added

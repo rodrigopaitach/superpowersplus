@@ -7,7 +7,7 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 ## Overview
 
-**Core principle:** Verify tests → Verify the conformance audit → Detect environment → Present options → Execute choice → Clean up.
+**Core principle:** Verify tests → Verify both gates, audit and review → Detect environment → Present options → Execute choice → Clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
@@ -25,7 +25,15 @@ Tests failing (<N> failures). Must fix before completing:
 
 **If tests pass:** continue to Step 2.
 
-## Step 2: Verify the Conformance Audit
+## Step 2: Verify the Two Gates
+
+**Two gates stand between a green suite and the menu, and this step checks
+both.** They ran in this order — superpowersplus:final-branch-audit first, then
+the whole-branch review — and this step does not re-run them: it establishes
+that each one ran and what it returned. Checking one and assuming the other is
+how a branch reaches the menu with a gate nobody opened.
+
+### 2a. The conformance audit
 
 A green suite proves the code that exists works. It says nothing about the
 work the plan asked for and nobody built. Before any merge option is on the
@@ -43,6 +51,24 @@ returned PASS.
 
 A FALSE COMPLETION finding always stops here, whatever else the audit said.
 It is never parked either, so it can never arrive by the row above.
+
+### 2b. The whole-branch code review
+
+`../requesting-code-review/SKILL.md` declares itself mandatory before merge to
+main, and both execution paths run it as their second gate
+(`../executing-plans/SKILL.md`, section "Step 3: Audit and Review the Branch";
+`../subagent-driven-development/references/final-review.md`). **Until this
+section existed, nothing at the merge decision asked whether it had happened**
+— the audit was checked and the review was assumed.
+
+| State | Action |
+|-------|--------|
+| Review ran over the whole branch, no Critical or Important findings open | Continue to Step 3 |
+| Review ran, findings still open | Stop. Report them. Open findings are not a merge decision to take here — route them back into a fix pass, the same way an audit FAIL routes |
+| Review ran, findings addressed or ruled on at the fix wave's cap | Continue to Step 3 and present the rulings beside the options, as named pending items — the same terminal treatment the parked audit rows get above. **Check the rulings, never believe them:** each carries its reason and the ledger or the branch shows a fix pass between the runs |
+| Review ran, but its base was `HEAD~1` or any range short of the fork point | Treat as **not run**, and take the row below. A reviewer judges the diff it was handed: on a branch that commits as it goes, `HEAD~1` hands it the last task and calls it the branch |
+| **No review was run** — a branch built by hand, or an execution that stopped before its review step | Run it now: dispatch superpowersplus:requesting-code-review with `BASE_SHA=$(git merge-base <base-branch> HEAD)` and `HEAD_SHA=$(git rev-parse HEAD)`. Then apply the rows above |
+| No review was run **and no subagent is available to dispatch one** | Stop and take it to your human partner as a decision, not a detail. **Do not review your own diff and call the gate satisfied** — that is the first line of that skill's own Common Rationalizations — and do not drop the gate in silence |
 
 ## Step 3: Detect Environment
 
@@ -212,6 +238,8 @@ place. If your platform provides a workspace-exit tool, use it.
 | "Tests passed earlier this session" | Run the suite on the tree you are about to integrate. A green run only proves the tree it ran on. |
 | "The suite is green, so the plan is delivered" | Green proves the code that exists works. A task nobody built breaks no test. Run the audit. |
 | "This branch came through executing-plans, there's no audit step there" | It has both gates — audit, then whole-branch code review (`../executing-plans/SKILL.md`, section "Step 3: Audit and Review the Branch"). Step 2 here does not re-run them; it checks that they ran and what they returned, which an execution that stopped early cannot show. |
+| "The audit passed, so the branch is reviewed" | Different gates, different questions. The audit asks whether everything the plan wanted got built; the review judges the diff that exists. A branch can pass the audit with every task delivered and a Critical defect in all of them. Step 2b asks about the review by name because assuming it is exactly how it goes missing. |
+| "There's no reviewer available, and the audit passed — close enough" | Then it is a decision for your human partner, not a gate you close. Reviewing your own diff is the first rationalization that skill lists against itself. |
 | "The audit failed on one row, that's close enough to merge" | FAIL means the branch did not deliver the plan. The only FAIL that reaches the menu is the one whose every open row the fix wave already parked with a ruling at its cap, and those rows are presented beside the options. Deciding here that a row is close enough is the parking the cap exists to prevent. |
 | "They obviously want it merged" | Integration is your human partner's decision. Present the menu and wait. |
 | "They seem done with this feature — I'll offer to discard it" | The menu is complete as written. Discard happens only when your human partner asks for it in so many words. |
