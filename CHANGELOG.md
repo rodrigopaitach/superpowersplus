@@ -11,6 +11,22 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **The plan reviewer now charges Global Constraints, which nothing verified.**
+  Measured before writing: the string "global constraint" appeared **zero**
+  times in `plan-document-reviewer-prompt.md`. The plan declares a
+  `## Global Constraints` section (`writing-plans/SKILL.md:111`), the controller
+  hands it verbatim to the task reviewer, and that reviewer blocks a
+  happy-path test when those constraints list edge cases
+  (`task-reviewer-prompt.md:128`) — a gate whose input no gate checked. Two
+  blocking rows added to the Plan Contract: the section exists with exact values
+  copied from the spec (or says `None`, since an absent section and an unwritten
+  one read identically downstream), and no task contradicts a constraint. The
+  second was previously caught only by the controller's pre-flight scan
+  (`subagent-driven-development/SKILL.md:137`), which runs after the plan is
+  already approved. Pairs with the implementer slot added above.
+
 ### Fixed
 
 - **The Test Coverage Matrix stated its rules in two places, 119 lines apart.**
