@@ -58,6 +58,29 @@ References below name them so a claim here can be traced there.
   test bodies invites a vacuous one.
   No skill was edited on the strength of it.
 
+### Changed
+
+- **`docs/context-audit.md`'s measured interpretation is bounded by the run
+  above, and the correction is narrow on purpose.** It carried "position
+  matters more than wording" as a single finding. Two halves came apart:
+  **what stands** is that extracting act-guarding content *to behind a link*
+  degrades it — that is what `RESULT-resume-route-inline.md` measured, and the
+  restriction the procedure enforces is unchanged. **What falls** is the
+  inference drawn from it, that moving a rule *closer* to the act improves it:
+  `RESULT-main-branch-consent.md` found the recap position and the
+  point-of-action position indistinguishable, with deletion the only thing that
+  changed the outcome.
+  **Two explanations now sit in the file, neither tested against the other** —
+  that position matters only when it changes whether the rule is *read*, and
+  that the *cost of obeying* decides regardless of placement. Both fit both
+  runs, because every measurement so far varied the two together: the resume
+  rule was expensive **and** behind a link; the main-branch rule was cheap
+  **and** in the same file. The file states what a run would have to cross to
+  separate them — an expensive rule at the point of action, and a cheap rule
+  behind a link — and says to cite the bounded finding until one does.
+  A generalisation this project would otherwise keep quoting is now labelled as
+  one candidate of two.
+
 ### Fixed
 
 - **`scripts/lint-shell.sh` passed green while linting nothing whenever `git`

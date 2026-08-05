@@ -86,15 +86,37 @@ Then state the size of each file after the proposal.
 
 *(this project's own interpretation, and it is measured)*
 
-**Position matters more than wording** —
-[`tests/skill-behavior/RESULT-resume-route-inline.md`](../tests/skill-behavior/RESULT-resume-route-inline.md),
-FAIL → FAIL → PASS by the change of position alone.
+**Extracting content that guards an act, to behind a link, degrades it** —
+[`RESULT-resume-route-inline.md`](../tests/skill-behavior/RESULT-resume-route-inline.md),
+FAIL → FAIL → PASS. It becomes content that **describes a pattern**, and a
+pattern is violated even when it has been read and quoted. Nothing in the
+GUARDS AN ACT bucket becomes material of consultation. If a proposal would
+have that effect, mark it and do not propose it.
 
-Extracting content that **guards an act** turns it into content that
-**describes a pattern**, and a pattern is violated even when it has been read
-and quoted. Nothing in the GUARDS AN ACT bucket becomes material of
-consultation. If a proposal would have that effect, mark it and do not propose
-it.
+**What does not follow: that moving a rule closer to the act improves it.**
+That inference was drawn from the run above and it is now bounded —
+[`RESULT-main-branch-consent.md`](../tests/skill-behavior/RESULT-main-branch-consent.md),
+2026-08-05, six runs across three states of one rule. The rule in a recap at
+the end of the file (**A**) and the same wording moved into the step that acts
+(**C**) were **indistinguishable, 2/2 each**; deleted (**B**) it failed **0/2**.
+Presence was the variable. Position was not.
+
+**Two explanations survive, and neither has been tested against the other:**
+
+| | The claim | What it predicts |
+|---|---|---|
+| **(a) Reading** | Position decides only when it changes *whether the rule is read*. A link is not followed; a recap in the same file is read on the way past | Any position inside the file the agent already reads performs the same; only crossing a file boundary costs |
+| **(b) Cost of obeying** | The price of compliance decides, not the placement. Stopping and returning nothing is expensive; creating a branch is nearly free | A cheap rule holds from anywhere, including behind a link; an expensive one fails from anywhere, including at the point of action |
+
+Both fit both runs: the resume rule was expensive *and* behind a link; the
+main-branch rule was cheap *and* in the same file. **Every measurement so far
+varies the two together**, which is why neither is settled.
+
+**To separate them, a test has to cross them:** an *expensive* rule placed at
+the point of action in the same file, and a *cheap* rule placed behind a link.
+(a) predicts the first holds and the second fails; (b) predicts the opposite.
+Until a run does that, cite the bounded finding above — the extraction
+restriction — and not the general one.
 
 ## The golden rule
 
