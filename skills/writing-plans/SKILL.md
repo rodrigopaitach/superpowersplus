@@ -78,7 +78,7 @@ plan ends at the last task that leaves a tested deliverable in the branch.
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowersplus:subagent-driven-development (recommended) or superpowersplus:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowersplus:subagent-driven-development or superpowersplus:executing-plans to implement this plan task-by-task — the `**Execution:**` field below names which of the two this plan was handed to, and that is the one to follow. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Source spec:** `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` —
 the exact path of the approved design this plan implements, committed. Not

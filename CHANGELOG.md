@@ -9,6 +9,28 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The path advice follows the measured criterion, in all three places that
+  carried it.** `executing-plans/SKILL.md:14` said to use
+  `subagent-driven-development` *instead of this skill* whenever subagents
+  exist; `writing-plans/SKILL.md:409` offers the choice by plan size, with the
+  resume difference measured adversarially on both paths in the `1.6.0`–`1.7.2`
+  cycle. Two rules over one decision, and nothing says which wins — the model
+  picks one arbitrarily. **The measured rule governs:** `:14` now states the
+  criterion (does the plan finish in one sitting, does its progress have to
+  outlive the session) and points at the `**Execution:**` field that already
+  records the answer.
+  **A third copy was found by measuring rather than by the report, and it was
+  the worst of them:** `writing-plans/SKILL.md:81`, inside the plan header
+  block, marked the subagent path `(recommended)` unconditionally — copied
+  into *every plan written*, twelve lines above the `**Execution:**` field it
+  contradicts. Both lines are upstream's and live in `upstream/main` today
+  (`:14` and `:61` there); each was changed on its own line, its neighbours
+  untouched, which is the rebase cost this project accepts deliberately.
+
 ## [1.8.2] - 2026-08-04
 
 ### Added
