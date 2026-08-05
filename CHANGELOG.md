@@ -9,7 +9,7 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.9.1] - 2026-08-05
 
 ### Added
 
@@ -2218,6 +2218,8 @@ to hold; and the resume route, which split — the subagent half held on its fir
 run, the inline half failed twice and held on the third after one structural
 change. Six remain queued in the gap above.
 
+[1.9.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.9.1
+[1.9.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.9.0
 [1.8.2]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.8.2
 [1.8.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.8.1
 [1.8.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.8.0
