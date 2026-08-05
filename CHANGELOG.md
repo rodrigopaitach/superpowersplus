@@ -58,6 +58,18 @@ References below name them so a claim here can be traced there.
   the terminal state is invoking `writing-plans`, and no implementation skill
   is invoked here — stays in `SKILL.md`, because it guards an act.
 
+- **`subagent-driven-development`: the model tiering moved to
+  `references/model-selection.md`** — `SKILL.md` goes 460 → 434, which takes it
+  from 40 lines under the 500-line ceiling to 66. What moved is lookup
+  material: the role tiers, the fix-loop escalation, why turn count beats
+  token price, and the task complexity signals. What stays is the one line
+  that guards an act — **always name the model explicitly**, because an
+  omitted model inherits the session's own and silently defeats the whole
+  choice — plus an imperative pointer carrying its moment: "open it before
+  each dispatch and pick the tier there". The section heading stays too: six
+  places in this skill say "per `SKILL.md` Model Selection" and all six still
+  resolve.
+
 - **`CLAUDE.md` records the distinction this case produced**, in the rule about
   a third occurrence: a form that *cannot* be extracted is unified in place
   **and charged by a gate**. Written by rewriting the existing paragraph rather
