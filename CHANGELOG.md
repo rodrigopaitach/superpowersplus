@@ -9,7 +9,7 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.9.0] - 2026-08-05
 
 ### Added
 
