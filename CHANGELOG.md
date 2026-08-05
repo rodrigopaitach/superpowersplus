@@ -13,6 +13,23 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The review worktree pointed outside every policy that would clean it up.**
+  `code-reviewer.md` told the reviewer to `git worktree add /tmp/review-[SHA]`
+  when it needed a working copy of another revision. `/tmp` is not on
+  `using-git-worktrees`' directory ladder — declared preference, then an
+  existing `.worktrees/` or `worktrees/`, then `.worktrees/` by default — and
+  `finishing-a-development-branch` cleans up **only** what sits under those
+  two, leaving everything else to the host. So a review worktree was created
+  by one skill, matched no other skill's idea of where worktrees live, and was
+  removed by nobody. It now uses the ladder and, because nothing downstream
+  removes a *review* worktree even there, the reviewer removes its own before
+  reporting.
+  **The ownership was measured and it contradicted the brief this came from:**
+  the line is byte-identical to `upstream/main`, not fork-owned, so this is a
+  rebase cost rather than a free change. It was spent deliberately and kept to
+  the single line, which is what this project's upstream rule asks for — the
+  cost is never a veto, only something to spend on purpose.
+
 - **The skill that decides the merge now checks both gates, and until now it
   checked one.** `finishing-a-development-branch`'s Step 2 was titled "Verify
   the Conformance Audit" and its table had six rows, every one of them a state
