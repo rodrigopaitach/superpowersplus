@@ -47,10 +47,11 @@ wording: `base:` in `task-reviewer-prompt.md`, section "Test Evidence";
 `code-reviewer.md`, section "Test Run", which has no prior count.
 
 **A form inside a subagent's `## Output Format` is unified in place, never
-extracted** — the measured exception to "at a third occurrence, extract it":
-`references/escalation-format.md:9-11` records that move measuring 1/3, then 3/3
-once the form came back to the point of use. (It keeps a line number: preamble,
-no heading to name.)
+extracted — and then charged by a gate.** The measured exception to "at a third
+occurrence, extract it": `references/escalation-format.md:9-11` records it at
+1/3, then 3/3 once the form returned to the point of use. **Without the gate,
+"unified in place" is just "copied"** — `scripts/check-evidence-line.sh` compares
+the five carriers' fields, tolerating formatting. (Line number: no heading.)
 
 **Anchor by `file:line` for code and artifacts that do not move because of what
 we write; by file plus section title — the form above — for a file of this

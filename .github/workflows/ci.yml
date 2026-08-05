@@ -66,6 +66,9 @@ jobs:
       - name: Tests (skill size gate)
         run: tests/hooks/test-check-skill-size.sh
 
+      - name: Tests (evidence line gate)
+        run: tests/hooks/test-check-evidence-line.sh
+
       - name: Tests (codex plugin sync)
         run: tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 
@@ -150,6 +153,12 @@ jobs:
       # of which commit put it there.
       - name: Every SKILL.md stays under the line ceiling
         run: scripts/check-skill-size.sh
+
+      # The five carriers of the test-evidence line hold one form, copied on
+      # purpose because it cannot live behind a link. Without this, "unified
+      # in place" is just "copied".
+      - name: The evidence line is the same line everywhere
+        run: scripts/check-evidence-line.sh
 
       # Integrity of the adversarial records only. The tests themselves are
       # never re-run here: they dispatch a live agent, cost tokens, and are

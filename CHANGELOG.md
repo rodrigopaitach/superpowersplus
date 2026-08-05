@@ -9,6 +9,49 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **`scripts/check-evidence-line.sh` — the test-evidence line is charged, not
+  just copied.** The form `**Command:** … — **exit:** … — **counts:** …` is
+  carried in five places, unified **in place** rather than extracted, and that
+  decision stands: a form inside a subagent's output block cannot sit behind a
+  link, which is the exception measured at
+  `skills/using-superpowers/references/escalation-format.md:9-11` (1/3, then
+  3/3 once the form returned to the point of use). Nothing verified that the
+  five stayed equivalent. Measured before writing: three formatting variants
+  in the tree — indentation, wrapping, and a `carried from earlier` prefix —
+  with the fields identical. **Unifying in place without a gate is just
+  copying.**
+  The gate extracts the field NAMES from each carrier and fails when they
+  disagree. **Formatting is tolerated by design and proved in both states:**
+  dropping `**exit:**` from one carrier fails, a sixth field on one carrier
+  fails, and the same fields unindented, unwrapped, prefixed, suffixed, or
+  split across six lines all pass. Eight cases in
+  `tests/hooks/test-check-evidence-line.sh`.
+  **It reads the whole file, not line by line** — the `1.8.2` lesson: a check
+  that reads lines misses a form an editor split across them, goes quiet, and
+  shows the author a pass.
+  **What it does not cover is declared in its own header**, at the top of the
+  script: whether the text *inside* each field makes sense for that carrier.
+  `**exit:** [code]` and `**exit:** [the moon]` are identical to it. So is the
+  deliberate suffix difference — `base:`, `previous:`, none — which is content,
+  not wording. The carrier list is declared rather than discovered: a sixth
+  carrier is added to the script on purpose.
+  Wired into `githooks/pre-commit` and CI. Whole-tree in both, for a reason
+  peculiar to this gate: the carriers are edited one at a time, so a
+  range-scoped check would read the one being changed and never the four it
+  has to match.
+
+### Changed
+
+- **`CLAUDE.md` records the distinction this case produced**, in the rule about
+  a third occurrence: a form that *cannot* be extracted is unified in place
+  **and charged by a gate**. Written by rewriting the existing paragraph rather
+  than appending to it — the file is at its declared 200-line ceiling exactly,
+  so the next addition has to displace something.
+
 ## [1.9.0] - 2026-08-05
 
 ### Added

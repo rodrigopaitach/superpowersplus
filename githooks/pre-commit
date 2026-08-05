@@ -28,3 +28,8 @@ repo_root="$(git rev-parse --show-toplevel)"
 # Whole-tree for the same reason, and cheap for a different one: no
 # interpreter starts, just wc over fifteen files.
 "$repo_root/scripts/check-skill-size.sh"
+
+# Whole-tree too, and for a reason peculiar to it: the five carriers of the
+# evidence line are edited one at a time, so a range-scoped check would read
+# the one being changed and never the four it must match.
+"$repo_root/scripts/check-evidence-line.sh"
