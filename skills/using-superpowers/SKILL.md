@@ -57,6 +57,8 @@ If your harness appears here, read its reference file for special instructions:
 - Pi: `references/pi-tools.md`
 - Antigravity: `references/antigravity-tools.md`
 
+**This list names the harnesses that must be told to go read their mapping.** Gemini is absent on purpose: `GEMINI.md` imports `references/gemini-tools.md`, so it arrives flattened into context before the first turn. Telling an agent to fetch what it is already reading is a line nobody acts on.
+
 ## User Instructions
 
 User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.

@@ -9,6 +9,19 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **The Platform Adaptation list now states its criterion, and Gemini stays
+  out.** A sweep found `references/gemini-tools.md` present and unlisted and
+  read it as an omission. It is not: `GEMINI.md` imports both that file and the
+  skill body, so the mapping is flattened into context before the first turn,
+  while Codex, Pi and Antigravity have nothing that does it for them. The list
+  names the harnesses that must be **told** to go read their mapping — an
+  instruction to fetch what you are already reading is a line nobody acts on.
+  Written down so the next sweep does not reopen it.
+
 ## [1.8.0] - 2026-08-04
 
 ### Added
