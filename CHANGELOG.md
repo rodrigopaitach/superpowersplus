@@ -9,6 +9,43 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **The measured-number rule now has its exception, and `CLAUDE.md` carries no
+  descriptive number that is not dated.** `1.9.2` stated the principle and
+  fixed three numbers that had aged into falsehood; a sweep found three more,
+  all correct today and all aging the same way. Two left, one stays, and the
+  difference is now written into the principle itself.
+  - **Gone — they only described a state.** The URL count under `skills/` and
+    its per-domain breakdown became the relation they were evidence for:
+    upstream's vendored best-practices point at the platform docs, this fork's
+    worked example points at the vendor whose call it grounds, links and
+    anchors stay checked, and only the domain policy stops at the directory
+    boundary. And `escalation-format.md`'s length is now "just over its target,
+    closed by decision" — the sentence that works was never the number, it was
+    *every block carries distinct normative content, do not re-report it*, and
+    the number turns false at that file's first edit.
+  - **Stayed — it is the CONDITION of a rule, not a description of one.**
+    `writing-skills/SKILL.md` is exempt from the line ceiling because it is
+    679 lines here and 679 upstream. Remove the number and the exemption loses
+    its trigger: the day the two diverge, this project has begun owning that
+    file's content and the exemption falls. The principle now says so in the
+    same breath, **so the next audit cannot propose cutting it for
+    consistency** — which is exactly what a rule written only in the auditor's
+    head would have done.
+  - Measured 2026-08-05, all three correct at the time they were removed: 40
+    URLs under `skills/` (11 `platform.claude.com`, 3 `docs.stripe.com`),
+    `escalation-format.md` at 61 lines against a ~60-line target, and
+    `writing-skills/SKILL.md` at 679 here and 679 upstream. This entry is where
+    those numbers live now.
+  - The one descriptive measurement still inside `CLAUDE.md` — 34 of 78
+    backticked paths under `skills/` resolving to nothing, none of them a
+    defect — **carries its date in the sentence**, which is what keeps it from
+    reading as a current count. It is the boundary case the principle allows,
+    not an oversight.
+
 ## [1.9.2] - 2026-08-05
 
 ### Added

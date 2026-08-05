@@ -124,7 +124,7 @@ without a changelog entry and were caught only when the version was cut.
 
 ## Documentation hierarchy
 
-Three README-shaped files, with different jobs. The relation, not the sizes: `docs/README.pt-BR.md` is canonical and `docs/README.en.md` translates it, `scripts/check-docs-sync.sh:14-15` names exactly those two and forces them into the same commit, and `README.md` is outside that pair. **A measured number inside this file ages in silence and goes on reading as true** — where the relation is enough, state the relation; where the number is the point, it belongs in `CHANGELOG.md` with its date.
+Three README-shaped files, with different jobs. The relation, not the sizes: `docs/README.pt-BR.md` is canonical and `docs/README.en.md` translates it, `scripts/check-docs-sync.sh:14-15` names exactly those two and forces them into the same commit, and `README.md` is outside that pair. **A measured number inside this file ages in silence and goes on reading as true** — where the relation is enough, state the relation; where the number is the point, it belongs in `CHANGELOG.md` with its date. **One exception, and it is the only one: a number that IS the condition of a rule stays here** — removing it takes the rule's trigger with it, which is why `writing-skills`' 679-and-679 survives below. A number that only describes a state goes.
 
 | File | Job | Gated by |
 |---|---|---|
@@ -146,7 +146,7 @@ Three README-shaped files, with different jobs. The relation, not the sizes: `do
 
 **`docs/PLUS-CHANGELOG-historico.md` is exempt from the diet only.** It cannot acquire a new link by construction — `check-frozen-history.sh` refuses any change to it — so watching it for new domains is a check with no function. Its local links and anchors stay checked: freezing a file does not freeze the files it points at.
 
-**`skills/**` is exempt from the diet too, for a different reason: a skill legitimately cites vendor documentation.** All 40 URLs under `skills/` are off-diet — 11 to `platform.claude.com` in upstream's vendored best-practices, 3 to `docs.stripe.com` inside this fork's own worked example of a citation comment, the rest the same shape. The diet governs the seven documents this project hands to a reader; a skill body pointing at the vendor doc that grounds a call is the citation rule working. Their **links and anchors are checked** — only the domain policy stops at the directory boundary.
+**`skills/**` is exempt from the diet too, for a different reason: a skill legitimately cites vendor documentation.** Every URL under `skills/` is off-diet — upstream's vendored best-practices point at the platform docs, this fork's worked example of a citation comment points at the vendor whose call it grounds, and the rest are the same shape. The diet governs the seven documents this project hands to a reader; a skill body pointing at the vendor doc that grounds a call is the citation rule working. Their **links and anchors are checked** — only the domain policy stops at the directory boundary.
 
 ## Running `gh`
 
@@ -172,7 +172,7 @@ Skills are not prose — they are code that shapes agent behavior. Carefully-tun
 
 **The fix for a red is progressive disclosure, never compression.** Move what a run does not need until it needs it into `references/`, and leave the trigger that sends the reader there: a pointer nobody is told to follow is a deletion. `subagent-driven-development/SKILL.md` is the worked case: it has been cut twice this way, both times into `references/`, with every trigger left behind in `SKILL.md` as an imperative. The line counts of each pass are in `CHANGELOG.md`, dated.
 
-**`skills/writing-skills/SKILL.md` is exempt, and it is the only entry.** It is 679 lines here and 679 upstream, and the only two lines this fork changed in it are the namespace rename. Cutting it means rewriting a file the upstream maintains for a gain that belongs in somebody else's repository. Remove the exemption the day this project starts owning that file's content — never to make a red go away.
+**`skills/writing-skills/SKILL.md` is exempt, and it is the only entry.** It is 679 lines here and 679 upstream, and the only two lines this fork changed in it are the namespace rename. **Those two numbers stay while every other one left this file, because they are the CONDITION of the exemption rather than a description of it:** the day they diverge, this project has begun owning that file's content, and the exemption falls with them. Cutting it means rewriting a file the upstream maintains for a gain that belongs in somebody else's repository. Remove the exemption the day this project starts owning that file's content — never to make a red go away.
 
 Adversarial skill-behavior tests live at [`tests/skill-behavior/`](tests/skill-behavior/) — a fixture, the input carrying it, and a recorded result per rule. Read its `README.md` before adding one. Plugin-infrastructure tests are at `tests/`, run via each directory's own `run-*.sh`.
 
@@ -180,6 +180,6 @@ Adversarial skill-behavior tests live at [`tests/skill-behavior/`](tests/skill-b
 
 **`dispatching-parallel-agents` is orphaned in the invocation graph on purpose.** No `SKILL.md` names it — the one place that does is `skills/using-superpowers/references/codex-tools.md:10`, listing which harness tools it needs, which routes nothing to it — and a sweep for dead references will keep surfacing it. It fires on its description — the harness matches the work at hand against the frontmatter — which is how a skill that applies to *any* fan-out gets reached without every caller listing it. Do not "fix" it by wiring an invocation in: a reference from one skill would suggest that skill is where parallel dispatch belongs.
 
-**`escalation-format.md` is 61 lines against a ~60-line target — that is closed, not outstanding.** The remaining line was looked for and every block carries distinct normative content: the scope boundary, why the file exists, why item 4 is an action rather than a quality bar (the lesson that was measured failing twice), gate vocabulary, the self-test, and the worked example. Cutting to reach the number costs content the file exists to carry. It does not need re-reporting.
+**`escalation-format.md` sits just over its length target, and that is closed by decision, not outstanding.** The line to cut was looked for and every block carries distinct normative content: the scope boundary, why the file exists, why item 4 is an action rather than a quality bar (the lesson that was measured failing twice), gate vocabulary, the self-test, and the worked example. Cutting to reach the number costs content the file exists to carry. It does not need re-reporting.
 
 Most rules in this project are reasoned, not measured. When you add one, say which it is.
