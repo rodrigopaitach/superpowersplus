@@ -13,6 +13,22 @@ References below name them so a claim here can be traced there.
 
 ### Changed
 
+- **Document review and the conformance audit are separate families in the
+  measurement queue.** Two of its lines read as one rule and were two: the cap
+  of three and the returning-blocker rule each covered `brainstorming` and
+  `writing-plans`, where the actor is a reviewer subagent re-reading a document
+  and running out of rounds costs a paragraph — **and** `executing-plans`, where
+  the same numbers count rounds of the conformance audit, the branch is already
+  built, and running out ends with the work unfinished and its NOT DELIVERED
+  rows escalated. That last state is the one
+  `finishing-a-development-branch/SKILL.md:40` had to grow a row for in this
+  same cycle. Different actor, different client, different consequence at the
+  cap: one fixture cannot measure both, which is what the resume routes taught
+  when they came back split. The queue is eight entries now, and **the header
+  saying "seven" was already stale** — the resume routes left it measured and
+  the count never followed. Not to be confused with the 3-versus-5 axis, which
+  `1.5.0` settled and this split is not about.
+
 - **The evidence line is one form again, unified where it is used.** It appears
   three times and had drifted into three wordings; the divergence was
   `code-reviewer.md:96` asking for `[verbatim, and where you got it]` while the
@@ -1780,22 +1796,42 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   points at a commit on `main`; if that ever stops being the practice, this
   becomes a real gap and the trigger needs revisiting. (opened 1.3.1)
 
-- **Seven rules are precaution with no recorded symptom, and the queue to
+- **Eight rules are precaution with no recorded symptom, and the queue to
   settle them is measurement, not deletion.** A category sweep classified every
   rule this fork added: those that constrain what may be *asserted*, those that
   name a *state*, and those that decide something an agent would decide well on
   its own. The third group splits by provenance — born of a defect observed in
   real use, or born of our own caution — and only the second half is a
-  candidate for anything. These seven are that half:
+  candidate for anything. These are that half — **eight entries, where this
+  list opened with seven**: one left the queue measured (the resume routes,
+  below) and two split in place, each having been two rules under one line.
 
   | Rule | Where |
   |------|-------|
-  | The three-round cap | `brainstorming/SKILL.md:215`, `writing-plans/SKILL.md:363`, `executing-plans/SKILL.md:134` |
-  | A blocker that returns escalates immediately | `brainstorming/SKILL.md:225`, `writing-plans/SKILL.md:372`, `executing-plans/SKILL.md:145` |
+  | The three-round cap on **document review** | `brainstorming/SKILL.md:215`, `writing-plans/SKILL.md:363` |
+  | The three-round cap on the **conformance audit** | `executing-plans/SKILL.md:134` |
+  | A returning blocker escalates immediately — **document review** | `brainstorming/SKILL.md:225`, `writing-plans/SKILL.md:372` |
+  | A returning NOT DELIVERED row escalates immediately — **conformance audit** | `executing-plans/SKILL.md:145` |
   | The four rules guarding the dispute protocol | `subagent-driven-development/SKILL.md:353` |
   | Progress reports at four fixed points | `subagent-driven-development/SKILL.md:27`, `executing-plans/SKILL.md:16` |
   | "No gate can check any of this" | `subagent-driven-development/SKILL.md:48`, `executing-plans/SKILL.md:36` |
   | The `**Execution:**` field and its two readers | `writing-plans/SKILL.md:98`, `subagent-driven-development/SKILL.md:121`, `executing-plans/SKILL.md:70` |
+
+  **Two of those lines were one rule each on paper and two in the skills.** The
+  cap of three and the returning-blocker rule both count rounds of *document
+  review* in `brainstorming` and `writing-plans`: the actor is a reviewer
+  subagent re-reading a spec or a plan, the cap is reached before any code
+  exists, and running out costs a paragraph. In `executing-plans` the same two
+  numbers count rounds of the *conformance audit* — the client is
+  `final-branch-audit`, the branch is already built, and running out ends with
+  the work unfinished and its NOT DELIVERED rows escalated, which is the state
+  `finishing-a-development-branch/SKILL.md:40` had to grow a row for. Same
+  number, different actor, different client, different consequence at the cap.
+  A single fixture cannot measure both, which is exactly what the resume routes
+  taught when they came back split: one line here was two rules there, and only
+  measuring them apart showed it. **The 3-versus-5 axis is a different question
+  and is already settled** — `1.5.0` records why these loops cap at three while
+  the task loop runs to five, and it is not what this split is about.
 
   **Cutting them by argument would be the same move that wrote them.** They
   were reasoned into existence and would be reasoned out of it, with nothing
