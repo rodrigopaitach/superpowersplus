@@ -9,6 +9,44 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **The rule lost its exception and got simpler: `CLAUDE.md` keeps no measured
+  number at all.** `1.9.3` kept one — `writing-skills`' 679-here-and-679-upstream
+  — on the grounds that it was the *condition* of the exemption rather than a
+  description of it. That was true and still the wrong shape: a condition
+  stated as a number is a number, and it ages exactly like the ones removed
+  before it. **The condition is now a command.** The exemption holds while the
+  file is the upstream's, and
+  `git diff upstream/main -- skills/writing-skills/SKILL.md` answers that today
+  and never ages — anything beyond the namespace rename means this project has
+  begun owning the file's content, and the exemption goes with it. Measured
+  while writing this: the diff returns that rename and nothing else.
+  The principle now reads in one line — **this file keeps the relation, or the
+  condition; a number that matters lives here, with its date** — and needs no
+  carve-out for the next audit to misread.
+
+- **The last measured number left `CLAUDE.md` for the same reason, and this
+  entry is its home.** The paragraph explaining why backticked prose paths are
+  deliberately not gated carried its own count. It was dated, which is what had
+  kept it defensible, but "this file keeps no measured number" cannot be true
+  of a file that keeps one — a rule falsified by its own document is the
+  half-rule this project treats as the most silent failure there is. The
+  paragraph now states the finding and points here. **Counted 2026-08-03: 34 of
+  the 78 backticked paths under `skills/` resolved to nothing, and every one of
+  the 34 was read — none was a defect** (placeholders, artifact paths inside a
+  partner's own project, self-references, and upstream's illustrative
+  examples). `1.9.3`'s entry describes that number as still living in
+  `CLAUDE.md`; it did, at that version.
+
+- **One number stays, and it is not a measurement of this repository.** The
+  500-line `SKILL.md` ceiling is a threshold the gate enforces, borrowed from
+  Anthropic's own guidance and cited where it is vendored
+  (`skills/writing-skills/anthropic-best-practices.md:241`). A rule's value is
+  not a measured fact about this checkout, and it does not age with it.
+
 ## [1.9.3] - 2026-08-05
 
 ### Changed
