@@ -13,6 +13,24 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The Test Coverage Matrix stated its rules in two places, 119 lines apart.**
+  `writing-plans/SKILL.md` carries the heading twice by design — `:118` is the
+  block a plan author copies into the plan, `:237` is the instruction for
+  filling it — but the bracket inside the template restated the rules the
+  section already owns: one row one test, every `AC` and `IR` covered, test
+  types and layers taken from this repository. The template now points at the
+  section and keeps only what a template must show, the five columns and the
+  worked rows. **The example rows stay:** they are the one place that shows
+  `T3.1` and `T3.2` refining the same `AC1`, which the rule only implies with
+  "at least one row".
+- **`writing-plans` described a worktree it never creates.** `:16` read "it
+  should have been created via `using-git-worktrees` **at execution time**",
+  written in the past tense about something that happens after this skill
+  finishes. Both execution paths open by creating or verifying one
+  (`subagent-driven-development/SKILL.md:94`,
+  `executing-plans/SKILL.md:62`); planning creates none, and a worktree present
+  while planning predates the plan.
+
 - **"None restates it" was false, and the restatement is the part that had to
   stay.** `writing-plans/SKILL.md:38` declared itself the single statement of
   the least-structure rule and said the three appliers never restate it.

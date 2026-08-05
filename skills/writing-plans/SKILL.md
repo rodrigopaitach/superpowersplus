@@ -13,7 +13,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
-**Context:** If working in an isolated worktree, it should have been created via the `superpowersplus:using-git-worktrees` skill at execution time.
+**Context:** This skill creates no worktree. Both execution paths open by creating or verifying one with `superpowersplus:using-git-worktrees`; if you are already in one while planning, it predates this plan.
 
 **Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
 - (User preferences for plan location override this default)
@@ -117,10 +117,10 @@ include this section.]
 
 ## Test Coverage Matrix
 
-[One row per task criterion, across every task — one row, one test. Every
-`AC` and every `IR` in the spec appears in the Spec criterion column of at
-least one row. Test types and layer names are this repository's own — see
-the section below before filling it.]
+[One row per task criterion, across every task. The rules that govern this
+table — one row one test, every `AC` and `IR` covered, and where the test
+types and layer names come from — are stated once in this skill's
+"Test Coverage Matrix" section below. Read it before filling this in.]
 
 | Criterion | Spec criterion | Test type | Layer | Test |
 |-----------|----------------|-----------|-------|------|
