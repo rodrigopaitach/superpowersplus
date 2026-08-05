@@ -1,6 +1,6 @@
 {
   "name": "superpowersplus",
   "description": "superpowersplus — metodologia de desenvolvimento para agentes de código: spec fundamentada em citação arquivo:linha, matriz de cobertura de testes, revisor de tarefa que reexecuta a suíte e auditoria de conformidade no fim da branch. Obra derivada de Superpowers (Jesse Vincent, MIT).",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "contextFileName": "GEMINI.md"
 }
