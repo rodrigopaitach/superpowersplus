@@ -9,6 +9,41 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **`scripts/lint-shell.sh` passed green while linting nothing whenever `git`
+  failed.** The four collection loops read from process substitution —
+  `while … done < <(git …)` — which discards the producer's exit status;
+  `set -euo pipefail` never sees it. A failing `git` closed the pipe, the loop
+  read EOF, collection carried on with an empty list, and the run ended at
+  `No shell files found.` with **exit 0**. The gate reported success at exactly
+  the moment it lost the ability to look, and its output was indistinguishable
+  from a genuinely clean run.
+  **Measured as a difference between two states, not as a verdict in one:** the
+  same file carrying the same syntax error, linted from a healthy repository,
+  exits 1 with `SC1072`; linted from one whose `.git/index` is corrupt, exits 0
+  with `No shell files found.` Nothing about the file changed — only the gate's
+  ability to see it.
+  **The severity is stated smaller than it was found.** The review that raised
+  it called it HIGH on the strength of a CI path: `.github/workflows/ci.yml:124`
+  runs `git reset --soft` immediately before the lint step. Reading that
+  workflow does not support the claim — the step carries no `continue-on-error`
+  and Actions runs `run:` blocks under `bash -e`, so a `git` failure there fails
+  the job before the lint step starts. **The defect is proven; the scenario that
+  would make it HIGH is not.** It is recorded as a defect in the gate's shape.
+  The fix routes `git` through a temporary file, so its status is checked before
+  the loop runs and the loop still stays out of a subshell — which is what the
+  process substitution was buying. The four call sites collapse into one helper
+  — the code itself comes out even, and the file grows by the comment block
+  that records why the obvious idiom is the wrong one here.
+  `tests/shell-lint/test-lint-shell.sh` gains the paired half of the existing
+  "reports changed shell file count" case: three assertions that fail against
+  the previous script and pass against this one, verified in both directions. A
+  fourth assertion was written and **removed** — it passed in both states, so
+  no mutation of this defect could have reached it.
+
 ## [1.9.4] - 2026-08-05
 
 ### Changed

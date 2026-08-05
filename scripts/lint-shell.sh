@@ -64,36 +64,51 @@ add_shell_file() {
   files+=("$path")
 }
 
-collect_all_shell_files() {
-  local path
+# Reads NUL-delimited paths from `git "$@"` into the file list.
+#
+# `while … done < <(git …)` looks equivalent and is not: process substitution
+# discards git's exit status, and `set -e` never sees it. A failing git closes
+# the pipe, the loop reads EOF, collection continues with an empty list, and
+# the run ends at "No shell files found." with exit 0 — the gate passes having
+# linted nothing, which is the one outcome it must never produce. Measured on
+# a repository with a corrupted .git/index: a file carrying a syntax error
+# went from exit 1 to exit 0 with no other change.
+#
+# A temp file keeps the loop out of a subshell, so add_shell_file still
+# appends to the caller's array, while git's status stays visible.
+add_shell_files_from_git() {
+  local listing path
 
-  ensure_git_work_tree
-
-  while IFS= read -r -d '' path; do
-    add_shell_file "$path"
-  done < <(git ls-files -z)
-}
-
-collect_changed_shell_files() {
-  local path
-
-  ensure_git_work_tree
-
-  if git rev-parse --verify HEAD >/dev/null 2>&1; then
-    while IFS= read -r -d '' path; do
-      add_shell_file "$path"
-    done < <(git diff --name-only -z --diff-filter=ACMR HEAD)
-
-    while IFS= read -r -d '' path; do
-      add_shell_file "$path"
-    done < <(git diff --cached --name-only -z --diff-filter=ACMR)
-  else
-    collect_all_shell_files
+  listing="$(mktemp)" || die "could not create a temporary file"
+  if ! git "$@" >"$listing"; then
+    rm -f "$listing"
+    die "git $* failed — refusing to lint an empty file list"
   fi
 
   while IFS= read -r -d '' path; do
     add_shell_file "$path"
-  done < <(git ls-files --others --exclude-standard -z)
+  done <"$listing"
+
+  rm -f "$listing"
+}
+
+collect_all_shell_files() {
+  ensure_git_work_tree
+
+  add_shell_files_from_git ls-files -z
+}
+
+collect_changed_shell_files() {
+  ensure_git_work_tree
+
+  if git rev-parse --verify HEAD >/dev/null 2>&1; then
+    add_shell_files_from_git diff --name-only -z --diff-filter=ACMR HEAD
+    add_shell_files_from_git diff --cached --name-only -z --diff-filter=ACMR
+  else
+    collect_all_shell_files
+  fi
+
+  add_shell_files_from_git ls-files --others --exclude-standard -z
 }
 
 collect_requested_shell_files() {

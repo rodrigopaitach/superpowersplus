@@ -171,6 +171,29 @@ assert_contains "$tool_log" "<hooks/session-start>" "--all includes tracked exte
 assert_contains "$tool_log" "<tracked.sh>" "--all includes tracked .sh file"
 assert_not_contains "$tool_log" "untracked.sh" "--all ignores untracked shell files"
 
+# The paired half of "reports changed shell file count" above. That case proves
+# the gate lints what changed when git works; this one proves it refuses rather
+# than reporting an empty list when git does not. Both verdicts are needed: the
+# defect this catches kept exit 0 and printed "No shell files found.", which is
+# indistinguishable from a genuinely clean run.
+broken="$TEST_ROOT/broken-index"
+mkdir -p "$broken"
+make_fixture_repo "$broken"
+printf 'not a git index' >"$broken/.git/index"
+
+: >"$log"
+if output="$(run_lint_shell "$broken" "$fakebin" "$log" 2>&1)"; then
+  fail "lint-shell fails when git cannot list files"
+  printf '%s\n' "$output" | sed 's/^/      /'
+else
+  pass "lint-shell fails when git cannot list files"
+fi
+
+assert_not_contains "$output" "No shell files found." \
+  "does not report an empty file list when git failed"
+assert_contains "$output" "refusing to lint an empty file list" \
+  "says why it refused"
+
 if [[ "$FAILURES" -eq 0 ]]; then
   echo "All shell lint script tests passed"
 else
