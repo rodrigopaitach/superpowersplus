@@ -46,6 +46,18 @@ References below name them so a claim here can be traced there.
 
 ### Changed
 
+- **`brainstorming`: the process graph moved to
+  `skills/brainstorming/references/process-flow.md`** — 50 lines of `dot` out
+  of `SKILL.md`, which goes 306 → 261. The graph restates a Checklist that is
+  right above it and is read once, at entry; what stays at the trigger point
+  is an **imperative pointer carrying its moment** — "open it before your
+  first question to the user" — copied from the wording that measured 3/3
+  (`subagent-driven-development/SKILL.md`, section "The Process", pointing at
+  `references/resuming.md`). The graph's content moved verbatim: 19 nodes
+  declared, 19 used in edges, unchanged. The hard rule that followed it —
+  the terminal state is invoking `writing-plans`, and no implementation skill
+  is invoked here — stays in `SKILL.md`, because it guards an act.
+
 - **`CLAUDE.md` records the distinction this case produced**, in the rule about
   a third occurrence: a form that *cannot* be extracted is unified in place
   **and charged by a gate**. Written by rewriting the existing paragraph rather
