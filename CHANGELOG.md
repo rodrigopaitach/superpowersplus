@@ -13,6 +13,24 @@ References below name them so a claim here can be traced there.
 
 ### Changed
 
+- **The evidence line is one form again, unified where it is used.** It appears
+  three times and had drifted into three wordings; the divergence was
+  `code-reviewer.md:96` asking for `[verbatim, and where you got it]` while the
+  other two ask for `[verbatim]`. Nothing was lost by unifying: that reviewer's
+  instruction already requires it — "say which you ran and where you found it",
+  `:52-56` — and its worked example already shows the shape,
+  `` `npm test` (from package.json scripts.test) `` at `:163`. What stays
+  different is the baseline suffix, which is content rather than wording:
+  `base:` is the count before the task, `previous:` is what the last review
+  reported, and the whole-branch review carries none because it has no prior
+  count. Each face now declares its own label where it declares the slot.
+  **`CLAUDE.md` gained the exception this measured:** a form living inside a
+  subagent's `## Output Format` is unified in place and never extracted, whatever
+  the occurrence count says. Extracting replaces the form with an instruction to
+  fetch a file at runtime, and `references/escalation-format.md:9-11` is the
+  record of that exact move measuring 1 of 3 — then 3 of 3 once the form
+  returned to the point of use.
+
 - **The Platform Adaptation list now states its criterion, and Gemini stays
   out.** A sweep found `references/gemini-tools.md` present and unlisted and
   read it as an omission. It is not: `GEMINI.md` imports both that file and the

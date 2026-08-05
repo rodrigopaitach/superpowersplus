@@ -125,7 +125,11 @@ Subagent (general-purpose):
 - `[TEST_COMMAND]` — REQUIRED: the same command the task review ran, so the
   two runs compare; the re-reviewer runs it itself
 - `[BASE_TEST_COUNT]` — the counts the previous review reported. Pass
-  `unknown` when there are none, and expect the delta to come from the diff
+  `unknown` when there are none, and expect the delta to come from the diff.
+  **It is labelled `previous:` in the evidence line**, which is the one part of
+  that line each face words differently: this one compares against the previous
+  review, the task review against the commit before the task (`base:`), and the
+  whole-branch review has no prior count and carries no label at all
 - `[FIX_BASE_SHA]` — the head the previous review saw
 - `[HEAD_SHA]` — current commit
 - `[DIFF_FILE]` — the path `scripts/review-package PLAN_FILE FIX_BASE HEAD` printed

@@ -93,8 +93,8 @@ Subagent (general-purpose):
 
     ### Test Run
 
-    **Command:** [verbatim, and where you got it] — **exit:** [code] —
-    **counts:** [passed/failed/skipped]
+    **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/failed/
+    skipped]
 
     ### Strengths
     [What's well done? Be specific.]

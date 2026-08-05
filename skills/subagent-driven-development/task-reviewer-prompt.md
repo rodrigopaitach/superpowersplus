@@ -225,7 +225,11 @@ Subagent (general-purpose):
   reviewer runs it; do not pass a command you have not confirmed exists
 - `[BASE_TEST_COUNT]` — the test count at `[BASE_SHA]`, so the reviewer can
   see whether tests disappeared. Omit only when no total is available, and
-  expect the reviewer to derive the delta from the diff instead
+  expect the reviewer to derive the delta from the diff instead. **It is
+  labelled `base:` in the evidence line**, which is the one part of that line
+  each face words differently: this one compares against the commit before the
+  task, the re-review against what the previous review reported (`previous:`),
+  and the whole-branch review has no prior count and carries no label at all
 - `[BASE_SHA]` — commit before this task
 - `[HEAD_SHA]` — current commit
 - `[DIFF_FILE]` — REQUIRED: the path the controller wrote the review

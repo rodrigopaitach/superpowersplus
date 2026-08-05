@@ -41,14 +41,17 @@ reach of three gates at once. Do not harmonize.
 | `final-branch-audit/SKILL.md:175` | **No tests at all** — re-runs the *searches* against the spec |
 
 The evidence block `**Command:** [verbatim] — **exit:** [code] — **counts:** …`
-appears **three** times, in three wordings: `task-reviewer-prompt.md:180`
-(suffix `base:`), `re-review-prompt.md:83` (suffix `previous:`) and
-`code-reviewer.md:96` (`[verbatim, and where you got it]`, no suffix). The
-extraction trigger written here — two do not justify it, a third does — has
-been crossed, and the resolution is open: this block sits inside a subagent's
-`## Output Format`, so replacing it with a pointer makes the subagent fetch a
-file at runtime, which is the failure `escalation-format.md:9-11` measured and
-reversed. Unify the wording in place before considering anything else.
+appears in `task-reviewer-prompt.md:180`, `re-review-prompt.md:83` and
+`code-reviewer.md:96`, identical in all three but for its baseline suffix —
+content, not wording: `base:` (count before the task), `previous:` (what the
+last review reported), none at all for the whole-branch review, which has no
+prior count. Each face declares its label where it declares the slot.
+
+**A form inside a subagent's `## Output Format` is unified in place, never
+extracted** — the measured exception to "at a third occurrence, extract it". A
+reference file replaces the form with an instruction to go fetch it, and
+`references/escalation-format.md:9-11` records that move measuring 1/3, then
+3/3 once the form came back to the point of use.
 
 ## Rebase relationship with Superpowers
 
