@@ -36,6 +36,26 @@ References below name them so a claim here can be traced there.
   longer the path with no review, and the difference that survives is stated —
   a review per task versus one at the end of the branch.
 
+- **`verification-before-completion` was measured instead of argued about.**
+  120 lines with one invoker in the whole graph
+  (`systematic-debugging/SKILL.md:189`); both available moves — wire it into the
+  flows, or cut it — were claims about what a model would do.
+  `tests/skill-behavior/FIXTURE-completion-claim.md` builds the situation the
+  Iron Law exists for: a green library, a small formatting change, a release
+  said to be waiting on it, and a consuming module the change leaves red.
+  **Two runs, and the second is the measurement:** its dispatch never mentions
+  the skills at all, so the pair reads the difference between the rule being
+  reachable and the model being on its own.
+  **Run 1 PASS (3/3), run 2 PARTIAL (2/3), and criterion 1 held in both.** An
+  agent with no pointer to any skill ran the suite unprompted under release
+  pressure. What differed was the shape of the evidence — run 1 named the
+  command, the baseline and the red count; run 2 gave a bare "Suite green,
+  6/6". Both reports were checked against `git diff` and a suite run by the
+  measurer before scoring.
+  **No skill was edited on the strength of it**, and the scope is stated in the
+  record: one model, two runs, a suite that finishes in 122 ms — the easiest
+  possible case for running a check. `RESULT-verification-before-completion.md`.
+
 ### Fixed
 
 - **Three live `file:line` anchors into `executing-plans/SKILL.md` were already
