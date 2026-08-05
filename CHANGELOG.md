@@ -13,6 +13,20 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **"None restates it" was false, and the restatement is the part that had to
+  stay.** `writing-plans/SKILL.md:38` declared itself the single statement of
+  the least-structure rule and said the three appliers never restate it.
+  Measured: `plan-document-reviewer-prompt.md:83` and
+  `task-reviewer-prompt.md:118-120` do exactly that — cite and judge — but
+  `implementer-prompt.md:83-90` restates the *smaller* clause, and it restates
+  it **because the subject differs**. This statement picks a structure; the
+  implementer writes the code inside it, which is why its copy carries
+  reuse-before-writing and duplication-as-a-last-resort, neither of which is a
+  planning decision. Deleting them there to make the sentence true would strip a
+  rule out of a subagent's prompt and leave a pointer in its place — the move
+  `escalation-format.md:9-11` measured failing. The sentence was corrected
+  instead, and now names which appliers cite and which one adapts.
+
 - **Three of the four review-face anchors in `CLAUDE.md` pointed somewhere
   else.** Measured by opening each destination: `task-reviewer-prompt.md:69` is
   the heading "Do Not Trust the Report" and the `[TEST_COMMAND]` run is at
