@@ -38,7 +38,7 @@ new_tree() {
     mkdir -p "$tree/scripts" "$tree/docs"
     cp "$SCRIPT_UNDER_TEST" "$tree/scripts/check-links.sh"
     local target
-    for target in README.md CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md CHANGELOG.md; do
+    for target in README.md CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md CHANGELOG.md CLAUDE.md; do
         : > "$tree/$target"
     done
     printf '%s\n' "$tree"
@@ -219,6 +219,66 @@ T="$(new_tree)"
 printf '# Doc\n\n<!-- https://docs.stripe.com/api -->\n' > "$T/README.md"
 assert_run 1 "the same URL in a root document is still off-diet" \
     "$T" "outside the third-party link diet"
+
+echo "Test: section references — the stable anchor form"
+
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Tests — Run Them Yourself\n\nbody\n' > "$T/skills/demo/SKILL.md"
+printf 'See `skills/demo/SKILL.md`, section "Tests — Run Them Yourself".\n' > "$T/CLAUDE.md"
+assert_run 0 "a section that exists passes" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Tests — Run Them Yourself\n' > "$T/skills/demo/SKILL.md"
+printf 'See `skills/demo/SKILL.md`, section "Tests Nobody Wrote".\n' > "$T/CLAUDE.md"
+assert_run 1 "a section that does not exist fails" "$T" "no heading matching section"
+
+T="$(new_tree)"
+printf 'See `skills/gone/SKILL.md`, section "Anything".\n' > "$T/CLAUDE.md"
+assert_run 1 "a section reference to a missing file fails" "$T" "names a file that does not exist"
+
+# The case this form exists for: in a prompt template the whole body is one
+# fenced block and its headings are indented, so the link-anchor regex — which
+# needs '#' in column 1 and blanks fenced blocks — sees none of them.
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Template\n\n```\n  prompt: |\n    ## Tests — Run Them Yourself\n\n    body\n```\n' \
+    > "$T/skills/demo/prompt.md"
+printf 'See `skills/demo/prompt.md`, section "Tests — Run Them Yourself".\n' > "$T/CLAUDE.md"
+assert_run 0 "an indented heading inside a fenced prompt body counts" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## The `--verify-tag` Guard\n' > "$T/skills/demo/SKILL.md"
+printf 'See `skills/demo/SKILL.md`, section "The `--verify-tag` Guard".\n' > "$T/CLAUDE.md"
+assert_run 0 "a section name carrying backticks matches after normalization" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Setup\n' > "$T/skills/demo/SKILL.md"
+printf 'See `demo/SKILL.md`, section "Setup".\n' > "$T/CLAUDE.md"
+assert_run 0 "a path relative to skills/ resolves, like the changelog gate's cascade" "$T"
+
+T="$(new_tree)"
+printf 'The rule lives at `scripts/check-docs-sync.sh:14-15`.\n' > "$T/CLAUDE.md"
+assert_run 0 "a plain file:line anchor is untouched by this check" "$T"
+
+# A reference wrapped across lines by an editor must still be checked. Reading
+# line by line, it simply stops matching — the gate goes quiet and the author
+# sees a pass, which is the "silence reads as coverage" failure this repository
+# exists to separate.
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Test Run\n' > "$T/skills/demo/SKILL.md"
+printf 'See `skills/demo/SKILL.md`, section "Test\nRun" for the shape.\n' > "$T/CLAUDE.md"
+assert_run 0 "a reference wrapped across two lines still resolves" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Test Run\n' > "$T/skills/demo/SKILL.md"
+printf 'See `skills/demo/SKILL.md`, section "Nothing\nHere" for the shape.\n' > "$T/CLAUDE.md"
+assert_run 1 "a wrapped reference to a missing section still fails" "$T" "no heading matching section"
 
 echo
 if [ "$FAILURES" -eq 0 ]; then

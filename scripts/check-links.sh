@@ -55,6 +55,21 @@ TARGETS += sorted(str(p) for p in pathlib.Path("skills").rglob("*.md"))
 
 FENCE = re.compile(r"^\s*(```|~~~)")
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
+
+# The stable-anchor form: `path/file.md`, section "Exact Heading". A heading
+# moves only when somebody renames it — rare, and loud in a diff — while a line
+# number moves every time a paragraph is inserted above it. Three of the four
+# review-face anchors and five of the measurement queue's were pointing at the
+# wrong line when this was written, three of those five broken by the very
+# session that wrote them.
+# Matched against the whole file, never line by line: an editor wrapping a
+# reference across two lines would otherwise stop it matching, the gate would
+# go quiet, and the author would see a pass — silence reading as coverage,
+# which is the failure this repository exists to separate. The path cannot
+# contain a newline; the section title can, and is normalized before lookup.
+SECTION_REF = re.compile(r'`([^`\n]+\.md)`,\s*section\s+"([^"]+)"')
+SECTION_HEADING = re.compile(r"^\s*(#{1,6})\s+(.*?)\s*#*\s*$")
+SECTION_TARGETS = ["CLAUDE.md"]
 LINK = re.compile(r"(?<!\!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 EXTERNAL = re.compile(r"^(https?:|mailto:|tel:|ftp:)", re.IGNORECASE)
 
@@ -158,6 +173,48 @@ def anchors_cached(path):
     return anchor_cache[key]
 
 
+def section_slugs(path):
+    """Every heading the file offers, indented ones included.
+
+    Deliberately NOT anchors_of(): that one answers "what can a GitHub anchor
+    link reach", so it needs '#' in column 1 and blanks fenced blocks. A prompt
+    template is one fenced block from top to bottom and its headings are
+    indented inside it — `task-reviewer-prompt.md` exposes 1 heading of its 10
+    to those rules. Those are exactly the sections CLAUDE.md has to cite.
+
+    The looseness is one-directional and declared: a `# comment` inside a shell
+    block would count as a heading here, so this check can accept a section
+    that is not one. It can never reject a section that exists, which is the
+    failure that matters — the anchors it replaces were wrong three times.
+    """
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return None
+    found = set()
+    for line in text.splitlines():
+        match = SECTION_HEADING.match(line)
+        if match:
+            base = slug(match.group(2))
+            if base:
+                found.add(base)
+    return found
+
+
+def resolve_section_path(raw_path):
+    """The changelog gate's cascade: as written, then under skills/, then any
+    tracked path ending with it. Several matches is an ambiguity to skip, not
+    a claim to charge — same reasoning as check-changelog.sh."""
+    direct = pathlib.Path(raw_path)
+    if direct.is_file():
+        return [direct]
+    under_skills = pathlib.Path("skills") / raw_path
+    if under_skills.is_file():
+        return [under_skills]
+    return sorted(p for p in ROOT.rglob("*")
+                  if p.is_file() and str(p).endswith("/" + raw_path))
+
+
 problems = []
 offdiet = []
 checked = 0
@@ -211,6 +268,34 @@ for name in TARGETS:
             if anchor.lower() not in available:
                 problems.append(f"{name}:{number}: {target} -> no heading with anchor '{anchor}'")
 
+sections = 0
+
+for name in SECTION_TARGETS:
+    source = pathlib.Path(name)
+    if not source.is_file():
+        continue
+    text = source.read_text(encoding="utf-8")
+    for match in SECTION_REF.finditer(text):
+        raw_path = match.group(1)
+        heading = " ".join(match.group(2).split())
+        number = text.count("\n", 0, match.start()) + 1
+        sections += 1
+        matches = resolve_section_path(raw_path)
+        if not matches:
+            problems.append(
+                f"{name}:{number}: section reference names a file that does not exist: {raw_path}")
+            continue
+        if len(matches) > 1:
+            continue
+        available = section_slugs(matches[0])
+        if available is None:
+            problems.append(
+                f"{name}:{number}: {raw_path} -> destination is not readable text")
+            continue
+        if slug(heading) not in available:
+            problems.append(
+                f'{name}:{number}: {raw_path} -> no heading matching section "{heading}"')
+
 if problems:
     print("check-links: local links that do not resolve.", file=sys.stderr)
     print("", file=sys.stderr)
@@ -242,5 +327,5 @@ if problems or offdiet:
     sys.exit(1)
 
 print(f"check-links: {checked} local link(s) across {len(TARGETS)} file(s) resolve; "
-      f"{scanned} URL(s) on the diet.")
+      f"{scanned} URL(s) on the diet; {sections} section reference(s) resolve.")
 PY

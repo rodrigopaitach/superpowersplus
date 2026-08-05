@@ -9,6 +9,65 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **`check-links.sh` verifies the stable anchor form, and `CLAUDE.md` is the
+  first file it reads at all.** Measured before writing: no gate reached
+  `CLAUDE.md` — `check-links.sh` scans the institutional root, `docs/` and
+  `skills/`, and `check-changelog.sh` only ever opens the changelog. The file
+  whose anchors were wrong three times in two releases was the one nothing
+  checked. It now charges `` `path/file.md`, section "Exact Heading" ``: the
+  file must resolve, and some heading in it must match the title after the same
+  slug normalization the anchor pass already uses.
+  **The heading scan is deliberately looser than the anchor scan, and the
+  reason is measured.** `anchors_of()` answers "what can a GitHub anchor link
+  reach", so it needs `#` in column 1 and blanks fenced blocks — under those
+  rules `task-reviewer-prompt.md` exposes **1** of its 10 headings, because a
+  prompt template is one fenced block top to bottom with its headings indented
+  inside it. Those are exactly the sections `CLAUDE.md` has to cite, so
+  `section_slugs()` reads indented headings inside fences. The looseness runs
+  one way only and is stated in the code: it can accept a section that is not
+  one, never reject a section that exists.
+  **It matches against the whole file, not line by line** — an editor wrapping
+  a reference across two lines would otherwise stop it matching, the gate would
+  go quiet, and the author would see a pass. That is not hypothetical: the first
+  implementation read line by line and silently ignored one of the seven
+  references being converted, which is how it was found.
+  Nine cases in `tests/hooks/test-check-links.sh`, and four mutations run
+  against them — dropping the indentation tolerance, removing the heading
+  comparison, removing the missing-file charge, and restoring line-by-line
+  reading — each killing exactly one distinct assertion.
+  **The gate failed the commit that created it**, on the generic
+  `` `file.md`, section "Heading" `` written into the criterion sentence. The
+  sentence now points at the table above instead of instantiating a path that
+  does not exist.
+
+### Changed
+
+- **Seven anchors in `CLAUDE.md` moved from line numbers to section titles.** A
+  heading changes only when somebody renames it — rare, and loud in a diff —
+  while a line number moves every time a paragraph is inserted above it. Of the
+  13 `file:line` anchors in the file, 8 pointed into skill files this project
+  edits every release; 7 of those became section references and **one kept its
+  line number**: `references/escalation-format.md:9-11` sits in that file's
+  preamble, between the title and `## Example`, with no heading of its own to
+  name. No heading was invented for it. The other 5 are unchanged by design —
+  4 name scripts and tests, which move rarely and often have no headings, and
+  `anthropic-best-practices.md:241` is vendored from upstream, so it is not a
+  file this fork edits.
+  The `CHANGELOG.md` anchors — 90 of them, 80 into skills — were **not**
+  touched: they record where a rule was in the version being described, which
+  is what a historical record is for.
+  The criterion is now written down: `file:line` for code and artifacts that do
+  not move because of what we write, file plus section title for a file of this
+  repository we edit every release.
+- **The pre-commit cost table is re-measured.** `check-links.sh` 42 → 70 ms with
+  the section pass, which resolves each bare basename by walking the tree;
+  `check-skill-size.sh` 15 → 10 ms and the hook end to end 68 → 90 ms, same
+  method, same machine, median of three.
+
 ## [1.8.1] - 2026-08-04
 
 ### Changed

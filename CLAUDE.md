@@ -29,29 +29,33 @@ These break things silently when violated.
 
 ## The four review scopes are distinct by design
 
-Each face in the review chain runs something different. They are **not one rule
-written four ways** — unifying them into a common protocol would change the
-reach of three gates at once. Do not harmonize.
+Each face runs something different. They are **not one rule written four ways**
+— harmonizing them into a common protocol changes the reach of three gates at
+once. Do not.
 
 | Face | What it actually runs |
 |---|---|
-| `subagent-driven-development/task-reviewer-prompt.md:83` | The **task's** test command, `[TEST_COMMAND]`, reported verbatim |
-| `requesting-code-review/code-reviewer.md:52` | The **project's** suite, with a fallback to the command the dispatch named |
-| `subagent-driven-development/re-review-prompt.md:60` | **Re-runs** what already ran, reporting command, exit code, and counts |
-| `final-branch-audit/SKILL.md:175` | **No tests at all** — re-runs the *searches* against the spec |
+| `subagent-driven-development/task-reviewer-prompt.md`, section "Tests — Run Them Yourself" | The **task's** test command, `[TEST_COMMAND]`, reported verbatim |
+| `requesting-code-review/code-reviewer.md`, section "What to Check" | The **project's** suite, with a fallback to the command the dispatch named |
+| `subagent-driven-development/re-review-prompt.md`, section "Tests — Run Them Yourself" | **Re-runs** what already ran, reporting command, exit code, and counts |
+| `final-branch-audit/SKILL.md`, section "The Auditor Re-Runs the Searches" | **No tests at all** — re-runs the *searches* against the spec |
 
 The evidence block `**Command:** [verbatim] — **exit:** [code] — **counts:** …`
-appears in `task-reviewer-prompt.md:180`, `re-review-prompt.md:83` and
-`code-reviewer.md:96`, identical in all three but for its baseline suffix —
-content, not wording: `base:` (count before the task), `previous:` (what the
-last review reported), none at all for the whole-branch review, which has no
-prior count. Each face declares its label where it declares the slot.
+appears three times, identical but for a baseline suffix that is content, not
+wording: `base:` in `task-reviewer-prompt.md`, section "Test Evidence";
+`previous:` in `re-review-prompt.md`, section "Test Run"; none in
+`code-reviewer.md`, section "Test Run", which has no prior count.
 
 **A form inside a subagent's `## Output Format` is unified in place, never
-extracted** — the measured exception to "at a third occurrence, extract it". A
-reference file replaces the form with an instruction to go fetch it, and
-`references/escalation-format.md:9-11` records that move measuring 1/3, then
-3/3 once the form came back to the point of use.
+extracted** — the measured exception to "at a third occurrence, extract it":
+`references/escalation-format.md:9-11` records that move measuring 1/3, then 3/3
+once the form came back to the point of use. (It keeps a line number: preamble,
+no heading to name.)
+
+**Anchor by `file:line` for code and artifacts that do not move because of what
+we write; by file plus section title — the form above — for a file of this
+repository we edit every release.** `scripts/check-links.sh` proves the section
+exists; a line number it cannot.
 
 ## Rebase relationship with Superpowers
 
@@ -150,15 +154,13 @@ Measured 2026-08-02, median of three runs each on a warm cache, invoking each sc
 | `check-docs-sync.sh` | 3 ms |
 | `check-frozen-history.sh` | 3 ms |
 | `check-changelog.sh` | 3 ms |
-| `check-links.sh` | 42 ms |
-| `check-skill-size.sh` | 15 ms |
-| **`githooks/pre-commit` end to end** | **68 ms** |
+| `check-links.sh` | 70 ms |
+| `check-skill-size.sh` | 10 ms |
+| **`githooks/pre-commit` end to end** | **90 ms** |
 
-`check-links.sh`, `check-skill-size.sh` and the end-to-end figure were re-measured 2026-08-03 the same way; the other three rows are unchanged from the run above. `check-skill-size.sh` starts no interpreter — its 15 ms is fifteen `wc` processes and nothing else. `check-links.sh` went 29 → 42 ms when its scan grew from 12 files to 56; the extra 13 ms is reading and parsing, not another `python3` start.
+Those three rows were re-measured 2026-08-04 the same way; the other three are unchanged from the run above. `check-links.sh` went 29 → 42 ms when its scan grew from 12 files to 56, then 42 → 70 when it gained the section-reference pass, which resolves each bare basename by walking the tree. `check-skill-size.sh` starts no interpreter — its cost is `wc` processes and nothing else.
 
-**The condition matters more than the number.** Almost all of `check-links.sh` is `python3` startup, which moves with the machine and with whether the interpreter is in cache — an independent measurement the same day reported roughly 7× these figures. Treat the table as a baseline taken this way, on this machine, not as a constant.
-
-**There is deliberately no automatic timer.** A stopwatch around the hook is one more thing to maintain, and it reports on every commit a number nobody reads. If a commit ever visibly drags, timing the checks one at a time is the first step, and the table above is what to compare against.
+**The condition matters more than the number, and there is deliberately no automatic timer.** Most of `check-links.sh` is `python3` startup, which moves with the machine and with whether the interpreter is in cache — an independent measurement the same day reported roughly 7× these figures. Treat the table as a baseline taken this way, on this machine, not as a constant. A stopwatch around the hook would be one more thing to maintain, reporting a number nobody reads on every commit; if a commit ever visibly drags, time the checks one at a time against the table above.
 
 ## Running `gh`
 
