@@ -9,33 +9,7 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
-
-### Changed
-
-- **The stance on diverging from the upstream is recorded in `CLAUDE.md`.** The
-  rebase section read as though conflict cost were a reason not to change a
-  file, and sessions have treated it that way. It is not: the upstream is a
-  historical base, complete divergence is acceptable by the owner's decision of
-  2026-08-04, and rebase cost is an expense to schedule. The existing rule —
-  touch the minimum of what they edit often — stays, now framed as spending that
-  cost deliberately rather than avoiding it.
-
-### Fixed
-
-- **Five anchors in the measurement queue slid, three of them inside this
-  cycle.** The digraph fix added two lines to `brainstorming/SKILL.md` above the
-  review cap, the Step 2 renumbering added one to `executing-plans/SKILL.md`
-  above the audit cap, and the dispatch-list item added three to
-  `subagent-driven-development/SKILL.md` above the dispute rules. Every queue
-  anchor below each insertion point moved by exactly that much: the three-round
-  cap `213 → 215` and `133 → 134`, the returning-blocker rule `223 → 225` and
-  `144 → 145`, the dispute protocol `350 → 353`. Two of the five landed on
-  lines that read plausibly — `brainstorming:213` is now "Fix every blocking
-  issue the reviewer returns", one line above the cap it claims. This is the
-  second time in three releases (`1.6.0` recorded the first, same mechanism,
-  same file); `check-changelog.sh` cannot catch it, because an anchor whose file
-  exists and is long enough passes by construction.
+## [1.8.0] - 2026-08-04
 
 ### Added
 
@@ -52,9 +26,30 @@ References below name them so a claim here can be traced there.
   second was previously caught only by the controller's pre-flight scan
   (`subagent-driven-development/SKILL.md:137`), which runs after the plan is
   already approved. Pairs with the implementer slot added above.
+### Changed
 
+- **The stance on diverging from the upstream is recorded in `CLAUDE.md`.** The
+  rebase section read as though conflict cost were a reason not to change a
+  file, and sessions have treated it that way. It is not: the upstream is a
+  historical base, complete divergence is acceptable by the owner's decision of
+  2026-08-04, and rebase cost is an expense to schedule. The existing rule —
+  touch the minimum of what they edit often — stays, now framed as spending that
+  cost deliberately rather than avoiding it.
 ### Fixed
 
+- **Five anchors in the measurement queue slid, three of them inside this
+  cycle.** The digraph fix added two lines to `brainstorming/SKILL.md` above the
+  review cap, the Step 2 renumbering added one to `executing-plans/SKILL.md`
+  above the audit cap, and the dispatch-list item added three to
+  `subagent-driven-development/SKILL.md` above the dispute rules. Every queue
+  anchor below each insertion point moved by exactly that much: the three-round
+  cap `213 → 215` and `133 → 134`, the returning-blocker rule `223 → 225` and
+  `144 → 145`, the dispute protocol `350 → 353`. Two of the five landed on
+  lines that read plausibly — `brainstorming:213` is now "Fix every blocking
+  issue the reviewer returns", one line above the cap it claims. This is the
+  second time in three releases (`1.6.0` recorded the first, same mechanism,
+  same file); `check-changelog.sh` cannot catch it, because an anchor whose file
+  exists and is long enough passes by construction.
 - **The Test Coverage Matrix stated its rules in two places, 119 lines apart.**
   `writing-plans/SKILL.md` carries the heading twice by design — `:118` is the
   block a plan author copies into the plan, `:237` is the instruction for
@@ -1871,6 +1866,7 @@ to hold; and the resume route, which split — the subagent half held on its fir
 run, the inline half failed twice and held on the third after one structural
 change. Six remain queued in the gap above.
 
+[1.8.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.8.0
 [1.7.3]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.3
 [1.7.2]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.2
 [1.7.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.7.1
