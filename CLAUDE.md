@@ -54,6 +54,8 @@ reversed. Unify the wording in place before considering anything else.
 
 The upstream remote stays, and rebasing onto `obra/superpowers` is how their improvements arrive. That has one standing consequence:
 
+**The upstream is a historical base, not a ceiling.** Diverging from it completely is acceptable — the owner decided this on 2026-08-04 — and rebase cost is an expense to schedule, never a veto on a change worth making. The rule below is about spending that cost deliberately, not about avoiding it.
+
 **Touch the minimum of the files the upstream edits often.** Every line rewritten in a file they also maintain is a conflict at the next rebase. Prefer additive blocks in regions they do not touch; when a line must change, change that line and not its neighbors. `README.md` is this project's own now, but the rule still holds for `skills/`, `RELEASE-NOTES.md`, and everything under `tests/` that came from them.
 
 **Do not edit an upstream test to assert the opposite of what it asserts.** A test rewritten to match this project stops detecting the upstream's changes — it conflicts *and* loses the signal.

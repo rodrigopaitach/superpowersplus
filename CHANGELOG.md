@@ -11,6 +11,16 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Changed
+
+- **The stance on diverging from the upstream is recorded in `CLAUDE.md`.** The
+  rebase section read as though conflict cost were a reason not to change a
+  file, and sessions have treated it that way. It is not: the upstream is a
+  historical base, complete divergence is acceptable by the owner's decision of
+  2026-08-04, and rebase cost is an expense to schedule. The existing rule —
+  touch the minimum of what they edit often — stays, now framed as spending that
+  cost deliberately rather than avoiding it.
+
 ### Fixed
 
 - **Five anchors in the measurement queue slid, three of them inside this
