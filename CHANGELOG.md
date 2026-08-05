@@ -11,7 +11,50 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **The inline path runs a whole-branch code review before it hands off.**
+  `requesting-code-review` declares itself mandatory "Before merge to main"
+  (`skills/requesting-code-review/SKILL.md:17`) and the inline path invoked it
+  from nowhere — measured over `skills/`: `executing-plans/SKILL.md` named
+  neither it, nor `receiving-code-review`, nor
+  `verification-before-completion`. A gate declared mandatory with no consumer,
+  the same defect as the orphaned `**Execution:**` field and the orphaned
+  `receiving-code-review`, and wiring it in was the right answer both times.
+  Step 3 is now **Audit and Review the Branch**: two gates in a fixed order —
+  audit first, because a reviewer judges the diff it is handed and a task
+  nobody implemented produces none — feeding **one** findings list, under the
+  three-round cap and the escalation that were already there. No second loop
+  with rules of its own; the existing cap now counts both gates.
+  **The base is `git merge-base`, never `HEAD~1`** (the 1.8.0 correction),
+  stated at the point of dispatch: this path commits per task, so `HEAD~1`
+  hands over the last task's diff and calls it the branch.
+  **Where the harness has no subagent to dispatch, that is an escalation, not
+  a silent skip** — and not a self-review either, which is the first line of
+  that skill's own Common Rationalizations.
+  The execution offer in `writing-plans` was corrected with it: inline is no
+  longer the path with no review, and the difference that survives is stated —
+  a review per task versus one at the end of the branch.
+
 ### Fixed
+
+- **Three live `file:line` anchors into `executing-plans/SKILL.md` were already
+  off by one before this cycle touched them.** `finishing-a-development-branch`
+  cited `:26`, `:124` and `:136`; measured at `a5ac650`, before any edit here,
+  two of the three landed on a blank line and the third mid-sentence. Growing
+  Step 3 would have moved them again. They now use the stable form this project
+  adopted in `1.8.2` — `` `path/file.md`, section "Exact Heading" `` — which is
+  what `CLAUDE.md` prescribes for a file of this repository edited every
+  release. **The gate does not reach them:** `scripts/check-links.sh:72` sets
+  `SECTION_TARGETS = ["CLAUDE.md"]`, so the form is verified in `CLAUDE.md` and
+  nowhere else. Recorded as an open gap rather than fixed by widening the gate
+  in the same commit as the change that revealed it.
+- **A Common Rationalization in `finishing-a-development-branch` said the
+  inline path has no final review.** True when written, false the moment Step 3
+  gained one — a rotten rule competing with the correct one, which is the
+  failure this project's own instructions name. Its Reality now says what Step
+  2 there actually does: it checks that the gates ran and what they returned,
+  never re-runs them.
 
 - **The path advice follows the measured criterion, in all three places that
   carried it.** `executing-plans/SKILL.md:14` said to use
@@ -1832,6 +1875,18 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   than what it asserts. Treat a failure here as uninformative until the
   assertion is language-agnostic.
 
+- **The stable-anchor gate reaches `CLAUDE.md` and nothing else.**
+  `scripts/check-links.sh:72` sets `SECTION_TARGETS = ["CLAUDE.md"]`, so the
+  `` `path/file.md`, section "Exact Heading" `` form is verified only there.
+  Skills cite each other in that form too now, and those references are
+  unchecked — which is how three anchors in
+  `finishing-a-development-branch/SKILL.md` sat off by one without anything
+  noticing. Not closed in the same commit that revealed it: widening
+  `SECTION_TARGETS` to `skills/**` is a gate change wanting its own measurement
+  of what it would charge on the 44 markdown files under `skills/`, not a line
+  appended to a
+  behavioural change. The `file:line` form under `skills/` is unchecked as
+  well, and always was.
 - **The TDD Iron Law has no verifying face.** The implementer prompt requires a
   test before code, but no verifier can prove the order: the only record that
   the test came first is a report section written by the party being audited. A

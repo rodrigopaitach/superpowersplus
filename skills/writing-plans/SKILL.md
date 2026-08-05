@@ -399,8 +399,8 @@ The offer, filled in from the plan:
 >
 > | Option | What it costs | What survives an interruption |
 > |---|---|---|
-> | **Subagent-driven** | A fresh subagent per task, plus a review between tasks — more tokens, and each task starts without the last one's context | Progress is written to a file. Stopping mid-plan and resuming later works |
-> | **Inline** | Runs here, in this session — cheapest, and the whole plan stays in one context | Session todos only. If this session ends mid-plan, where things stood has to be rebuilt from git and the plan |
+> | **Subagent-driven** | A fresh subagent per task, plus a review after each one — more tokens, and each task starts without the last one's context | Progress is written to a file. Stopping mid-plan and resuming later works |
+> | **Inline** | Runs here, in this session — cheapest, and the whole plan stays in one context. Both end-of-branch gates still run, audit then code review; what it does not buy is a review per task, so a wrong turn surfaces at the end of the branch instead of at the task that took it | Session todos only. If this session ends mid-plan, where things stood has to be rebuilt from git and the plan |
 >
 > **Measured, 2026-08-04 — resuming was tested adversarially on both paths, and they did not come back the same:**
 > - **Subagent-driven:** a fresh agent given an interrupted run found the resume point, presented it, and waited without touching a file — 3 of 3 criteria on the first run.

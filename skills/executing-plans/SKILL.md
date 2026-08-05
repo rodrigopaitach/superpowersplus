@@ -21,7 +21,8 @@ line each:
 - **Each task done:** `task N of M complete — <short title>`, and what
   comes next.
 - **Going back to fix something** — a verification that failed, an audit
-  that came back FAIL: what failed, and that you are fixing it. This path
+  that came back FAIL, a review finding: what failed, and that you are
+  fixing it. This path
   runs no numbered fix rounds, so there is no round count to give; do not
   invent one.
 - **Finishing:** what was delivered, and which gate runs next.
@@ -120,27 +121,52 @@ Then, for each task, in this order:
 - Run verifications as specified
 - Mark as completed
 
-### Step 3: Audit the Branch
+### Step 3: Audit and Review the Branch
 
-After the last task, before finishing: the conformance audit is mandatory.
+After the last task, before finishing: both gates are mandatory, they run in
+this order, and they feed ONE findings list.
 
-- **REQUIRED SUB-SKILL:** Use superpowersplus:final-branch-audit
-- It walks every task and verdicts every acceptance criterion against
-  located evidence. Your own todos are claims under audit, not evidence —
-  marking a task completed in Step 2 proves nothing to it.
-- Verdict FAIL: the branch is not done. Fix the NOT DELIVERED rows and
-  re-run the audit. Never resolve a gap by editing the plan to stop asking.
+1. **Conformance audit — first.**
+   - **REQUIRED SUB-SKILL:** Use superpowersplus:final-branch-audit
+   - It walks every task and verdicts every acceptance criterion against
+     located evidence. Your own todos are claims under audit, not evidence —
+     marking a task completed in Step 2 proves nothing to it.
+   - Verdict FAIL does not skip the review below and does not send you
+     straight to a fix: its NOT DELIVERED rows join the review's findings in
+     the same round. Never resolve a gap by editing the plan to stop asking.
 
-**Three audit rounds maximum.** A round is one fix pass plus one re-run of the
-audit.
+2. **Whole-branch code review — second.**
+   - **REQUIRED SUB-SKILL:** Use superpowersplus:requesting-code-review, whose
+     "Before merge to main" is mandatory and reaches this path here.
+   - The base is the fork point, never `HEAD~1`:
+     `BASE_SHA=$(git merge-base <base-branch> HEAD)`. This path commits as it
+     goes, so `HEAD~1` silently hands the reviewer the last task's diff and
+     calls it the branch.
+   - It runs after the audit for the reason that skill gives at its "Before
+     merge to main": a reviewer judges the diff it is handed, and a task
+     nobody implemented produces no diff to judge.
+   - **No subagent available to dispatch?** That is the harness case in the
+     Note at the top of this skill, and it is a decision, not a detail: take it
+     to your human partner in the escalation shape below. Do not review your
+     own diff and call the gate satisfied — that is the first line of that
+     skill's own Common Rationalizations — and do not drop the gate in silence.
+
+3. **Fix both lists in one pass.** Audit rows and review findings are one list,
+   not one queue per gate. A pass ends by re-running what it touched: the audit
+   when it closed a NOT DELIVERED row, the review over the fix diff when it
+   addressed a finding — a row closes on evidence, never on your word that you
+   fixed it.
+
+**Three rounds maximum, counting both gates together.** A round is one fix pass
+plus the re-runs step 3 triggers.
 
 **At the cap, escalate — do not open a fourth round.** In the escalation shape
-below: which rows are still NOT DELIVERED, why three rounds did not close them,
-and the options with their cost — finish with the gaps recorded and named to
-your partner, implement what the audit keeps asking for as its own task, or go
-back to the plan, which is where a criterion nothing can satisfy usually comes
-from. Three rounds that did not converge is a finding about the plan, not about
-the last fix.
+below: which rows are still NOT DELIVERED and which findings are still open,
+why three rounds did not close them, and the options with their cost — finish
+with the gaps recorded and named to your partner, implement what the audit
+keeps asking for as its own task, or go back to the plan, which is where a
+criterion nothing can satisfy usually comes from. Three rounds that did not
+converge is a finding about the plan, not about the last fix.
 
 **A row that returns to NOT DELIVERED after being fixed escalates immediately,
 whatever the round.** Either two criteria are pulling against each other —
@@ -152,7 +178,8 @@ partner.
 
 ### Step 4: Complete Development
 
-After all tasks complete and verified, and the audit PASSes:
+After all tasks complete and verified, and Step 3's two gates are settled — the
+audit PASSes and the review's findings are addressed or ruled on:
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
 - **REQUIRED SUB-SKILL:** Use superpowersplus:finishing-a-development-branch
 - Follow that skill to verify tests, present options, execute choice
