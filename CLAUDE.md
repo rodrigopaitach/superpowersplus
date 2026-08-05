@@ -102,6 +102,8 @@ entry-less changes — a typo in a comment, whitespace — are what
 `git commit --no-verify` is for; the gate cannot tell them apart and does not
 try.
 
+**If a commit ever visibly drags, time the checks one at a time against the baseline in [`docs/pre-commit-cost.md`](docs/pre-commit-cost.md)** — there is deliberately no automatic timer, which would be one more thing to maintain, reporting on every commit a number nobody reads.
+
 ## Versioning
 
 Semver, from `1.0.0` on. **PATCH** for a fix that does not change how a skill behaves; **MINOR** for a new skill or a compatible new rule; **MAJOR** for anything that breaks existing artifacts or invocations — the namespace rename would have been MAJOR.
@@ -122,7 +124,7 @@ without a changelog entry and were caught only when the version was cut.
 
 ## Documentation hierarchy
 
-Three README-shaped files, with different jobs. Measured, not assumed: `README.md` is 170 lines, each `docs/README.*` is 153, and `scripts/check-docs-sync.sh:14-15` names exactly two files.
+Three README-shaped files, with different jobs. The relation, not the sizes: `docs/README.pt-BR.md` is canonical and `docs/README.en.md` translates it, `scripts/check-docs-sync.sh:14-15` names exactly those two and forces them into the same commit, and `README.md` is outside that pair. **A measured number inside this file ages in silence and goes on reading as true** — where the relation is enough, state the relation; where the number is the point, it belongs in `CHANGELOG.md` with its date.
 
 | File | Job | Gated by |
 |---|---|---|
@@ -132,7 +134,7 @@ Three README-shaped files, with different jobs. Measured, not assumed: `README.m
 
 **Structural divergence between the showcase and the documentation is deliberate** — different sections, different order, different depth, because they answer different questions. Do not "harmonize" them; the sync gate covers the bilingual pair only, and extending it to the root would force the showcase to mirror a reference document. What ties the three together is their links, and those are verified: `scripts/check-links.sh` also covers the five files in `docs/` that no gate reached before.
 
-**`check-links.sh` scans the institutional files at the root, `docs/`, and every markdown file under `skills/`.** `skills/**` was left out while the fear was rebase churn — upstream text whose relative links move when their side changes. Measured instead of assumed, 2026-08-03: the 21 markdown links under `skills/` all resolve, upstream's included, so the scan simply covers them and no design to tell a fork-owned link from an upstream one was needed. A link upstream wrote and broke is broken for this project's users exactly like one written here.
+**`check-links.sh` scans the institutional files at the root, `docs/`, and every markdown file under `skills/`.** `skills/**` was left out while the fear was rebase churn — upstream text whose relative links move when their side changes. Measured instead of assumed, 2026-08-03: every markdown link under `skills/` resolves, upstream's included — `check-links.sh` is what keeps that true — so the scan simply covers them and no design to tell a fork-owned link from an upstream one was needed. A link upstream wrote and broke is broken for this project's users exactly like one written here.
 
 **A pointer to a file of this repository is written as a markdown link, never in backticks** — `check-links.sh` resolves link syntax and nothing else, so a real reference in backticks is one no gate has ever read; the fix is the link, not a gate. **Backticks are reserved for the paths that do not resolve on purpose, and those are never "corrected":** placeholders (`<workspace>/progress.md`), artifact paths inside your partner's own project (`docs/superpowers/specs/…`), self-references (`SKILL.md` meaning the one you are reading), and the `❌ Bad` paths `writing-skills` exists to teach you not to write. **That convention is deliberately not gated, and the reason is measured, not cost:** counted 2026-08-03, 34 of the 78 backticked paths under `skills/` resolved to nothing and **none of the 34 was a defect** — a gate there reports 34 non-problems on every commit, which is how a gate stops being read.
 
@@ -145,23 +147,6 @@ Three README-shaped files, with different jobs. Measured, not assumed: `README.m
 **`docs/PLUS-CHANGELOG-historico.md` is exempt from the diet only.** It cannot acquire a new link by construction — `check-frozen-history.sh` refuses any change to it — so watching it for new domains is a check with no function. Its local links and anchors stay checked: freezing a file does not freeze the files it points at.
 
 **`skills/**` is exempt from the diet too, for a different reason: a skill legitimately cites vendor documentation.** All 40 URLs under `skills/` are off-diet — 11 to `platform.claude.com` in upstream's vendored best-practices, 3 to `docs.stripe.com` inside this fork's own worked example of a citation comment, the rest the same shape. The diet governs the seven documents this project hands to a reader; a skill body pointing at the vendor doc that grounds a call is the citation rule working. Their **links and anchors are checked** — only the domain policy stops at the directory boundary.
-
-## What the pre-commit hook costs
-
-Measured 2026-08-02, median of three runs each on a warm cache, invoking each script directly:
-
-| Check | Cost |
-|---|---|
-| `check-docs-sync.sh` | 3 ms |
-| `check-frozen-history.sh` | 3 ms |
-| `check-changelog.sh` | 3 ms |
-| `check-links.sh` | 70 ms |
-| `check-skill-size.sh` | 10 ms |
-| **`githooks/pre-commit` end to end** | **90 ms** |
-
-Those three rows were re-measured 2026-08-04 the same way; the other three are unchanged from the run above. `check-links.sh` went 29 → 42 ms when its scan grew from 12 files to 56, then 42 → 70 when it gained the section-reference pass, which resolves each bare basename by walking the tree. `check-skill-size.sh` starts no interpreter — its cost is `wc` processes and nothing else.
-
-**The condition matters more than the number, and there is deliberately no automatic timer.** Most of `check-links.sh` is `python3` startup, which moves with the machine and with whether the interpreter is in cache — an independent measurement the same day reported roughly 7× these figures. Treat the table as a baseline taken this way, on this machine, not as a constant. A stopwatch around the hook would be one more thing to maintain, reporting a number nobody reads on every commit; if a commit ever visibly drags, time the checks one at a time against the table above.
 
 ## Running `gh`
 
@@ -185,7 +170,7 @@ Skills are not prose — they are code that shapes agent behavior. Carefully-tun
 
 **A `SKILL.md` stays under 500 lines, and `scripts/check-skill-size.sh` enforces it.** The number is borrowed, not measured here — "Keep SKILL.md body under 500 lines for optimal performance" is Anthropic's own guidance, vendored in this checkout at `skills/writing-skills/anthropic-best-practices.md:241` and repeated at `:1109` as a checklist item nothing ever ran. This project did not pick a stricter number, because it has no measurement that would justify one, and inventing a tighter limit by argument is the move its own Open gaps entry refuses. The gate counts the whole file, frontmatter included — about five lines stricter than the rule as written, which is not the failure it guards against.
 
-**The fix for a red is progressive disclosure, never compression.** Move what a run does not need until it needs it into `references/`, and leave the trigger that sends the reader there: a pointer nobody is told to follow is a deletion. `subagent-driven-development/SKILL.md` is the worked case — 564 → 457 across two reference files, with both triggers left in `SKILL.md` as imperatives.
+**The fix for a red is progressive disclosure, never compression.** Move what a run does not need until it needs it into `references/`, and leave the trigger that sends the reader there: a pointer nobody is told to follow is a deletion. `subagent-driven-development/SKILL.md` is the worked case: it has been cut twice this way, both times into `references/`, with every trigger left behind in `SKILL.md` as an imperative. The line counts of each pass are in `CHANGELOG.md`, dated.
 
 **`skills/writing-skills/SKILL.md` is exempt, and it is the only entry.** It is 679 lines here and 679 upstream, and the only two lines this fork changed in it are the namespace rename. Cutting it means rewriting a file the upstream maintains for a gain that belongs in somebody else's repository. Remove the exemption the day this project starts owning that file's content — never to make a red go away.
 
@@ -193,7 +178,7 @@ Adversarial skill-behavior tests live at [`tests/skill-behavior/`](tests/skill-b
 
 **`tests/codex/test-package-codex-plugin.sh` only tells the truth on a clean tree.** The packager builds its archive from a git ref — `REF="HEAD"` at `scripts/package-codex-plugin.sh:15`, and `--allow-dirty` (which the test passes) permits a dirty tree while still packaging the ref. The test then reads its expected values from the *working tree*, at `tests/codex/test-package-codex-plugin.sh:175-176`, and compares the two at line 177. With anything uncommitted the two sources disagree and `archive manifest preserves source hooks` fails with no defect present — measured: staging a `9.9.9` version locally produced `expected: 9.9.9` against `actual: 1.2.0`, and reverting made it green. Run this suite after committing. It has cost two debugging detours already; it is upstream's file and is not fixed here. CI runs every static suite on every push: `brainstorm-server`, `shell-lint`, `hooks`, `codex-plugin-sync`, `antigravity`, `codex`, `systematic-debugging`, `kimi`, `opencode` and `pi`, plus shell lint, the bilingual-docs sync check, the `SKILL.md` line ceiling, and the integrity check on the adversarial records. The three that stay out all dispatch a live agent — `claude-code`, `explicit-skill-requests`, `skill-behavior` — which costs tokens and is non-deterministic. A suite CI does not run blocks nothing; if you add one, add its step.
 
-**`dispatching-parallel-agents` is orphaned in the invocation graph on purpose.** No skill body names it, and a sweep for dead references will keep surfacing it. It fires on its description — the harness matches the work at hand against the frontmatter — which is how a skill that applies to *any* fan-out gets reached without every caller listing it. Do not "fix" it by wiring an invocation in: a reference from one skill would suggest that skill is where parallel dispatch belongs.
+**`dispatching-parallel-agents` is orphaned in the invocation graph on purpose.** No `SKILL.md` names it — the one place that does is `skills/using-superpowers/references/codex-tools.md:10`, listing which harness tools it needs, which routes nothing to it — and a sweep for dead references will keep surfacing it. It fires on its description — the harness matches the work at hand against the frontmatter — which is how a skill that applies to *any* fan-out gets reached without every caller listing it. Do not "fix" it by wiring an invocation in: a reference from one skill would suggest that skill is where parallel dispatch belongs.
 
 **`escalation-format.md` is 61 lines against a ~60-line target — that is closed, not outstanding.** The remaining line was looked for and every block carries distinct normative content: the scope boundary, why the file exists, why item 4 is an action rather than a quality bar (the lesson that was measured failing twice), gate vocabulary, the self-test, and the worked example. Cutting to reach the number costs content the file exists to carry. It does not need re-reporting.
 

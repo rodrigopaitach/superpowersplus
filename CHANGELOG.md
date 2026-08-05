@@ -9,6 +9,67 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **`docs/context-audit.md` — the context audit as a procedure, not a skill.**
+  A skill costs its name and description in every session whether or not it
+  runs; a document under `docs/` costs nothing until somebody names it, and
+  this one is invoked with "follow `docs/context-audit.md`, scope: `<target>`".
+  Five steps — measure before judging, classify each section into six buckets,
+  list conflicts with the `file:line` of both sides, ask of each rule whether a
+  model of this generation would decide correctly without it, and propose
+  without applying. Criteria from *The New Rules of Context Engineering for
+  Claude 5 Generation Models* (Thariq Shihipar, Anthropic, 2026-07-24); the
+  source is **named rather than linked**, because `docs/` is inside the URL
+  diet `check-links.sh` enforces. Everything in it that is not in the article
+  is marked as this project's own interpretation — including the measured
+  restriction that position beats wording, which is why nothing in the
+  GUARDS AN ACT bucket may become material of consultation. It carries its own
+  settled-cases table so a later run does not reopen `final-branch-audit`, the
+  escalation shape, `writing-skills`, or the teaching examples with fake paths.
+
+- **`docs/pre-commit-cost.md`** — the hook's cost table, moved out of
+  `CLAUDE.md` by the first run of that procedure. **One row is declared
+  missing rather than filled:** `check-evidence-line.sh` joined the hook after
+  both timed runs, and measuring it now would blend two instruments into one
+  table.
+
+### Changed
+
+- **`CLAUDE.md` 200 → 185, and the section that left was the one nothing acts
+  on.** "What the pre-commit hook costs" said so itself — *"treat the table as
+  a baseline… not as a constant"*, *"a number nobody reads on every commit"*.
+  Its single acting line did not go with it: **"if a commit ever visibly drags,
+  time the checks one at a time"** moved *up*, into "Preparing a commit", where
+  the act is. The 15 lines of headroom are the point — the ceiling forced a
+  paragraph rewrite twice in one session.
+
+### Fixed
+
+- **Three numbers inside `CLAUDE.md` had aged in silence, and the fix is a
+  principle, not three corrections.** Found by the audit's own Step 1: the
+  pair under `docs/` was described as 153 lines each when they are 179 and 181
+  and not even equal to one another; the markdown links under `skills/` were
+  described as 21 when a sweep now counts 40; and
+  `subagent-driven-development/SKILL.md` was narrated as "564 → 457" when it is
+  434. **A measured number inside `CLAUDE.md` ages in silence and goes on
+  reading as true**, which is now stated in the file: where the relation is
+  enough, state the relation — `docs/README.pt-BR.md` is canonical,
+  `docs/README.en.md` translates it, `check-docs-sync.sh:14-15` forces them
+  into one commit — and where the number is the point, it belongs here, dated.
+  For the record this entry is now the home of: the two cuts of
+  `subagent-driven-development/SKILL.md` were 564 → 457 (2026-08-02) and
+  460 → 434 (2026-08-05, `1.9.1`).
+
+- **`dispatching-parallel-agents` is still orphaned, but not the way
+  `CLAUDE.md` said.** It claimed "no skill body names it"; the audit found
+  `skills/using-superpowers/references/codex-tools.md:10` naming it, in a list
+  of the harness tools it needs. That routes nothing to it, so the design holds
+  — the claim was simply wider than the measurement, and a sweep for dead
+  references kept surfacing exactly what the paragraph predicted it would.
+
 ## [1.9.1] - 2026-08-05
 
 ### Added
