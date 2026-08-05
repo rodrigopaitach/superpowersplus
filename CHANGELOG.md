@@ -13,6 +13,17 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **`executing-plans`' Step 2 carried two lists numbered from 1** — the resume
+  lock's three acts and the four steps of the per-task loop, seven lines apart,
+  so "step 2" named two different things inside one section. The step now holds
+  a single numbered sequence: the lock keeps its numbers, whose position at the
+  top of the step is what the third adversarial run measured
+  (`tests/skill-behavior/RESULT-resume-route-inline.md`), and the per-task loop
+  became an ordered list without them. **Renumbering the two into one 1–7 run
+  was considered and rejected:** the lock fires once and conditionally, the loop
+  fires per task, and a single sequence would assert a linearity that is not
+  there — trading a label collision for a false claim.
+
 - **The implementer was being graded against a document the dispatch never
   handed it.** `subagent-driven-development/SKILL.md:216` says a fresh subagent
   needs "its task, the interfaces it touches, and the global constraints", and

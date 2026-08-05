@@ -113,11 +113,12 @@ do these three, in order, before touching a file:
 How to reconstruct, and why being wrong costs your partner either way, is in
 "Resuming after an interruption" above — this lock does not repeat it.
 
-For each task:
-1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
-3. Run verifications as specified
-4. Mark as completed
+Then, for each task, in this order:
+
+- Mark as in_progress
+- Follow each step exactly (plan has bite-sized steps)
+- Run verifications as specified
+- Mark as completed
 
 ### Step 3: Audit the Branch
 
