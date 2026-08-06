@@ -33,6 +33,37 @@ References below name them so a claim here can be traced there.
   This is **reasoned against a stated vendor rule, not measured** — no suite in
   this repository measures when a skill fires, as `1.12.1` already recorded.
 
+- **The final code-review gate pointed at a reviewer template instead of
+  dispatching the skill that owns it**, which was both a nested reference and a
+  bypass of that skill's rules. Anthropic's skill authoring checklist requires
+  file references one level deep; `subagent-driven-development/SKILL.md` names
+  eight files and `code-reviewer.md` is not among them, so the controller
+  reached it only through
+  [references/final-review.md](skills/subagent-driven-development/references/final-review.md),
+  section "2. Whole-branch code review" — two hops. **The other four `.md` links
+  under `skills/*/references/` were measured and none is a second hop:**
+  `re-review-prompt.md` is already named in that `SKILL.md`, so the link is a
+  second path to a level-one file; `escalation-format.md` names
+  `final-review.md` while counting which files carry the escalation shape, which
+  is provenance and not an instruction to read; and the two in `gemini-tools.md`
+  are left-column identifiers in a dispatch-mapping table.
+  **The gate now dispatches superpowersplus:requesting-code-review**, the skill
+  that owns the template — symmetric with gate 1 in the same file, which has
+  always dispatched superpowersplus:final-branch-audit and never a file. The
+  asymmetry was the defect. **The fix recovers content, not only compliance:**
+  reading the raw template skipped that skill's mandatory "Before merge to
+  main", its refusal of `HEAD~1` as a base, its placeholder list, and the
+  Common Rationalizations table that two other skills already cite as the
+  defense against reviewing your own diff. The three inputs this path owns —
+  the review package, the model, and the ledger's deferred-minor and parked
+  lines — stay, now as a named list.
+  Two alternatives were evaluated and rejected: moving the pointer up to
+  `SKILL.md` would satisfy the rule but change when the template is read, which
+  is behavior; inlining the template would make a sixth carrier for
+  [check-evidence-line.sh](scripts/check-evidence-line.sh) to hold in agreement,
+  and fork a file `requesting-code-review` owns. Cost: `final-review.md` 79 → 85
+  lines, local links 87 → 86.
+
 ## [1.12.1] - 2026-08-05
 
 ### Fixed

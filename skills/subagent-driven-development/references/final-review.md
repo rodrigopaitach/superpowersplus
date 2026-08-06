@@ -28,16 +28,22 @@ findings in the same fix wave.
 
 ### 2. Whole-branch code review
 
-The final whole-branch review gets a package too: run
-`scripts/review-package PLAN_FILE MERGE_BASE HEAD` (MERGE_BASE = the commit the
-branch started from, e.g. `git merge-base main HEAD`) and include the
-printed path in the final review dispatch, so the final reviewer reads
-one file instead of re-deriving the branch diff with git commands. Dispatch
-on the most capable available model (see Model Selection in SKILL.md), using
-superpowersplus:requesting-code-review's
-[code-reviewer.md](../../requesting-code-review/code-reviewer.md). Point it at
-the ledger's deferred-minor and parked lines so it can triage which must be
-fixed before merge.
+Dispatch superpowersplus:requesting-code-review — its "Before merge to main"
+is mandatory and reaches this path here. It carries its own reviewer template
+and the rules around it, including the one against reviewing your own diff.
+Naming that template file here would hand you the form and leave the rules
+behind, which is why gate 1 above dispatches a skill and not a file either.
+
+Three inputs belong to this path, and that skill cannot know them:
+
+- **The review package.** Run `scripts/review-package PLAN_FILE MERGE_BASE HEAD`
+  (MERGE_BASE = the commit the branch started from, e.g. `git merge-base main
+  HEAD`) and include the printed path in the dispatch, so the reviewer reads
+  one file instead of re-deriving the branch diff with git commands.
+- **The model** — the most capable available one (see Model Selection in
+  SKILL.md).
+- **The ledger's deferred-minor and parked lines**, so it can triage what must
+  be fixed before merge.
 
 ### 3. The fix wave — up to 3 iterations
 
