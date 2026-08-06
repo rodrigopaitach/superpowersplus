@@ -70,8 +70,13 @@ References below name them so a claim here can be traced there.
   and the reason is the measurement above** — the 10 anchors it would govern are
   correct today, so there is no measured defect in that class. Building it would
   be the invented-by-argument move this file's Open gaps refuses on its own
-  terms. **The condition is recorded there instead: the first code anchor found
-  drifted is what turns this from a design into a defect.**
+  terms. **The condition is declared in Open gaps instead, with the count behind
+  it: the first code anchor found drifted is what turns this from a design into
+  a defect.**
+  **Open gaps also states, in one line, why its own references use the section
+  form.** The rule is not new and is not what fails — remembering it while
+  writing is, five times over in this one series of changes. It is written in
+  the section where the next lapse would be written.
 
 - **The evidence line was enforced everywhere an agent reports to an agent and
   nowhere an agent reports to its human partner.** Every carrier of
@@ -3176,6 +3181,29 @@ section where the next one would be written.
   review whose findings include one that is wrong, which is the case
   `receiving-code-review` exists for and the only one where its absence has an
   observable cost.
+
+- **The `file:line` form has no gate, and the condition that would justify one
+  is declared here rather than guessed at.** Where a citation's target is code —
+  a `.sh`, `.js` or `.json` line — no heading exists to anchor to, so the
+  section form does not apply and `file:line` is the correct form, not a lapse.
+  Nothing verifies those.
+  **Measured, 2026-08-06:** 10 such anchors exist across the documents this
+  project edits. All 10 were opened against their targets and all 10 check out.
+  **The design that would close it, if it needed closing:** the citation carries
+  a literal fragment of the line beside the number, and a gate checks the
+  fragment is still there. It needs no named exception — the rule becomes
+  "either a section, or a line with its fragment" — and **this project already
+  writes it that way without being told**, at
+  [`spec-under-test.md`](tests/skill-behavior/spec-under-test.md) and
+  [`docs/releasing.md`](docs/releasing.md), which put the identifier or the
+  literal text next to the number.
+  **Not built, and the condition is the whole point of the entry: the first code
+  anchor found drifted turns this from a design into a defect.** Until one is,
+  building the gate would be the invented-by-argument move the entry below
+  refuses on its own terms — a verifier for a class with no measured failure.
+  The markdown side of the same question is closed and needs no condition: those
+  anchors became section references in this cycle, and the section pass reads
+  them.
 
 - **Ten references to `CLAUDE.md` section titles, in three files, that no gate
   reads.** `CHANGELOG.md:6` and `:84` use the canonical form and are excluded
