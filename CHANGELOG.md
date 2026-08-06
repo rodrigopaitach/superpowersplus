@@ -9,6 +9,30 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **`CLAUDE.md` wrote the pointer rule from outside the pass that enforces it.**
+  [`check-links.sh`](scripts/check-links.sh) has three passes — local links,
+  the third-party diet, and section references — and `CLAUDE.md` reached only
+  the third. It is the file that states "a pointer to a file of this repository
+  is written as a markdown link, never in backticks", with the reason that the
+  gate resolves link syntax; the gate was not reading it. **Measured in a
+  throwaway tree with a control before the fix, 2026-08-06:** a markdown link
+  to a file that does not exist exited 0 inside `CLAUDE.md` and 1 inside
+  `README.md`; an off-diet URL did the same. The file is now the sixth entry of
+  `TARGETS` at `scripts/check-links.sh:61`. Local links went 235 to 248 — the
+  13 are every markdown link `CLAUDE.md` carries except the external one, which
+  the pass counts on the diet instead, taking it 70 to 71. **None was broken**,
+  so this fixes an absence of coverage, not a defect it was hiding.
+  The four tests at `tests/hooks/test-check-links.sh:224` are paired: the two
+  that detect were proved by removing `"CLAUDE.md"` from the list and watching
+  the failure migrate to exactly them, and the two that assert a pass stay
+  green under that mutation by design — they are the control half, not the
+  detector. `AGENTS.md` is deliberately absent from the list: it is a symlink
+  to `CLAUDE.md`, and listing both reports every problem twice.
+
 ## [1.12.4] - 2026-08-06
 
 ### Fixed

@@ -220,6 +220,35 @@ printf '# Doc\n\n<!-- https://docs.stripe.com/api -->\n' > "$T/README.md"
 assert_run 1 "the same URL in a root document is still off-diet" \
     "$T" "outside the third-party link diet"
 
+echo
+echo "Test: CLAUDE.md is scanned by the link pass and the diet, not only sections"
+
+# CLAUDE.md used to reach only the section pass. It is the file that writes
+# "a pointer to a file of this repository is a markdown link, never backticks",
+# and the pass that resolves links did not read it — so a link it wrote to a
+# deleted file passed green, as did a URL naming any host at all. Each case
+# below is paired with its opposite: a gate is proved by the DIFFERENCE between
+# two states, never by one verdict.
+
+T="$(new_tree)"
+printf '# Rules\n\nSee [the guide](docs/guide.md).\n' > "$T/CLAUDE.md"
+printf '# Guide\n' > "$T/docs/guide.md"
+assert_run 0 "a link in CLAUDE.md that resolves passes" "$T"
+
+T="$(new_tree)"
+printf '# Rules\n\nSee [the guide](docs/missing.md).\n' > "$T/CLAUDE.md"
+assert_run 1 "a link in CLAUDE.md that does not resolve fails" "$T" "no such file"
+
+T="$(new_tree)"
+printf '# Rules\n\nUpstream: https://github.com/obra/superpowers\n' > "$T/CLAUDE.md"
+assert_run 0 "an allowed URL in CLAUDE.md passes the diet" "$T"
+
+T="$(new_tree)"
+printf '# Rules\n\nSee https://docs.stripe.com/api\n' > "$T/CLAUDE.md"
+assert_run 1 "an off-diet URL in CLAUDE.md fails" \
+    "$T" "outside the third-party link diet"
+
+echo
 echo "Test: section references — the stable anchor form"
 
 T="$(new_tree)"

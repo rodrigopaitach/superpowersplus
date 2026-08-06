@@ -48,8 +48,18 @@ import sys
 
 ROOT = pathlib.Path(".").resolve()
 
+# CLAUDE.md is here because it was the one file writing the pointer rule from
+# outside the pass that enforces it. It was collected below for section
+# references and nowhere else: a markdown link to a deleted file passed green,
+# and so did a URL naming any host at all. Measured in a throwaway tree before
+# the line was added — a broken link and an off-diet URL both exited 0 inside
+# CLAUDE.md while the same two defects exited 1 inside README.md. A rule whose
+# author is out of reach of its own gate is the quietest half-rule there is.
+#
+# AGENTS.md is not listed and must not be: it is a symlink to this file, and
+# scanning both reports every problem twice.
 TARGETS = ["README.md", "CONTRIBUTING.md", "SECURITY.md",
-           "CODE_OF_CONDUCT.md", "CHANGELOG.md"]
+           "CODE_OF_CONDUCT.md", "CHANGELOG.md", "CLAUDE.md"]
 TARGETS += sorted(str(p) for p in pathlib.Path("docs").glob("*.md"))
 TARGETS += sorted(str(p) for p in pathlib.Path("skills").rglob("*.md"))
 
