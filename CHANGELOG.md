@@ -11,6 +11,41 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Fixed
+
+- **The two document reviewers had no model prescribed and inherited the most
+  expensive one by default.**
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)
+  and
+  [`plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md)
+  now carry the `model:` field, in the form
+  [`task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md),
+  section "Task Reviewer Prompt Template", already uses.
+  **Measured over every dispatch this project has on record: the templates
+  that require the field ran on a mid or cheap tier in 920 of 981 despatches
+  (task reviewer 61 of 63, implementer 859 of 918); the two without it ran on
+  the top tier in 21 of 23** (plan reviewer 12 of 12, spec reviewer 9 of 11).
+  The correlation is with the template, not with the task —
+  `subagent-driven-development/SKILL.md`, section "Model Selection", already
+  says an omitted model inherits the session's, and these two are where that
+  was left to happen.
+  **Two other carriers have no `model:` field either and are left alone:**
+  `requesting-code-review/code-reviewer.md` and `final-branch-audit/SKILL.md`.
+  Both are prescribed "the most capable available model" in prose — the second
+  in its own "Dispatch" section — and both measured at the top tier in 43 of 44
+  despatches. There the default and the rule agree, so the missing field costs
+  nothing today; it is recorded here as the reason they were not changed, not
+  as a clean bill.
+  **A floor of mid tier is declared for the spec reviewer only.** Roughly four
+  of five of its blocking verdicts are mechanical — open the cited line, match
+  an id, confirm a section is present — and the prompt says to raise the tier
+  when the spec's risk is judgement instead.
+  **The plan reviewer gets the field but no floor**, deliberately: its record
+  holds findings of a class the mechanical share does not describe (a test that
+  would pass without the change; a count an implementer will quietly adjust to
+  make green), and whether a mid tier still produces those is unmeasured. The
+  field makes the choice deliberate; the floor waits for the measurement.
+
 ### Added
 
 - **A mechanical check between fixing a review's blocking issues and

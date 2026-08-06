@@ -9,6 +9,13 @@ Use this template when dispatching a plan document reviewer subagent.
 ```
 Subagent (general-purpose):
   description: "Review plan document"
+  model: [MODEL — REQUIRED: an omitted model silently inherits the session's
+         most expensive one, which is what used to happen here. No floor is
+         declared for this face yet: its record contains findings of the
+         "does this instrument discriminate?" class — a test that would pass
+         without the change, a count the implementer will quietly adjust —
+         and whether a mid tier still finds those has not been measured.
+         Until it is, choose deliberately rather than by default]
   prompt: |
     You are a plan document reviewer. Verify this plan is complete and ready for implementation.
 

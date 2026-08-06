@@ -9,6 +9,12 @@ Use this template when dispatching a spec document reviewer subagent.
 ```
 Subagent (general-purpose):
   description: "Review spec document"
+  model: [MODEL — REQUIRED: mid tier or above; an omitted model silently
+         inherits the session's most expensive one. Roughly four of every
+         five verdicts below are mechanical — open the citation, match the
+         id, confirm the section is there — which is what puts the floor at
+         mid tier rather than at the top. Raise it for a spec whose risk is
+         judgement: money, auth, concurrency, a migration]
   prompt: |
     You are a spec document reviewer. Verify this spec is complete and ready for planning.
 
