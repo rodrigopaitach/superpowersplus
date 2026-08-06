@@ -2846,6 +2846,24 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   release — a premise pointing at a directory that has never existed here,
   in files nothing would ever run.
 
+- **The link gate scans `docs/*.md` and not `docs/**`, and that boundary is
+  decided rather than a gap.** `scripts/check-links.sh:53` globs one level, so
+  35 markdown files under `docs/superpowers/plans/`,
+  `docs/superpowers/specs/` and `docs/plans/` are outside it. Measured
+  2026-08-06 before deciding: **those 35 files contain zero local markdown
+  links.** Extending the scan would cover 35 files and catch nothing, because
+  the plans and specs cite paths in backticks — the mention form no gate reads
+  by design.
+  What extending it would actually do is put completed plans and specs under a
+  gate. They are dated records: each states where a file was when that work was
+  done, and a later move does not make one wrong. Failing a commit over it
+  would force rewriting a record to stay green, which is the same reason
+  `CHANGELOG.md`, the frozen history and the `RESULT-*.md` files stay out of
+  the section-reference pass. The boundary is the same distinction in both
+  gates — live text is charged, records are not.
+  This was reported as an outstanding leftover before it was measured. It is
+  not one.
+
 - **A subagent payload is not a reference document, and the seven that are
   payloads carry no table of contents. This is decided, not pending.**
   Anthropic's guidance asks for a table of contents in a reference file over
