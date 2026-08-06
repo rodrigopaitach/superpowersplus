@@ -19,7 +19,7 @@ formatting. A seventh carrier is added there, by hand, on purpose.
 
 That split is measured, not preferred. Three runs of the same scenario moved
 from 1/3 to 3/3 as the shape moved out of this file and into the moment of use
-— see `tests/skill-behavior/README.md`.
+— see [tests/skill-behavior/README.md](../../../tests/skill-behavior/README.md).
 
 **Scope: the machine → human boundary only.** A reviewer reporting to the
 controller, or an implementer reporting to the controller, keeps its own

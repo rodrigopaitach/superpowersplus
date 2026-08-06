@@ -22,13 +22,13 @@ Every project goes through this process. A todo list, a single-function utility,
 You MUST create a task for each of these items and complete them in order:
 
 1. **Investigate the codebase** — MANDATORY before ANY question to the user. Read the real code: files, tests, configs, recent commits. Record every finding as `path/file.ext:line` + the quoted snippet. This recorded output becomes the spec's `## Codebase Findings` section. Claims about a library, external API, or third-party service are grounded the same way, in the order and citation forms below — see "Where a Claim Comes From". No investigation output, no questions.
-2. **Build the coverage map** — from the request and the investigation, before any question. Assign every category one of four states with its reason, apply the admission filter so only decision-changing gaps become questions, and order what remains by impact × uncertainty. Every question you then ask carries a recommendation with a declared source, and every accepted answer is written into the spec and saved as you go. See `skills/brainstorming/coverage-map.md`.
+2. **Build the coverage map** — from the request and the investigation, before any question. Assign every category one of four states with its reason, apply the admission filter so only decision-changing gaps become questions, and order what remains by impact × uncertainty. Every question you then ask carries a recommendation with a declared source, and every accepted answer is written into the spec and saved as you go. See [coverage-map.md](coverage-map.md).
 3. **Check for a declared preference about the visual companion, then offer just-in-time** — NOT upfront. Look first for a preference in the context: the project's `CLAUDE.md`, your memory of this user, or an instruction in this conversation. Declared "never" means never offer, and never say that you didn't — the flow just continues in text. No preference, or a favorable one: the first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
 4. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 5. **Propose 2-3 approaches** — with trade-offs and your recommendation
 6. **Present design** — in sections scaled to their complexity, get user approval after each section
 7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-8. **Dispatch spec reviewer subagent** — using `skills/brainstorming/spec-document-reviewer-prompt.md`; fix blocking issues (see below)
+8. **Dispatch spec reviewer subagent** — using [spec-document-reviewer-prompt.md](spec-document-reviewer-prompt.md); fix blocking issues (see below)
 9. **Present the pending decisions, then the user reviews the spec** — every decision the spec leaves open goes to your partner in the escalation shape, in one message, before you ask for approval. None open is itself something you say. See "User Review Gate" below.
 10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
@@ -171,10 +171,10 @@ an assumption. Say so in `## Assumptions to Confirm`, with what you tried.
 | `## Codebase Findings` | Every claim about the existing system carries a `path/file.ext:line` citation plus the quoted snippet. No located citation, the claim does not go in the spec. |
 | `## External Dependencies` | Every claim about a library, external API, or third-party service, each carrying one of the two citation forms from "Where a Claim Comes From": the lockfile-pinned version plus the line you read inside the dependency, or the official doc URL for that version. Example: "The idempotency key is a request option, never a param — `stripe@19.1.0`, `https://docs.stripe.com/api/idempotent_requests`." No source, the claim does not go in the spec. If the design touches none, write "None". |
 | `## Assumptions to Confirm` | Everything you could NOT verify in the code. Never mix an assumption into verified facts. Each item records the search you ran (command/pattern + paths inspected) and why it could not be confirmed. Anything the code CAN answer is not an assumption — go verify it and cite it. If there are none, write "None". |
-| `## Coverage Map` | The compact table from `skills/brainstorming/coverage-map.md` — one row per category: `Category \| State \| Where it landed`. Every category appears, with one of `Clear`/`Resolved`/`Deferred`/`Outstanding` and the reason for that state; a state with no reason is invalid, because "not checked" and "not applicable" render identically. Where it landed is the `AC`/`IR` id, the `## Assumptions to Confirm` item, or what already settled it. Below the table, the decision record: each question asked, the answer, the recommendation you gave, and its declared source — this is what makes an approval auditable after the conversation is gone. Asked no questions? The table still appears, and every row says why none were needed. |
+| `## Coverage Map` | The compact table from [coverage-map.md](coverage-map.md) — one row per category: `Category \| State \| Where it landed`. Every category appears, with one of `Clear`/`Resolved`/`Deferred`/`Outstanding` and the reason for that state; a state with no reason is invalid, because "not checked" and "not applicable" render identically. Where it landed is the `AC`/`IR` id, the `## Assumptions to Confirm` item, or what already settled it. Below the table, the decision record: each question asked, the answer, the recommendation you gave, and its declared source — this is what makes an approval auditable after the conversation is gone. Asked no questions? The table still appears, and every row says why none were needed. |
 
 **Spec Review:**
-After writing the spec document, dispatch a spec document reviewer subagent using the template at `skills/brainstorming/spec-document-reviewer-prompt.md`. Do NOT review it inline yourself.
+After writing the spec document, dispatch a spec document reviewer subagent using the template at [spec-document-reviewer-prompt.md](spec-document-reviewer-prompt.md). Do NOT review it inline yourself.
 
 Fix every blocking issue the reviewer returns, then re-dispatch. Recommendations are advisory.
 
@@ -209,7 +209,7 @@ Three places hold them, and all three are sources:
 | `## Coverage Map` | Every row in state `Deferred` or `Outstanding`, carrying the reason that state already requires |
 | The dependency findings | A central dependency the vendor documents as end-of-life or deprecated, per "Where a Claim Comes From". Reporting it in a section is not the same as putting it in front of a person |
 
-**Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
+**Escalation shape** (detail and a worked example: [escalation-format.md](../using-superpowers/references/escalation-format.md)):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
 2. **2–4 options with the cost of each**, always including doing nothing now.
 3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.
@@ -221,7 +221,7 @@ is the only reason the interview asks one question at a time. Serializing them
 turns the gate into a second interview after the design was approved.
 
 **Present all of them; do not truncate.** Order by impact × uncertainty — the
-criterion the interview already uses, in `skills/brainstorming/coverage-map.md`
+criterion the interview already uses, in [coverage-map.md](coverage-map.md)
 — so the heaviest is read first. A long list is a fact about the spec, not a
 problem with the message, and the item cut for length is the one your partner
 would never have found.
@@ -269,4 +269,4 @@ A browser-based companion for showing mockups, diagrams, and visual options duri
 A question about a UI topic is not automatically a visual question. "What does personality mean in this context?" is a conceptual question — use the terminal. "Which wizard layout works better?" is a visual question — use the browser.
 
 If they agree to the companion, read the detailed guide before proceeding:
-`skills/brainstorming/visual-companion.md`
+[visual-companion.md](visual-companion.md)

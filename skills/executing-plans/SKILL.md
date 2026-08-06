@@ -199,7 +199,7 @@ audit PASSes and the review's findings are addressed or ruled on:
 
 **Ask for clarification rather than guessing.**
 
-**Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
+**Escalation shape** (detail and a worked example: [escalation-format.md](../using-superpowers/references/escalation-format.md)):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
 2. **2–4 options with the cost of each**, always including doing nothing now.
 3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.

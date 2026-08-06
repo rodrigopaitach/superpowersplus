@@ -44,7 +44,7 @@ returned PASS.
 |-------|--------|
 | Audit ran, verdict PASS | Continue to Step 3 |
 | Audit ran, verdict FAIL | Stop. Report the NOT DELIVERED rows. The branch is not finished — route the gaps into a fix wave. |
-| Audit ran, verdict FAIL, and every NOT DELIVERED row is a residual the fix wave parked with a ruling at its cap | Continue to Step 3 and present those rows beside the options, as named pending items — the treatment OUT OF SCOPE — DECLARED already gets at `../final-branch-audit/SKILL.md:342`. The row above routes to a fix wave that is exhausted: three iterations, `../subagent-driven-development/references/final-review.md`. **Check the parking, never believe it** — each row carries its ruling and the ledger shows the cap was reached. A parking nobody checks is absolution by assertion. |
+| Audit ran, verdict FAIL, and every NOT DELIVERED row is a residual the fix wave parked with a ruling at its cap | Continue to Step 3 and present those rows beside the options, as named pending items — the treatment OUT OF SCOPE — DECLARED already gets at `../final-branch-audit/SKILL.md:342`. The row above routes to a fix wave that is exhausted: three iterations, [final-review.md](../subagent-driven-development/references/final-review.md). **Check the parking, never believe it** — each row carries its ruling and the ledger shows the cap was reached. A parking nobody checks is absolution by assertion. |
 | Audit ran, verdict FAIL, and every NOT DELIVERED row was escalated to your human partner at the cap of three rounds ([executing-plans/SKILL.md](../executing-plans/SKILL.md), section "Step 3: Audit and Review the Branch") | Continue to Step 3 and present those rows beside the options, as named pending items — the same terminal treatment as the row above. It takes a row of its own because the inline path runs no fix wave and parks nothing ([executing-plans/SKILL.md](../executing-plans/SKILL.md), section "Overview"), so the parking row can never match it. **Check the escalation, never believe it** — the audit report names the rows and `git log` shows a fix pass between each run. No such evidence and this is the plain FAIL row above. |
 | No audit was run (a branch built by hand, or an execution that stopped before its audit step — both execution paths make the audit mandatory, [executing-plans/SKILL.md](../executing-plans/SKILL.md), section "Step 3: Audit and Review the Branch") | Run it now: dispatch superpowersplus:final-branch-audit with the plan file, `git merge-base <base-branch> HEAD`..HEAD, and any ledger. Then apply the rows above. |
 | No plan exists for this branch | Say so explicitly and ask your human partner whether to proceed without the audit. Do not decide this yourself. |
@@ -54,10 +54,10 @@ It is never parked either, so it can never arrive by the row above.
 
 ### 2b. The whole-branch code review
 
-`../requesting-code-review/SKILL.md` declares itself mandatory before merge to
+[requesting-code-review](../requesting-code-review/SKILL.md) declares itself mandatory before merge to
 main, and both execution paths run it as their second gate
 ([executing-plans/SKILL.md](../executing-plans/SKILL.md), section "Step 3: Audit and Review the Branch";
-`../subagent-driven-development/references/final-review.md`). **Until this
+[final-review.md](../subagent-driven-development/references/final-review.md)). **Until this
 section existed, nothing at the merge decision asked whether it had happened**
 — the audit was checked and the review was assumed.
 

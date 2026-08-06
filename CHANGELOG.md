@@ -47,6 +47,41 @@ References below name them so a claim here can be traced there.
   maintain: it is a fixed historical fact now, and its "update this line at
   every rebase" instruction went with the decision.
 
+- **27 file pointers under `skills/` were written in backticks and are now
+  markdown links, which is the vendor's own form.** Anthropic's skill authoring
+  best practices write every progressive-disclosure pointer as a markdown link
+  to the reference file, and a backticked path is read by no gate here —
+  [check-links.sh](scripts/check-links.sh) resolves link syntax and nothing
+  else. Measured across `skills/`: 77 backticked `.md` paths outside fenced
+  blocks, 42 of which resolve. Local links went 182 to 210.
+  **15 of the 42 were left in backticks, and converting them would have
+  introduced a defect rather than closed one.** Ten name `CLAUDE.md`,
+  `AGENTS.md`, `CONTRIBUTING.md` or `GEMINI.md` meaning the files of **your
+  partner's own project** — they resolve here only by name coincidence, and a
+  link would point a reader at this repository's copies. Three are
+  self-references, where `SKILL.md` means the file being read. Two describe how
+  Gemini's instructions file imports a mapping rather than telling anyone to
+  open it.
+  **Paths are relative to the file holding the link**, the rule `1.9.1`
+  established after measuring that a `./` had been written relative to the
+  skill being named. Seven pointers in `brainstorming/SKILL.md` were written
+  from the repository root and had to change: as a link,
+  `skills/brainstorming/coverage-map.md` inside that file resolves to
+  `skills/brainstorming/skills/brainstorming/…`.
+  **Reference-style links are not used, and that was measured rather than
+  assumed.** A probe naming a nonexistent target through a footer definition
+  passed green: `scripts/check-links.sh:118` matches the inline form only —
+  bracketed text followed by the destination in parentheses. The
+  form would hide the path from the one gate that reads it, in a file an agent
+  consumes as plain text.
+  **No gate was built for the pointer-versus-mention distinction, by decision.**
+  Telling them apart requires knowing whether `CLAUDE.md` means this repository
+  or the partner's, which no script decides; the alternative is a closed list of
+  four names, and a closed exception list is the form this project has already
+  recorded as the one that rots. The coverage comes from the conversion itself —
+  the 27 are now read by `check-links.sh` — not from a new watcher that would
+  report 15 non-problems on every commit.
+
 - **Eight reference files over 100 lines gained a `## Contents`, and seven
   candidates turned out not to be reference files.** Anthropic's skill
   authoring best practices ask for a table of contents in a reference file over

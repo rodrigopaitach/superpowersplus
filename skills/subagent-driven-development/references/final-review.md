@@ -73,12 +73,12 @@ the options — that presentation is where a person decides.
 **Parking an audit gap leaves the audit at FAIL, and that is the finished
 state — not a step short of one.** The row stays NOT DELIVERED, so the verdict
 cannot turn; what carries the branch forward is the ruling on the row, which
-`../../finishing-a-development-branch/SKILL.md` reads and checks before
+[finishing-a-development-branch](../../finishing-a-development-branch/SKILL.md) reads and checks before
 presenting the options. Do not re-run the audit hoping the verdict moves, and
 never edit the plan to stop it asking — that is the resolution
-`../../final-branch-audit/SKILL.md` forbids outright.
+[final-branch-audit](../../final-branch-audit/SKILL.md) forbids outright.
 
-**Escalation shape** (detail and a worked example: `../../using-superpowers/references/escalation-format.md`):
+**Escalation shape** (detail and a worked example: [escalation-format.md](../../using-superpowers/references/escalation-format.md)):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
 2. **2–4 options with the cost of each**, always including doing nothing now.
 3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.

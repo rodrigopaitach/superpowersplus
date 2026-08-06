@@ -53,9 +53,9 @@ These thoughts mean STOP—you're rationalizing:
 
 If your harness appears here, read its reference file for special instructions:
 
-- Codex: `references/codex-tools.md`
-- Pi: `references/pi-tools.md`
-- Antigravity: `references/antigravity-tools.md`
+- Codex: [references/codex-tools.md](references/codex-tools.md)
+- Pi: [references/pi-tools.md](references/pi-tools.md)
+- Antigravity: [references/antigravity-tools.md](references/antigravity-tools.md)
 
 **This list names the harnesses that must be told to go read their mapping.** Gemini is absent on purpose: `GEMINI.md` imports `references/gemini-tools.md`, so it arrives flattened into context before the first turn. Telling an agent to fetch what it is already reading is a line nobody acts on.
 

@@ -16,7 +16,7 @@ ledger and the tool results carry the record.
 
 **When you do escalate to your human partner** — the plan is wrong, an iteration cap was hit, residuals were parked — use the shape below. A subagent's report to you is unchanged; that is machine to machine.
 
-**Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
+**Escalation shape** (detail and a worked example: [escalation-format.md](../using-superpowers/references/escalation-format.md)):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
 2. **2–4 options with the cost of each**, always including doing nothing now.
 3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.
@@ -40,7 +40,7 @@ silence. Report to your human partner at four fixed points, one line each:
   comes next.
 - **Entering a fix round:** which round, out of the cap of the loop you are
   in — five in the task loop below, three in the final fix wave
-  (`references/final-review.md`) — and why in a few words. There are two
+  ([references/final-review.md](references/final-review.md)) — and why in a few words. There are two
   caps and one report; naming the wrong one tells your partner they have
   more rounds left than they do.
 - **Finishing:** what was delivered, and which gate runs next.
@@ -140,7 +140,7 @@ Read the plan header's `**Execution:**` field. It records the path this plan
 was handed to and where its progress was being kept. If it names the inline
 path, you are resuming by a different route than the one it started on — stop
 and present that before dispatching anything, in the escalation shape above,
-with what each side costs from `references/resuming.md`. A plan with no such
+with what each side costs from [references/resuming.md](references/resuming.md). A plan with no such
 field is a plan written before the field existed; that is not an error —
 proceed, and write the path you are taking into it.
 
