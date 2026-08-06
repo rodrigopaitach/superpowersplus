@@ -47,6 +47,18 @@ References below name them so a claim here can be traced there.
   the wrong form; this is the first one measured **rotting**, which is the claim
   the form exists to prevent and until now the only untested half of it.
 
+- **The same anchoring defect one stage earlier: right value, wrong form, in
+  the row directly above one that already had it right.**
+  `finishing-a-development-branch/SKILL.md:47` cited the audit's treatment of a
+  declared-out-of-scope task as a backticked `file:line`. That line number
+  checks out today — it names the `OUT OF SCOPE — DECLARED` row of the audit's
+  `Handling the Result` table — so nothing was broken, and that is the whole
+  point of fixing it: the entry above records the same citation form one drift
+  later, and there is no signal that separates the two states while both are
+  still green. The line below it, in the same table, was already written as a
+  markdown link plus a section title. Converted to match, and verified by
+  mutation the same way.
+
 - **A commit about another subject deleted a measured decision, and
   `executing-plans` spent a day telling the reader both that its fix rounds are
   capped at three and that it has no numbered fix rounds at all.** Step 3 has
