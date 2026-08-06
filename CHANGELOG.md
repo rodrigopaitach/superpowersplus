@@ -9,6 +9,8 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
 ## [1.12.2] - 2026-08-06
 
 ### Changed
@@ -2814,6 +2816,26 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   `testing-skills-with-subagents.md`, `examples/`, `graphviz-conventions.dot`
   and `render-graphs.js` sit beside the `SKILL.md` rather than under
   `references/`, `assets/` and `scripts/`.
+
+- **A subagent payload is not a reference document, and the seven that are
+  payloads carry no table of contents. This is decided, not pending.**
+  Anthropic's guidance asks for a table of contents in a reference file over
+  100 lines, and the failure it prevents is a reader loading a long document to
+  find one part of it. A prompt template has no such reader: it is filled and
+  handed to another agent whole, so there is nothing to navigate and an index
+  inside it becomes an index of the subagent's own instructions.
+  The six are `task-reviewer-prompt.md`, `re-review-prompt.md` and
+  `implementer-prompt.md` under `subagent-driven-development`,
+  `spec-document-reviewer-prompt.md` under `brainstorming`,
+  `plan-document-reviewer-prompt.md` under `writing-plans`, and
+  `code-reviewer.md` under `requesting-code-review`. Measured: each is one
+  fenced block from top to bottom with every heading indented inside it, which
+  is what makes them payloads rather than documents.
+  `subagent-driven-development/references/process-graph.md` is the seventh, for
+  a different reason — it carries no heading at all, so a table of contents
+  would index nothing.
+  A future sweep against the vendor checklist will surface these seven again.
+  This entry is the answer, so it does not get re-derived as a finding.
 
 - **Five of the fifteen skill names are not gerunds, and that is the final
   state.** Anthropic's skill authoring best practices recommend the gerund form
