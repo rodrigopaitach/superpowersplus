@@ -3314,6 +3314,42 @@ an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
+- **Splitting the plan-reviewer face into a cheap mechanical pass and a short
+  judgement pass is NOT built, and it is conditioned on a measurement that has
+  not returned.** The measured shape is real: roughly four of five of that
+  face's blocking verdicts are mechanical, and the two halves travel in one
+  190-line prompt paying the tier of the more expensive. But the judgement
+  fifth is where its uniquely-valuable findings live — the class "does this
+  instrument discriminate?", which the end-of-branch gates are structurally
+  blind to because they arrive after an implementer has already worked around
+  the problem. **The condition: a retrospective re-running recorded plan
+  reviews on a mid tier against the same documents. Every grave finding
+  reappears → declare the floor and the split becomes a candidate with data.
+  Any one goes missing → the face stays at the top tier and that result is the
+  provenance, so the next sweep cannot demote it for economy.** The `model:`
+  field added to
+  [`plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md),
+  section "Plan Document Reviewer Prompt Template", carries no floor for
+  exactly this reason.
+
+- **"Only the plan reviewer catches a vacuous test" is stated too strongly in
+  the analysis that produced the changes above, and the correction is recorded
+  here rather than silently dropped.** The classification asked which
+  *reviewer* would catch each finding and compared against
+  [`final-branch-audit`](skills/final-branch-audit/SKILL.md), section "The
+  Audit Table", and
+  [`task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md),
+  section "Part 2: Code Quality". **It never asked about the implementer.**
+  A test-first implementer has to watch the test fail before making it pass —
+  [`test-driven-development`](skills/test-driven-development/SKILL.md) — and a
+  test that would pass on the untouched repository never produces that red.
+  So there is a second catcher for that class, upstream of every reviewer, and
+  the count of "findings only the plan reviewer catches" is an upper bound
+  rather than a measurement. Left open because tightening it means measuring
+  how often the red step is actually observed, which the transcripts of this
+  series were not read for. **Recorded so the number does not harden into
+  doctrine before anyone checks it.**
+
 - **Two skills bind the implementer on the subagent path and nothing binds
   anyone on the inline one. The asymmetry is recorded, not closed, because
   closing it would change what a flow does and that is a design decision, not a
