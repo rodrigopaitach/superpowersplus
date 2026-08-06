@@ -2817,6 +2817,20 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   and `render-graphs.js` sit beside the `SKILL.md` rather than under
   `references/`, `assets/` and `scripts/`.
 
+### Removed
+
+- **Four adversarial test prompts were deleted: nothing pointed at them, no
+  suite ran them, and they recorded another project's development.**
+  `test-pressure-1.md`, `test-pressure-2.md`, `test-pressure-3.md` and
+  `test-academic.md` under `systematic-debugging` were prompts written to
+  pressure-test that skill while it was being built upstream. Measured before
+  deleting: the only file in this repository naming any of them is this
+  changelog, and the only hits outside it are old plugin caches of this same
+  project. Three of the four carried the dead
+  `skills/debugging/systematic-debugging` path corrected earlier in this
+  release — a premise pointing at a directory that has never existed here,
+  in files nothing would ever run.
+
 - **A subagent payload is not a reference document, and the seven that are
   payloads carry no table of contents. This is decided, not pending.**
   Anthropic's guidance asks for a table of contents in a reference file over
