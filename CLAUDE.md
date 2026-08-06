@@ -55,8 +55,10 @@ the five carriers' fields, tolerating formatting. (Line number: no heading.)
 
 **Anchor by `file:line` for code and artifacts that do not move because of what
 we write; by file plus section title — the form above — for a file of this
-repository we edit every release.** `scripts/check-links.sh` proves the section
-exists; a line number it cannot.
+repository we edit every release.** `check-links.sh` proves the section only
+where `SECTION_TARGETS` reaches — this file alone. Under `skills/` the form has
+no gate, and twice an instruction has asked `file:line` where the rule asks the
+section: **on a third, the finding is that the rule needs a gate.**
 
 ## Rebase relationship with Superpowers
 

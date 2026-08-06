@@ -9,6 +9,34 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [1.12.1] - 2026-08-05
+
+### Fixed
+
+- **This file's own anchoring rule claimed a coverage its gate does not have.**
+  The rule says to anchor by file plus section title for a file of this
+  repository we edit every release, and it backed that with *"`check-links.sh`
+  proves the section exists; a line number it cannot"*. The first half is a
+  half-truth: `scripts/check-links.sh:72` sets `SECTION_TARGETS = ["CLAUDE.md"]`,
+  so the section-exists pass runs over this file and nothing else. **Under
+  `skills/` — where the rule is applied most, because those are the files edited
+  every release — the section form has no gate at all.**
+  **The change is a correction, not an addition.** It was found while writing up
+  a separate observation, and the observation turned out to be the smaller half:
+  the sentence was not missing a caveat, it was asserting a check that does not
+  reach the files it governs. A rule that names its own verifier is trusted
+  exactly as far as that name is true, and this one was read as covered for as
+  long as it has existed.
+  It now states where the gate reaches, and records the two occurrences so far
+  of an instruction asking for `file:line` where the rule asks for the section —
+  the anchor conversion in `1.9.1` and one in the `1.12.0` cycle. **On a third,
+  the finding is that the rule needs a gate, not that somebody slipped.** That
+  is a condition, which this file keeps, rather than a count, which it does not:
+  the third occurrence is what changes the verdict, and nothing about it ages.
+  No gate was written here. Writing one to enforce a rule whose need for
+  enforcement is still at two of three would be the invented-by-argument move
+  this project's own Open gaps entry refuses.
+
 ## [1.12.0] - 2026-08-05
 
 ### Changed
