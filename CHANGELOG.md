@@ -9,6 +9,44 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **A commit about another subject deleted a measured decision, and
+  `executing-plans` spent a day telling the reader both that its fix rounds are
+  capped at three and that it has no numbered fix rounds at all.** Step 3 has
+  said "Three rounds maximum, counting both gates together" since
+  [`dde1615`](https://github.com/rodrigopaitach/superpowersplus/commit/dde1615)
+  (2026-08-05 11:16). Two hours later
+  [`b0b58ec`](https://github.com/rodrigopaitach/superpowersplus/commit/b0b58ec),
+  a commit about the shape of the evidence line, wrote into the progress-report
+  list that "this path runs no numbered fix rounds, so there is no round count
+  to give; do not invent one". **The newer rule negated the older one inside the
+  same file, and neither side knew.**
+  The cap is the side that was derived: the number comes from its own session,
+  on the argument that the actor is constant **by construction** on this path —
+  `executing-plans` is where a harness has no subagents, so escalating to a
+  different model or a fresh implementer, which is what buys the subagent loop
+  its extra rounds, is not an unexercised option but an absent one. The negation
+  was written in passing. **The negation was removed and the cap kept.**
+  What the deleted sentence was reaching for was a real distinction, and it drew
+  it in the wrong place: this path has counted fix rounds **and** no fix wave.
+  Rounds it has — three, then escalation. What it has no equivalent of is the
+  subagent path's adjudication, which parks residual findings with a ruling in a
+  ledger. Both halves are now stated in `Overview`, which is where
+  [`finishing-a-development-branch`](skills/finishing-a-development-branch/SKILL.md)
+  cites this path for exactly that claim.
+  **The contradiction had already propagated.** One table row at the merge
+  decision, `finishing-a-development-branch/SKILL.md:48`, leans on both sides at
+  once — it cites Step 3 for "escalated at the cap of three rounds" and the
+  Overview for "the inline path runs no fix wave and parks nothing". Under the
+  old text those two citations could not both be true, and the failure was not
+  academic: an agent following the Overview counts no rounds, so it never
+  reaches a cap, so it never escalates, so the row requiring an escalation is
+  unreachable and a branch off this path can only ever take the plain FAIL row
+  that stops it. Both citations are true now, and the row is left as written.
+
 ## [1.13.0] - 2026-08-06
 
 ### Added

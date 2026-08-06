@@ -20,11 +20,11 @@ line each:
   and that the record is this session's todo list.
 - **Each task done:** `task N of M complete — <short title>`, and what
   comes next.
-- **Going back to fix something** — a verification that failed, an audit
-  that came back FAIL, a review finding: what failed, and that you are
-  fixing it. This path
-  runs no numbered fix rounds, so there is no round count to give; do not
-  invent one.
+- **Entering a fix round** — a verification that failed, an audit that came
+  back FAIL, a review finding: which round, out of the cap of three in Step
+  3, and what failed in a few words. There is one cap on this path and one
+  report; the subagent path has two loops with two caps, and its rounds are
+  not these.
 - **Finishing:** what was delivered, which gate runs next, and the test
   evidence from the run you made after your last edit — never a count
   carried from earlier: **Command:** [verbatim] — **exit:** [code] —
@@ -38,6 +38,19 @@ belong to the audit's own report, not to a line telling your partner where
 the work is. Past two lines it has become a status summary; shorten it. When
 you actually need a decision, that is an escalation, and the shape for it is
 below.
+
+**This path fixes in counted rounds, and it parks nothing.** Step 3 runs both
+gates, and what they open is fixed in rounds capped at three — reported above,
+and at the cap you escalate. What this path has no equivalent of
+is the subagent path's fix wave, which adjudicates whatever survives its cap
+and parks it with a ruling in a ledger
+([final-review.md](../subagent-driven-development/references/final-review.md),
+section "3. The fix wave — up to 3 iterations"). There is no ledger here and no
+parking: a finding these rounds cannot close reaches your human partner as an
+escalation. Both halves matter downstream —
+[finishing-a-development-branch](../finishing-a-development-branch/SKILL.md)
+gives a branch off this path its own row at the merge decision precisely
+because the parking row can never describe it.
 
 **No gate can check any of this, and none is asked to.** These reports
 happen in the chat, which the audit does not read. Do not build a verifier
