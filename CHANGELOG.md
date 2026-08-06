@@ -9,6 +9,29 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **A release shipped with an empty body, and the guard that would have caught
+  it did not exist at the point where the damage happens.**
+  [`release-notes.sh`](scripts/release-notes.sh) died on a version section that
+  was empty, and the `>` redirect had already truncated its target to zero
+  bytes; `gh release create --notes-file` then published the empty file without
+  complaining. **The script's exit code was never the problem — it exited 1
+  both before and after this fix.** The truncation happens before the script
+  runs, so no rule and no exit code can undo it: the only place a guard works
+  is inside the process that owns the write.
+  The script now takes an optional output file and writes it only after the
+  body exists and is non-empty, and an empty section is refused by name instead
+  of falling through to an `IndexError` that read like a defect in the script.
+  [`CLAUDE.md`](CLAUDE.md), section "Versioning" now states the two-argument
+  form as the step and names the redirect as the thing not to do.
+  Proved in three states: a real version writes 31,876 bytes and exits 0; an
+  empty section under the new script exits 1 and leaves the target file
+  untouched; the same empty section under the previous script also exits 1 but
+  leaves the file at zero bytes — which is the version `gh` published.
+
 ## [1.12.3] - 2026-08-06
 
 ### Added

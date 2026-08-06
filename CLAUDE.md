@@ -125,7 +125,7 @@ know what is on `main` becomes reading the diff. It also loses entries: the
 commit-preparation rule and `check-skill-behavior-records.sh` both shipped
 without a changelog entry and were caught only when the version was cut.
 
-**A release body is generated, never hand-written:** `scripts/release-notes.sh <version>` builds it from `CHANGELOG.md` — the version's section, then Open gaps, then the footer. A body assembled by hand drifts from the changelog it claims to summarize. Publishing is `gh release create` with **both guards**: `--repo rodrigopaitach/superpowersplus` and `--verify-tag`.
+**A release body is generated, never hand-written**, and it is generated **into a file by the script itself** — `scripts/release-notes.sh <version> <file>`, then `gh release create … --notes-file <file>`. Never `release-notes.sh <version> > <file>`: the redirect truncates the target before the script runs, so a script that fails still leaves a zero-byte file and `gh` publishes it without complaining. That shipped an empty release body once; the two-argument form writes only after the body exists, and refuses an empty one. Publishing takes **both guards**: `--repo rodrigopaitach/superpowersplus` and `--verify-tag`.
 
 ## Documentation hierarchy
 
