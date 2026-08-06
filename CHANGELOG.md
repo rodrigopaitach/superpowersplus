@@ -13,6 +13,40 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The first measured instance of the hole the anchoring rule describes: an
+  anchor that was correct when written and was wrong two days later, with no
+  gate between the two states.** `plan-document-reviewer-prompt.md` sent its
+  reader to the controller's pre-flight scan at
+  `../subagent-driven-development/SKILL.md:137`. At
+  [`0024cb0`](https://github.com/rodrigopaitach/superpowersplus/commit/0024cb0)
+  (2026-08-04), where the anchor was written, line 137 of that file **was**
+  `Before dispatching Task 1, scan the plan once for conflicts:` — verified by
+  reading the file at that commit, not inferred. Today it is `todo per task.`
+  and the scan is at line 153. **It drifted sixteen lines in two days.**
+  Everything the rule predicts is present in this one case, which is why it is
+  worth recording rather than just fixing. The anchor was never wrong to begin
+  with, so no review could have caught it at authoring time. Nothing edited the
+  reference — the referenced file grew above it. It sat in backticks, and
+  [`check-links.sh`](scripts/check-links.sh) resolves link syntax, so the pass
+  that would have read a converted form never looked at this one. And the
+  citation still names a real file and a plausible line, so it reads as
+  verified: `todo per task.` is not obviously not-a-pre-flight-scan to someone
+  who does not open it.
+  **This is what the canonical form buys, measured on the converted
+  reference rather than argued.** Rewritten as a markdown link carrying the
+  section title, it is now read by both passes,
+  and each mutation goes red on its own assertion: pointing the path at a file
+  that does not exist fails with *"section reference names a file that does not
+  exist"*, and renaming the section in the citation fails with *"no heading
+  matching section"*. Two states, two different failures, neither reachable
+  before the conversion.
+  **Provenance for the rule, not a note about one file.** `1.12.1` recorded two
+  occurrences of an instruction asking for `file:line` where the rule asks for
+  the section, and said that on a third the finding is that the rule needs a
+  gate rather than that somebody slipped. Those two were instructions written in
+  the wrong form; this is the first one measured **rotting**, which is the claim
+  the form exists to prevent and until now the only untested half of it.
+
 - **A commit about another subject deleted a measured decision, and
   `executing-plans` spent a day telling the reader both that its fix rounds are
   capped at three and that it has no numbered fix rounds at all.** Step 3 has
