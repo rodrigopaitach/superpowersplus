@@ -72,6 +72,9 @@ jobs:
       - name: Tests (escalation shape gate)
         run: tests/hooks/test-check-escalation-shape.sh
 
+      - name: Tests (cross-reference check)
+        run: tests/hooks/test-check-cross-references.sh
+
       - name: Tests (codex plugin sync)
         run: tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 

@@ -176,7 +176,29 @@ an assumption. Say so in `## Assumptions to Confirm`, with what you tried.
 **Spec Review:**
 After writing the spec document, dispatch a spec document reviewer subagent using the template at [spec-document-reviewer-prompt.md](spec-document-reviewer-prompt.md). Do NOT review it inline yourself.
 
-Fix every blocking issue the reviewer returns, then re-dispatch. Recommendations are advisory.
+Fix every blocking issue the reviewer returns; recommendations are advisory.
+**Then, before re-dispatching, in this order:**
+
+1. **Run the mechanical check** —
+   [check-cross-references](../writing-plans/scripts/check-cross-references),
+   invoked as `check-cross-references <spec path> <repo root>`. It compares
+   sets: every `AC`/`IR` cited resolves to the list that defines it, every
+   `file:line` opens and is long enough. Exit 1 means something you just
+   edited no longer resolves.
+2. **Judge what the script cannot.** For each citation the fix touched, open
+   the line and confirm it SAYS what the spec claims. The script proves the
+   line exists; only you can prove it is the right line.
+3. **Repair what either one found, then re-dispatch.** Not before.
+
+**This step exists because the fix pass is where the breaks happen, and they
+are not the reviewer's to find.** The author of the spec is the one correcting
+it, and renumbering `AC1`–`AC7` leaves a pointer at the old `AC2` — a defect
+no reader of the fixed document would call judgement, and one that costs a
+whole reviewer round to report.
+
+Report the run to your human partner in the form every carrier uses:
+
+> **Command:** [verbatim] — **exit:** [code] — **counts:** [what resolved]
 
 **Three review rounds maximum.** A round is one fix pass plus one re-dispatch.
 

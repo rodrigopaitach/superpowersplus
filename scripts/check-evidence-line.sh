@@ -53,13 +53,20 @@ root = Path(sys.argv[1])
 # form. Every other carrier is a machine-to-machine prompt, so the shape was
 # enforced everywhere an agent reports to an agent and nowhere an agent reports
 # to its human partner. That asymmetry is what adding it closes.
+#
+# brainstorming and writing-plans joined when the post-fix mechanical check was
+# added: it is a run with a command, an exit code and counts, reported to a
+# person before the reviewer is re-dispatched. Same asymmetry as the line
+# above — the reader is the human partner, and the form had to reach there too.
 CARRIERS = [
+    "skills/brainstorming/SKILL.md",
     "skills/executing-plans/SKILL.md",
     "skills/finishing-a-development-branch/SKILL.md",
     "skills/requesting-code-review/code-reviewer.md",
     "skills/subagent-driven-development/implementer-prompt.md",
     "skills/subagent-driven-development/re-review-prompt.md",
     "skills/subagent-driven-development/task-reviewer-prompt.md",
+    "skills/writing-plans/SKILL.md",
 ]
 
 FIELD = re.compile(r"\*\*([A-Za-z][A-Za-z ]*?):\*\*")

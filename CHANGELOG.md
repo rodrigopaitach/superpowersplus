@@ -9,6 +9,59 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **A mechanical check between fixing a review's blocking issues and
+  re-dispatching the reviewer**, in both document loops:
+  [`brainstorming/SKILL.md`](skills/brainstorming/SKILL.md), section "Spec
+  Review", and [`writing-plans/SKILL.md`](skills/writing-plans/SKILL.md),
+  section "Plan Review". Until now there were **zero steps** between the two
+  acts: the instruction was "fix every blocking issue, then re-dispatch", and
+  nothing in between looked at what the fix had broken.
+  **Measured in this session's transcripts, over every spec and plan review
+  this project has on record (23 dispatches across 13 documents, in
+  `~/.claude/projects/*/*/subagents/`): 74% of the new findings in a round-2
+  review were in the diff the round-1 fix had just produced**, and the round-3
+  review found something new in 3 of 3 documents that reached it — every time
+  about what round 2 had corrected. One report carries a section titled
+  "Regressões introduzidas pelas correções" with four items.
+  The cause is structural: the author of the document is the one correcting it,
+  and a spec or plan is dense in cross-references edited in pieces. Every
+  regression read was of one class — renumbering `AC1`–`AC7` leaving a pointer
+  at the old `AC2`, a renamed test leaving its criterion naming the old one,
+  a task added leaving "PASS on the six" at five. **None of that is judgement,
+  and paying a reviewer subagent a full round to report it is the cost this
+  step removes.**
+  The deterministic half lives in a script, not in prose —
+  [`check-cross-references`](skills/writing-plans/scripts/check-cross-references):
+  every `AC`/`IR` cited resolves to the list that defines it, every task
+  criterion has exactly one matrix row and every matrix label a criterion,
+  every test the matrix names is created by some step, the announced task count
+  matches the tasks present, and every `file:line` opens and is long enough.
+  Short citations (`page.tsx:7`) resolve by suffix against `git ls-files`;
+  exactly one match resolves, several is reported as ambiguous, which is a real
+  defect — the reader cannot tell which file was meant either.
+  **The split is drawn where judgement starts:** the script proves a reference
+  *resolves*; whether the cited line *says* what the document claims stays in
+  the prose step, as does recounting a number stated in a sentence.
+  Verified against the two real documents that produced the measurement above:
+  on the plan of a partner project it reproduced, in one run, the set
+  comparison a round-3 plan reviewer had reported by hand as "40/40, by
+  extracting and comparing sets, not by reading" — 40 criteria, 40 matrix rows,
+  40 labels, 13 tasks, no orphan in either direction.
+  Tests: [`test-check-cross-references.sh`](tests/hooks/test-check-cross-references.sh),
+  nine cases, in CI. Each of the four mechanisms was mutated and the suite seen
+  red for that mutation; the orphan-label case first went green under its own
+  mutation because it was failing on the test-existence check instead, and the
+  case was rewritten to name a test that exists so the failure migrates to the
+  assertion whose name it carries.
+  `brainstorming/SKILL.md` and `writing-plans/SKILL.md` join the declared
+  carriers of [`check-evidence-line.sh`](scripts/check-evidence-line.sh) — the
+  step reports a run, and a run reported to a person carries the same line as
+  everywhere else.
+
 ## [1.14.1] - 2026-08-06
 
 ### Fixed

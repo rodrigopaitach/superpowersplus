@@ -355,10 +355,35 @@ a gap costs a paragraph instead of a re-plan.
 Hand it the plan file path and nothing else: the spec path comes from the
 plan's own header, and confirming it is part of what the reviewer checks.
 
-Fix every blocking issue the reviewer returns, then re-dispatch.
-Recommendations are advisory. If it reports a spec requirement with no
-task, add the task — never resolve a gap by narrowing the plan's stated
-scope.
+Fix every blocking issue the reviewer returns; recommendations are advisory.
+If it reports a spec requirement with no task, add the task — never resolve
+a gap by narrowing the plan's stated scope.
+
+**Then, before re-dispatching, in this order:**
+
+1. **Run the mechanical check** — this skill's
+   [check-cross-references](scripts/check-cross-references), invoked as
+   `check-cross-references <plan path> <repo root>`. It compares sets: every
+   task criterion in a body has a matrix row and every matrix label has a
+   criterion, no label carries two rows, every test the matrix names is
+   created by some step, the task count matches what the document announces,
+   and every `file:line` opens. Exit 1 means something you just edited no
+   longer resolves.
+2. **Judge what the script cannot.** For each citation the fix touched, open
+   the line and confirm it SAYS what the plan claims; for each count stated
+   in prose ("PASS on the six"), recount. The script proves a reference
+   resolves, never that it resolves to the right thing.
+3. **Repair what either one found, then re-dispatch.** Not before.
+
+**This step exists because the fix pass is where the breaks happen.** The
+author of the plan is the one correcting it, and a plan is dense in ids
+edited in pieces: renaming a test leaves the criterion naming the old one,
+adding a task leaves "PASS on the six" at five. A reviewer round spent
+reporting that is a round not spent on the plan.
+
+Report the run to your human partner in the form every carrier uses:
+
+> **Command:** [verbatim] — **exit:** [code] — **counts:** [what resolved]
 
 **Three review rounds maximum.** A round is one fix pass plus one re-dispatch.
 

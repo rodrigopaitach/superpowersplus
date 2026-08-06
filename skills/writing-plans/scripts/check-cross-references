@@ -1,0 +1,297 @@
+#!/usr/bin/env bash
+#
+# check-cross-references — the ids, tests and citations a document names all resolve.
+#
+# Run this between fixing a reviewer's blocking issues and re-dispatching the
+# reviewer. It is the mechanical half of that step: set extraction and set
+# comparison over one spec or plan, the same pass a plan reviewer once ran by
+# hand and reported as "40/40, by extracting and comparing sets, not by reading".
+#
+# It exists because the fix pass is where these break. A document dense in ids
+# is edited in pieces by the same author who wrote it: renumbering AC1-AC7
+# leaves a pointer at the old AC2, renaming a test leaves the criterion naming
+# the old one, adding a task leaves "PASS on the six". None of that is
+# judgement — it is a set difference, and paying a reviewer subagent to find it
+# costs a whole round.
+#
+# WHAT IT DOES NOT COVER — read this before trusting a pass:
+#   * Whether a cited line SAYS what the citation claims. It checks that the
+#     file opens and is long enough, never the content. `verify.ts:88` pointing
+#     at a blank line passes here. That half is judgement and stays in the
+#     skill's prose step.
+#   * Whether an id that resolves is the RIGHT id. `F4` naming a real AC that
+#     means something else reads as clean.
+#   * Whether a test named in the matrix asserts anything. Existence only.
+#   * Counts stated in prose ("PASS on the six"). It compares structure it can
+#     extract — matrix labels against matrix rows, tasks announced against
+#     tasks present — not arbitrary sentences.
+#   * A citation whose path is deliberately unresolvable — a placeholder, or a
+#     path inside a third-party package. Those are reported; judge them.
+#
+# Usage:
+#   check-cross-references DOCUMENT [REPO_ROOT]
+#
+#   DOCUMENT    the spec or plan to check
+#   REPO_ROOT   root the file:line citations resolve against (default: cwd)
+#
+# Exit 1 when anything does not resolve.
+#
+set -euo pipefail
+
+usage() {
+  sed -n '2,34p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+if [[ $# -lt 1 || "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 1
+fi
+
+doc="$1"
+root="${2:-$PWD}"
+
+[[ -f "$doc" ]] || {
+  echo "check-cross-references: no such document: $doc" >&2
+  exit 1
+}
+
+python3 - "$doc" "$root" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+doc = Path(sys.argv[1])
+root = Path(sys.argv[2])
+text = doc.read_text(encoding="utf-8")
+lines = text.splitlines()
+
+failures = []
+counts = {}
+
+
+def section(title_re):
+    """Body of the first `## <title>` section matching, or None."""
+    start = None
+    for i, line in enumerate(lines):
+        if re.match(r"^#{2,3}\s", line):
+            if start is not None:
+                return "\n".join(lines[start:i])
+            if re.match(rf"^#{{2,3}}\s+{title_re}\s*$", line, re.I):
+                start = i + 1
+    return "\n".join(lines[start:]) if start is not None else None
+
+
+# ---------------------------------------------------------------- ids
+# Defined where the list that owns them lives; cited anywhere else.
+AC_IR = re.compile(r"\b((?:AC|IR)\d+[a-z]?)\b")
+TASK_CRIT = re.compile(r"\b(T\d+\.\d+)\b")
+
+defining = []
+for title in (r"Acceptance Criteria", r"Implicit Requirements"):
+    body = section(title)
+    if body:
+        defining.append(body)
+
+defined_ac = set()
+for body in defining:
+    defined_ac |= set(AC_IR.findall(body))
+
+cited_ac = set(AC_IR.findall(text))
+counts["AC/IR defined"] = len(defined_ac)
+counts["AC/IR cited"] = len(cited_ac)
+
+# Only charge dangling ids when the document actually carries the defining
+# lists. A plan cites its spec's ids without defining them; that is correct.
+if defined_ac:
+    dangling = sorted(cited_ac - defined_ac, key=lambda s: (len(s), s))
+    if dangling:
+        failures.append(
+            "ids cited but not defined in `## Acceptance Criteria` / "
+            "`## Implicit Requirements`: " + ", ".join(dangling)
+        )
+
+# Task criteria: defined by the task bodies, cited by the matrix.
+all_task_crit = set(TASK_CRIT.findall(text))
+counts["task criteria"] = len(all_task_crit)
+
+matrix_rows = [
+    ln for ln in lines
+    if ln.lstrip().startswith("|") and TASK_CRIT.search(ln)
+]
+matrix_labels = set()
+for ln in matrix_rows:
+    matrix_labels |= set(TASK_CRIT.findall(ln))
+
+body_only = all_task_crit - matrix_labels
+matrix_only = matrix_labels - (all_task_crit - matrix_labels) - set()
+# A label that appears ONLY inside matrix rows is defined nowhere else.
+outside_matrix = set()
+for ln in lines:
+    if ln.lstrip().startswith("|"):
+        continue
+    outside_matrix |= set(TASK_CRIT.findall(ln))
+
+if matrix_labels:
+    counts["matrix rows"] = len(matrix_rows)
+    counts["matrix labels"] = len(matrix_labels)
+    orphan_in_matrix = sorted(matrix_labels - outside_matrix)
+    if orphan_in_matrix:
+        failures.append(
+            "criteria in the coverage matrix with no matching criterion in a "
+            "task body: " + ", ".join(orphan_in_matrix)
+        )
+    orphan_in_body = sorted(outside_matrix - matrix_labels)
+    if orphan_in_body:
+        failures.append(
+            "criteria in a task body with no row in the coverage matrix: "
+            + ", ".join(orphan_in_body)
+        )
+    dupes = sorted(lbl for lbl in matrix_labels
+                   if sum(1 for ln in matrix_rows
+                          if lbl in TASK_CRIT.findall(ln)) > 1)
+    if dupes:
+        failures.append(
+            "criteria carrying more than one matrix row: " + ", ".join(dupes)
+        )
+
+# ------------------------------------------------------------- tasks
+task_headings = [ln for ln in lines if re.match(r"^#{2,3}\s+Task\s+\d+\b", ln)]
+if task_headings:
+    counts["tasks present"] = len(task_headings)
+    for m in re.finditer(r"\b(?:has|with)\s+(\d+)\s+tasks?\b", text, re.I):
+        announced = int(m.group(1))
+        if announced != len(task_headings):
+            failures.append(
+                f"the document announces {announced} tasks and carries "
+                f"{len(task_headings)}"
+            )
+            break
+
+# ------------------------------------------------------------- tests
+# Every test named in the matrix is created by some step of some task.
+TEST_DEF = re.compile(
+    r"""(?:\bit|\btest|\bdescribe)\s*\(\s*["'`](.+?)["'`]"""
+    r"""|\bdef\s+(test_\w+)"""
+    r"""|\bfunc\s+(Test\w+)"""
+    r"""|\btest\s*\(\s*["'`](.+?)["'`]""",
+    re.X,
+)
+created = set()
+for m in TEST_DEF.finditer(text):
+    created |= {g for g in m.groups() if g}
+
+# Matrix cells name a test as `> name`, `file.py::name`, or `file:line > name`.
+named_in_matrix = set()
+for ln in matrix_rows:
+    for cell in ln.split("|"):
+        cell = cell.strip().strip("`")
+        m = re.search(r">\s*(.+?)\s*$", cell)
+        if m:
+            named_in_matrix.add(m.group(1).strip().strip("`"))
+        m = re.search(r"::(\w+)\s*$", cell)
+        if m:
+            named_in_matrix.add(m.group(1))
+
+if named_in_matrix:
+    counts["tests named in matrix"] = len(named_in_matrix)
+    counts["tests created by a step"] = len(created)
+    missing = sorted(n for n in named_in_matrix
+                     if n not in created
+                     and not any(n in c or c in n for c in created))
+    if missing:
+        failures.append(
+            "tests named in the coverage matrix that no step creates: "
+            + "; ".join(f"`{n}`" for n in missing)
+        )
+
+# --------------------------------------------------------- citations
+# `path/file.ext:NN` — the path opens and is long enough. Content is judgement.
+#
+# A citation is routinely written short (`page.tsx:7` for a file nested deep),
+# which is a real convention and not a defect. So a path that does not resolve
+# from the root is resolved by SUFFIX against the tracked files. Exactly one
+# match resolves it; none is a dead citation; several is ambiguous, which is
+# its own defect — the reader cannot tell which file was meant either.
+tracked = []
+try:
+    import subprocess
+    out = subprocess.run(
+        ["git", "-C", str(root), "ls-files"],
+        capture_output=True, text=True, check=False,
+    )
+    if out.returncode == 0:
+        tracked = out.stdout.splitlines()
+except OSError:
+    pass
+
+
+def resolve(rel):
+    """(path, note) — note is non-empty when the citation was not literal."""
+    direct = root / rel
+    if direct.is_file():
+        return direct, ""
+    if not tracked:
+        return None, "no such file, and the tracked-file list is unavailable"
+    hits = [t for t in tracked if t == rel or t.endswith("/" + rel)]
+    if len(hits) == 1:
+        return root / hits[0], f"short form, resolved to {hits[0]}"
+    if not hits:
+        return None, f"no tracked file matches under {root}"
+    return None, "ambiguous short form — " + ", ".join(sorted(hits)[:4])
+
+
+CITATION = re.compile(r"`([^`\s]+\.[A-Za-z0-9_]+):(\d+)(?:-(\d+))?`")
+seen_citations = set()
+unresolved = []
+shortened = 0
+for m in CITATION.finditer(text):
+    rel, first, last = m.group(1), int(m.group(2)), m.group(3)
+    key = (rel, first, last)
+    if key in seen_citations:
+        continue
+    seen_citations.add(key)
+    if "<" in rel:
+        continue  # placeholder, unresolvable on purpose
+    path, note = resolve(rel)
+    if path is None:
+        unresolved.append(f"`{rel}:{first}` — {note}")
+        continue
+    if note:
+        shortened += 1
+    try:
+        n = sum(1 for _ in path.open(encoding="utf-8", errors="replace"))
+    except OSError as exc:
+        unresolved.append(f"`{rel}:{first}` — cannot read: {exc}")
+        continue
+    end = int(last) if last else first
+    if end > n:
+        unresolved.append(
+            f"`{rel}:{first}` — {path.name} has {n} line(s)"
+            + (f" ({note})" if note else "")
+        )
+
+counts["file:line citations"] = len(seen_citations)
+if shortened:
+    counts["resolved by suffix"] = shortened
+if unresolved:
+    failures.append(
+        "citations that do not open:\n    " + "\n    ".join(unresolved)
+    )
+
+# ----------------------------------------------------------- verdict
+summary = ", ".join(f"{k} {v}" for k, v in counts.items())
+if failures:
+    print(f"check-cross-references: {doc}", file=sys.stderr)
+    for f in failures:
+        print(f"  - {f}", file=sys.stderr)
+    print(
+        f"\ncounts: {summary}\n"
+        "\nThese are the breaks a fix pass leaves behind. Repair them before "
+        "re-dispatching the reviewer — a round spent reporting a dangling id "
+        "is a round not spent on the document.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+print(f"check-cross-references: {doc} — every reference resolves ({summary})")
+PY
