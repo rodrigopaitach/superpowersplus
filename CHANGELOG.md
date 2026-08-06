@@ -13,6 +13,34 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **Open gaps is the live list, and it was the one live text no gate could
+  read — exempt by container, live by content.** The section pass skips
+  `CHANGELOG.md` because a changelog is a dated record: a heading renamed after
+  an entry was written does not make that entry wrong, and a gate red on one
+  would force rewriting history to stay green. Open gaps sits inside that file
+  and is the opposite of a dated record — it says so in its own opening line,
+  and closing an item edits it in place. **It inherited an exemption written for
+  the text around it.**
+  **The cost was already paid and nobody had seen it.** The item declaring that
+  the stable-anchor gate reached `CLAUDE.md` and nothing else stayed on the list
+  after `1.13.0` widened that gate to `docs/`, `skills/` and `tests/` — and the
+  line number it cited for the assignment had itself moved. A reader following
+  the list would have set out to do work already done. That item is now marked
+  closed, which is what the pass forces.
+  `## Open gaps` is now sliced out of `CHANGELOG.md` and scanned as a section
+  source, on the same heading boundary
+  [`release-notes.sh`](scripts/release-notes.sh) already uses to put it in a
+  release body. Reported line numbers are offset back to the real file, so a
+  problem is named at its `CHANGELOG.md` line.
+  **Three cases in [`test-check-links.sh`](tests/hooks/test-check-links.sh), and
+  the first two have to disagree or the boundary does nothing:** a stale
+  reference inside Open gaps fails, the same defect in a dated entry above it
+  passes, and a renamed heading raises instead of yielding an empty slice —
+  which would report zero problems and read exactly like a clean pass. The
+  throwaway tree the whole suite builds now writes a real `CHANGELOG.md` rather
+  than an empty one, because a file without that heading is malformed rather
+  than minimal.
+
 - **Every `file:line` anchor into a live document was counted, and the three
   that could be sections became sections.** The sweep found 18 anchors in files
   this project edits. They fall into three groups, and only one of them is a
@@ -3367,18 +3395,16 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   avoided. **The condition for cutting is a second measurement that builds
   those conditions**, not a decision taken without one.
   `tests/skill-behavior/RESULT-verification-before-completion.md`.
-- **The stable-anchor gate reaches `CLAUDE.md` and nothing else.**
-  `scripts/check-links.sh:72` sets `SECTION_TARGETS = ["CLAUDE.md"]`, so the
-  `` `path/file.md`, section "Exact Heading" `` form is verified only there.
-  Skills cite each other in that form too now, and those references are
-  unchecked — which is how three anchors in
-  `finishing-a-development-branch/SKILL.md` sat off by one without anything
-  noticing. Not closed in the same commit that revealed it: widening
-  `SECTION_TARGETS` to `skills/**` is a gate change wanting its own measurement
-  of what it would charge on the 44 markdown files under `skills/`, not a line
-  appended to a
-  behavioural change. The `file:line` form under `skills/` is unchecked as
-  well, and always was.
+- **CLOSED, and it had been closed for a while without this list noticing.**
+  The item here said the stable-anchor gate reached `CLAUDE.md` and nothing
+  else, and asked for the widening to `skills/**` as future work. That widening
+  landed in `1.13.0` — the section pass now collects `CLAUDE.md`, `docs/`,
+  `skills/` and `tests/` — while this entry went on describing the older gate,
+  citing a line number for the assignment that had itself moved. **It is the
+  reason Open gaps is now read by that pass**, recorded in the `1.14.0` cycle.
+  **What replaces it is narrower and still open:** the `file:line` form is
+  unchecked wherever it survives, and the count of where that is, plus the
+  condition that would justify a gate, is in the entry for this cycle.
 - **The TDD Iron Law has no verifying face.** The implementer prompt requires a
   test before code, but no verifier can prove the order: the only record that
   the test came first is a report section written by the party being audited. A

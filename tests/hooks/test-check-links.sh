@@ -41,6 +41,13 @@ new_tree() {
     for target in README.md CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md CHANGELOG.md CLAUDE.md; do
         : > "$tree/$target"
     done
+    # CHANGELOG.md is the one target that cannot be empty: the section pass
+    # slices `## Open gaps` out of it and raises when that heading is absent,
+    # rather than yielding an empty slice that would report zero problems and
+    # read like a clean pass. A tree without the heading is not a smaller
+    # repository, it is a malformed one.
+    printf '# Changelog\n\n## [1.0.0] - 2026-01-01\n\n- an entry.\n\n## Open gaps\n\n- none.\n' \
+        > "$tree/CHANGELOG.md"
     printf '%s\n' "$tree"
 }
 
@@ -360,15 +367,43 @@ printf 'Ran against [demo](../../skills/demo/SKILL.md), section "Gone Since".\n'
 assert_run 0 "a RESULT- record is not charged for a renamed heading" "$T"
 
 # The frozen history is the exclusion the skip set actually exercises: it lives
-# under docs/, so it IS collected and then dropped. CHANGELOG.md is not in the
-# scanned roots at all — its entry in the skip set guards a root nobody has
-# added yet, and a test asserting it would pass whatever the skip set said.
+# under docs/, so it IS collected and then dropped. CHANGELOG.md is dropped as a
+# whole file and re-enters as one section — the three cases below.
 T="$(new_tree)"
 mkdir -p "$T/skills/demo" "$T/docs"
 printf '# Demo\n\n## Overview\n' > "$T/skills/demo/SKILL.md"
 printf '# History\n\nWas [demo](../skills/demo/SKILL.md), section "Gone Since".\n' \
     > "$T/docs/PLUS-CHANGELOG-historico.md"
 assert_run 0 "the frozen history is not charged for a renamed heading" "$T"
+
+# --- CHANGELOG.md: the live section is read, the history around it is not ----
+# Open gaps calls itself the live list and sits inside the file exempted for
+# being history. These three cases are the whole reason the slice exists, and
+# the first two must disagree — a pass on both would mean the slice boundary
+# does nothing.
+
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Overview\n' > "$T/skills/demo/SKILL.md"
+printf '# Changelog\n\n## [1.0.0] - 2026-01-01\n\n- shipped.\n\n## Open gaps\n\nStill open: [demo](skills/demo/SKILL.md), section "Gone Since".\n' \
+    > "$T/CHANGELOG.md"
+assert_run 1 "a stale section reference inside Open gaps is caught" "$T" \
+    'no heading matching section "Gone Since"'
+
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Overview\n' > "$T/skills/demo/SKILL.md"
+printf '# Changelog\n\n## [1.0.0] - 2026-01-01\n\nWas [demo](skills/demo/SKILL.md), section "Gone Since".\n\n## Open gaps\n\n- none.\n' \
+    > "$T/CHANGELOG.md"
+assert_run 0 "a dated entry above Open gaps is not charged" "$T"
+
+# A renamed heading must raise, never yield an empty slice: an empty one
+# reports zero problems and is indistinguishable from a clean pass.
+T="$(new_tree)"
+printf '# Changelog\n\n## [1.0.0] - 2026-01-01\n\n- shipped.\n\n## Open questions\n\n- none.\n' \
+    > "$T/CHANGELOG.md"
+assert_run 1 "a renamed Open gaps heading fails loudly instead of scanning nothing" "$T" \
+    "has no '## Open gaps' heading"
 
 echo
 if [ "$FAILURES" -eq 0 ]; then

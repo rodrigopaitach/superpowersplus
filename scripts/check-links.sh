@@ -97,8 +97,47 @@ SECTION_REF = re.compile(
 SECTION_HEADING = re.compile(r"^\s*(#{1,6})\s+(.*?)\s*#*\s*$")
 
 
+def open_gaps_source():
+    """CHANGELOG.md's `## Open gaps` section, and nothing else in that file.
+
+    The exemption of dated records has one exception inside it, and this is
+    the exception. Open gaps calls itself THE LIVE LIST in its own opening
+    line — closing an item edits it in place — but it lives inside the one
+    file this pass skips for being history. Exempt by container, live by
+    content, and so read by nothing.
+
+    That was not theoretical. One item there described the stable-anchor gate
+    as reaching CLAUDE.md and nothing else, citing a line number for the
+    assignment that says so. The gate had been widened hours after the item
+    was written; the line number had moved; and the item went on telling
+    readers to do work already done. Both halves — a stale claim and a rotted
+    anchor — sat in the only live text no pass could see.
+
+    Sliced from the heading to end of file, the same boundary
+    scripts/release-notes.sh already uses to put this section into a release
+    body. A missing heading raises rather than yielding an empty slice: an
+    empty one would report zero problems and read exactly like a clean pass.
+    """
+    path = pathlib.Path("CHANGELOG.md")
+    text = path.read_text(encoding="utf-8")
+    marker = "\n## Open gaps\n"
+    at = text.find(marker)
+    if at == -1:
+        raise SystemExit(
+            "check-links: CHANGELOG.md has no '## Open gaps' heading. The "
+            "section is sliced by that exact heading; if it was renamed, "
+            "rename it here and in scripts/release-notes.sh together."
+        )
+    return (path, text[at + 1:], text.count("\n", 0, at + 1))
+
+
 def section_sources():
     """Every live markdown file — the text a reader is told to obey today.
+
+    Returned as (path, text, line_offset) so a source can be a SLICE of a
+    file rather than the whole of it. The offset keeps reported line numbers
+    pointing at the real file: a problem in the Open gaps slice is reported
+    at its CHANGELOG.md line, not at its offset within the slice.
 
     Dated records are out: the frozen history and the RESULT-*.md records
     each state what was true on their date, a heading renamed afterwards does
@@ -107,9 +146,8 @@ def section_sources():
     name something real, and a red there says the recorded run's premise moved.
 
     The skip set is what drops the frozen history, which lives under docs/ and
-    is therefore collected first. CHANGELOG.md is not in these roots at all;
-    its entry there guards a root nobody has added, so no test can tell whether
-    it is doing anything.
+    is therefore collected first. CHANGELOG.md is skipped as a whole file and
+    re-enters through open_gaps_source() as one section.
 
     Symlinks are out — AGENTS.md points at CLAUDE.md, and scanning both
     reports every problem twice.
@@ -118,10 +156,12 @@ def section_sources():
     for base in ("docs", "skills", "tests"):
         found += sorted(pathlib.Path(base).rglob("*.md"))
     skip = {"CHANGELOG.md", "PLUS-CHANGELOG-historico.md"}
-    return [p for p in found
-            if p.is_file() and not p.is_symlink()
-            and p.name not in skip
-            and not p.name.startswith("RESULT-")]
+    sources = [(p, p.read_text(encoding="utf-8"), 0) for p in found
+               if p.is_file() and not p.is_symlink()
+               and p.name not in skip
+               and not p.name.startswith("RESULT-")]
+    sources.append(open_gaps_source())
+    return sources
 
 
 SECTION_TARGETS = section_sources()
@@ -335,13 +375,12 @@ for name in TARGETS:
 
 sections = 0
 
-for source in SECTION_TARGETS:
+for source, text, line_offset in SECTION_TARGETS:
     name = str(source)
-    text = source.read_text(encoding="utf-8")
     for match in SECTION_REF.finditer(text):
         raw_path = match.group(1) or match.group(2)
         heading = " ".join(match.group(3).split())
-        number = text.count("\n", 0, match.start()) + 1
+        number = text.count("\n", 0, match.start()) + 1 + line_offset
         sections += 1
         matches = resolve_section_path(raw_path, source)
         if not matches:
