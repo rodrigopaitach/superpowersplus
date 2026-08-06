@@ -11,6 +11,45 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **Three reference documents, carrying what `CLAUDE.md` used to carry inline.**
+  [`docs/review-scopes.md`](docs/review-scopes.md) holds the four review faces
+  and the two shapes copied across carriers on purpose;
+  [`docs/docs-and-links.md`](docs/docs-and-links.md) holds the three
+  README-shaped files and what each of `check-links.sh`'s three passes reads;
+  [`docs/releasing.md`](docs/releasing.md) holds the bump audit's false
+  positive and the ceiling exemption that runs on a deadline. Each is reached
+  by an imperative pointer at the moment it applies, not by a link nobody is
+  told to follow. They land under `docs/`, so `check-links.sh` gates their
+  links, anchors and domains from the first commit.
+
+### Changed
+
+- **`CLAUDE.md` rewritten to the shape Anthropic's context-engineering
+  guidance describes: brief on what the repository is, most of the file on the
+  traps.** 190 lines to 97. **Measured by section, 75% of what is not the
+  header is now trap** — a rule that guards an act at the moment it happens —
+  against procedure, which is what moved out.
+  The cut is one rule, applied throughout: **the description of a gate leaves,
+  the prohibition stays.** Verified before applying it — all eight gates print
+  their reason on failure, and `check-skill-size.sh` prints the rule itself, so
+  a red is never a red without an explanation. The section that proved the
+  point was `## Documentation hierarchy`, whose account of what `check-links.sh`
+  scanned went stale twenty minutes after it was written, when this same cycle
+  added `CLAUDE.md` to that scan.
+  Four section titles are unchanged on purpose — `## Relationship with
+  Superpowers`, `## Versioning`, `## Preparing a commit` and ``## Running
+  `gh` `` — because ten references across three files name them and no gate
+  reads any of them. Each of the ten was checked against the new file by title
+  and by the rule it routes to.
+  Two blocks were reclassified during the work rather than after: the `evals/`
+  invariant, which provenance shows is a measured trap and not the obvious —
+  `docs/testing.md` once shipped a runnable `cd evals && uv sync` for a
+  directory that is absent — and the closed list of rename exceptions, which
+  became a positive rule, because a closed list of exceptions rots while the
+  question "what does this string name?" does not.
+
 ### Fixed
 
 - **`CLAUDE.md` wrote the pointer rule from outside the pass that enforces it.**
@@ -32,6 +71,21 @@ References below name them so a claim here can be traced there.
   green under that mutation by design — they are the control half, not the
   detector. `AGENTS.md` is deliberately absent from the list: it is a symlink
   to `CLAUDE.md`, and listing both reports every problem twice.
+
+- **A `file:line` anchor inside `CLAUDE.md` pointed at the wrong block.** It
+  cited the escalation format's 1-of-3-to-3-of-3 measurement at
+  `escalation-format.md:9-11`; the measurement is at
+  `skills/using-superpowers/references/escalation-format.md:20-22`, and `:9-11`
+  holds the carrier count instead. Found by opening the file rather than by any
+  gate — a line anchor into a file this project edits is exactly what the
+  anchor rule tells you not to write. The rewrite carries the claim without a
+  line number: the block it names has no heading, so a section reference is
+  impossible and a markdown link to the file is what survives an edit above it.
+
+- **`CONTRIBUTING.md:95` named a `CLAUDE.md` section that does not exist**,
+  `## Running gh` against the real ``## Running `gh` ``. It diverged before
+  this cycle touched anything, which is the point: it is one of ten references
+  to `CLAUDE.md` section titles that no gate reads.
 
 - **Three documents shortened the text inside an agent's quotation marks.** The
   worked example in [`README.md`](README.md) and both bilingual READMEs quote a
@@ -2884,6 +2938,35 @@ by entry.
 Identified and deliberately left open, each with the reason it was not closed.
 **This is the live list** — closing one updates it here. When each was opened is
 recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas) (in Portuguese).
+
+- **Ten references to `CLAUDE.md` section titles, in three files, that no gate
+  reads.** `CHANGELOG.md:6` and `:84` use the canonical form and are excluded
+  from the section pass because the changelog is a dated record;
+  `CONTRIBUTING.md:91-97` is a routing table of seven rows in bare backticks;
+  `docs/context-audit.md:141` names one in prose. Rename a section and they go
+  stale in silence. **Not closed, and no gate built for it now** — the seven
+  backticked rows are the form the gate deliberately does not police, and
+  charging them would mean policing a convention this project decided to leave
+  to authors.
+  **What a future sweep needs to know is how this one was nearly missed.** A
+  `grep` for `CLAUDE.md` finds none of the seven: the attribution sits in the
+  paragraph above the table, not on the rows. A `grep` for the gate's `,
+  section "…"` form finds none of them either. **They are only found by
+  grepping for the section TITLES**, which is how they surfaced here — after
+  the dependency list had already been reported as complete, and before
+  anything was edited. `CONTRIBUTING.md:95` was already divergent at that
+  point, with no rewrite involved.
+
+- **The pointer rule claims more than this project practises, and the gap is
+  measured.** `CLAUDE.md` states that a pointer to a file of this repository is
+  a markdown link and never backticks. Counted across the nine documents this
+  project owns: **167 real repository paths sit in backticks against 70
+  markdown links** — the practised convention names a file in backticks and
+  links it when telling the reader to go read it, a distinction the rule as
+  written does not make. Left open deliberately: narrowing the rule to match
+  practice would weaken it by one session's reading, and applying it literally
+  would convert 167 sites for no measured defect. Config declares the possible;
+  convention is the practised, and only one of the two is written down here.
 
 - **`writing-skills/SKILL.md` is under structural review, and this is the
   dossier that review consumes.** Its ceiling exemption now runs on a deadline
