@@ -1691,6 +1691,21 @@ first, and the candidate cause named and marked untested.
     rule must not soften: a new dependency needs approval, and generalizing
     beyond the criterion is invented scope.
 
+- **`anthropic-best-practices.md` gained a `## Contents`, reversing a decision
+  taken four days earlier in this same cycle.** At 1150 lines it is the longest
+  file in the repository and the document that states the rule, so it is where
+  a table of contents pays most. It was left out on 2026-08-05 with the reason
+  that a verbatim vendored copy of somebody else's documentation stops being a
+  faithful copy once a section is added — an argument that held while the file
+  was the upstream's and stopped holding on 2026-08-06, when this project
+  ended that relationship. Nothing else changed; the reason simply expired,
+  which is what the "Relationship with Superpowers" rule says to expect.
+  **This is a declared addition on third-party text, dated 2026-08-06**, not a
+  correction to it: 17 anchor links, no line of the vendor's own prose touched.
+  Three headings repeat and their anchors carry GitHub's `-1` suffix, which
+  [check-links.sh](scripts/check-links.sh) verified along with the other
+  fourteen — local links went 215 to 232.
+
 ### Removed
 
 - **Four examples that taught how to solve a problem, not what shape to
