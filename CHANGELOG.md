@@ -47,6 +47,23 @@ References below name them so a claim here can be traced there.
   maintain: it is a fixed historical fact now, and its "update this line at
   every rebase" instruction went with the decision.
 
+- **`writing-skills` carried a word target its own author has since moved, and
+  now says so instead of pretending the two agree.** Its "4. Token Efficiency
+  (Critical)" section asks for under 500 words from any skill that is not
+  frequently loaded. Anthropic's current skill-development guidance for plugin
+  skills asks for 1,500-2,000, under 3,000, with 5,000 as the maximum. Measured
+  against the current number, ten of the fifteen skills here comply; against
+  the one in this file, none do.
+  **The numbers were not overwritten, and the reason is that the two are not
+  the same axis.** The tiers here sort by how often a skill is loaded — the
+  distinction that decides whether its words cost anything — while the vendor's
+  is a single body target. Replacing three tiers with one number would delete
+  the frequently-loaded tier in silence, which this cycle's measurement shows
+  is the one that bites. Both are now stated, with which to apply where, and
+  with the instruction to name which one was used rather than picking whichever
+  lets a draft through. The file grew 679 to 692 lines; its ceiling exemption
+  is unaffected, being a hardcoded entry rather than a computed condition.
+
 - **Eight auxiliary files sat beside their `SKILL.md` instead of in the
   directories the vendor's anatomy declares, and now they are in them.**
   Anthropic's skill structure names three: `references/` for what is loaded

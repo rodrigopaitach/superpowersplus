@@ -219,6 +219,19 @@ Use words an agent would search for:
 - Frequently-loaded skills: <200 words total
 - Other skills: <500 words (still be concise)
 
+**These three tiers are stricter than the vendor's current guidance, and the
+difference is deliberate.** Anthropic's skill-development guidance for plugin
+skills asks for a body of 1,500-2,000 words, under 3,000, with 5,000 as the
+maximum - three to four times looser than the last tier above. Its target is a
+single number for the body; the tiers here sort by how often a skill is
+loaded, which is the distinction that decides whether words cost anything at
+all. A skill read once per task and a skill read into every conversation of
+every project do not share a budget.
+
+Take the vendor's number as the ceiling for a skill nobody loads by default,
+and the tiers above as the target for one that is. Where the two disagree, say
+which you applied rather than picking the one that lets the draft through.
+
 **Techniques:**
 
 **Move details to tool help:**
