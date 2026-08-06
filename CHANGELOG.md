@@ -3047,6 +3047,35 @@ Identified and deliberately left open, each with the reason it was not closed.
 **This is the live list** — closing one updates it here. When each was opened is
 recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas) (in Portuguese).
 
+- **Two skills bind the implementer on the subagent path and nothing binds
+  anyone on the inline one. The asymmetry is recorded, not closed, because
+  closing it would change what a flow does and that is a design decision, not a
+  conformance repair.** Both sides, located:
+  - **`receiving-code-review`** is named once in the entire graph, at
+    [`implementer-prompt.md`](skills/subagent-driven-development/implementer-prompt.md),
+    section "After Review Findings" — *"verify before implementing"*. The inline
+    path reaches the same moment at
+    [`executing-plans/SKILL.md`](skills/executing-plans/SKILL.md), section
+    "Step 3: Audit and Review the Branch", whose third item says to fix the
+    audit rows and the review findings in one pass and never names the skill.
+    Receiving a code review is literally that skill's trigger, and on this path
+    nobody is sent to it.
+  - **`test-driven-development`** is bound explicitly at the same template,
+    section "Your Job" — *"binds every task here: NO PRODUCTION CODE…"*. The
+    inline path has no equivalent sentence. It is the weaker of the two, because
+    [`writing-plans/SKILL.md`](skills/writing-plans/SKILL.md), section "Task
+    Structure", makes every task carry the red-green steps as literal steps, so
+    an inline executor following the plan runs the cycle without being told the
+    rule. That is the plan doing it, not the flow.
+  **Why left open.** Wiring either one in changes behaviour: the first adds a
+  skill invocation to a fix pass, the second adds a rule to a path that already
+  gets the behaviour from the plan. Neither is a broken reference, so neither is
+  the kind of thing this project fixes without measuring first. **What would
+  settle it is the measurement, not the argument** — an inline run against a
+  review whose findings include one that is wrong, which is the case
+  `receiving-code-review` exists for and the only one where its absence has an
+  observable cost.
+
 - **Ten references to `CLAUDE.md` section titles, in three files, that no gate
   reads.** `CHANGELOG.md:6` and `:84` use the canonical form and are excluded
   from the section pass because the changelog is a dated record;
