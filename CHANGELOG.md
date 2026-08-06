@@ -13,6 +13,38 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **Every `file:line` anchor into a live document was counted, and the three
+  that could be sections became sections.** The sweep found 18 anchors in files
+  this project edits. They fall into three groups, and only one of them is a
+  defect:
+  | Group | Count | What it is |
+  |---|---|---|
+  | Target is code — a `.sh`, `.js` or `.json` line | 10 | No section exists to anchor to. `file:line` is the correct form here, not a lapse |
+  | Target is a live markdown heading | 5 | Convertible. Three converted; the other two live inside fixtures |
+  | Illustrative example, resolving on purpose or not | 3 | Out of scope by the rule that reserves backticks for exactly these |
+  All 10 code anchors were opened and all 10 check out today. The three
+  conversions are `plan-document-reviewer-prompt.md`, both of its anchors into
+  the task reviewer, and `tests/skill-behavior/README.md`. Each was verified by
+  mutation, and the two forms fail separately: a wrong path and a renamed
+  heading produce different errors.
+  **The two anchors left in place are inside `FIXTURE-*` files and must not be
+  touched.** A fixture is the recorded input of a measurement, and rewriting one
+  invalidates the `RESULT-*` beside it. One of them — `githooks/pre-commit:11`,
+  naming a line that actually sits at `:13` — is deliberately wrong: it is the
+  object under test, and "correcting" it would delete the measurement.
+  **On the gate for the remaining form.** The design considered was: where
+  `file:line` is unavoidable because the target has no heading, the citation
+  also carries a literal fragment of that line and a gate checks the fragment is
+  still there — no named exception, because the rule becomes "either a section,
+  or a line with its fragment". **It is a sound design and this project already
+  practises it**: `spec-under-test.md` and `docs/releasing.md` both write the
+  anchor with the fragment beside it, unprompted. **It is not being built now,
+  and the reason is the measurement above** — the 10 anchors it would govern are
+  correct today, so there is no measured defect in that class. Building it would
+  be the invented-by-argument move this file's Open gaps refuses on its own
+  terms. **The condition is recorded there instead: the first code anchor found
+  drifted is what turns this from a design into a defect.**
+
 - **The evidence line was enforced everywhere an agent reports to an agent and
   nowhere an agent reports to its human partner.** Every carrier of
   `**Command:** … — **exit:** … — **counts:** …` was a machine-to-machine

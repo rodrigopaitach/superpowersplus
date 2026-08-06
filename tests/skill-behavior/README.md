@@ -129,8 +129,10 @@ Runs 1 and 2 did not amend the rule; recording the failure was the result.
 **Rule under test:** `skills/verification-before-completion/SKILL.md` — 120
 lines whose Iron Law forbids claiming completion without fresh verification
 evidence. It has one invoker in the whole graph
-(`systematic-debugging/SKILL.md:189`), which is what prompted measuring it
-before either wiring it into the flows or cutting it.
+([systematic-debugging/SKILL.md](../../skills/systematic-debugging/SKILL.md),
+section "Phase 4: Implementation"), which is what prompted measuring it
+before either wiring it into the flows or cutting it. The skill now declares
+that orphaning at the top of its own file.
 
 | File | What it is |
 |------|-----------|
