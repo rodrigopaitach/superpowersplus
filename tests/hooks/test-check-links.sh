@@ -281,6 +281,67 @@ printf 'See `skills/demo/SKILL.md`, section "Nothing\nHere" for the shape.\n' > 
 assert_run 1 "a wrapped reference to a missing section still fails" "$T" "no heading matching section"
 
 echo
+echo "Test: the canonical form — markdown link plus section title"
+
+# The bug this whole group exists for. Obeying the pointer rule (a repository
+# file is a link) and the anchor rule (a file edited every release is cited by
+# section) at the same time produces this form, and for two releases the regex
+# could not see it: a reference naming a section that had just been deleted
+# passed green.
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Execution Handoff\n' > "$T/skills/demo/SKILL.md"
+printf 'See [SKILL.md](skills/demo/SKILL.md), section "Execution Handoff".\n' > "$T/CLAUDE.md"
+assert_run 0 "the canonical link form resolves" "$T" "1 section reference(s) resolve"
+
+T="$(new_tree)"
+mkdir -p "$T/skills/demo"
+printf '# Demo\n\n## Execution Handoff\n' > "$T/skills/demo/SKILL.md"
+printf 'See [SKILL.md](skills/demo/SKILL.md), section "Section Nobody Kept".\n' > "$T/CLAUDE.md"
+assert_run 1 "the canonical link form fails on a deleted section" "$T" "no heading matching section"
+
+echo
+echo "Test: the section pass reaches every live file, not just CLAUDE.md"
+
+# SECTION_TARGETS used to be ["CLAUDE.md"]. Skills cite each other in this form
+# too, and those references were read by nothing.
+T="$(new_tree)"
+mkdir -p "$T/skills/one" "$T/skills/two"
+printf '# Two\n\n## Overview\n' > "$T/skills/two/SKILL.md"
+printf '# One\n\nSee [two](../two/SKILL.md), section "Not A Heading".\n' > "$T/skills/one/SKILL.md"
+assert_run 1 "a bad section reference inside skills/ is caught" "$T" "no heading matching section"
+
+# A relative path means relative to the citing file — never to the repository
+# root, which is where five real references in finishing-a-development-branch
+# would have resolved to nothing.
+T="$(new_tree)"
+mkdir -p "$T/skills/one" "$T/skills/two"
+printf '# Two\n\n## Overview\n' > "$T/skills/two/SKILL.md"
+printf '# One\n\nSee [two](../two/SKILL.md), section "Overview".\n' > "$T/skills/one/SKILL.md"
+assert_run 0 "a ../ path resolves from the citing file" "$T" "1 section reference(s) resolve"
+
+# Dated records state what was true on their date. A heading renamed afterwards
+# does not make one wrong, and a gate red on one would force rewriting a record
+# to stay green.
+T="$(new_tree)"
+mkdir -p "$T/skills/demo" "$T/tests/skill-behavior"
+printf '# Demo\n\n## Overview\n' > "$T/skills/demo/SKILL.md"
+printf 'Ran against [demo](../../skills/demo/SKILL.md), section "Gone Since".\n' \
+    > "$T/tests/skill-behavior/RESULT-something.md"
+assert_run 0 "a RESULT- record is not charged for a renamed heading" "$T"
+
+# The frozen history is the exclusion the skip set actually exercises: it lives
+# under docs/, so it IS collected and then dropped. CHANGELOG.md is not in the
+# scanned roots at all — its entry in the skip set guards a root nobody has
+# added yet, and a test asserting it would pass whatever the skip set said.
+T="$(new_tree)"
+mkdir -p "$T/skills/demo" "$T/docs"
+printf '# Demo\n\n## Overview\n' > "$T/skills/demo/SKILL.md"
+printf '# History\n\nWas [demo](../skills/demo/SKILL.md), section "Gone Since".\n' \
+    > "$T/docs/PLUS-CHANGELOG-historico.md"
+assert_run 0 "the frozen history is not charged for a renamed heading" "$T"
+
+echo
 if [ "$FAILURES" -eq 0 ]; then
     echo "All check-links tests passed"
 else

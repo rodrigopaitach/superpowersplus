@@ -47,6 +47,53 @@ References below name them so a claim here can be traced there.
   maintain: it is a fixed historical fact now, and its "update this line at
   every rebase" instruction went with the decision.
 
+### Fixed
+
+- **Two rules of this repository, obeyed together, produced a reference no gate
+  could read — and one naming a deleted section passed green.** The pointer
+  rule asks that a file of this repository be named by markdown link; the
+  anchor rule asks that a file edited every release be cited by section title.
+  Written together they give the link-plus-section form, and
+  [`check-links.sh`](scripts/check-links.sh) matched only the backticked
+  variant, so the form that obeys both rules was the one nothing verified.
+  Measured on the commit above: a reference to the section this very cycle had
+  just deleted was written, the gate reported *"7 section reference(s)
+  resolve"* — the same count as before — and exited 0.
+  **The canonical form is now declared and both variants are verified.** The
+  gate reads either and polices neither: matching only the canonical one would
+  leave it blind to the older form exactly as it was blind to the canonical
+  one. The canonical form earns both checks, the path from the link pass and
+  the heading from the section pass, which is why it is the one to write.
+  **`SECTION_TARGETS` was `["CLAUDE.md"]` and now reaches every live markdown
+  file.** Of 34 references measured across the repository, 7 were checked. The
+  27 that were not include five in
+  [finishing-a-development-branch/SKILL.md](skills/finishing-a-development-branch/SKILL.md)
+  and one in
+  [subagent-driven-development/SKILL.md](skills/subagent-driven-development/SKILL.md);
+  16 are checked now. Dated records stay out — the frozen history and the
+  `RESULT-*.md` files state what was true on their date, and a gate red on one
+  would force rewriting a record to stay green. Symlinks stay out, because
+  `AGENTS.md` points at `CLAUDE.md` and scanning both reports every problem
+  twice. Relative paths now resolve from the citing file, which is what a
+  markdown link means and what those five references require.
+  **13 occurrences were converted** to the canonical form — 7 in
+  [`CLAUDE.md`](CLAUDE.md), 5 in `finishing-a-development-branch`, 1 in
+  [tests/skill-behavior/README.md](tests/skill-behavior/README.md). The four in
+  this file that instantiate an example path are left alone: they document the
+  form inside past entries, and a record of what was done is not converted to a
+  new format.
+  **Proved in both states, with the real case.** With the reference to the
+  deleted section present, the previous script exited 0 and counted 7; the new
+  one exits 1 and names both variants; with it removed, 16 of 16 resolve. Six
+  tests were added to
+  [test-check-links.sh](tests/hooks/test-check-links.sh), and each was run
+  against a mutation aimed at its own mechanism. Two of those mutations found
+  a test that passed for the wrong reason: a positive case that could not tell
+  a match from silence, now asserting the reference was counted, and one
+  claiming this file is excluded when it is simply never collected — replaced
+  by the frozen history, which is the exclusion the skip set actually
+  exercises.
+
 - **Four skill `description` fields were written in the second person, against
   Anthropic's own rule for the field.** Skill authoring best practices
   (`platform.claude.com`, Agent Skills, "Writing effective descriptions") states

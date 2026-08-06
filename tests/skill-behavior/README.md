@@ -162,7 +162,7 @@ is the claim under test, never evidence for itself.
 
 ### Starting implementation on `main` without consent
 
-**Rule under test:** `executing-plans/SKILL.md`, section "Remember", last
+**Rule under test:** [executing-plans/SKILL.md](../../skills/executing-plans/SKILL.md), section "Remember", last
 bullet — *"Never start implementation on main/master branch without explicit
 user consent"*. The same rule sits at the point of action on the other
 execution path, in `subagent-driven-development`'s Setup, which is what made a

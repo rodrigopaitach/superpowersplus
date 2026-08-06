@@ -35,16 +35,16 @@ once. Do not.
 
 | Face | What it actually runs |
 |---|---|
-| `subagent-driven-development/task-reviewer-prompt.md`, section "Tests — Run Them Yourself" | The **task's** test command, `[TEST_COMMAND]`, reported verbatim |
-| `requesting-code-review/code-reviewer.md`, section "What to Check" | The **project's** suite, with a fallback to the command the dispatch named |
-| `subagent-driven-development/re-review-prompt.md`, section "Tests — Run Them Yourself" | **Re-runs** what already ran, reporting command, exit code, and counts |
-| `final-branch-audit/SKILL.md`, section "The Auditor Re-Runs the Searches" | **No tests at all** — re-runs the *searches* against the spec |
+| [task-reviewer-prompt.md](skills/subagent-driven-development/task-reviewer-prompt.md), section "Tests — Run Them Yourself" | The **task's** test command, `[TEST_COMMAND]`, reported verbatim |
+| [code-reviewer.md](skills/requesting-code-review/code-reviewer.md), section "What to Check" | The **project's** suite, with a fallback to the command the dispatch named |
+| [re-review-prompt.md](skills/subagent-driven-development/re-review-prompt.md), section "Tests — Run Them Yourself" | **Re-runs** what already ran, reporting command, exit code, and counts |
+| [final-branch-audit/SKILL.md](skills/final-branch-audit/SKILL.md), section "The Auditor Re-Runs the Searches" | **No tests at all** — re-runs the *searches* against the spec |
 
 The evidence block `**Command:** [verbatim] — **exit:** [code] — **counts:** …`
 appears three times, identical but for a baseline suffix that is content, not
-wording: `base:` in `task-reviewer-prompt.md`, section "Test Evidence";
-`previous:` in `re-review-prompt.md`, section "Test Run"; none in
-`code-reviewer.md`, section "Test Run", which has no prior count.
+wording: `base:` in [task-reviewer-prompt.md](skills/subagent-driven-development/task-reviewer-prompt.md), section "Test Evidence";
+`previous:` in [re-review-prompt.md](skills/subagent-driven-development/re-review-prompt.md), section "Test Run"; none in
+[code-reviewer.md](skills/requesting-code-review/code-reviewer.md), section "Test Run", which has no prior count.
 
 **A form inside a subagent's `## Output Format` is unified in place, never
 extracted — and then charged by a gate.** The measured exception to "at a third
@@ -54,11 +54,16 @@ occurrence, extract it": `references/escalation-format.md:9-11` records it at
 the five carriers' fields, tolerating formatting. (Line number: no heading.)
 
 **Anchor by `file:line` for code and artifacts that do not move because of what
-we write; by file plus section title — the form above — for a file of this
-repository we edit every release.** `check-links.sh` proves the section only
-where `SECTION_TARGETS` reaches — this file alone. Under `skills/` the form has
-no gate, and twice an instruction has asked `file:line` where the rule asks the
-section: **on a third, the finding is that the rule needs a gate.**
+we write; by markdown link plus section title — the form in the table above —
+for a file of this repository we edit every release.** One form, deliberately:
+the pointer rule asks for a link and the anchor rule asks for a section, and
+obeying them separately produced a reference no gate could read — a link naming
+a section that had just been deleted passed green, because `check-links.sh`
+matched only the backticked variant. The canonical form earns both checks, the
+path from the link pass and the heading from the section pass. The gate reads
+both variants and polices neither, and it scans every live markdown file now;
+the dated records stay out — the changelog, the frozen history and the
+`RESULT-` files — because a heading renamed later does not make a record wrong.
 
 ## Relationship with Superpowers
 

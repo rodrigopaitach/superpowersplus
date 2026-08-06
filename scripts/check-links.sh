@@ -67,9 +67,54 @@ HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 # go quiet, and the author would see a pass — silence reading as coverage,
 # which is the failure this repository exists to separate. The path cannot
 # contain a newline; the section title can, and is normalized before lookup.
-SECTION_REF = re.compile(r'`([^`\n]+\.md)`,\s*section\s+"([^"]+)"')
+#
+# TWO forms are matched, and the reason is the bug that produced this line.
+# The canonical form is the markdown link plus the section title — it obeys
+# both of CLAUDE.md's rules at once (a pointer to a file of this repository is
+# a link; a file edited every release is anchored by section) and it earns
+# double coverage, the path from the link pass and the heading from here.
+# But matching ONLY the canonical form would leave the gate blind to the older
+# backtick form exactly as it was blind to the canonical one, which is how a
+# reference to a deleted section passed green. Both are verified; neither is
+# policed. Writing the canonical one is a rule for authors, not for this gate.
+#
+# Do not instantiate an example path inside a scanned file — `path/file.md`
+# written to demonstrate the form is charged like a real reference. Point at
+# one that exists instead. This already failed a commit once; the changelog
+# entry for `1.8.2` records it.
+SECTION_REF = re.compile(
+    r'(?:`([^`\n]+\.md)`|\[[^\]]*\]\(([^)\s]+\.md)\)),\s*section\s+"([^"]+)"')
 SECTION_HEADING = re.compile(r"^\s*(#{1,6})\s+(.*?)\s*#*\s*$")
-SECTION_TARGETS = ["CLAUDE.md"]
+
+
+def section_sources():
+    """Every live markdown file — the text a reader is told to obey today.
+
+    Dated records are out: the frozen history and the RESULT-*.md records
+    each state what was true on their date, a heading renamed afterwards does
+    not make them wrong, and a gate red on one would force rewriting a record
+    to stay green. Fixtures stay in — a fixture is an input that must still
+    name something real, and a red there says the recorded run's premise moved.
+
+    The skip set is what drops the frozen history, which lives under docs/ and
+    is therefore collected first. CHANGELOG.md is not in these roots at all;
+    its entry there guards a root nobody has added, so no test can tell whether
+    it is doing anything.
+
+    Symlinks are out — AGENTS.md points at CLAUDE.md, and scanning both
+    reports every problem twice.
+    """
+    found = [pathlib.Path("CLAUDE.md")]
+    for base in ("docs", "skills", "tests"):
+        found += sorted(pathlib.Path(base).rglob("*.md"))
+    skip = {"CHANGELOG.md", "PLUS-CHANGELOG-historico.md"}
+    return [p for p in found
+            if p.is_file() and not p.is_symlink()
+            and p.name not in skip
+            and not p.name.startswith("RESULT-")]
+
+
+SECTION_TARGETS = section_sources()
 LINK = re.compile(r"(?<!\!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 EXTERNAL = re.compile(r"^(https?:|mailto:|tel:|ftp:)", re.IGNORECASE)
 
@@ -201,10 +246,20 @@ def section_slugs(path):
     return found
 
 
-def resolve_section_path(raw_path):
-    """The changelog gate's cascade: as written, then under skills/, then any
-    tracked path ending with it. Several matches is an ambiguity to skip, not
-    a claim to charge — same reasoning as check-changelog.sh."""
+def resolve_section_path(raw_path, source=None):
+    """The changelog gate's cascade: relative to the citing file, then as
+    written, then under skills/, then any tracked path ending with it. Several
+    matches is an ambiguity to skip, not a claim to charge — same reasoning as
+    check-changelog.sh.
+
+    Relative-to-the-source comes first because that is what a markdown link
+    means, and it is what the five references in
+    finishing-a-development-branch/SKILL.md use: `../executing-plans/SKILL.md`
+    resolves from that file, never from the repository root."""
+    if source is not None:
+        near = (source.parent / raw_path).resolve()
+        if near.is_file() and ROOT in near.parents:
+            return [near.relative_to(ROOT)]
     direct = pathlib.Path(raw_path)
     if direct.is_file():
         return [direct]
@@ -270,17 +325,15 @@ for name in TARGETS:
 
 sections = 0
 
-for name in SECTION_TARGETS:
-    source = pathlib.Path(name)
-    if not source.is_file():
-        continue
+for source in SECTION_TARGETS:
+    name = str(source)
     text = source.read_text(encoding="utf-8")
     for match in SECTION_REF.finditer(text):
-        raw_path = match.group(1)
-        heading = " ".join(match.group(2).split())
+        raw_path = match.group(1) or match.group(2)
+        heading = " ".join(match.group(3).split())
         number = text.count("\n", 0, match.start()) + 1
         sections += 1
-        matches = resolve_section_path(raw_path)
+        matches = resolve_section_path(raw_path, source)
         if not matches:
             problems.append(
                 f"{name}:{number}: section reference names a file that does not exist: {raw_path}")
