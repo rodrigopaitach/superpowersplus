@@ -3,7 +3,7 @@
 All notable changes to this project are documented here. The format follows
 Keep a Changelog 1.1.0, and this project adheres to Semantic Versioning 2.0.0.
 
-**Upstream base:** [`44c9b2d`](https://github.com/obra/superpowers/commit/44c9b2d) (2026-07-27) — the last Superpowers commit incorporated. Update this line at every rebase; it replaces the mirrored upstream `version` this project used before `1.0.0`.
+**Upstream base:** [`44c9b2d`](https://github.com/obra/superpowers/commit/44c9b2d) (2026-07-27) — the last Superpowers commit incorporated, and the last there will be: on 2026-08-05 this project stopped pulling from the upstream ([`CLAUDE.md`](CLAUDE.md), section "Relationship with Superpowers"). This line is now a fixed historical fact, not a field to maintain.
 
 The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
@@ -12,6 +12,40 @@ References below name them so a claim here can be traced there.
 ## [Unreleased]
 
 ### Changed
+
+- **This project stopped pulling from the upstream, and rebase cost stopped
+  being a criterion.** The owner decided on 2026-08-05: `obra/superpowers` is
+  the historical origin of this code and the reason the MIT attribution exists,
+  not a source of updates. The `upstream` remote may stay for consultation —
+  `git diff upstream/main` still answers where a file came from — but no rebase
+  is planned. In [`CLAUDE.md`](CLAUDE.md) the section that was headed "Rebase
+  relationship with Superpowers" is gone, replaced by one headed "Relationship
+  with Superpowers", and the posture is stated as a rule about rules: a rule
+  that reached for rebase cost
+  lost its foundation and gets rewritten on its own merits or dropped, never
+  left standing on a reason that no longer exists.
+  **The attribution is a separate question and does not move.**
+  [`LICENSE`](LICENSE) and the credit remain a license obligation on code that
+  came from them, independent of whether anything is ever pulled again.
+  **Three rules were carried by rebase cost and are now resolved or named.**
+  Two fell with the section itself: "touch the minimum of the files the
+  upstream edits often", and the rule against rewriting an upstream test, whose
+  purpose — keeping their tests able to detect the upstream's decisions —
+  describes a signal nothing consumes now. One was rewritten in place: the note
+  on `tests/codex/test-package-codex-plugin.sh` said the suite's known
+  clean-tree defect "is upstream's file and is not fixed here", and now says
+  fixing it is ordinary work on a file this project owns. One more is named and
+  left open on purpose — the `skills/writing-skills/SKILL.md` size exemption,
+  whose stated condition is "while the file is the upstream's" — because
+  closing it means extracting 179 lines, which is work to propose and not a
+  correction to make in a documentation commit.
+  **Two more live rules repeat the exemption's dead reason in executable
+  files** — [`scripts/check-skill-size.sh`](scripts/check-skill-size.sh) and
+  [`tests/hooks/test-check-skill-size.sh`](tests/hooks/test-check-skill-size.sh)
+  — and move with whatever that exemption becomes, not before.
+  The "Upstream base" line at the top of this file also stops being a field to
+  maintain: it is a fixed historical fact now, and its "update this line at
+  every rebase" instruction went with the decision.
 
 - **Four skill `description` fields were written in the second person, against
   Anthropic's own rule for the field.** Skill authoring best practices
