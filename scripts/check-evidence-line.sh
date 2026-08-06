@@ -2,9 +2,9 @@
 #
 # check-evidence-line.sh — the test-evidence line is the same line everywhere.
 #
-# The form `**Command:** … — **exit:** … — **counts:** …` is carried in five
-# places, unified IN PLACE rather than extracted to one file. That decision is
-# deliberate and measured: a form inside a subagent's output block must not sit
+# The form `**Command:** … — **exit:** … — **counts:** …` is carried in every
+# file listed in CARRIERS below, unified IN PLACE rather than extracted to one
+# file. That decision is deliberate and measured: a form inside a subagent's output block must not sit
 # behind a link, because the agent filling the block does not follow it
 # (skills/using-superpowers/references/escalation-format.md:9-11, the move
 # measured 1/3 then 3/3 once the form came back to the point of use).
@@ -22,8 +22,10 @@
 #     code-reviewer.md. That difference is CONTENT, not wording, and this gate
 #     is blind to it by design.
 #   * Whether a carrier is reached at the right moment in its own document.
-#   * Whether the five carriers are still the right five. The list below is
-#     declared, not discovered: adding a sixth carrier means adding it here.
+#   * Whether the declared carriers are still the right ones. The list below
+#     is declared, not discovered: a new carrier means adding it here. The
+#     count is printed at run time and deliberately not written down — a
+#     number in this comment ages every time the list grows.
 #
 # Formatting is explicitly tolerated: indentation, line wrapping inside the
 # form, and any prose prefix before `**Command:**` are all normalized away.
@@ -44,9 +46,16 @@ from pathlib import Path
 
 root = Path(sys.argv[1])
 
-# Declared, not discovered — a sixth carrier is added here on purpose.
+# Declared, not discovered — a new carrier is added here on purpose.
+#
+# finishing-a-development-branch is the only carrier whose reader is a person
+# rather than another subagent, and it was the last point of claim without the
+# form. Every other carrier is a machine-to-machine prompt, so the shape was
+# enforced everywhere an agent reports to an agent and nowhere an agent reports
+# to its human partner. That asymmetry is what adding it closes.
 CARRIERS = [
     "skills/executing-plans/SKILL.md",
+    "skills/finishing-a-development-branch/SKILL.md",
     "skills/requesting-code-review/code-reviewer.md",
     "skills/subagent-driven-development/implementer-prompt.md",
     "skills/subagent-driven-development/re-review-prompt.md",
@@ -113,7 +122,7 @@ if failures:
     for line in failures:
         print(f"check-evidence-line: {line}", file=sys.stderr)
     print(
-        "\nThe five carriers hold ONE line, copied on purpose because a form "
+        "\nThe declared carriers hold ONE line, copied on purpose because a form "
         "inside a subagent's output block cannot live behind a link. When they "
         "stop matching, the copy has drifted and one of them is teaching a "
         "shape nothing else uses.",

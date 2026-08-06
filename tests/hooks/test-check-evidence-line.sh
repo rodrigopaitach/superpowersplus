@@ -4,7 +4,7 @@
 #
 # The script resolves its repository root from its own location and reads a
 # hardcoded list of carriers, so each case builds a throwaway tree with the
-# script installed and all five carrier files present. That exercises the real
+# script installed and every declared carrier file present. That exercises the real
 # script — its real carrier list, its real chaining rule — rather than a
 # parameterized variant that only exists for tests.
 #
@@ -35,15 +35,25 @@ fail() {
     FAILURES=$((FAILURES + 1))
 }
 
-CARRIERS=(
-    "skills/executing-plans/SKILL.md"
-    "skills/requesting-code-review/code-reviewer.md"
-    "skills/subagent-driven-development/implementer-prompt.md"
-    "skills/subagent-driven-development/re-review-prompt.md"
-    "skills/subagent-driven-development/task-reviewer-prompt.md"
+# The carrier list is READ OUT OF THE SCRIPT, never copied here. It used to be
+# a second copy, and the copy is what broke: adding a carrier to the script
+# left this list one short, and three cases failed for a defect that did not
+# exist. A list duplicated across a rule and its test is the same half-rule
+# this repository keeps finding elsewhere — the test has to fail when the
+# script is wrong, not when the script is merely different.
+mapfile -t CARRIERS < <(
+    sed -n '/^CARRIERS = \[/,/^\]/p' "$SCRIPT_UNDER_TEST" |
+        grep -oE '"[^"]+"' | tr -d '"'
 )
 
-# The canonical form, as one indented wrapped line — the shape four of the five
+if [[ ${#CARRIERS[@]} -eq 0 ]]; then
+    echo "error: could not read CARRIERS out of $SCRIPT_UNDER_TEST" >&2
+    echo "The extraction below silently yields an empty list if that block is" >&2
+    echo "reworded, and every case would then pass over an empty tree." >&2
+    exit 1
+fi
+
+# The canonical form, as one indented wrapped line — the shape most of the
 # carriers actually use.
 canonical_form() {
     cat <<'EOF'
@@ -56,7 +66,7 @@ canonical_form() {
 EOF
 }
 
-# new_tree — throwaway tree with the script and all five carriers. Echoes path.
+# new_tree — throwaway tree with the script and every declared carrier. Echoes path.
 new_tree() {
     local tree
     tree="$(mktemp -d "$TEST_ROOT/tree.XXXXXX")"
@@ -79,9 +89,9 @@ echo "Testing check-evidence-line.sh"
 # --- the real repository -----------------------------------------------------
 
 if bash "$SCRIPT_UNDER_TEST" >/dev/null 2>&1; then
-    pass "this repository's five carriers agree"
+    pass "this repository's declared carriers agree"
 else
-    fail "this repository's five carriers agree"
+    fail "this repository's declared carriers agree"
 fi
 
 # --- baseline ----------------------------------------------------------------
@@ -116,7 +126,7 @@ fi
 
 # --- MUTATION: one field removed from one carrier ----------------------------
 # The failure this gate exists for. `**exit:**` disappears from one carrier and
-# the other four keep it.
+# every other carrier keeps it.
 
 tree="$(new_tree)"
 cat > "$tree/skills/subagent-driven-development/task-reviewer-prompt.md" <<'EOF'

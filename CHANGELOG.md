@@ -13,6 +13,39 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The evidence line was enforced everywhere an agent reports to an agent and
+  nowhere an agent reports to its human partner.** Every carrier of
+  `**Command:** … — **exit:** … — **counts:** …` was a machine-to-machine
+  prompt. The one place a person reads a suite result before deciding anything
+  — `finishing-a-development-branch`, Step 1, the last thing before merge
+  options are on the table — said *"report the failures"* and gave no form at
+  all. A rule that binds the reports nobody reads and releases the one that
+  decides a merge is the half-rule this project keeps finding in other shapes.
+  Step 1 now carries the form, for a pass as well as a failure, and the skill
+  is a declared carrier in
+  [`check-evidence-line.sh`](scripts/check-evidence-line.sh). Verified by
+  mutation: dropping `**counts:**` from the new carrier names that file against
+  the others.
+  **The list stays declared rather than discovered.** Globbing for the form
+  would make a carrier that silently lost it indistinguishable from a file that
+  never had it — the exact failure the gate exists to catch.
+  **What this gate does not do, stated because a green run invites the opposite
+  reading:** it compares the SHAPE of the line across carriers. It never checks
+  that the text inside is true of any real run — `**exit:** [the moon]` passes.
+  Only the adversarial records under
+  [`tests/skill-behavior/`](tests/skill-behavior/README.md) reach that, and they
+  reach it one measured scenario at a time.
+  **Two secondary defects were fixed in the same files rather than left.** The
+  script's own prose carried the count of its carriers in three places, so
+  adding one aged its documentation on the spot; those now state the condition
+  and let the run print the number. And
+  [`test-check-evidence-line.sh`](tests/hooks/test-check-evidence-line.sh) held
+  a SECOND copy of the carrier list — adding a carrier to the script broke three
+  of its cases with no defect present. The test now reads the list out of the
+  script under test, with a guard that fails loudly if the extraction ever
+  yields nothing, because an empty list would let every case pass over an empty
+  tree.
+
 - **The first measured instance of the hole the anchoring rule describes: an
   anchor that was correct when written and was wrong two days later, with no
   gate between the two states.** `plan-document-reviewer-prompt.md` sent its

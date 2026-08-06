@@ -15,6 +15,13 @@ description: Decides how to integrate finished work - merge locally, open a pull
 
 Run the project's full test suite (`npm test` / `cargo test` / `pytest` / `go test ./...`).
 
+**Report the run in the evidence line, whichever way it went** — this is the
+last thing your human partner reads before a merge option is on the table, and
+a bare count ("6/6 green") does not say which instrument produced it:
+**Command:** [verbatim] — **exit:** [code] — **counts:** [passed/failed/skipped].
+From the run you made on the tree you are about to integrate, never one carried
+from earlier in the session.
+
 **If tests fail**, report the failures and stop — the menu comes after a green suite:
 
 ```
