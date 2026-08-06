@@ -203,7 +203,7 @@ Next failing test for next feature.
 | **Clear** | Name describes behavior | `test('test1')` |
 | **Shows intent** | Demonstrates desired API | Obscures what code should do |
 
-When writing or changing any test, read [writing-good-tests.md](writing-good-tests.md) for the rules that keep tests honest:
+When writing or changing any test, read [writing-good-tests.md](references/writing-good-tests.md) for the rules that keep tests honest:
 - Name the production change that would make the test fail — before writing it
 - Assert on real behavior, never on mock behavior
 - Keep test-only code in test utilities, out of production classes
@@ -221,7 +221,7 @@ These three patterns are blocking findings at review, not style notes:
 | Pattern | Why it fails |
 |---------|--------------|
 | An assertion that cannot fail — `expect(true)`, `assert 1 == 1` — or a test with no assertion | Proves the runner works. Nothing else. |
-| Assertions only on mock call counts or mock existence | Tests the mock, not your code. See [writing-good-tests.md](writing-good-tests.md). |
+| Assertions only on mock call counts or mock existence | Tests the mock, not your code. See [writing-good-tests.md](references/writing-good-tests.md). |
 | Happy path only, when the spec or brief lists edge cases — including every case an `IR` criterion names, the spec's home for edge cases, concurrency, failure modes and limits | Those listed cases are requirements, not extras. |
 
 **The inverse, same weight:** every test maps to a row in the plan's Test

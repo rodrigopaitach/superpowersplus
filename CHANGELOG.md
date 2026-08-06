@@ -47,6 +47,43 @@ References below name them so a claim here can be traced there.
   maintain: it is a fixed historical fact now, and its "update this line at
   every rebase" instruction went with the decision.
 
+- **Eight auxiliary files sat beside their `SKILL.md` instead of in the
+  directories the vendor's anatomy declares, and now they are in them.**
+  Anthropic's skill structure names three: `references/` for what is loaded
+  into context on demand, `scripts/` for executable code, and a place for
+  working examples. Measured across the fifteen skills: seven kept auxiliary
+  files loose at the top level and only three used `references/` at all, with
+  `systematic-debugging` holding ten loose files.
+  Six moved to `references/` — `root-cause-tracing.md`, `defense-in-depth.md`
+  and `condition-based-waiting.md` under `systematic-debugging`,
+  `coverage-map.md` and `visual-companion.md` under `brainstorming`,
+  `writing-good-tests.md` under `test-driven-development`. Each is pointed at
+  by its own `SKILL.md` and read during a run, which is what that directory is
+  for. `find-polluter.sh` moved to `scripts/`: it is executable and a suite
+  runs it. `condition-based-waiting-example.ts` moved to `examples/`, the
+  category the vendor gives working code.
+  **The gate found the pointers, including two nobody had listed.** With the
+  conversion above in place, `check-links.sh` named eleven broken links after
+  the move — two of them in `test-driven-development/SKILL.md`, which had been
+  written as links already and so appeared in no backtick inventory. Four more
+  references were outside its reach and were found by hand: two naming
+  `find-polluter.sh` in prose and a code block, one naming the example file,
+  and the suite's own `SCRIPT_UNDER_TEST` path. All four said "in this
+  directory", which had stopped being true.
+  **Three kinds of file were deliberately left where they are.** The six
+  subagent prompt templates are a category the vendor's anatomy does not have —
+  neither consulted like a reference nor run like a script, but filled and
+  handed to another agent — and `subagent-driven-development` already splits
+  them from its `references/` on purpose; moving them would also move paths
+  that [check-evidence-line.sh](scripts/check-evidence-line.sh) and three
+  recorded test results name. `CREATION-LOG.md` is a dated record, and a record
+  does not move for symmetry. The four `test-pressure` files are pointed at by
+  nothing: deciding whether they are live fixtures or dead artifacts is a
+  judgement about this skill's testing story, not a layout question, and
+  guessing it while moving directories is how a decision gets made by accident.
+  `writing-skills` was excluded entirely — its structural review is open, and
+  moving its files now is work thrown away if that review ends in a rewrite.
+
 - **27 file pointers under `skills/` were written in backticks and are now
   markdown links, which is the vendor's own form.** Anthropic's skill authoring
   best practices write every progressive-disclosure pointer as a markdown link

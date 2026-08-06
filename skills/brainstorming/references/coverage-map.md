@@ -74,7 +74,7 @@ When there are more gaps than it makes sense to ask about, order by **impact × 
 - A technical term appears only if it is defined in the same sentence.
 - **Self-test before sending:** could somebody who does not know this project answer it by reading only the question and the recommendation? If not, it is not ready.
 
-This is the general escalation format applied to a clarifying question — the same four parts that any escalation reaching a person carries. What is specific to the interview stays here; the boundary that shape applies to, why it is worded that way, and a worked example are in [escalation-format.md](../using-superpowers/references/escalation-format.md).
+This is the general escalation format applied to a clarifying question — the same four parts that any escalation reaching a person carries. What is specific to the interview stays here; the boundary that shape applies to, why it is worded that way, and a worked example are in [escalation-format.md](../../using-superpowers/references/escalation-format.md).
 
 ## The recommendation, and where it comes from
 
