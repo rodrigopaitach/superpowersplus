@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute inline, in this session, with both end-of-branch gates
+description: Executes a written implementation plan inline, in the current session, with both end-of-branch gates. Use when a written implementation plan is ready to execute.
 ---
 
 # Executing Plans

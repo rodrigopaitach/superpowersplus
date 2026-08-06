@@ -1,6 +1,6 @@
 ---
 name: finishing-a-development-branch
-description: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work
+description: Decides how to integrate finished work - merge locally, open a pull request, or keep the branch. Use when implementation is complete and all tests pass.
 ---
 
 # Finishing a Development Branch

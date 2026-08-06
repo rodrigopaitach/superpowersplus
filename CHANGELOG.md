@@ -9,6 +9,30 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **Four skill `description` fields were written in the second person, against
+  Anthropic's own rule for the field.** Skill authoring best practices
+  (`platform.claude.com`, Agent Skills, "Writing effective descriptions") states
+  it as a warning: *"Always write in third person. The description is injected
+  into the system prompt, and inconsistent point-of-view can cause discovery
+  problems."* The four — `brainstorming` (*"You MUST use this…"*),
+  `writing-plans`, `executing-plans` and `finishing-a-development-branch` (all
+  *"Use when you have…"* / *"…you need to"*) — now state what the skill does
+  first and when to use it second, which is the same guidance's other
+  requirement for the field.
+  **The rewrite preserves reach, not just point of view.** Every trigger term
+  that decides selection was kept verbatim — `brainstorming` keeps the full
+  creative-work list and the imperative force (*"Required before"* carries what
+  *"You MUST"* carried); `executing-plans` keeps the `1.12.1` wording about
+  running inline with both gates and gains no decider, which that release
+  refused on the rule of the pair. Point of view was the defect; the trigger
+  surface is unchanged by design.
+  This is **reasoned against a stated vendor rule, not measured** — no suite in
+  this repository measures when a skill fires, as `1.12.1` already recorded.
+
 ## [1.12.1] - 2026-08-05
 
 ### Fixed
