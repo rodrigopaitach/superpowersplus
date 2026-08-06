@@ -6,6 +6,20 @@ What to ask, and how every question leaves carrying a recommendation your human 
 
 It settles a second thing. **Your human partner may not be a programmer.** They can judge where a recommendation came from — open a `file:line` and see for themselves that it exists and says what you claimed — but not whether the technique is the right one. A bare question hands them a decision they have no basis to make, and they answer it by guessing or by deferring back to you. Every question in this file leaves with a recommendation and a declared source, so what they approve is a grounded decision instead of a blind one.
 
+## Contents
+
+- [The map is a floor, not a ceiling](#the-map-is-a-floor-not-a-ceiling)
+- [Categories](#categories)
+- [The four states](#the-four-states)
+- [Admission filter](#admission-filter)
+- [Priority](#priority)
+- [Question form](#question-form)
+- [The recommendation, and where it comes from](#the-recommendation-and-where-it-comes-from)
+- [Presentation](#presentation)
+- [Integrating each answer](#integrating-each-answer)
+- [Where each category lands](#where-each-category-lands)
+- [Red flags](#red-flags)
+
 ## The map is a floor, not a ceiling
 
 Covering the ten categories does not end the interview, and no category — covered, deferred, or dismissed — authorizes skipping the design phase. A closed list invites treating it as a stopping criterion. It is a stopping criterion for *nothing*: it is the minimum below which the interview was incomplete.

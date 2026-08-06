@@ -47,6 +47,45 @@ References below name them so a claim here can be traced there.
   maintain: it is a fixed historical fact now, and its "update this line at
   every rebase" instruction went with the decision.
 
+- **Eight reference files over 100 lines gained a `## Contents`, and seven
+  candidates turned out not to be reference files.** Anthropic's skill
+  authoring best practices ask for a table of contents in a reference file over
+  100 lines. Measured across `skills/`: 18 non-`SKILL.md` markdown files exceed
+  100 lines — a number reported as eight in an earlier session, which was the
+  fork-owned subset labelled as if it were the whole set.
+  Two are reached by no `SKILL.md` at all —
+  `writing-skills/examples/CLAUDE_MD_TESTING.md` and
+  `systematic-debugging/CREATION-LOG.md` — and the rule governs a file the
+  `SKILL.md` sends a reader to open, which is what excludes them. A creation
+  log with an index is noise, not compliance.
+  **Six more are payloads, not references.** `task-reviewer-prompt.md`,
+  `spec-document-reviewer-prompt.md`, `implementer-prompt.md`,
+  `re-review-prompt.md`, `plan-document-reviewer-prompt.md` and
+  `code-reviewer.md` are one fenced block from top to bottom, with every
+  heading indented inside it — the whole file is a prompt to be filled and
+  handed to a subagent. A `## Contents` there either enters the block, so the
+  subagent receives an index of its own instructions, or sits above it as an
+  index of sections a reader cannot navigate to.
+  `subagent-driven-development/references/process-graph.md` carries no heading
+  at all. These seven are open, not closed: the decision is the owner's.
+  The eight that did get one are `coverage-map.md` (11 sections),
+  `testing-skills-with-subagents.md` (15), `visual-companion.md` (11),
+  `writing-good-tests.md` (7), `persuasion-principles.md` (7),
+  `root-cause-tracing.md` (9), `defense-in-depth.md` (6) and
+  `condition-based-waiting.md` (8). Entries are anchor links rather than the
+  plain list the vendor's own example shows, because
+  [check-links.sh](scripts/check-links.sh) then verifies every one: local links
+  went from 104 to 178, and an index entry naming a section somebody renamed
+  now fails instead of quietly lying.
+  **A ninth file needs one and did not get it.**
+  `writing-skills/anthropic-best-practices.md` is 1150 lines, the longest here
+  and the document that states the rule. An earlier claim in this cycle that it
+  already complied was wrong: its `## Contents` is at line 392, inside the
+  worked example it uses to illustrate the pattern. It is a verbatim vendored
+  copy of somebody else's documentation, and adding a section to it makes it no
+  longer a faithful copy — a reason that has nothing to do with the upstream
+  decision above and survives it.
+
 ### Fixed
 
 - **Two rules of this repository, obeyed together, produced a reference no gate
