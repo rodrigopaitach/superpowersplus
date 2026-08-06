@@ -3140,6 +3140,14 @@ Identified and deliberately left open, each with the reason it was not closed.
 **This is the live list** — closing one updates it here. When each was opened is
 recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas) (in Portuguese).
 
+**References here use the markdown link plus section title, never `file:line`,
+because this list is live and its own items have rotted that way.** The rule is
+not new and it is not the thing that fails: what fails is remembering it while
+writing, which has now happened five times in one series of changes — each time
+an instruction asked for `file:line` in a place the rule assigns to the section
+form, and each time the rule was right. It is written here because this is the
+section where the next one would be written.
+
 - **Two skills bind the implementer on the subagent path and nothing binds
   anyone on the inline one. The asymmetry is recorded, not closed, because
   closing it would change what a flow does and that is a design decision, not a
