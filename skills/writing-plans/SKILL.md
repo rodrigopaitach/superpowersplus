@@ -338,6 +338,23 @@ const intent = await stripe.paymentIntents.create(
 
 ## Plan Review
 
+**First, read the source spec's header.** A spec carrying `**Route:** short
+path` came through superpowersplus:brainstorming's short path, which its
+partner accepted against five measured criteria — no schema change, no new
+dependency, two or fewer production files, no public contract moved, no money,
+auth or PII. **That plan gets no reviewer subagent.** Run the mechanical check
+below, say in one line that you skipped the reviewer and why, and go to the
+execution handoff. Both end-of-branch gates still run; they are what the short
+path leans on.
+
+**The defect this face is here to catch scales with the size of the plan.** A
+matrix of forty labels desynchronises — that is measured, and it is most of
+what this reviewer has ever found. Three criteria and one task do not have the
+surface for it.
+
+No such line, or no header at all: the reviewer runs. A missing declaration is
+the full process, never an inferred shortcut.
+
 Save the complete plan, then dispatch a plan document reviewer subagent
 using the template at
 [plan-document-reviewer-prompt.md](plan-document-reviewer-prompt.md). The

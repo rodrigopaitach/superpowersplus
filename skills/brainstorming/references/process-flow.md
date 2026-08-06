@@ -1,17 +1,27 @@
 # The Process, Drawn
 
 Every branch and back-edge of the interview: the investigation that gates the
-first question, the coverage-map loop each answer re-enters, the visual
-companion's two decision points, and the spec review's cap with its three
-exits. `SKILL.md`'s Checklist names the same steps in the order they run —
-what only this file shows is where each loop **returns to** and where the
-review gate **breaks out**, which a numbered list cannot make visible at once.
+first question, the short-path fork that follows it, the coverage-map loop each
+answer re-enters, the visual companion's two decision points, and the spec
+review's cap with its three exits. `SKILL.md`'s Checklist names the same steps
+in the order they run — what only this file shows is where each loop **returns
+to** and where the review gate **breaks out**, which a numbered list cannot make
+visible at once.
+
+**Two edges here exist to be read together**: the short path leaves after the
+investigation, and its return valve comes back to the same node the full
+process starts from. Drawn apart they look like two routes; drawn as a cycle
+they show what they are — one route with a door that stays open.
 
 Read it before your first question to the user.
 
 ```dot
 digraph brainstorming {
     "Investigate code + deps\n(cite file:line / pinned source)" [shape=box];
+    "All five short-path\ncriteria hold?" [shape=diamond];
+    "Offer the short path\n(escalation shape, criteria as evidence)" [shape=box];
+    "Short path: minimal artefact,\nnumbered AC/IR, committed" [shape=box];
+    "Partner approves the change?" [shape=diamond];
     "Build coverage map\n(state + reason per category)" [shape=box];
     "Gap changes a decision?" [shape=diamond];
     "Preference against the\ncompanion declared?" [shape=diamond];
@@ -31,7 +41,15 @@ digraph brainstorming {
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
 
-    "Investigate code + deps\n(cite file:line / pinned source)" -> "Build coverage map\n(state + reason per category)";
+    "Investigate code + deps\n(cite file:line / pinned source)" -> "All five short-path\ncriteria hold?";
+    "All five short-path\ncriteria hold?" -> "Build coverage map\n(state + reason per category)" [label="no, or unanswerable\n— full process, no offer"];
+    "All five short-path\ncriteria hold?" -> "Offer the short path\n(escalation shape, criteria as evidence)" [label="yes"];
+    "Offer the short path\n(escalation shape, criteria as evidence)" -> "Build coverage map\n(state + reason per category)" [label="partner declines"];
+    "Offer the short path\n(escalation shape, criteria as evidence)" -> "Short path: minimal artefact,\nnumbered AC/IR, committed" [label="partner accepts"];
+    "Short path: minimal artefact,\nnumbered AC/IR, committed" -> "Build coverage map\n(state + reason per category)" [label="return valve: a criterion\nbroke — escalate, the work\nso far is the input"];
+    "Short path: minimal artefact,\nnumbered AC/IR, committed" -> "Partner approves the change?";
+    "Partner approves the change?" -> "Short path: minimal artefact,\nnumbered AC/IR, committed" [label="no, revise"];
+    "Partner approves the change?" -> "Invoke writing-plans skill" [label="yes — both end-of-branch\ngates still run"];
     "Build coverage map\n(state + reason per category)" -> "Gap changes a decision?";
     "Gap changes a decision?" -> "Preference against the\ncompanion declared?" [label="yes, highest\nimpact x uncertainty first"];
     "Preference against the\ncompanion declared?" -> "Ask clarifying questions" [label="yes, text only\n(never say so)"];

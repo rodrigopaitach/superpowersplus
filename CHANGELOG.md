@@ -48,6 +48,54 @@ References below name them so a claim here can be traced there.
 
 ### Added
 
+- **A short path for a small change**, offered in
+  [`brainstorming/SKILL.md`](skills/brainstorming/SKILL.md), section "The Short
+  Path", and honoured in
+  [`writing-plans/SKILL.md`](skills/writing-plans/SKILL.md), section "Plan
+  Review". Until now there was one march and no other: the same two reviewer
+  subagents, the same ten-category coverage map and the same round loop for a
+  thirteen-task slice and for a config change. The skill said so —
+  "every project goes through this process… a config change — all of them" —
+  and the sentence is now about the *skill*, with the route separated from the
+  gate.
+  **The fork sits after the investigation, at checklist item 2, and not at the
+  door**: none of the five criteria is computable before you know what the
+  change touches, and the investigation is what produces that. All five must
+  hold — no schema change, no new dependency, two or fewer production files,
+  no public contract moved, no money/auth/PII — and a criterion you cannot
+  answer counts as failed. **The offer is the partner's decision in the
+  escalation shape, with the criteria filled in as evidence**, never a
+  permission the agent grants itself.
+  **What it drops is the two document reviewers, the full coverage map and the
+  round loop. What it keeps is everything a gate stands on:** the cited
+  investigation, a committed artefact with numbered `AC`/`IR`, the approval
+  before any code, and both end-of-branch gates.
+  **The artefact is not negotiable, and the reason is structural.**
+  `final-branch-audit/SKILL.md`, section "The Spec Is the Root, Not the Plan",
+  resolves the spec from the plan and blocks when there is none, then traces
+  against `## Acceptance Criteria` and `## Implicit Requirements`. Dropping the
+  document does not make the final gate cheaper — it removes it. Ten lines are
+  enough; zero is not.
+  **The route is declared in the artefact's header (`**Route:** short path`),
+  because the skill that has to act on it cannot otherwise know.**
+  `writing-plans` reads that line and skips its own reviewer; with the rule
+  written only on the producing side, half of what the path saves would be
+  spent by a skill nobody told. A missing declaration means the full process —
+  never an inferred shortcut.
+  **What sizes the cut is a measurement, not a preference: the defect this
+  reviewer face uniquely catches scales with the size of the plan. A matrix of
+  forty labels desynchronises; three criteria do not.**
+  **The return valve is a step at every task boundary, not a closing check.**
+  The moment the work crosses a criterion that qualified it — a third file, a
+  dependency, a schema change — the agent stops and escalates, and the work
+  done so far becomes the full process's input rather than being thrown away.
+  Without it the shortcut is where a large project hides: the criteria were
+  measured against a request, the work is what actually happened, and the two
+  drift in silence.
+  [`references/process-flow.md`](skills/brainstorming/references/process-flow.md)
+  carries the fork, the decline edge and the return edge; declared and used
+  node sets were compared after the edit and agree at 23.
+
 - **A mechanical check between fixing a review's blocking issues and
   re-dispatching the reviewer**, in both document loops:
   [`brainstorming/SKILL.md`](skills/brainstorming/SKILL.md), section "Spec

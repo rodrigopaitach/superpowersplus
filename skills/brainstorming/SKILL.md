@@ -15,22 +15,31 @@ Do NOT invoke any implementation skill, write any code, scaffold any project, or
 
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
 
-Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+Every project goes through this skill. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+
+**What scales with the size of a change is the ROUTE, never the gate.** A small
+change can take "The Short Path" below, and it still investigates the code,
+still writes numbered criteria, still waits for your partner's approval, and
+still faces both end-of-branch gates. What it drops is the two reviewer
+subagents, the full coverage map and the round loop. "Too simple to need a
+design" stays wrong; "too simple to need three review rounds" is a different
+claim, and the short path is what it earns.
 
 ## Checklist
 
 You MUST create a task for each of these items and complete them in order:
 
 1. **Investigate the codebase** — MANDATORY before ANY question to the user. Read the real code: files, tests, configs, recent commits. Record every finding as `path/file.ext:line` + the quoted snippet. This recorded output becomes the spec's `## Codebase Findings` section. Claims about a library, external API, or third-party service are grounded the same way, in the order and citation forms below — see "Where a Claim Comes From". No investigation output, no questions.
-2. **Build the coverage map** — from the request and the investigation, before any question. Assign every category one of four states with its reason, apply the admission filter so only decision-changing gaps become questions, and order what remains by impact × uncertainty. Every question you then ask carries a recommendation with a declared source, and every accepted answer is written into the spec and saved as you go. See [coverage-map.md](references/coverage-map.md).
-3. **Check for a declared preference about the visual companion, then offer just-in-time** — NOT upfront. Look first for a preference in the context: the project's `CLAUDE.md`, your memory of this user, or an instruction in this conversation. Declared "never" means never offer, and never say that you didn't — the flow just continues in text. No preference, or a favorable one: the first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
-4. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-5. **Propose 2-3 approaches** — with trade-offs and your recommendation
-6. **Present design** — in sections scaled to their complexity, get user approval after each section
-7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-8. **Dispatch spec reviewer subagent** — using [spec-document-reviewer-prompt.md](spec-document-reviewer-prompt.md); fix blocking issues (see below)
-9. **Present the pending decisions, then the user reviews the spec** — every decision the spec leaves open goes to your partner in the escalation shape, in one message, before you ask for approval. None open is itself something you say. See "User Review Gate" below.
-10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+2. **Size the change against the five criteria, and offer the short path if all five hold** — right here, after the investigation and before the first question, because nothing below is computable until you know what the change touches. All five hold: offer, in the escalation shape, with each criterion filled in as evidence. Any one fails: the full process, and no offer. See "The Short Path" below.
+3. **Build the coverage map** — from the request and the investigation, before any question. Assign every category one of four states with its reason, apply the admission filter so only decision-changing gaps become questions, and order what remains by impact × uncertainty. Every question you then ask carries a recommendation with a declared source, and every accepted answer is written into the spec and saved as you go. See [coverage-map.md](references/coverage-map.md).
+4. **Check for a declared preference about the visual companion, then offer just-in-time** — NOT upfront. Look first for a preference in the context: the project's `CLAUDE.md`, your memory of this user, or an instruction in this conversation. Declared "never" means never offer, and never say that you didn't — the flow just continues in text. No preference, or a favorable one: the first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
+5. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
+6. **Propose 2-3 approaches** — with trade-offs and your recommendation
+7. **Present design** — in sections scaled to their complexity, get user approval after each section
+8. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+9. **Dispatch spec reviewer subagent** — using [spec-document-reviewer-prompt.md](spec-document-reviewer-prompt.md); fix blocking issues (see below)
+10. **Present the pending decisions, then the user reviews the spec** — every decision the spec leaves open goes to your partner in the escalation shape, in one message, before you ask for approval. None open is itself something you say. See "User Review Gate" below.
+11. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 **Resuming a spec written before the map was required?** Build it from what the spec already contains — every criterion, finding, and assumption already there fills a row — and mark `Outstanding` only what the spec does not answer. Do not re-run the interview from scratch: the decisions were already made and approved, and reopening them costs your human partner the work twice.
 
@@ -54,6 +63,62 @@ is a frontend task. So `frontend-design` is not forbidden — it is **two
 handoffs away**, and invoking it from here skips the plan, which is the only
 artifact that says what to build. "Not yet, and not by you" is the rule; "never"
 is not.
+
+## The Short Path
+
+**Offer it only when all five criteria hold, and only after the
+investigation.** None of them is computable before you know what the change
+touches, which is why this decision sits at checklist item 2 and not at the
+door.
+
+| Criterion | How you answer it |
+|---|---|
+| No migration or schema change | Nothing under the project's migration directory changes |
+| No new dependency | The lockfile is untouched |
+| Two or fewer production files touched | Count them; tests and docs do not count |
+| No public contract changes | No route, exported signature, event name, or env var |
+| Touches no money, auth, or PII | By path, against what this project calls those |
+
+**Any one failing means the full process, and no offer at all** — not a
+shorter offer, not an offer with a caveat. A criterion you cannot answer is a
+criterion that failed.
+
+**The offer is your partner's decision, in the escalation shape**, with the
+five criteria filled in as the evidence: what you counted, and where. They
+choose; a criterion list is not a permission slip you sign yourself.
+
+**What the short path keeps:**
+
+- The investigation you already did, cited `path/file.ext:line`
+- **An artefact with numbered `AC`/`IR` criteria** — ten lines is enough, at
+  the usual spec path, committed. This is not negotiable and not decoration:
+  superpowersplus:final-branch-audit resolves the spec from the plan and
+  traces against those two lists, so a branch with no citable spec has no
+  final audit at all. Dropping the document does not make the gate cheaper;
+  it removes it.
+- **A header line declaring the route: `**Route:** short path`.** This is the
+  only way anything downstream knows. superpowersplus:writing-plans reads it and
+  skips its own reviewer; without the line it dispatches one, and half of what
+  this path saves is spent by a skill that was never told.
+- Your partner's approval before any code — the `<HARD-GATE>` above applies
+  unchanged
+- **Both end-of-branch gates, intact**: the conformance audit, then the branch
+  review
+
+**What it drops:** the spec reviewer subagent, the plan reviewer subagent, the
+full ten-category coverage map, and the round loop with its cap.
+
+**The return valve — check it at every task boundary, not at the end.** The
+moment the work crosses any criterion that qualified it — a third production
+file, a dependency you now need, a schema change, a contract that has to move
+— **stop and escalate**. Say which criterion broke and on what evidence. The
+work done so far is not thrown away: it is the investigation and the criteria
+the full process starts from.
+
+**A shortcut nobody re-checks becomes the tunnel every large project hides
+in.** The criteria were measured against a request; the work is what actually
+happens, and the two diverge silently. Re-reading them costs a line and is the
+only thing that keeps this path small.
 
 ## Where a Claim Comes From
 
