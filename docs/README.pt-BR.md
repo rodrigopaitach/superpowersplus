@@ -122,7 +122,7 @@ O agente esbarrou num requisito que não conseguia entregar honestamente e parou
 > | **Construir o feed à mão** | Umas quinze linhas a mais. Precisa de três valores que o design não tem: título do feed, endereço na web e descrição de uma linha |
 > | **Não fazer nada agora** | Construir o arquivamento hoje e revisitar o feed quando alguém de fato quiser assinar. Custo: ninguém assina até lá |
 >
-> **Recomendação: tirar o feed.** O `CLAUDE.md` afirma "plugin de zero dependências por design", e todo caminho até um feed verificável aqui termina em ferramenta externa ou endereço inventado. **Fonte: uma regra já escrita no seu projeto, mais a minha própria checagem de que nada publica `docs/` num site.**
+> **Recomendação: tirar o feed.** O `CLAUDE.md` afirma "o Superpowers é um plugin de zero dependências por design", e todo caminho até um feed verificável aqui termina em ferramenta externa ou endereço inventado. **Fonte: uma regra já escrita no seu projeto, mais a minha própria checagem de que nada publica `docs/` num site.**
 
 Quatro coisas sustentam isso: a consequência dita antes do mecanismo, cada opção carregando seu custo, **não fazer nada oferecido como opção de verdade**, e a recomendação declarando de onde veio. A quarta é o que permite a quem não programa distinguir uma recomendação fundamentada no próprio código de um palpite plausível.
 

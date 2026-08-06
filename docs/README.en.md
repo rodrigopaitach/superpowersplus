@@ -122,7 +122,7 @@ The agent hit a requirement it could not deliver honestly and stopped. This is w
 > | **Build it by hand** | About fifteen extra lines. Needs three values the design doesn't have: the feed's title, its web address, its one-line description |
 > | **Do nothing now** | Build the archiving today, revisit the feed when somebody actually wants to subscribe. Cost: no subscribing until then |
 >
-> **Recommendation: drop the feed.** `CLAUDE.md` states "zero-dependency plugin by design", and every path to a checkable feed here ends in an outside tool or an invented web address. **Source: a rule already in your project, plus my own check that nothing publishes `docs/` to a website.**
+> **Recommendation: drop the feed.** `CLAUDE.md` states "Superpowers is a zero-dependency plugin by design", and every path to a checkable feed here ends in an outside tool or an invented web address. **Source: a rule already in your project, plus my own check that nothing publishes `docs/` to a website.**
 
 Four things are load-bearing: the consequence stated before the mechanism, every option carrying its cost, **doing nothing offered as a real option**, and the recommendation naming where it came from. The fourth is what lets someone who does not program tell a recommendation grounded in their own codebase from a plausible guess.
 

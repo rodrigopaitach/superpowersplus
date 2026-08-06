@@ -33,6 +33,38 @@ References below name them so a claim here can be traced there.
   detector. `AGENTS.md` is deliberately absent from the list: it is a symlink
   to `CLAUDE.md`, and listing both reports every problem twice.
 
+- **Three documents shortened the text inside an agent's quotation marks.** The
+  worked example in [`README.md`](README.md) and both bilingual READMEs quote a
+  recorded run, and the quote read `CLAUDE.md` states "zero-dependency plugin
+  by design" where
+  [`RESULT-escalation-format-in-chat-v3.md`](tests/skill-behavior/RESULT-escalation-format-in-chat-v3.md)
+  records the agent writing "Superpowers is a zero-dependency plugin by
+  design". The framing above the blockquote says *condensed from the
+  transcript*, which licenses cutting outside the quotation marks and not
+  inside them. Restored in all three; the Portuguese one carries the same span
+  in translation.
+
+  **This is the correction that was nearly made backwards, and the near-miss is
+  the entry.** Today's `CLAUDE.md` says "This is a zero-dependency plugin", so
+  the quote looked like a live citation gone stale, and the first instruction
+  was to align all three to it. Provenance says otherwise: the phrase entered
+  `CLAUDE.md` upstream in `c0b417e` (2026-03-31) and left in `8147efa`
+  (2026-08-02), and the run is dated 2026-08-02 — **the agent quoted it
+  correctly**. Aligning to today's wording would have put text the agent never
+  produced inside quotation marks attributed to it, and made the passage
+  contradict the record it links to.
+
+  **The axis is assertion versus quotation, not dated record versus live
+  document.** A quotation of a dated record inside a live document inherits the
+  record's exemption, provided the framing sits at the point of use — here the
+  *condensed from* line and its link, eight lines above the blockquote. Without
+  that framing the same text would be a defect. **The corollary is what decides
+  a case: text inside quotation marks is verified against the RECORD cited,
+  never against the current state of the document the phrase came from.**
+  Comparing the two strings and skipping the question of whose voice it is
+  gets the symptom right and the bucket wrong. No gate: deciding whose voice a
+  passage carries needs a reader.
+
 ## [1.12.4] - 2026-08-06
 
 ### Fixed
