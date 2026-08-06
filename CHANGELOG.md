@@ -2866,6 +2866,28 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   This was reported as an outstanding leftover before it was measured. It is
   not one.
 
+- **`systematic-debugging/CREATION-LOG.md` stays, and this is final.** It was
+  proposed for deletion alongside the four orphan test prompts, on the premise
+  that nothing referenced it. Measured, the premise is false: two specs of this
+  repository name it by path.
+  `docs/superpowers/specs/2026-05-05-platform-neutral-config-refs-design.md:20`
+  lists `skills/systematic-debugging/CREATION-LOG.md` as a declared carve-out
+  from the platform-neutral rewrite, because the attribution path it contains
+  is a historical fact;
+  `docs/superpowers/specs/2026-05-05-platform-neutral-prose-design.md:25` lists
+  it among the dated, point-in-time artifacts exempt from that same rewrite.
+  **The one that decides it is
+  `docs/superpowers/specs/2026-05-05-platform-neutral-config-refs-design.md:67`**,
+  a verification criterion: a `grep` over `skills/` "should return only the
+  documented carve-outs (CREATION-LOG, CLAUDE_MD_TESTING …)". Deleting the file
+  makes that criterion permanently unsatisfiable — it would name a carve-out
+  that cannot be found — and the spec is a dated record, so it is not rewritten
+  to match. A record whose check can never pass again is worse than an
+  unreferenced file.
+  It is pointed at by no `SKILL.md` and run by no suite, which is what made it
+  look orphaned. Being unreachable from a skill and being unreferenced are
+  different questions, and only the second would have authorised deleting it.
+
 - **A subagent payload is not a reference document, and the seven that are
   payloads carry no table of contents. This is decided, not pending.**
   Anthropic's guidance asks for a table of contents in a reference file over
