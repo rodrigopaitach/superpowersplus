@@ -9,6 +9,22 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [1.15.1] - 2026-08-06
+
+### Fixed
+
+- **`1.15.0` shipped with CI red.** `tests/hooks/test-check-cross-references.sh`
+  carried a `local dir="$(…)"` — ShellCheck SC2155, which the "Shell lint (files
+  this push changed)" step treats as an error. The suite itself passed; only the
+  linter failed.
+  **The failure was mine to have caught and the reason is worth writing down:**
+  before committing I ran `scripts/lint-shell.sh` with two explicit paths — the
+  new script and the gate I had edited — **and left out the test file I had just
+  written**. Passing an explicit file list makes the linter check exactly what
+  you name, so a clean result meant nothing about the file I forgot. Run with no
+  arguments and it lints what the push changed, which is what CI does and what
+  would have caught this.
+
 ## [1.15.0] - 2026-08-06
 
 ### Added

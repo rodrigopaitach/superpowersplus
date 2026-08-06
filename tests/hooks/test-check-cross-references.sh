@@ -40,7 +40,9 @@ make_repo() {
 # run_case <name> <expected exit> <document body>
 run_case() {
     local name="$1" expected="$2" body="$3"
-    local dir="$TEST_ROOT/$(echo "$name" | tr ' /' '__')"
+    local slug dir
+    slug="$(echo "$name" | tr ' /' '__')"
+    dir="$TEST_ROOT/$slug"
     make_repo "$dir"
     printf '%s\n' "$body" >"$dir/docs/doc.md"
     local actual=0
