@@ -88,6 +88,20 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **Four adversarial test prompts told an agent the skill lives at a path that
+  has never existed here.** `skills/debugging/systematic-debugging` names a
+  `debugging/` parent directory this repository does not have; the skill is at
+  `skills/systematic-debugging`. It appeared in `test-pressure-1.md`,
+  `test-pressure-2.md`, `test-pressure-3.md` and `test-academic.md`, each of
+  which opens by telling the agent under test where the skill is — a fixture
+  whose premise is a path resolving to nothing. Nothing consumes these files
+  today, measured: no suite and no `SKILL.md` references them.
+  Two occurrences were deliberately left. `CREATION-LOG.md:107` is a dated
+  record of how the skill was built, and a record is not rewritten to match a
+  later layout. `writing-skills/examples/CLAUDE_MD_TESTING.md:16` says
+  `~/.claude/skills/debugging/` — a hypothetical user's directory inside a
+  worked example, not a path of this repository.
+
 - **Two rules of this repository, obeyed together, produced a reference no gate
   could read — and one naming a deleted section passed green.** The pointer
   rule asks that a file of this repository be named by markdown link; the
@@ -2669,6 +2683,40 @@ by entry.
 Identified and deliberately left open, each with the reason it was not closed.
 **This is the live list** — closing one updates it here. When each was opened is
 recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas) (in Portuguese).
+
+- **Five of the fifteen skill names are not gerunds, and that is the final
+  state.** Anthropic's skill authoring best practices recommend the gerund form
+  for consistency and list the noun phrase as an accepted alternative; the names
+  to avoid are the vague, the generic and the ones carrying a reserved word.
+  `subagent-driven-development`, `systematic-debugging`,
+  `test-driven-development`, `verification-before-completion` and
+  `final-branch-audit` are none of those — they are noun phrases, the listed
+  alternative. **Renaming any of them would be MAJOR**, and not on paper: every
+  `superpowersplus:<name>` invocation already written into the plans and specs
+  of four projects would name a skill that does not exist, which fails silently
+  by design — the namespace invariant at the top of [`CLAUDE.md`](CLAUDE.md)
+  describes exactly that failure. The owner closed this on 2026-08-05. It is
+  recorded so the next sweep against the vendor checklist finds a decision here
+  instead of re-deriving the finding.
+
+- **The word-count targets inside `writing-skills` are not adopted as this
+  project's bar, and no gate measures words.** `writing-skills/SKILL.md`,
+  section "4. Token Efficiency (Critical)" states three tiers: under 150 words
+  for a getting-started workflow, under 200 for a frequently-loaded skill,
+  under 500 for any other. Measured 2026-08-05 across the fifteen `SKILL.md`
+  bodies: `using-superpowers` is the one skill the 200-word tier governs — it
+  is the file [`hooks/session-start`](hooks/session-start) reads in full into
+  every session — and it holds 502 words, two and a half times the target. The
+  other fourteen all exceed the 500-word tier, from 512
+  (`requesting-code-review`) to 4202 (`subagent-driven-development`).
+  **A gate here would have to invent a number this project cannot justify.**
+  The enforced ceiling is the 500-LINE one in
+  [check-skill-size.sh](scripts/check-skill-size.sh), borrowed from the vendor
+  and declared as borrowed; picking a word number by argument is the move this
+  list already refuses elsewhere, and a gate red on all fifteen skills the day
+  it ships is a gate nobody reads. The targets stay in `writing-skills` as
+  advice to whoever writes a skill, which is what they are. This entry is the
+  declared divergence, not a plan to close it.
 
 - **`final-branch-audit/SKILL.md` is not one long document — it is two, and
   that is a named candidate rather than a pending item.** At 368 lines it is
