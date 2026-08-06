@@ -11,6 +11,37 @@ References below name them so a claim here can be traced there.
 
 ## [1.12.3] - 2026-08-06
 
+### Added
+
+- **`anthropic-best-practices.md` gained a `## Contents`, reversing a decision
+  taken four days earlier in this same cycle.** At 1150 lines it is the longest
+  file in the repository and the document that states the rule, so it is where
+  a table of contents pays most. It was left out on 2026-08-05 with the reason
+  that a verbatim vendored copy of somebody else's documentation stops being a
+  faithful copy once a section is added — an argument that held while the file
+  was the upstream's and stopped holding on 2026-08-06, when this project
+  ended that relationship. Nothing else changed; the reason simply expired,
+  which is what the "Relationship with Superpowers" rule says to expect.
+  **This is a declared addition on third-party text, dated 2026-08-06**, not a
+  correction to it: 17 anchor links, no line of the vendor's own prose touched.
+  Three headings repeat and their anchors carry GitHub's `-1` suffix, which
+  [check-links.sh](scripts/check-links.sh) verified along with the other
+  fourteen — local links went 215 to 232.
+
+### Removed
+
+- **Four adversarial test prompts were deleted: nothing pointed at them, no
+  suite ran them, and they recorded another project's development.**
+  `test-pressure-1.md`, `test-pressure-2.md`, `test-pressure-3.md` and
+  `test-academic.md` under `systematic-debugging` were prompts written to
+  pressure-test that skill while it was being built upstream. Measured before
+  deleting: the only file in this repository naming any of them is this
+  changelog, and the only hits outside it are old plugin caches of this same
+  project. Three of the four carried the dead
+  `skills/debugging/systematic-debugging` path corrected earlier in this
+  release — a premise pointing at a directory that has never existed here,
+  in files nothing would ever run.
+
 ## [1.12.2] - 2026-08-06
 
 ### Changed
@@ -1691,21 +1722,6 @@ first, and the candidate cause named and marked untested.
     rule must not soften: a new dependency needs approval, and generalizing
     beyond the criterion is invented scope.
 
-- **`anthropic-best-practices.md` gained a `## Contents`, reversing a decision
-  taken four days earlier in this same cycle.** At 1150 lines it is the longest
-  file in the repository and the document that states the rule, so it is where
-  a table of contents pays most. It was left out on 2026-08-05 with the reason
-  that a verbatim vendored copy of somebody else's documentation stops being a
-  faithful copy once a section is added — an argument that held while the file
-  was the upstream's and stopped holding on 2026-08-06, when this project
-  ended that relationship. Nothing else changed; the reason simply expired,
-  which is what the "Relationship with Superpowers" rule says to expect.
-  **This is a declared addition on third-party text, dated 2026-08-06**, not a
-  correction to it: 17 anchor links, no line of the vendor's own prose touched.
-  Three headings repeat and their anchors carry GitHub's `-1` suffix, which
-  [check-links.sh](scripts/check-links.sh) verified along with the other
-  fourteen — local links went 215 to 232.
-
 ### Removed
 
 - **Four examples that taught how to solve a problem, not what shape to
@@ -2831,20 +2847,6 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   `testing-skills-with-subagents.md`, `examples/`, `graphviz-conventions.dot`
   and `render-graphs.js` sit beside the `SKILL.md` rather than under
   `references/`, `assets/` and `scripts/`.
-
-### Removed
-
-- **Four adversarial test prompts were deleted: nothing pointed at them, no
-  suite ran them, and they recorded another project's development.**
-  `test-pressure-1.md`, `test-pressure-2.md`, `test-pressure-3.md` and
-  `test-academic.md` under `systematic-debugging` were prompts written to
-  pressure-test that skill while it was being built upstream. Measured before
-  deleting: the only file in this repository naming any of them is this
-  changelog, and the only hits outside it are old plugin caches of this same
-  project. Three of the four carried the dead
-  `skills/debugging/systematic-debugging` path corrected earlier in this
-  release — a premise pointing at a directory that has never existed here,
-  in files nothing would ever run.
 
 - **The link gate scans `docs/*.md` and not `docs/**`, and that boundary is
   decided rather than a gap.** `scripts/check-links.sh:53` globs one level, so
