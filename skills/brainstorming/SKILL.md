@@ -253,7 +253,10 @@ Fix every blocking issue the reviewer returns; recommendations are advisory.
 2. **Judge what the script cannot.** For each citation the fix touched, open
    the line and confirm it SAYS what the spec claims. The script proves the
    line exists; only you can prove it is the right line.
-3. **Repair what either one found, then re-dispatch.** Not before.
+3. **Repair what either one found, then re-dispatch** — filling in `[ROUND]`,
+   `[FIX_DIFF]` and `[PREVIOUS_FINDINGS]`. Those three are what select the
+   round-2 scope inside the template; a dispatch that leaves them out gets a
+   full re-read and costs what round 1 cost. Not before.
 
 **This step exists because the fix pass is where the breaks happen, and they
 are not the reviewer's to find.** The author of the spec is the one correcting

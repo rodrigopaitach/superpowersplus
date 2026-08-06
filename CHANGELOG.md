@@ -11,6 +11,44 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Changed
+
+- **A round-2 review verifies the repair; it no longer re-reads the whole
+  document.** Both reviewer templates now carry the scope **in the prompt
+  body**, selected by a `[ROUND]` placeholder:
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)
+  and
+  [`plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md),
+  each in a new section "Which Round This Is".
+  **Measured: a round 2 cost what a round 1 cost** — about 19k output tokens
+  for a spec review and 26k for a plan review, with no downward trend across
+  rounds — because the body said to reopen every `file:line` regardless.
+  **Three recorded dispatches announced a narrower scope in their header and
+  saved nothing; two of the three cost more than their own round 1.** That is
+  why the scope moved into the body: a reviewer follows the body it is given,
+  not the adjective in the first line.
+  Round 2+ now verdicts the previous findings, reads the sections the diff
+  touched, and greps every identifier the diff changed to find its use sites —
+  **the damage of a fix is not inside the diff**, and recorded rounds found
+  four such regressions in one pass.
+  **The plan reviewer additionally changes instrument rather than depth**: it
+  builds the plan in a scratch copy, runs the suite, and executes the
+  *nameable* counterfactuals — every test the plan adds is run against the
+  previous HEAD and the ones that pass are reported as vacuous. That class is
+  invisible to re-reading at any tier, and the two reviewers that did it are
+  the only ones on record that found it.
+  **The cost is declared, not hidden: 8 findings across 10 dispatches came
+  from sections the diff never touched.** Accepted because most of that class
+  is now caught mechanically by `check-cross-references` before the
+  re-dispatch, and because the instrument change reaches further than the
+  re-read did. The rule stops short of the whole saving on purpose — a section
+  the diff *affected* is still read, and the reviewer has to go find which
+  ones those are.
+  `brainstorming/SKILL.md` and `writing-plans/SKILL.md`, both in their
+  post-fix step, now require the dispatch to fill `[ROUND]`, `[FIX_DIFF]` and
+  `[PREVIOUS_FINDINGS]` — a rule written only in the template would be a scope
+  nobody selects.
+
 ### Fixed
 
 - **The two document reviewers had no model prescribed and inherited the most

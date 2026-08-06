@@ -27,6 +27,52 @@ Subagent (general-purpose):
     (`git log -1 -- <spec path>` names a commit). Read it: it is the
     requirement, the plan is a translation of it.
 
+    ## Which Round This Is
+
+    **Round 1 — [ROUND] is 1, or no fix diff was handed to you.** Full pass:
+    every citation, every task, everything below.
+
+    **Round 2 or later — [ROUND] is 2 or more, and [FIX_DIFF] holds the diff
+    of the corrections.** You are verifying the REPAIR, not re-reading the
+    plan. Do exactly this, in order, and nothing beyond it:
+
+    a. **Verdict every blocking finding of the previous round**
+       ([PREVIOUS_FINDINGS]) against the corrected plan. "Attempted" is not
+       fixed: the specific defect must no longer exist.
+    b. **Read at full bar every task and section the diff touched.**
+    c. **Find what the fix broke elsewhere.** Grep every identifier the diff
+       changed — a task or section title, an `AC`/`IR`/`T` id, a test name, a
+       signature, a path, a stated count — and open each place it is used.
+       **This is where the damage of a fix lands, and it is not inside the
+       diff.** Recorded rounds found four such regressions in a single pass:
+       a renamed test leaving its criterion naming the old one, twice; a task
+       added leaving "PASS on the six" at five; an import dropped from a step.
+    d. **Change the instrument: build the plan and run it.** Apply the tasks
+       in order in a scratch copy — never the real tree — then report the
+       suite's exact pass/fail/skip counts and the linter's result. Then run
+       the **nameable counterfactuals**, which is what this step exists for:
+       **run each test the plan adds against the previous HEAD and list the
+       ones that pass** — those are vacuous, they prove nothing the plan
+       built — and report any branch of the new code no test reaches. **This
+       class is invisible to re-reading at any tier**, and it is the reason
+       round 2 changes instrument instead of changing depth: a test that
+       would pass without the change reads exactly like one that would not.
+    e. **Do NOT reopen a `file:line` in a task the diff neither touched nor
+       affected.** That is the whole saving; spending it makes this round cost
+       what round 1 cost.
+
+    **Why the scope is drawn here, and what it costs.** Measured across this
+    project's recorded reviews: **74% of the new findings in a round 2 were
+    inside the diff the fix had just produced.** The 26% that were not cost, on
+    those runs, 8 findings over 10 dispatches — a real loss, accepted because
+    most of that class is now caught mechanically by `check-cross-references`,
+    which runs between the fix and this dispatch, and because step (d) reaches
+    a class no amount of re-reading ever did. **A narrower scope announced in
+    the dispatch header does not produce a narrower review: three recorded
+    attempts did exactly that and each cost what a full round costs, because
+    the body still said to reopen everything. The scope has to be here, in the
+    body, or it is decoration.**
+
     ## The Plan Contract (blocking)
 
     superpowersplus:final-branch-audit charges these at the end of the branch,
@@ -119,5 +165,16 @@ Subagent (general-purpose):
     **Recommendations (advisory, do not block approval):**
     - [suggestions for improvement]
 ```
+
+**Placeholders:**
+- `[PLAN_FILE_PATH]` — REQUIRED: the plan under review
+- `[ROUND]` — REQUIRED: `1` on the first dispatch, then `2`, `3`. It selects
+  the scope in "Which Round This Is", so omitting it silently buys a full
+  re-read at every round — the exact cost this template was changed to stop
+- `[FIX_DIFF]` — the diff of the corrections since the previous round
+  (`git diff <sha the last review saw>..HEAD -- <plan path>`). Required from
+  round 2; without it the reviewer has no scope and falls back to round 1
+- `[PREVIOUS_FINDINGS]` — the previous round's blocking findings, copied
+  verbatim, one per bullet. Required from round 2
 
 **Reviewer returns:** Status, Issues (if any), Unverified External Calls (if any), Recommendations

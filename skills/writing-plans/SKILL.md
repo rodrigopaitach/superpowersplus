@@ -390,7 +390,11 @@ a gap by narrowing the plan's stated scope.
    the line and confirm it SAYS what the plan claims; for each count stated
    in prose ("PASS on the six"), recount. The script proves a reference
    resolves, never that it resolves to the right thing.
-3. **Repair what either one found, then re-dispatch.** Not before.
+3. **Repair what either one found, then re-dispatch** — filling in `[ROUND]`,
+   `[FIX_DIFF]` and `[PREVIOUS_FINDINGS]`. Those three are what select the
+   round-2 scope inside the template, where the reviewer stops re-reading the
+   plan and starts building it; a dispatch that leaves them out gets a full
+   re-read and costs what round 1 cost. Not before.
 
 **This step exists because the fix pass is where the breaks happen.** The
 author of the plan is the one correcting it, and a plan is dense in ids

@@ -20,6 +20,39 @@ Subagent (general-purpose):
 
     **Spec to review:** [SPEC_FILE_PATH]
 
+    ## Which Round This Is
+
+    **Round 1 — [ROUND] is 1, or no fix diff was handed to you.** Full pass:
+    every citation, every section, everything below.
+
+    **Round 2 or later — [ROUND] is 2 or more, and [FIX_DIFF] holds the diff
+    of the corrections.** You are verifying the REPAIR, not re-reading the
+    document. Do exactly this, in order, and nothing beyond it:
+
+    a. **Verdict every blocking finding of the previous round**
+       ([PREVIOUS_FINDINGS]) against the corrected document. "Attempted" is
+       not fixed: the specific defect must no longer exist.
+    b. **Read at full bar every section the diff touched** — every citation
+       in them opened, every claim checked.
+    c. **Find what the fix broke elsewhere.** Grep every identifier the diff
+       changed — a section title, an `AC`/`IR` id, a path, a claim's wording
+       — and open each place it is used. **This is where the damage of a fix
+       lands, and it is not inside the diff.**
+    d. **Do NOT reopen a `file:line` in a section the diff neither touched
+       nor affected.** That is the whole saving; spending it makes this round
+       cost what round 1 cost.
+
+    **Why the scope is drawn here, and what it costs.** Measured across this
+    project's recorded reviews: **74% of the new findings in a round 2 were
+    inside the diff the fix had just produced.** The 26% that were not cost, on
+    those runs, 8 findings over 10 dispatches — a real loss, accepted because
+    most of that class is now caught mechanically by `check-cross-references`,
+    which runs between the fix and this dispatch. **A narrower scope announced
+    in the dispatch header does not produce a narrower review: three recorded
+    attempts did exactly that and each cost what a full round costs, because
+    the body still said to reopen everything. The scope has to be here, in the
+    body, or it is decoration.**
+
     ## What to Check
 
     | Category | What to Look For |
@@ -202,5 +235,16 @@ Subagent (general-purpose):
     **Recommendations (advisory, do not block approval):**
     - [suggestions for improvement]
 ```
+
+**Placeholders:**
+- `[SPEC_FILE_PATH]` — REQUIRED: the spec under review
+- `[ROUND]` — REQUIRED: `1` on the first dispatch, then `2`, `3`. It selects
+  the scope in "Which Round This Is", so omitting it silently buys a full
+  re-read at every round — the exact cost this template was changed to stop
+- `[FIX_DIFF]` — the diff of the corrections since the previous round
+  (`git diff <sha the last review saw>..HEAD -- <spec path>`). Required from
+  round 2; without it the reviewer has no scope and falls back to round 1
+- `[PREVIOUS_FINDINGS]` — the previous round's blocking findings, copied
+  verbatim, one per bullet. Required from round 2
 
 **Reviewer returns:** Status, Issues (if any), Unverified External Claims (if any), Recommendations
