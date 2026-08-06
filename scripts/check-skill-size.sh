@@ -25,12 +25,13 @@ set -euo pipefail
 
 MAX=500
 
-# Files whose length is not this fork's to change. skills/writing-skills is 679
-# lines here and 679 upstream: the only two lines this fork changed there are
-# the namespace rename, and neither added any. Cutting it means rewriting a
-# file the upstream maintains — which CLAUDE.md forbids — for a gain that
-# belongs in somebody else's repository. Remove the entry the day this project
-# starts owning that file's content.
+# Exempt while that file's structural review is open — a deadline, not a
+# condition. The entry used to say the length was not this fork's to change
+# because the file was the upstream's; that stopped meaning anything when this
+# project stopped pulling from them, and a rule standing on a dead reason is
+# still obeyed, which is worse than one that is simply wrong. The review's
+# dossier is in CLAUDE.md's changelog under Open gaps. Remove this entry when
+# the review closes — never to make a red go away.
 EXEMPT=(skills/writing-skills/SKILL.md)
 
 # Resolved from this script's own location, not from the working directory or

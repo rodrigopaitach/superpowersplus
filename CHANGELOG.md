@@ -2773,6 +2773,48 @@ Identified and deliberately left open, each with the reason it was not closed.
 **This is the live list** — closing one updates it here. When each was opened is
 recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md#pendências-conhecidas) (in Portuguese).
 
+- **`writing-skills/SKILL.md` is under structural review, and this is the
+  dossier that review consumes.** Its ceiling exemption now runs on a deadline
+  rather than the dead condition "while the file is the upstream's" — see the
+  Changed entry for this cycle. What the review has to decide, already
+  measured, so it does not start from zero:
+  **Conformance: 1 of 15.** Against the template that file itself prescribes —
+  Overview, When to Use, Quick Reference, Common Mistakes — only
+  `writing-skills` carries all four. Overview appears in 10 of 15, When to Use
+  in 6, Quick Reference in 4, Common Mistakes in 3. `final-branch-audit`, the
+  one skill this project created from nothing, follows none of it. The document
+  is inherited and close to unexercised.
+  **Three blocks are its own, with no equivalent in Anthropic's
+  skill-development skill:** the Iron Law (no skill without a failing test
+  first), RED-GREEN-REFACTOR for skills, and Bulletproofing Against
+  Rationalization. The vendor's Step 5 is a static validation checklist plus a
+  reviewer agent, and its Step 6 is "use it, see where it struggles, update" —
+  review and observation, with no red state and no baseline. The difference is
+  this project's thesis: a skill is code that shapes behaviour and is tested
+  adversarially, not documentation to be validated. **Bulletproofing is the one
+  block with measured adoption — 11 of 15 skills carry a rationalization or Red
+  Flags table** — and `tests/skill-behavior/README.md` names as its
+  methodological source not the `SKILL.md` but its companion,
+  `testing-skills-with-subagents.md`.
+  **What the vendor has and this does not:** `assets/` as a third category,
+  distinct from `references/` because it enters the output rather than the
+  context; a per-level budget for progressive disclosure (~100 words of
+  metadata, under 5,000 of body, unbounded resources); imperative form as a
+  hard rule for the body, not only third person in the description; literal
+  trigger phrases quoted inside the description; grep patterns in `SKILL.md`
+  for a reference file over 10,000 words; and the rule that information lives
+  in `SKILL.md` or in a reference file, never both.
+  **One correction hangs on this review.** `writing-skills/SKILL.md:666` tells
+  the reader to consider contributing back via pull request, and the top of
+  [`CLAUDE.md`](CLAUDE.md) states this project takes no outside contributions
+  and has no PR process. It is one line and it is wrong today; fixing it alone
+  inside a file the review may rewrite is work thrown away, so it waits.
+  **Its auxiliary files were excluded from this cycle's layout move** for the
+  same reason — `anthropic-best-practices.md`, `persuasion-principles.md`,
+  `testing-skills-with-subagents.md`, `examples/`, `graphviz-conventions.dot`
+  and `render-graphs.js` sit beside the `SKILL.md` rather than under
+  `references/`, `assets/` and `scripts/`.
+
 - **Five of the fifteen skill names are not gerunds, and that is the final
   state.** Anthropic's skill authoring best practices recommend the gerund form
   for consistency and list the noun phrase as an accepted alternative; the names
