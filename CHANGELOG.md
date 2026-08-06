@@ -9,6 +9,31 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The reference documents went stale inside the cycle that changed what they
+  describe** — three claims, all of them counts, all of them written as facts
+  about a gate whose shape had just moved.
+  [`docs/review-scopes.md`](docs/review-scopes.md) said the evidence line
+  "appears three times" and that `check-evidence-line.sh` holds "five carriers";
+  [`docs/docs-and-links.md`](docs/docs-and-links.md) said the section pass covers
+  every live markdown file with dated records excluded, full stop, and that
+  dated records stay out — after `## Open gaps` had been sliced back in. A
+  fourth, older and not from this cycle, was found by the same sweep:
+  [`docs/context-audit.md`](docs/context-audit.md) counted five carriers for the
+  escalation shape where the gate has measured six for some time.
+  **Every one of them is a number where a condition belongs**, which is the rule
+  [`CLAUDE.md`](CLAUDE.md) states for itself and these documents inherit by
+  being the place its procedure moved to. They now name the declared list and
+  let the gate print the count, so the next carrier added ages nothing.
+  **Found by sweeping for the counts, not for the filenames.** The documents
+  were not edited in the commits that invalidated them, so nothing in those
+  diffs pointed here — the same shape as `1.13.0`'s stale section, and the
+  reason this sweep is worth running at the end of a cycle rather than trusting
+  that a changed gate drags its documentation with it.
+
 ## [1.14.0] - 2026-08-06
 
 ### Fixed

@@ -16,14 +16,23 @@ prohibits flattening. Read it before editing any reviewer prompt.
 
 ## The evidence line
 
-The block `**Command:** [verbatim] — **exit:** [code] — **counts:** …` appears
-three times, identical but for a baseline suffix that is content, not wording.
+The block `**Command:** [verbatim] — **exit:** [code] — **counts:** …` is
+carried by every file `check-evidence-line.sh` declares, identical but for a
+baseline suffix that is content, not wording. The review faces are these three;
+the other carriers are the points where a completion claim is made, not where a
+diff is judged, and they take no suffix.
 
 | Carrier | Baseline suffix |
 |---|---|
 | [task-reviewer-prompt.md](../skills/subagent-driven-development/task-reviewer-prompt.md), section "Test Evidence" | `base:` |
 | [re-review-prompt.md](../skills/subagent-driven-development/re-review-prompt.md), section "Test Run" | `previous:` |
 | [code-reviewer.md](../skills/requesting-code-review/code-reviewer.md), section "Test Run" | none — it has no prior count |
+
+**The reader changes at the last carrier, and that is the one that was missing.**
+Every other carrier is read by a subagent. `finishing-a-development-branch`,
+section "Step 1: Verify Tests" is read by a person, immediately before merge
+options are on the table — so the shape was enforced everywhere an agent reports
+to an agent and nowhere an agent reports to its human partner. Added in `1.14.0`.
 
 ## Why the form is copied rather than extracted
 
@@ -38,8 +47,12 @@ are in [tests/skill-behavior/README.md](../tests/skill-behavior/README.md).
 
 **Without a gate, "unified in place" is just "copied."** Two carry that weight:
 
-- [check-evidence-line.sh](../scripts/check-evidence-line.sh) — five carriers,
-  comparing the evidence line's fields and tolerating formatting.
+- [check-evidence-line.sh](../scripts/check-evidence-line.sh) — comparing the
+  evidence line's fields across every declared carrier, tolerating formatting.
+  The list is declared in the script, not discovered by globbing: a carrier that
+  silently lost the form has to be distinguishable from a file that never had
+  it. The count is printed at run time and written down nowhere, because it ages
+  every time the list grows.
 - [check-escalation-shape.sh](../scripts/check-escalation-shape.sh) — six
   carriers, five skills, `subagent-driven-development` holding the shape twice.
   A list of skill names undercounts the files that have to agree.

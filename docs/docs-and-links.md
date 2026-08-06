@@ -32,7 +32,7 @@ different sets:
 |---|---|---|
 | Local links | The institutional files at the root — `CLAUDE.md` among them — everything in `docs/`, and every markdown file under `skills/` | A link whose destination does not exist, or whose anchor names no heading |
 | Third-party diet | The same set, minus the two exemptions below, reading **raw lines, fenced blocks included** | A URL whose host is not on the allowlist |
-| Section references | Every live markdown file, dated records excluded | A section reference naming a file, or a heading, that does not exist |
+| Section references | Every live markdown file, dated records excluded — plus `CHANGELOG.md`'s `## Open gaps` section, sliced out of the file around it | A section reference naming a file, or a heading, that does not exist |
 
 `skills/**` was in none of them while the fear was rebase churn — upstream text
 whose relative links move when their side changes. Measured instead of assumed:
@@ -47,6 +47,18 @@ scanning both reports every problem twice.
 **Dated records stay out of the section pass** — the changelog, the frozen
 history, and the `RESULT-` files. A heading renamed later does not make a record
 wrong, and a gate red on one would force rewriting a record to stay green.
+
+**One section inside a dated record is the exception, and it is exempt for the
+wrong reason without it.** `CHANGELOG.md`'s `## Open gaps` calls itself the live
+list in its own opening line — closing an item edits it in place — while sitting
+inside the one file this pass skips for being history. Exempt by container, live
+by content, and so read by nothing: an item there went on describing a gate that
+had already been widened, citing a line number that had itself moved. The
+section is sliced from its heading to end of file, on the same boundary
+[`release-notes.sh`](../scripts/release-notes.sh) uses to put it in a release
+body, and reported line numbers are offset back to the real file. A renamed
+heading raises rather than yielding an empty slice, which would report zero
+problems and read like a clean pass. Added in `1.14.0`.
 
 ## Why the backtick convention is not gated
 
