@@ -2717,6 +2717,20 @@ recorded in [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.m
   it ships is a gate nobody reads. The targets stay in `writing-skills` as
   advice to whoever writes a skill, which is what they are. This entry is the
   declared divergence, not a plan to close it.
+  **One concrete candidate falls out of the measurement, and it is not a
+  general rule being missed.** `using-superpowers/SKILL.md` is the single file
+  the 200-word tier governs and the single file
+  [`hooks/session-start`](hooks/session-start) reads in full into every session
+  of every project — so its 502 words are 502 words of every client
+  conversation's context, before the first turn. Cutting it has an effect that
+  is measurable in real work rather than against a checklist. Named as a
+  candidate; no gate, and no number invented to justify one.
+  **The vendored copy carries a target the vendor has since moved.** Anthropic's
+  current skill-development guidance for plugin skills asks for a 1,500–2,000
+  word body, under 3,000, with 5,000 as the maximum — three to four times looser
+  than the under-500 in the copy this repository vendored. Measured against the
+  current number, ten of the fifteen comply; against the vendored one, none do.
+  That is the strongest reason not to build a gate on the vendored figure.
 
 - **`final-branch-audit/SKILL.md` is not one long document — it is two, and
   that is a named candidate rather than a pending item.** At 368 lines it is
