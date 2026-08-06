@@ -5,6 +5,20 @@ description: Use when about to claim work is complete, fixed, or passing, before
 
 # Verification Before Completion
 
+**This skill is orphaned in the invocation graph on purpose.** No flow names
+it; it fires on its description, at the moment a completion claim is about to
+be made — which is every flow and none of them. The orphaning is measured, not
+assumed:
+[RESULT-verification-before-completion.md](../../tests/skill-behavior/RESULT-verification-before-completion.md)
+records two adversarial runs, one of them in a repository where no skill was
+reachable at all, and **the verification was run in both**. What differed was
+whether the claim named the instrument. Wiring this file into the flows would
+contradict that record; the one thing it was measured to add — the form of the
+evidence — was taken to the points where the claim is actually made, and is
+gated there by [`check-evidence-line.sh`](../../scripts/check-evidence-line.sh).
+What stays here is the rule for the conditions that record explicitly did not
+build: a long session, an expensive suite, wanting the work over.
+
 ## Overview
 
 **Core principle:** Evidence before claims, always.

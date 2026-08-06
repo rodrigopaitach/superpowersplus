@@ -47,6 +47,30 @@ References below name them so a claim here can be traced there.
   the wrong form; this is the first one measured **rotting**, which is the claim
   the form exists to prevent and until now the only untested half of it.
 
+- **`verification-before-completion` was orphaned in the invocation graph and
+  nowhere said so, which is the only part of that situation that was a defect.**
+  No flow reaches it — the sole invoker in the whole graph is
+  `systematic-debugging/SKILL.md:189`, and neither execution path, nor the merge
+  decision, nor the audit names it. **The orphaning is correct and it was
+  already measured**, in
+  [`RESULT-verification-before-completion.md`](tests/skill-behavior/RESULT-verification-before-completion.md):
+  across two adversarial runs, one in a repository where no skill was reachable
+  at all, the verification ran both times. What varied was whether the claim
+  named the instrument, and that — the form of the evidence, not the running of
+  the check — was taken to the points where a completion claim is actually made
+  and is gated there by
+  [`check-evidence-line.sh`](scripts/check-evidence-line.sh). Connecting the
+  skill to the flows now would be an argument against this project's own
+  measurement.
+  What was missing is the declaration, and its absence has a cost with a name:
+  a sweep for dead references surfaces this skill beside
+  `dispatching-parallel-agents`, which **is** declared, and the undeclared one
+  reads as the real defect. Declared now in two places, because two different
+  readers hit it — at the top of
+  [the skill itself](skills/verification-before-completion/SKILL.md), for
+  whoever opens the file, and in [`CLAUDE.md`](CLAUDE.md)'s table of things
+  that break silently, for whoever is running the sweep and never opens it.
+
 - **The same anchoring defect one stage earlier: right value, wrong form, in
   the row directly above one that already had it right.**
   `finishing-a-development-branch/SKILL.md:47` cited the audit's treatment of a
