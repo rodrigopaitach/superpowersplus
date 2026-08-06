@@ -3378,23 +3378,66 @@ an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
-- **Splitting the plan-reviewer face into a cheap mechanical pass and a short
-  judgement pass is NOT built, and it is conditioned on a measurement that has
-  not returned.** The measured shape is real: roughly four of five of that
-  face's blocking verdicts are mechanical, and the two halves travel in one
-  190-line prompt paying the tier of the more expensive. But the judgement
-  fifth is where its uniquely-valuable findings live — the class "does this
-  instrument discriminate?", which the end-of-branch gates are structurally
-  blind to because they arrive after an implementer has already worked around
-  the problem. **The condition: a retrospective re-running recorded plan
-  reviews on a mid tier against the same documents. Every grave finding
-  reappears → declare the floor and the split becomes a candidate with data.
-  Any one goes missing → the face stays at the top tier and that result is the
-  provenance, so the next sweep cannot demote it for economy.** The `model:`
-  field added to
+- **The plan reviewer stays on the top tier. Decided, with the measurement
+  that decided it, so no later sweep demotes it for economy.** The
+  retrospective ran: three recorded plan reviews re-dispatched on a mid tier,
+  same prompts, same documents, each in a git worktree at the exact commit the
+  original reviewer saw. **Two of four grave findings reappeared, two went
+  missing** — and the rule fixed in advance was that one going missing settles
+  it.
+  **The axis is not mechanical against judgement; it is directed against
+  generated.** What reappeared was what an instrument finds: a type opened to
+  show the field is absent (`papel` missing from `DadosNota`, reproduced with
+  the same citations and one step further than the original), and a branch no
+  test reaches (found again by running coverage). What went missing was what
+  needs a counterfactual nobody named: that restoring a pre-image undoes a
+  decision taken between it and now — where the mid tier went to the same
+  step, opened the same file, and wrote *"copiável sem ambiguidade; não é
+  bloqueante"* — and that a test would pass without the change. **The vacuous
+  test is the clean proof: the counterfactual was requested in the prompt in
+  so many words, and it was executed only for the one test the instruction
+  named.** A cheaper tier runs a counterfactual it is handed; it does not
+  invent one.
+  **The split of this face is therefore a candidate WITH a design, and still
+  not built.** The design the measurement points at is not "mechanical cheap,
+  judgement expensive" — it is **everything nameable in the instruction goes
+  to the cheap pass**, counterfactuals included ("run each new test against
+  the previous HEAD and list those that pass", now written into the round-2
+  scope), leaving the expensive pass only what cannot be named in advance.
+  **Trigger to build it: a fourth and fifth recorded document, so the sample
+  stops being three.** Not built today because three documents cannot separate
+  a tier effect from a document effect.
+
+- **The Sonnet floor on the spec reviewer is a decision by analogy, not a
+  measurement on the same axis.** The retrospective covered plan reviews; the
+  floor declared in
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md),
+  section "Spec Document Reviewer Prompt Template", rests on that face's
+  verdicts being about four-fifths mechanical, which is a count of the prompt,
+  not a run. **Named so it is not read as measured. The symptom that reopens
+  it: a spec finding that used to appear and stops appearing in real use** —
+  in particular anything of the counterfactual class, since that is precisely
+  what the plan-side retrospective showed a mid tier does not generate.
+
+- **Blocking rows in the plan reviewer's contract were examined for demotion
+  and NONE moved. Recorded because "we looked and left it" and "nobody looked"
+  are indistinguishable a year later.** The recorded classification of that
+  face's findings was mapped onto the thirteen blocking rows of
   [`plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md),
-  section "Plan Document Reviewer Prompt Template", carries no floor for
-  exactly this reason.
+  section "The Plan Contract (blocking)". **Nine rows produced no finding at
+  all in the record — unclassified, so they stay by the rule that doubt does
+  not cut coverage.** Two rows are classified as caught only by this face and
+  stay for that reason. One row mixes both classes in a single line (an orphan
+  label in the matrix was caught downstream; a matrix label with no criterion
+  in the body was not), so the line cannot move without taking the second
+  class with it. **One row was a genuine candidate — "every matrix row names a
+  test some step creates" — and it stays too, for two reasons that only
+  appeared on inspection: the task reviewer that would catch it does not exist
+  on the inline execution path at all, and the audit that would catch it
+  charges at the end of the branch, which is the stated reason this contract
+  exists (the section's own preamble says so).** The criterion "the audit also
+  catches it" turned out to select every row by design rather than separate
+  them.
 
 - **"Only the plan reviewer catches a vacuous test" is stated too strongly in
   the analysis that produced the changes above, and the correction is recorded
@@ -3413,6 +3456,25 @@ section where the next one would be written.
   how often the red step is actually observed, which the transcripts of this
   series were not read for. **Recorded so the number does not harden into
   doctrine before anyone checks it.**
+
+- **The seven ambiguous citations `check-cross-references` reported on a
+  partner's plan are a defect of that plan, not a limit of the script — and
+  the question is closed rather than left hanging.** Checked: the plan writes
+  `page.tsx:7`, `page.tsx:5`, `page.tsx:142`, `page.tsx:178` with no path, the
+  repository holds four files named `page.tsx`, and **the plan declares no
+  base path anywhere** (searched for one). A reader cannot resolve those
+  either; the script resolves a short citation by suffix against the tracked
+  files and reports as ambiguous exactly the case where the reader would also
+  have to guess. **Nothing to change here. It is a finding for a session in
+  that partner's project, and it is recorded in this repository only as the
+  reason the script's behaviour is correct.**
+
+- **The remaining measurement queue is a terminal state, not a to-do.** What is
+  declared above as waiting — the fourth and fifth document for the face split,
+  the symptom that would reopen the spec floor — waits on **usage producing
+  data**, which no amount of work here advances. Writing them as pending would
+  make a finished decision look unfinished; they are conditions with a named
+  trigger, and until the trigger fires there is nothing to do about them.
 
 - **Two skills bind the implementer on the subagent path and nothing binds
   anyone on the inline one. The asymmetry is recorded, not closed, because
