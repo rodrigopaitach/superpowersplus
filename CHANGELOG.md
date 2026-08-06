@@ -9,6 +9,105 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [1.12.0] - 2026-08-05
+
+### Changed
+
+- **`subagent-driven-development`'s `When to Use` graph decided by the wrong
+  criterion, and named the two paths backwards while doing it.** Its diamond
+  asked "Stay in this session?" and sent `no - parallel session` to
+  `executing-plans`. Both halves were false: the criterion the other two
+  documents use is the plan's size and whether its progress has to outlive the
+  session (`writing-plans/SKILL.md`, section "Execution Handoff", which carries
+  the adversarial runs of 2026-08-04 that measured it; `executing-plans/SKILL.md`,
+  section "Overview"), and `executing-plans` is the path that runs **in this
+  session** — it is the inline one. An agent reading the graph literally chose
+  wrong in both directions.
+  **The graph was redrawn rather than patched**, because a graph is the only
+  form where the flow is visible at once and a patched one stops being that.
+  Four defects closed together: the criterion, the inverted labels, a missing
+  decider — where the harness has no subagents there is no choice to present
+  and `executing-plans` is the path — and task independence, which was sitting
+  *before* the path choice and so routed every tightly-coupled plan to manual
+  execution, contradicting `executing-plans/SKILL.md`, section "Overview",
+  where that path declares itself "a legitimate choice, not a fallback".
+  Independence is a precondition of the subagent path, not of having a plan,
+  and it now sits there.
+  **Integrity, measured after the redraw:** 7 nodes declared, 7 used, 8 edges;
+  no node declared and unused, none used and undeclared, a single root, and no
+  node unreachable from it. The three leaves are the three exits.
+  The `vs. Executing Plans` block below the graph fell with it: `(parallel
+  session)` repeated the same falsehood, and `Same session (no context switch)`
+  had stopped being a difference at all — both paths run in this session. What
+  replaced it is the difference the measurement supports: progress written to a
+  file survives an interruption, session todos do not.
+
+- **`subagent-driven-development`, section "Continuous execution", listed three
+  reasons to stop and five instructions in the same file required a sixth.** The
+  closed list — BLOCKED you cannot resolve, ambiguity, all tasks complete — was
+  contradicted by the `**Execution:**` field mismatch at Setup, the pre-dispatch
+  conflict scan, a plan-mandated finding, a dispute still open at the cap, and a
+  load-bearing finding at the breaker. Every one of those says "stop and ask" at
+  its own point of decision. A closed list of exceptions is true only until
+  somebody adds a case, and adding cases is what a fork does.
+  It was replaced by the positive rule: **you are authorized to proceed alone on
+  everything this skill gives you a rule for**, and where consulting is required
+  the rule requiring it says so where the decision is made. Nothing has to be
+  enumerated, so nothing goes stale.
+  `references/resuming.md` claimed to be "the one moment continuous execution
+  does not cover" — the same completeness claim from the other side, and false
+  for the same five reasons. It now states the rule instead of its own rank.
+
+- **`requesting-code-review`, section "When to Request Review", claimed the
+  subagent path runs it after every task.** It does not: per-task reviews there
+  run a different instrument
+  ([task-reviewer-prompt.md](skills/subagent-driven-development/task-reviewer-prompt.md)),
+  and this broad review runs once, over the whole branch, as the second of the
+  two end-of-branch gates. The line now says that, and names the other
+  instrument so the distinction is readable from here.
+
+- **`using-superpowers/references/codex-tools.md` pointed at the wrong step.**
+  It sent the reader to `finishing-a-development-branch` Step 1 for environment
+  detection, which lives in Step 3 — upstream had it at Step 2 and this fork's
+  insertion of the two-gate check pushed it one further. Both pointers now name
+  the section titles rather than bare numbers, which is what survives the next
+  insertion.
+
+- **`executing-plans`'s `description` said the skill runs "in a separate session
+  with review checkpoints", and a `description` is what the harness matches to
+  decide whether to load a skill at all** — so the error happened before the
+  graph above was ever read. Three defects in one line: "separate session" is
+  false, since this is the inline path that runs in the current one; "review
+  checkpoints" describes the upstream's Step 2 and not the two end-of-branch
+  gates the skill runs today; and it carried none of the deciders. Leaving it
+  was not neutral either — it and `subagent-driven-development`'s `description`
+  compete for the same trigger and were distinguished by exactly the false
+  "separate session" / "current session" pair, so the harness was already
+  choosing between them by the broken criterion.
+  **The change is the narrow one: the line stops misstating where the skill
+  runs, and gains no decider.** The alternative — putting the measured
+  size criterion into the `description` — was refused on the rule of the pair:
+  that criterion already lives with a producer (`writing-plans`, section
+  "Execution Handoff", which presents it to the human partner with the
+  measurement and writes the answer into the plan's `**Execution:**` field) and
+  a verifier (the graph above). A third copy inside a `description` would be the
+  only one no gate reads and no human confirms, which is where it would rot
+  first.
+  **This one is reasoned, not measured, and there is no eval behind it:** no
+  suite in this repository measures when `executing-plans` fires.
+  `tests/explicit-skill-requests/` covers naming a skill explicitly, not
+  description matching, and it does not reference this skill at all.
+
+- **Rebase cost of this release, counted because this project schedules that
+  expense rather than avoiding it: +43 lines of new divergence** from
+  `upstream/main` — `subagent-driven-development/SKILL.md` +34,
+  `using-superpowers/references/codex-tools.md` +5,
+  `requesting-code-review/SKILL.md` +2, `executing-plans/SKILL.md` +2;
+  `references/resuming.md` is fork-owned and costs nothing.
+  **The one worth naming is `codex-tools.md`: it stood at zero, and a
+  one-line correction put it at five.** A file with no divergence at all is
+  cheap to rebase exactly once.
+
 ## [1.11.0] - 2026-08-05
 
 ### Changed

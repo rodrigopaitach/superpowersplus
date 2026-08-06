@@ -40,9 +40,10 @@ The ledger lives at `<workspace>/progress.md`.
    in the escalation shape `SKILL.md` carries: what the branch already has,
    where you would resume, what resuming in the wrong place costs (a second
    implementation of finished work, at full task price, or a gap every later
-   task builds on), and your recommendation with that evidence behind it. This
-   is the one moment continuous execution does not cover — everything after it
-   rests on a starting point nobody checked.
+   task builds on), and your recommendation with that evidence behind it.
+   Continuous execution authorizes you to decide whatever the skill gives you a
+   rule for; where you resume is not one of those — everything after it rests on
+   a starting point nobody checked.
 
 ## Two shapes the ledger rules cannot describe
 

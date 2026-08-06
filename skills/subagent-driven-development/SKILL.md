@@ -22,7 +22,14 @@ ledger and the tool results carry the record.
 3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.
 4. **Before sending, reread the whole message once**, looking for terms someone outside this project would not know. Rewrite each in plain language, or define it in the sentence that uses it. A gate verdict name (`LOST IN TRANSLATION`, `INVENTED SCOPE`, …) appears only in parentheses, never carrying the explanation.
 
-**Continuous execution:** Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are: BLOCKED status you cannot resolve, ambiguity that genuinely prevents progress, or all tasks complete. "Should I continue?" prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.
+**Continuous execution:** Do not pause to check in with your human partner
+between tasks. **You are authorized to proceed alone on everything this skill
+gives you a rule for** — a status to handle, a loop to run, a cap to respect, a
+finding to park with a ruling — and that covers most of a run. Where consulting
+is required instead, the rule requiring it says so at the point of decision;
+this paragraph does not carry their list, and a stop this skill did not ask for
+is a stop you invented. "Should I continue?" prompts and progress summaries
+waste their time — they asked you to execute the plan, so execute it.
 
 **Progress reports.** Executing without stopping is not executing in
 silence. Report to your human partner at four fixed points, one line each:
@@ -56,26 +63,37 @@ somebody was told.
 ```dot
 digraph when_to_use {
     "Have implementation plan?" [shape=diamond];
+    "Subagents available in this harness?" [shape=diamond];
+    "Finishes in one sitting?" [shape=diamond];
     "Tasks mostly independent?" [shape=diamond];
-    "Stay in this session?" [shape=diamond];
     "subagent-driven-development" [shape=box];
     "executing-plans" [shape=box];
     "Manual execution or brainstorm first" [shape=box];
 
-    "Have implementation plan?" -> "Tasks mostly independent?" [label="yes"];
     "Have implementation plan?" -> "Manual execution or brainstorm first" [label="no"];
-    "Tasks mostly independent?" -> "Stay in this session?" [label="yes"];
-    "Tasks mostly independent?" -> "Manual execution or brainstorm first" [label="no - tightly coupled"];
-    "Stay in this session?" -> "subagent-driven-development" [label="yes"];
-    "Stay in this session?" -> "executing-plans" [label="no - parallel session"];
+    "Have implementation plan?" -> "Subagents available in this harness?" [label="yes"];
+    "Subagents available in this harness?" -> "executing-plans" [label="no - no choice to present"];
+    "Subagents available in this harness?" -> "Finishes in one sitting?" [label="yes"];
+    "Finishes in one sitting?" -> "executing-plans" [label="yes - inline"];
+    "Finishes in one sitting?" -> "Tasks mostly independent?" [label="no - progress must survive"];
+    "Tasks mostly independent?" -> "subagent-driven-development" [label="yes"];
+    "Tasks mostly independent?" -> "Manual execution or brainstorm first" [label="no - re-decompose the plan"];
 }
 ```
 
-**vs. Executing Plans (parallel session):**
-- Same session (no context switch)
+**The plan header's `**Execution:**` field may already answer this** — when
+superpowersplus:writing-plans handed the plan over, your partner picked the
+path and it was written there. The graph is for a plan that arrives without
+one, and for checking that the field still fits what you are looking at.
+
+**vs. Executing Plans (the inline path):** both run in this session — what
+differs is what each one buys.
 - Fresh subagent per task (no context pollution)
 - Review after each task (spec compliance + code quality), broad review at the end
-- Faster iteration (no human-in-loop between tasks)
+- Progress written to a file, so an interruption resumes from it; the inline
+  path tracks with session todos, which do not outlive the session. The
+  measured difference is in [writing-plans](../writing-plans/SKILL.md),
+  section "Execution Handoff"
 
 ## The Process
 
