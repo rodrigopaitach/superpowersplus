@@ -11,6 +11,32 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **Ad-hoc review is governed**, in
+  [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md), section
+  "Review Lives in the Gates" — the always-on skill, because this is the one
+  file every session reads and the behaviour it governs happens in sessions
+  that invoked no review skill at all.
+  **Measured over every subagent dispatch since 2026-08-01: review invented
+  per session is 31.3% of output tokens (794,725 of 2,536,549 across 28
+  dispatches) — against 18.4% for the spec and plan reviewers combined.** The
+  largest single instance is four dispatches of "LENTE N de 4" over one SQL
+  migration, **184,954 output tokens for one document**, each lens re-reading
+  it in full and returning findings the others also returned. **Nothing in
+  this repository governed any of it**: the skills describe gates, and this
+  spend happens between them.
+  Four acts, in six lines: review belongs to the gates and no review subagent
+  is dispatched between them on the agent's own initiative; a partner's
+  request for extra review is **one dispatch with every lens in the same
+  prompt**, deduplicated by the reviewer; before dispatching, the agent says
+  what the existing gates already check, because reviewing now what the audit
+  checks later is paying twice; and an extra round follows the rule above —
+  it verifies the repair, never the document again.
+  **Cost of the rule, measured: the skill body went from 502 to 590 words.**
+  It is loaded on every turn of every session, which is why the rule is four
+  sentences and not a section with a table.
+
 ### Changed
 
 - **A round-2 review verifies the repair; it no longer re-reads the whole

@@ -30,6 +30,10 @@ When multiple skills apply, process skills come first — they set the approach,
 - "Let's build X" → superpowersplus:brainstorming first, then implementation skills.
 - "Fix this bug" → superpowersplus:systematic-debugging first, then domain skills.
 
+## Review Lives in the Gates
+
+Review has gates: spec, plan, task, audit, branch. **Between them, do not dispatch a review subagent on your own initiative.** Asked for extra review: **one dispatch, every requested lens in the same prompt**, findings deduplicated by the reviewer — separate lenses re-read the same document and return the same findings. Before dispatching, tell your partner what the existing gates already check; reviewing now what the audit checks later is paying twice. An extra round verifies the repair, never the whole document again.
+
 ## Red Flags
 
 These thoughts mean STOP—you're rationalizing:
