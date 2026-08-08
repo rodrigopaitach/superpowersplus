@@ -9,6 +9,57 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [1.16.4] - 2026-08-08
+
+### Fixed
+
+- **The suite stops inheriting the operator's global context, and the header
+  stops claiming it never did.** `tests/explicit-skill-requests/run-test.sh`
+  opened with *"Uses isolated HOME to avoid user context interference"* while
+  no runner in the directory has ever set `HOME`. **A false claim of isolation
+  is worse than no isolation**: it invites every result to be read as a
+  property of the skill.
+  **`--setting-sources project` drops the user layer and leaves credentials
+  alone**, because authentication does not come from the settings sources.
+  Copying credentials into a scratch `HOME` was the obvious move, was blocked
+  by the operator's own settings, and turned out to be unnecessary.
+  **It was not a cosmetic difference.** Re-measured across the same nine
+  cases: the announcement result changes on 5 of 9, Sonnet moves from 3/9 to
+  6/9, and the suite costs less than half as much (Opus US$ 5.04 → US$ 2.15;
+  Sonnet US$ 3.21 → US$ 1.53). The user layer was consuming the turn the
+  announcement belongs to.
+
+### Changed
+
+- **`1.16.3` reported that the announcement rule was obeyed a third of the
+  time on both tiers and called that "not a tier effect". Isolated, it is one,
+  and it runs the other way.** Clean, Sonnet announces in 6 of 9 and Opus in
+  2 of 9 — **the smaller tier follows the prescribed form and the larger one
+  paraphrases it.** The texts say it better than the score: Sonnet writes
+  *"Using superpowersplus:brainstorming to help think through your feature"*,
+  which is the rule's own shape, while Opus writes *"I'll invoke that skill"*
+  and *"the skill you asked for"* — the invocation announced, the skill's name
+  replaced by a pronoun.
+  **So the rule is not being ignored; its form is.** Seven of nine isolated
+  Opus runs open by declaring a skill is being invoked and two name which one.
+  A dead rule and a rule whose wording nobody follows need different repairs,
+  and the distinction only became visible once the environment was clean.
+  **Invocation, meanwhile, is 36 of 36** across four rounds — including the
+  four cases built to argue against invoking.
+  **No skill was changed.** What to do about the announcement's wording is the
+  owner's decision; this entry is the measurement that reaches him.
+  The case-by-case table, the falsified correlation and the ruled-out
+  truncation are in
+  [`tests/explicit-skill-requests/README.md`](tests/explicit-skill-requests/README.md),
+  section "RESULT — the invocation always happens; the announcement's form
+  does not".
+
+- **[`docs/releasing.md`](docs/releasing.md) no longer claims the bump audit
+  has exactly one class of false positive.** It has two, and the correction is
+  to the assertion of uniqueness rather than to the list — a count of
+  exceptions written as a fact ages like any other measured number, and the
+  third class will not announce that it is the third.
+
 ## [1.16.3] - 2026-08-08
 
 ### Added
@@ -3751,6 +3802,51 @@ section where the next one would be written.
   use before the suite grows again — a sample of one does not justify a
   third pair, and a suite nobody reads the output of is the failure mode this
   directory already recorded once.
+
+- **The announcement assertion demands the skill's literal name, and whether
+  that criterion should loosen is waiting on runs rather than on argument.**
+  Two kinds of miss were measured on 2026-08-08 and only one is a candidate.
+  **Not a candidate:** the anaphoric opening — *"I'll invoke that skill"*,
+  *"the requested skill"*, *"the skill you asked for"* — which genuinely names
+  nothing and is the miss the rule exists to catch. **The candidate:** one run
+  translated the name instead of using it (*"o processo sistemático de
+  debugging"* for `systematic-debugging`), purpose announced, form intact,
+  scored FAIL. **It happened once, under the contaminated profile, and
+  isolation removed the cause** — the same case announces correctly in both
+  clean rounds. The owner's ruling: count how often it recurs on isolated runs
+  before relaxing a criterion that is currently exact, because a criterion
+  loosened against one occurrence stops catching the miss it was built for.
+
+- **The bump audit has two classes of false positive, and the document said it
+  had one.** [`docs/releasing.md`](docs/releasing.md), section "The bump
+  audit's false positives", now names both: a version constant in a test
+  fixture, and a version named in running prose. **The defect was the claim of
+  uniqueness, not the missing entry** — a second class turned up on
+  2026-08-08, was read against a document asserting no second class existed,
+  and the assertion is what had to change. Recorded here because the same
+  failure is available to any count of exceptions written as a fact: **the
+  third class will not announce that it is the third**, so the correction was
+  to say why the number is not the durable part rather than to update the
+  number.
+
+- **`lint-shell.sh --all` fails today, on files no recent diff has touched.**
+  Measured 2026-08-08: **11 findings across 3 files**, all under
+  `tests/claude-code/` — `test-helpers.sh` (5), `test-worktree-path-policy.sh`
+  (4), `test-subagent-driven-development-integration.sh` (2) — and **6 of the
+  11 are `SC2155`, the code that shipped a red CI in `1.15.0` and was fixed in
+  `1.15.1`.**
+  **What is *not* the defect, corrected here because it was asserted before it
+  was measured:** the gate does not lint a fixed pair of files. Its default
+  collects what changed (`scripts/lint-shell.sh`, `collect_changed_shell_files`),
+  CI narrows that to the pushed range on purpose (`.github/workflows/ci.yml`,
+  step "Shell lint (files this push changed)"), and `--all` exists for the
+  baseline. The five runners under `tests/explicit-skill-requests/` are tracked
+  `.sh` files and are linted whenever they change — they were, in this very
+  cycle.
+  **The gap that is real is the one this project already has an entry for:** a
+  diff-scoped gate never reaches code that is standing still, and these three
+  files have been standing still. It stays open on the same terms as that
+  entry — a sweep is something the owner asks for.
 
 - **The plan reviewer stays on the top tier. Decided, with the measurement
   that decided it, so no later sweep demotes it for economy.** The

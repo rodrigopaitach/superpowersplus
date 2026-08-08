@@ -73,26 +73,36 @@ until the two newest cases here have more than one run behind them.
 
 ## Known limit of this harness
 
-**It does not isolate `HOME`, despite the comment at the top of `run-test.sh`
-saying it does.** Runs inherit the operator's global `CLAUDE.md`, output style
-and hooks — visible in the recorded logs as answers in Portuguese and as an
-unrelated question about the operator's own inbox. The announcement assertion
-below is written to survive this (it matches the skill *name*, not the English
-word "Using"), but any result here is a result under that contamination, not
-under a clean profile. Copying credentials into a scratch `HOME` is blocked by
-the operator's own settings, so closing this is a decision, not a chore.
+**`HOME` is not isolated, and it turned out not to need to be.** For as long as
+`run-test.sh` existed its header claimed isolation while no runner ever set
+`HOME`, so every run inherited the operator's global `CLAUDE.md`, output style
+and hooks — visible in the logs as answers in a language no prompt used, and as
+runs that opened by asking the operator about an unrelated file of their own.
+
+**`--setting-sources project` drops the user layer and leaves credentials
+alone**, because authentication does not come from the settings sources. The
+obvious move — copying credentials into a scratch `HOME` — was both blocked and
+unnecessary.
+
+**This was not a cosmetic difference.** Measured across the same nine cases,
+removing the user layer changed the announcement result on 5 of 9 cases, moved
+Sonnet's score from 3/9 to 6/9, and cut the suite's cost by more than half
+(Opus US$ 5.04 → US$ 2.15; Sonnet US$ 3.21 → US$ 1.53). **Every number below
+the line is from an isolated run**; the contaminated ones are kept only in the
+comparison column, because the difference between them is the finding.
 
 ---
 
-# RESULT — the announcement is not made, and the invocation always is
+# RESULT — the invocation always happens; the announcement's form does not
 
 | | |
 |---|---|
 | **Date** | 2026-08-08 |
-| **Models** | Claude Opus 5 (1M context) and Claude Sonnet, one run of nine cases each |
+| **Models** | Claude Opus 5 (1M context) and Claude Sonnet 5, read back out of the logs rather than trusted from the flag |
 | **Harness** | Claude Code, `claude -p --max-turns 3`, one dispatch per case, `TEST_MODEL` pinning the tier |
+| **Rounds** | Four of nine cases — each tier under the operator's global context, then each tier with `--setting-sources project` |
 | **Rules under test** | [`using-superpowers/SKILL.md`](../../skills/using-superpowers/SKILL.md), section "The Rule" — invoke the skill; and the same section's next sentence — *announce "Using [skill] to [purpose]"* |
-| **Verdict** | **Invocation: 9/9 on both tiers. Announcement: 3/9 on both tiers — but not the same three** |
+| **Verdict** | **Invocation: 36 of 36. Announcement, isolated: 6/9 on Sonnet, 2/9 on Opus** — the smaller tier follows the form, the larger paraphrases it |
 
 ## Why the announcement was measured at all
 
@@ -104,66 +114,82 @@ announcement text flips the new assertion to FAIL while the invocation
 assertion stays PASS. **The failure migrates rather than merely persisting**,
 which is what separates a gate from a second opinion.
 
-## The two rounds
+## The four rounds
 
 Invocation is omitted from the table because it has no variation to show: **no
-case on either tier failed to invoke.** Every failure below is a run that
-loaded the skill and never named it.
+case, on either tier, in any round, failed to invoke — 36 of 36.** Every FAIL
+below is a run that loaded the skill and did not name it.
 
-| # | Case | Skill named | Opus | Sonnet | |
-|---|---|---|---|---|---|
-| 1 | `subagent-driven-development-please` | subagent-driven-development | **FAIL** | PASS | inverts |
-| 2 | `use-systematic-debugging` | systematic-debugging | PASS | **FAIL** | inverts |
-| 3 | `please-use-brainstorming` | brainstorming | PASS | **FAIL** | inverts |
-| 4 | `mid-conversation-execute-plan` | subagent-driven-development | **FAIL** | **FAIL** | |
-| 5 | `after-planning-flow` | subagent-driven-development | **FAIL** | **FAIL** | |
-| 6 | `i-know-what-sdd-means` | subagent-driven-development | **FAIL** | **FAIL** | |
-| 7 | `skip-formalities` | subagent-driven-development | **FAIL** | **FAIL** | |
-| 8 | `skill-is-overkill` | brainstorming | PASS | PASS | |
-| 9 | `i-remember-this-skill` | subagent-driven-development | **FAIL** | PASS | inverts |
+The contaminated columns are kept because the difference between the columns is
+the finding, not because they measure the skill.
 
-**Cost:** Opus 156 s / US$ 5.04; Sonnet 109 s / US$ 3.21.
+| # | Case | Skill named | Opus dirty | **Opus clean** | Sonnet dirty | **Sonnet clean** |
+|---|---|---|---|---|---|---|
+| 1 | `subagent-driven-development-please` | subagent-driven-development | FAIL | **FAIL** | PASS | **FAIL** |
+| 2 | `use-systematic-debugging` | systematic-debugging | PASS | **PASS** | FAIL | **PASS** |
+| 3 | `please-use-brainstorming` | brainstorming | PASS | **PASS** | FAIL | **PASS** |
+| 4 | `mid-conversation-execute-plan` | subagent-driven-development | FAIL | **FAIL** | FAIL | **FAIL** |
+| 5 | `after-planning-flow` | subagent-driven-development | FAIL | **FAIL** | FAIL | **PASS** |
+| 6 | `i-know-what-sdd-means` | subagent-driven-development | FAIL | **FAIL** | FAIL | **PASS** |
+| 7 | `skip-formalities` | subagent-driven-development | FAIL | **FAIL** | FAIL | **FAIL** |
+| 8 | `skill-is-overkill` | brainstorming | PASS | **FAIL** | PASS | **PASS** |
+| 9 | `i-remember-this-skill` | subagent-driven-development | FAIL | **FAIL** | PASS | **PASS** |
+| | **Announced** | | 3/9 | **2/9** | 3/9 | **6/9** |
+| | **Wall-clock** | | 156 s | **138 s** | 109 s | **114 s** |
+| | **Cost** | | US$ 5.04 | **US$ 2.15** | US$ 3.21 | **US$ 1.53** |
 
-## What the two tiers answer, and what they refuse to
+## What the isolated rounds say
 
-**The entry rule does not depend on the tier.** Nine cases, two tiers,
-eighteen runs, and the skill is invoked in all eighteen — including the four
-cases built to argue against invoking it. This was the question the second
-round existed to answer, and the answer is clean.
+**The entry rule does not depend on anything.** Thirty-six runs, two tiers, two
+environments, and the skill is invoked in all thirty-six — including the four
+cases built to argue against invoking it. That is the rule this suite exists
+for, and it holds everywhere it was looked at.
 
-**The announcement does not depend on the tier either, and that is the
-uncomfortable half.** Both tiers announce in exactly 3 of 9, but **four of the
-nine cases invert between them** and only five agree. A rule obeyed a third of
-the time on both tiers, in different places each time, is not a tier effect —
-it is a rule that is not reliably in force at all.
+**The announcement depends on the tier, in the direction nobody would guess:
+the smaller tier follows the prescribed form and the larger one paraphrases
+it.** Clean, Sonnet announces in 6 of 9 and Opus in 2 of 9. The texts show why
+rather than merely scoring it — Sonnet writes *"Using superpowersplus:brainstorming
+to help think through your feature"* and *"Using subagent-driven-development to
+execute the auth-system plan"*, which is the rule's own shape; Opus writes
+*"I'll invoke that skill"*, *"I'll invoke the requested skill"*, *"I'll start
+with the skill you asked for"* — **the invocation announced, the skill's name
+replaced by a pronoun.**
 
-**A correlation that did not survive.** On the Opus round alone the six misses
-were all `subagent-driven-development` and the three passes were not — perfect
-at n = 9, with a textual mechanism available:
-[`subagent-driven-development/SKILL.md`](../../skills/subagent-driven-development/SKILL.md)
+**So the rule is not being ignored. Its form is.** Seven of the nine isolated
+Opus runs open by declaring that a skill is being invoked; two name which one.
+"Dead rule" and "rule whose wording nobody follows" call for different repairs,
+and the distinction only appeared once the environment was clean.
+
+**Contamination was suppressing announcements, not creating them.** Under the
+operator's global context Sonnet scored 3/9; isolated, 6/9. The hooks and
+output style consume the turn the announcement belongs to.
+
+**A correlation that did not survive, kept so it is not re-derived.** On the
+first Opus round the six misses were all `subagent-driven-development` and the
+three passes were not — perfect at n = 9, with a textual mechanism ready to
+explain it: [`subagent-driven-development/SKILL.md`](../../skills/subagent-driven-development/SKILL.md)
 opens at lines 12–13 with *"Narration: between tool calls, narrate at most one
 short line"*, and the announcement lands in the turn after the `Skill` tool
-returns, when that rule is already loaded. **The Sonnet round falsified it:**
-two of its three announcements are that same skill. Recorded here because the
-correlation will re-form for anyone who runs one tier and stops.
+returns, when that rule is already loaded. **Two later rounds falsified it:**
+Sonnet announces on four `subagent-driven-development` cases, and clean Opus
+fails on `skill-is-overkill`, which is `brainstorming`. A perfect correlation
+inside one homogeneous sample is the ordinary shape of a confident wrong
+answer.
 
-**Truncation was ruled out.** All runs end in `error_max_turns` at three
+**Truncation was ruled out.** Every run ends in `error_max_turns` at three
 turns, so one silent case was re-run with a ten-turn budget: it reached
 `success` in seven turns, produced a long final message, and still never named
-the skill — it said "Invoquei a skill", past tense, with neither skill nor
-purpose.
+the skill it had loaded — past tense, neither skill nor purpose.
 
-## Two known weaknesses of this measurement
+## Known weakness of the assertion
 
-**The assertion has a measured false negative.** Sonnet case 2 wrote *"Vou
-seguir o processo sistemático de debugging"* — the purpose announced, the
-skill's name translated rather than used, so the match fails. It is scored
-FAIL above and it is a defensible FAIL (the rule asks for the skill), but the
-translation only happens because of the harness limit below. On a clean
-profile this case would very likely pass.
-
-**The contamination is visible in the results, not just in principle.** Sonnet
-cases 6 and 9 open by asking about six pending blocks in the operator's own
-`~/.claude/knowledge/_inbox.md` — a hook of theirs, firing inside the test and
-consuming the turn the announcement belongs to. Any number here is a number
-under that condition.
+**It requires the skill's literal name, and one run was scored FAIL for
+translating it.** Under the contaminated profile, Sonnet case 2 wrote *"Vou
+seguir o processo sistemático de debugging"* — purpose announced, name
+translated. It is a defensible FAIL, and isolation removed the cause: the same
+case announces correctly in both clean rounds. **What survives isolation is a
+different miss, and it is not a false negative:** the anaphoric openings
+("that skill", "the requested skill") genuinely do not name anything, which is
+exactly what the rule asks for. Whether the criterion should loosen is a
+decision waiting on more runs, tracked in
+[`CHANGELOG.md`](../../CHANGELOG.md), section "Open gaps".

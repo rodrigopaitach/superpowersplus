@@ -5,7 +5,16 @@
 # Tests whether Claude invokes a skill when the user explicitly requests it by name
 # (without using the plugin namespace prefix)
 #
-# Uses isolated HOME to avoid user context interference
+# HOME is NOT isolated, and it does not need to be. This comment claimed isolation
+# for as long as it existed while no runner ever set HOME, so every run inherited
+# the operator's global CLAUDE.md, output style and hooks — measured 2026-08-08 in
+# the logs as answers in a language no prompt used, and as runs that opened by
+# asking the operator about an unrelated file of their own.
+#
+# `--setting-sources project` below drops the user layer while leaving credentials
+# alone, which is what actually mattered: authentication does not come from the
+# settings sources. Copying credentials into a scratch HOME was the obvious move
+# and the wrong one.
 
 set -e
 
@@ -76,6 +85,7 @@ timeout 300 claude -p "$PROMPT" \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
     --max-turns "$MAX_TURNS" \
+    --setting-sources project \
     ${TEST_MODEL:+--model "$TEST_MODEL"} \
     --output-format stream-json --verbose \
     > "$LOG_FILE" 2>&1 || true
