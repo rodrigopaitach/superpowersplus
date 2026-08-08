@@ -9,6 +9,20 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The two release steps that ran on deduction now exist in writing.**
+  [`CLAUDE.md`](CLAUDE.md), section "Versioning", carries the heading rename —
+  `[Unreleased]` becomes `[X.Y.Z] - YYYY-MM-DD`, an edit `bump-version.sh` does
+  not make and no script will fail over, and the one whose omission leaves
+  `release-notes.sh` looking for a section that is no longer named. Section
+  "Running `gh`" carries the post-publication read: the CI run for the pushed
+  SHA, `/releases/latest` returning the new tag, and the README badge agreeing.
+  **Both were executed correctly at every release and described at none** —
+  which is exactly the state that produced `--follow-tags` one version ago.
+
 ## [1.16.1] - 2026-08-08
 
 ### Fixed

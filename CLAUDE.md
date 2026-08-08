@@ -72,6 +72,8 @@ Bump with `scripts/bump-version.sh <version>`; the files carrying the field are 
 
 **`[Unreleased]` does not survive more than one cycle of work.** When it tells a complete story — a measured correction closed, a set of leftovers cleared — cut the version. A fat `[Unreleased]` means `main` has drifted from the last installable release with no name describing the difference, and the only way to know what is on `main` becomes reading the diff.
 
+**Cutting the version renames the heading by hand: `[Unreleased]` becomes `[X.Y.Z] - YYYY-MM-DD`.** `scripts/bump-version.sh` writes the manifests and never touches [`CHANGELOG.md`](CHANGELOG.md), so this edit belongs to no script and is the one part of the cut with nothing to fail loudly if it is forgotten — a release whose body is generated from a section still called `[Unreleased]` finds nothing.
+
 **The tag is created by name and pushed by name, never by `--follow-tags`.** `git tag -a vX.Y.Z`, `git push origin main`, then `git push origin vX.Y.Z` — three commands, each naming what it sends. `--follow-tags` sends every annotated tag reachable from the commits going out, and this repository has an upstream remote whose tags are reachable through the common history: one release push put their version tags into this project's tag list — in a repository whose independence from them is a declared fact — and they had to be deleted by hand. **`--verify-tag` does not catch this: it verifies the tag you name, not the ones you did not name.**
 
 **A release body is generated, never hand-written**, and it is generated **into a file by the script itself** — `scripts/release-notes.sh <version> <file>`, then `gh release create … --notes-file <file>`. Never `release-notes.sh <version> > <file>`: the redirect truncates the target before the script runs, so a script that fails still leaves a zero-byte file and `gh` publishes it without complaining. That shipped an empty release body once; the two-argument form writes only after the body exists, and refuses an empty one. Publish with both guards from [Running `gh`](#running-gh).
@@ -91,6 +93,8 @@ sha="$(git rev-parse HEAD)"
 gh run list --repo rodrigopaitach/superpowersplus --commit "$sha" \
   --json status,conclusion,headSha
 ```
+
+**Publishing is not finished at `gh release create`.** Three answers are read after it, and each is silent when wrong: that run reaching `completed success` for the SHA you pushed, `gh api repos/rodrigopaitach/superpowersplus/releases/latest --jq .tag_name` returning the tag you just cut, and the README badge reading the same. A release whose `latest` still names the previous version installs nobody's new version while looking published from here.
 
 ## Where the rest lives
 
