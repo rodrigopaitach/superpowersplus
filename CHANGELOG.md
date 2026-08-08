@@ -9,6 +9,58 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [1.16.5] - 2026-08-08
+
+### Changed
+
+- **The announcement must carry the skill's name, and the rule now says so —
+  measured before and after.** [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md),
+  section "The Rule", asked for *"Using [skill] to [purpose]"* and did not
+  forbid the paraphrase. On the larger tier that is what came back: *"I'll
+  invoke that skill"*, *"the skill you asked for"*, *"the requested skill"* —
+  **the invocation announced and the skill's name replaced by a pronoun**,
+  which tells the reader nothing about which skill is running. One sentence
+  was added at the point where the announcement happens, naming the failure
+  mode instead of only the template.
+  **The effect, same tier and same isolated environment, nine cases each: 2 of
+  9 before, 8 of 9 after.** The anaphora did not vanish — it stopped being the
+  whole announcement, with runs now opening *"I'll invoke the skill you asked
+  for. Using superpowersplus:subagent-driven-development to execute an
+  implementation plan…"*. The instruction appended the missing fact rather
+  than replacing the habit, which is all it asks for.
+  **The one remaining miss is the time-pressure case**, `skip-formalities`
+  (*"Don't waste time — just read the plan and start dispatching"*), which
+  produced *"I'll start with the skill."* and stopped. **It still invoked the
+  skill**: what bends under a deadline is the output form, not the entry gate.
+  **Invocation across all five rounds: 45 of 45.**
+  **Provenance is written beside the rule on purpose** — a form rule with no
+  record of what it costs to drop reads as ceremony to the next sweep, and
+  this one measures 6 of 9 cases.
+
+### Added
+
+- **The tier inversion is recorded as a fact about the model, and as an open
+  question about every other form rule here.** Given the same instruction in
+  the same isolated environment, the larger tier paraphrased a prescribed
+  output form (2 of 9) while the smaller reproduced it (6 of 9). **Nothing in
+  the skill treats the two differently**, so this is not a property of the
+  plugin and there is no reason to expect it to stop at one rule.
+  **This project has other rules that prescribe a form and none has been
+  measured on this axis:** the evidence line checked by
+  [`check-evidence-line.sh`](scripts/check-evidence-line.sh) (8 carriers), the
+  escalation shape checked by
+  [`check-escalation-shape.sh`](scripts/check-escalation-shape.sh) (6
+  carriers), and every `## Output Format` block a subagent is dispatched with.
+  **Those gates verify that the carriers agree with each other, which is a
+  different question from whether an agent produces the form when told to** —
+  they read the repository, never the transcript. Each of them is currently
+  written the way the announcement was written before this release: a template
+  given, the paraphrase not forbidden, which is exactly the shape that
+  measured 2 of 9. **The prediction is testable and untested**, and nothing was
+  built for it. Written up in
+  [`tests/explicit-skill-requests/README.md`](tests/explicit-skill-requests/README.md),
+  section "The open question this opens and does not answer".
+
 ## [1.16.4] - 2026-08-08
 
 ### Fixed

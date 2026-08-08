@@ -23,6 +23,8 @@ This is not negotiable. You cannot rationalize your way out of this.
 
 Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
 
+**Write the skill's name. A pronoun for it is not an announcement** — "using that skill", "the skill you asked for", "the requested skill", "the one you mentioned" name nothing, and your human partner reads this line to know *which* skill is running. This is not ceremony: measured 2026-08-08 in an isolated environment, seven of nine runs announced the invocation without ever naming the skill, and which tier you are on changes whether the prescribed form survives at all.
+
 ## Skill Priority
 
 When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.

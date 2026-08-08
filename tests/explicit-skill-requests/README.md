@@ -51,19 +51,20 @@ shape of the request, and any skill would carry it.
 
 ## Cost, so the next cut is argued against a number
 
-Measured 2026-08-08, Opus 5 (1M context), whole suite:
+Measured 2026-08-08, Opus 5 (1M context), whole suite, **isolated** — the
+figure that applies to a run you start today:
 
 | | |
 |---|---|
-| Wall-clock | **156 s** (2 min 36 s) for nine cases |
-| Per case | 12.5 – 28.4 s |
+| Wall-clock | **138 – 232 s** across three isolated rounds of nine |
 | Dispatches | **9** — one `claude -p --max-turns 3` each, no subagents |
-| Cost | **US$ 5.04** total, US$ 0.50 – 0.60 per case |
+| Cost | **US$ 2.15 – 2.17** total, roughly US$ 0.24 per case |
 
-The seven-case suite that preceded it ran 123 s at US$ 3.83. **Dropping a case
-saves about 17 s and US$ 0.56 of a suite that runs in under three minutes and
-is not in CI.** A cut here has to be argued from coverage, never from economy —
-the economy is not there.
+**Dropping a case saves about US$ 0.24 and some seconds of a suite that runs in
+two to four minutes and is not in CI.** A cut here has to be argued from
+coverage, never from economy — the economy is not there. (Before
+`--setting-sources project`, the same nine cost US$ 5.04 on this tier: the
+operator's global context was more than half the bill.)
 
 ## What is deliberately not covered
 
@@ -100,9 +101,9 @@ comparison column, because the difference between them is the finding.
 | **Date** | 2026-08-08 |
 | **Models** | Claude Opus 5 (1M context) and Claude Sonnet 5, read back out of the logs rather than trusted from the flag |
 | **Harness** | Claude Code, `claude -p --max-turns 3`, one dispatch per case, `TEST_MODEL` pinning the tier |
-| **Rounds** | Four of nine cases — each tier under the operator's global context, then each tier with `--setting-sources project` |
+| **Rounds** | Five of nine cases — each tier under the operator's global context, each tier with `--setting-sources project`, then Opus isolated again after the rule was reinforced |
 | **Rules under test** | [`using-superpowers/SKILL.md`](../../skills/using-superpowers/SKILL.md), section "The Rule" — invoke the skill; and the same section's next sentence — *announce "Using [skill] to [purpose]"* |
-| **Verdict** | **Invocation: 36 of 36. Announcement, isolated: 6/9 on Sonnet, 2/9 on Opus** — the smaller tier follows the form, the larger paraphrases it |
+| **Verdict** | **Invocation: 45 of 45. Announcement on Opus, isolated: 2/9 before the rule named the failure mode, 8/9 after** — the one remaining miss is the time-pressure case |
 
 ## Why the announcement was measured at all
 
@@ -114,34 +115,65 @@ announcement text flips the new assertion to FAIL while the invocation
 assertion stays PASS. **The failure migrates rather than merely persisting**,
 which is what separates a gate from a second opinion.
 
-## The four rounds
+## The five rounds
 
 Invocation is omitted from the table because it has no variation to show: **no
-case, on either tier, in any round, failed to invoke — 36 of 36.** Every FAIL
+case, on either tier, in any round, failed to invoke — 45 of 45.** Every FAIL
 below is a run that loaded the skill and did not name it.
 
 The contaminated columns are kept because the difference between the columns is
 the finding, not because they measure the skill.
 
-| # | Case | Skill named | Opus dirty | **Opus clean** | Sonnet dirty | **Sonnet clean** |
-|---|---|---|---|---|---|---|
-| 1 | `subagent-driven-development-please` | subagent-driven-development | FAIL | **FAIL** | PASS | **FAIL** |
-| 2 | `use-systematic-debugging` | systematic-debugging | PASS | **PASS** | FAIL | **PASS** |
-| 3 | `please-use-brainstorming` | brainstorming | PASS | **PASS** | FAIL | **PASS** |
-| 4 | `mid-conversation-execute-plan` | subagent-driven-development | FAIL | **FAIL** | FAIL | **FAIL** |
-| 5 | `after-planning-flow` | subagent-driven-development | FAIL | **FAIL** | FAIL | **PASS** |
-| 6 | `i-know-what-sdd-means` | subagent-driven-development | FAIL | **FAIL** | FAIL | **PASS** |
-| 7 | `skip-formalities` | subagent-driven-development | FAIL | **FAIL** | FAIL | **FAIL** |
-| 8 | `skill-is-overkill` | brainstorming | PASS | **FAIL** | PASS | **PASS** |
-| 9 | `i-remember-this-skill` | subagent-driven-development | FAIL | **FAIL** | PASS | **PASS** |
-| | **Announced** | | 3/9 | **2/9** | 3/9 | **6/9** |
-| | **Wall-clock** | | 156 s | **138 s** | 109 s | **114 s** |
-| | **Cost** | | US$ 5.04 | **US$ 2.15** | US$ 3.21 | **US$ 1.53** |
+The last column is the one that matters now: same tier, same environment, after
+the rule was rewritten to forbid the pronoun.
+
+| # | Case | Skill named | Opus dirty | Opus clean | Sonnet dirty | Sonnet clean | **Opus clean, rule names the skill** |
+|---|---|---|---|---|---|---|---|
+| 1 | `subagent-driven-development-please` | subagent-driven-development | FAIL | FAIL | PASS | FAIL | **PASS** |
+| 2 | `use-systematic-debugging` | systematic-debugging | PASS | PASS | FAIL | PASS | **PASS** |
+| 3 | `please-use-brainstorming` | brainstorming | PASS | PASS | FAIL | PASS | **PASS** |
+| 4 | `mid-conversation-execute-plan` | subagent-driven-development | FAIL | FAIL | FAIL | FAIL | **PASS** |
+| 5 | `after-planning-flow` | subagent-driven-development | FAIL | FAIL | FAIL | PASS | **PASS** |
+| 6 | `i-know-what-sdd-means` | subagent-driven-development | FAIL | FAIL | FAIL | PASS | **PASS** |
+| 7 | `skip-formalities` | subagent-driven-development | FAIL | FAIL | FAIL | FAIL | **FAIL** |
+| 8 | `skill-is-overkill` | brainstorming | PASS | FAIL | PASS | PASS | **PASS** |
+| 9 | `i-remember-this-skill` | subagent-driven-development | FAIL | FAIL | PASS | PASS | **PASS** |
+| | **Announced** | | 3/9 | 2/9 | 3/9 | 6/9 | **8/9** |
+| | **Wall-clock** | | 156 s | 138 s | 109 s | 114 s | **232 s** |
+| | **Cost** | | US$ 5.04 | US$ 2.15 | US$ 3.21 | US$ 1.53 | **US$ 2.17** |
+
+## The rule held, and one case did not
+
+**2/9 → 8/9 on the same tier, in the same environment, from one sentence.**
+The only change between those two columns is a line in
+[`using-superpowers/SKILL.md`](../../skills/using-superpowers/SKILL.md), section
+"The Rule", forbidding the pronoun and requiring the skill's name.
+
+**The anaphora did not disappear — it stopped being the whole announcement.**
+Several runs now open with the old phrasing and then name the skill anyway:
+*"I'll invoke the skill you asked for. Using superpowersplus:subagent-driven-development
+to execute an implementation plan…"*, *"I'll start with the requested skill.
+I'm using superpowersplus:subagent-driven-development to execute the auth-system
+plan"*. The instruction did not replace the habit; it appended the missing
+fact, which is all the rule asks for.
+
+**The one failure is the time-pressure case, and that is the interesting
+part.** `skip-formalities` — *"Don't waste time — just read the plan and start
+dispatching subagents immediately"* — produced *"I'll start with the skill."*
+and nothing else. Every other pressure in the suite yielded to the explicit
+rule; the pressure to go fast did not. **It still invoked the skill**, so what
+bends under a deadline is the output form, not the entry gate.
+
+**This answers a question that was open before the rule was written.** An
+explicit instruction about output *form* does hold on this tier — 8 of 9. The
+earlier 2/9 measured a rule that asked for a template without forbidding the
+paraphrase, not a tier that cannot follow forms.
 
 ## What the isolated rounds say
 
-**The entry rule does not depend on anything.** Thirty-six runs, two tiers, two
-environments, and the skill is invoked in all thirty-six — including the four
+**The entry rule does not depend on anything.** Forty-five runs, two tiers, two
+environments, two wordings of the rule, and the skill is invoked in all
+forty-five — including the four
 cases built to argue against invoking it. That is the rule this suite exists
 for, and it holds everywhere it was looked at.
 
@@ -180,6 +212,41 @@ answer.
 turns, so one silent case was re-run with a ten-turn budget: it reached
 `success` in seven turns, produced a long final message, and still never named
 the skill it had loaded — past tense, neither skill nor purpose.
+
+## The open question this opens and does not answer
+
+**The tier inversion is a fact about the model, not about this plugin.** Given
+the same instruction, in the same isolated environment, the larger tier
+paraphrases a prescribed output form and the smaller tier reproduces it. That
+is not a property of `using-superpowers` — nothing in the skill treats the two
+differently — and there is no reason to expect it to stop at this one rule.
+
+**This project has other rules that prescribe a form, and none of them has been
+measured on this axis:**
+
+- the evidence line, checked by [`check-evidence-line.sh`](../../scripts/check-evidence-line.sh)
+  — "Command — exit — counts", carried by 8 files;
+- the escalation shape, checked by [`check-escalation-shape.sh`](../../scripts/check-escalation-shape.sh)
+  — four numbered items, carried by 6 files;
+- every `## Output Format` block a subagent is dispatched with.
+
+Those two gates verify that the **carriers agree with each other**, which is a
+different question from whether an agent **produces** the form when told to.
+A skill can hold a perfectly consistent template that the tier reading it
+rewrites in its own words, and no gate here would see it: the gates read the
+repository, not the transcript.
+
+**What the reinforcement round adds to the question rather than closing it.**
+The 2/9 → 8/9 result says an explicit instruction about form *can* hold on the
+larger tier. It does not say the other forms are holding: each of them is
+currently written the way the announcement was written before — a template
+given, the paraphrase not forbidden — which is exactly the shape that measured
+2/9. **The prediction is testable and untested.**
+
+**Recorded as a question, deliberately unanswered.** Measuring it means a
+suite per form, and the cheapest honest version of that is not obvious. What
+this file establishes is that the axis exists, that one rule on it came out
+2/9, and that naming the failure mode in the rule moved it to 8/9.
 
 ## Known weakness of the assertion
 
