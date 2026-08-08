@@ -85,6 +85,21 @@ References below name them so a claim here can be traced there.
   credentials in a scratch `HOME`, which the operator's settings block, so it
   is declared rather than fixed.
 
+### Changed
+
+- **The post-publication check is two independent reads, not three.**
+  [`CLAUDE.md`](CLAUDE.md), section "Running `gh`", listed the release API,
+  the README badge and the CI run as three confirmations. The badge is
+  `shields.io/github/v/release`, which derives from the same release API as
+  `/releases/latest` — **one fact read twice, counted as two.** That is
+  coverage existing only in the tally, which is the defect this project's
+  gates are built to separate. The two reads that answer different questions
+  are kept and named: the release API says the release exists and is the
+  newest, and `raw.githubusercontent.com` at the tag says the tag's own tree
+  carries the version — a bump left uncommitted, or a tag placed one commit
+  early, publishes a release whose contents still announce the previous
+  version, and the release API cannot see that.
+
 ## [1.16.2] - 2026-08-08
 
 ### Added

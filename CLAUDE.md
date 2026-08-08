@@ -94,7 +94,14 @@ gh run list --repo rodrigopaitach/superpowersplus --commit "$sha" \
   --json status,conclusion,headSha
 ```
 
-**Publishing is not finished at `gh release create`.** Three answers are read after it, and each is silent when wrong: that run reaching `completed success` for the SHA you pushed, `gh api repos/rodrigopaitach/superpowersplus/releases/latest --jq .tag_name` returning the tag you just cut, and the README badge reading the same. A release whose `latest` still names the previous version installs nobody's new version while looking published from here.
+**Publishing is not finished at `gh release create`, and it is confirmed by two independent reads — not three.** The README badge is `shields.io/github/v/release`, which derives from the same release API as `/releases/latest`: checking both is one fact read twice, and counting it as two is the kind of coverage that exists only in the tally. The two that answer different questions:
+
+```bash
+gh api repos/rodrigopaitach/superpowersplus/releases/latest --jq .tag_name
+curl -sS https://raw.githubusercontent.com/rodrigopaitach/superpowersplus/vX.Y.Z/.claude-plugin/plugin.json
+```
+
+The first says the release exists and is the newest — the badge follows it and needs no separate look. The second says the tag's own tree carries the version, which is what anyone installing gets: a bump left uncommitted, or a tag placed on the commit before it, publishes a release whose contents still announce the previous version, and the release API cannot see that. Both are silent when wrong, and so is the CI run for the pushed SHA above.
 
 ## Where the rest lives
 
