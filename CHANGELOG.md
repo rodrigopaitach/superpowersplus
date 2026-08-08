@@ -39,6 +39,28 @@ References below name them so a claim here can be traced there.
   the post-publication check that `/releases/latest` and the README badge read
   the new tag.
 
+- **The `explicit-skill-requests` suite had been failing 4 of 4 on a flag, not
+  on behaviour.** `claude -p --output-format stream-json` requires `--verbose`,
+  and none of the four runners passed it, so the CLI refused before running:
+  a **74-byte** log holding only `Error: When using --print,
+  --output-format=stream-json requires --verbose`, no `Skill` invocation to
+  match, four failures in about six seconds.
+  **Proven as the difference between two states, on 2026-08-08.** Without the
+  flag: 0 of 4, logs of 74 bytes. With it: **4 of 4**, logs of 99–109 KB, each
+  case matching its skill (`superpowersplus:subagent-driven-development`,
+  `systematic-debugging`, `brainstorming`) and each also reporting "No
+  premature tool invocations detected" — the suite's second assertion, which
+  had never been reached either. **No case failed on behaviour.**
+  **Provenance, because it decides who owns the defect:** all five runners come
+  from the upstream — created by Jesse Vincent on 2025-12-26, last touched by
+  Drew Ritter on 2026-05-13 — and this project has never edited them.
+  `git log -S "--verbose"` over that directory returns nothing: the flag was
+  never there. **The date the CLI began requiring it is not determinable in
+  this checkout**; what is known is the version that refuses today, 2.1.226.
+  **A permanent red reads like a permanent green: nobody reads either.** This
+  suite stays out of CI for the reason the others do — it dispatches a live
+  agent — so nothing but a hand run was ever going to notice.
+
 ## [1.16.0] - 2026-08-08
 
 ### Changed
