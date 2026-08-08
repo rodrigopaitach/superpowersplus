@@ -68,7 +68,7 @@
 
 Semver from `1.0.0` on. **PATCH** for a fix that does not change how a skill behaves; **MINOR** for a new skill or a compatible new rule; **MAJOR** for anything that breaks existing artifacts or invocations — the namespace rename would have been MAJOR.
 
-Bump with `scripts/bump-version.sh <version>`; the files carrying the field are declared in `.version-bump.json` and are never edited by hand. How to read the audit's one class of false positive is in [`docs/releasing.md`](docs/releasing.md).
+Bump with `scripts/bump-version.sh <version>`; the files carrying the field are declared in `.version-bump.json` and are never edited by hand. How to read the audit's false positives — two classes, and why the count is not the durable part — is in [`docs/releasing.md`](docs/releasing.md).
 
 **`[Unreleased]` does not survive more than one cycle of work.** When it tells a complete story — a measured correction closed, a set of leftovers cleared — cut the version. A fat `[Unreleased]` means `main` has drifted from the last installable release with no name describing the difference, and the only way to know what is on `main` becomes reading the diff.
 
@@ -107,5 +107,5 @@ The first says the release exists and is the newest — the badge follows it and
 
 - [`docs/review-scopes.md`](docs/review-scopes.md) — what each of the four review faces runs, and the two shapes copied across carriers on purpose. **Read before editing any reviewer prompt.**
 - [`docs/docs-and-links.md`](docs/docs-and-links.md) — the three README-shaped files and their jobs, what `check-links.sh` reads in each of its three passes, and the third-party link diet. **Read before adding a document or a link.**
-- [`docs/releasing.md`](docs/releasing.md) — the bump audit's one false positive, and the `SKILL.md` ceiling exemption that runs on a deadline. **Read when cutting a version.**
+- [`docs/releasing.md`](docs/releasing.md) — the bump audit's false positives, and the `SKILL.md` ceiling exemption that runs on a deadline. **Read when cutting a version.**
 - [`tests/skill-behavior/README.md`](tests/skill-behavior/README.md) — the adversarial records: a fixture, the input carrying it, a recorded result per rule. **Read before adding one.** Plugin-infrastructure tests live at [`tests/`](tests/) and run via each directory's own `run-*.sh`. CI runs every static suite; the three that dispatch a live agent stay out because they cost tokens and are non-deterministic. **Add a suite, add its CI step.**
