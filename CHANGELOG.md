@@ -9,6 +9,37 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **The mechanical check now runs before the first dispatch, not only before a
+  re-dispatch.** [`brainstorming/SKILL.md`](skills/brainstorming/SKILL.md),
+  section "Spec Review", and
+  [`writing-plans/SKILL.md`](skills/writing-plans/SKILL.md), section "Plan
+  Review". `check-cross-references` was introduced in `1.15.0` as step 1 of
+  "before re-dispatching" — which means the cheapest defect a document can
+  carry (a citation that does not resolve, a matrix label with no criterion)
+  waited for a reviewer round to be named.
+  **The two costs, both measured on 2026-08-08:** the script returns in
+  **0.038 s** on a real plan (18 `file:line` citations, 21 matrix rows); the
+  reviewer it precedes has a **median of 7.3 minutes** across the 29 document
+  reviews this project has on record. It was serial by position in the recipe,
+  never by dependency — the script needs the saved document and nothing the
+  reviewer produces.
+  **The ceiling is stated at the point of use, because a green run is the kind
+  of result that gets over-read:** it proves the references resolve, not that
+  the document is right, and it does not stand in for the review. The dispatch
+  is not conditional on it. The step after the fix stays exactly where it was —
+  this adds an occurrence, it does not move one.
+  **What this does not claim:** the round-1 report I read while measuring
+  (`orcamento-publico-sem-valor`, spec) carried three findings and **none** was
+  of the class the script catches. The saving proven here is wall-clock at a
+  cost of 0.038 s, not a reviewer round.
+  [`references/process-flow.md`](skills/brainstorming/references/process-flow.md)
+  gains the node; declared and used node sets were compared after the edit and
+  agree at 24.
+
 ## [1.15.1] - 2026-08-06
 
 ### Fixed

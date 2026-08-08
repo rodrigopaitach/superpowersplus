@@ -239,6 +239,19 @@ an assumption. Say so in `## Assumptions to Confirm`, with what you tried.
 | `## Coverage Map` | The compact table from [coverage-map.md](references/coverage-map.md) — one row per category: `Category \| State \| Where it landed`. Every category appears, with one of `Clear`/`Resolved`/`Deferred`/`Outstanding` and the reason for that state; a state with no reason is invalid, because "not checked" and "not applicable" render identically. Where it landed is the `AC`/`IR` id, the `## Assumptions to Confirm` item, or what already settled it. Below the table, the decision record: each question asked, the answer, the recommendation you gave, and its declared source — this is what makes an approval auditable after the conversation is gone. Asked no questions? The table still appears, and every row says why none were needed. |
 
 **Spec Review:**
+**Run the mechanical check before you dispatch, not only after a fix** —
+[check-cross-references](../writing-plans/scripts/check-cross-references),
+invoked as `check-cross-references <spec path> <repo root>`. It returns in a
+fraction of a second; the reviewer it precedes returns in minutes. A citation
+that does not resolve is the cheapest defect this document can carry, and
+spending a reviewer round to hear about it is the one part of this loop that
+buys nothing.
+
+**A green run here proves the references resolve. It does not prove the
+document is right, and it does not stand in for the review.** The script
+compares sets — it cannot read what a cited line says, and the defects this
+face exists to catch are the ones only a reader finds. Dispatch either way.
+
 After writing the spec document, dispatch a spec document reviewer subagent using the template at [spec-document-reviewer-prompt.md](spec-document-reviewer-prompt.md). Do NOT review it inline yourself.
 
 Fix every blocking issue the reviewer returns; recommendations are advisory.

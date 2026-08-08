@@ -355,6 +355,18 @@ surface for it.
 No such line, or no header at all: the reviewer runs. A missing declaration is
 the full process, never an inferred shortcut.
 
+**Run the mechanical check before you dispatch, not only after a fix** — this
+skill's [check-cross-references](scripts/check-cross-references), invoked as
+`check-cross-references <plan path> <repo root>`. It returns in a fraction of a
+second and the reviewer returns in minutes: a matrix label with no criterion is
+the cheapest defect this plan can carry, and spending a round to hear about it
+buys nothing.
+
+**A green run proves the references resolve — not that the plan is right, and
+never in place of the review.** The script compares sets; it cannot read what a
+cited line says. Dispatch either way. On the short path above there is no
+dispatch, and this same run is the one the short path sends you to.
+
 Save the complete plan, then dispatch a plan document reviewer subagent
 using the template at
 [plan-document-reviewer-prompt.md](plan-document-reviewer-prompt.md). The

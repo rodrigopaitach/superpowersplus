@@ -32,6 +32,7 @@ digraph brainstorming {
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
     "Write design doc,\ncommit it" [shape=box];
+    "Mechanical check\n(check-cross-references)" [shape=box];
     "Dispatch spec reviewer\nsubagent" [shape=box];
     "Reviewer approves?" [shape=diamond];
     "Round = 3, or a fixed\nblocker came back?" [shape=diamond];
@@ -63,7 +64,8 @@ digraph brainstorming {
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
     "User approves design?" -> "Write design doc,\ncommit it" [label="yes"];
-    "Write design doc,\ncommit it" -> "Dispatch spec reviewer\nsubagent";
+    "Write design doc,\ncommit it" -> "Mechanical check\n(check-cross-references)";
+    "Mechanical check\n(check-cross-references)" -> "Dispatch spec reviewer\nsubagent" [label="green or not — it never\nreplaces the review"];
     "Dispatch spec reviewer\nsubagent" -> "Reviewer approves?";
     "Reviewer approves?" -> "Round = 3, or a fixed\nblocker came back?" [label="blocking issues"];
     "Round = 3, or a fixed\nblocker came back?" -> "Write design doc,\ncommit it" [label="no, fix and\nre-dispatch"];
