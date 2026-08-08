@@ -40,6 +40,31 @@ References below name them so a claim here can be traced there.
   gains the node; declared and used node sets were compared after the edit and
   agree at 24.
 
+- **The pending-decisions package is written while the reviewer runs, and sent
+  after its report.** [`brainstorming/SKILL.md`](skills/brainstorming/SKILL.md),
+  sections "Spec Review" and "User Review Gate". The checklist ran them in
+  sequence — dispatch the reviewer (item 9), then present the pending decisions
+  (item 10) — and the package is built from the document as it stands:
+  `## Assumptions to Confirm`, every `Deferred` or `Outstanding` row, the
+  dependency findings. None of that needs the report.
+  **What the wait costs, measured on 2026-08-08 across the 29 recorded document
+  reviews: 239 minutes of blocking wait in total, median 7.3 minutes per
+  dispatch, and one typical document — a spec and a plan, seven rounds between
+  them — spent 56 minutes waiting.** That is the whole of what this recovers:
+  the writing moves into a window that was already being paid for.
+  **Writing it there is free; sending it there is not, and the rule splits the
+  two.** A blocking finding can change a decision already in a partner's hands,
+  and an answer to a question that no longer exists is worse than no answer. So
+  the package goes out after the report, with every finding that touches an item
+  folded **into** that item — the reconciliation is stated on the receiving side
+  too, because a package that arrives unchanged after a round with blocking
+  findings was written before those findings existed.
+  **A number quoted in conversation is corrected here rather than repeated:
+  "review is 36% of the time until the plan is ready" does not survive its
+  denominator** — the session wall-clock it divides by includes the hours the
+  human partner was not at the machine. The numerator is what holds, and it is
+  the one written above.
+
 ## [1.15.1] - 2026-08-06
 
 ### Fixed

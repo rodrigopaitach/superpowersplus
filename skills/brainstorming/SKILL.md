@@ -254,6 +254,16 @@ face exists to catch are the ones only a reader finds. Dispatch either way.
 
 After writing the spec document, dispatch a spec document reviewer subagent using the template at [spec-document-reviewer-prompt.md](spec-document-reviewer-prompt.md). Do NOT review it inline yourself.
 
+**While the reviewer runs, write the pending-decisions package — and do not
+send it.** The dispatch blocks for minutes, and the package is built from the
+document as it stands: `## Assumptions to Confirm`, every `Deferred` or
+`Outstanding` row, the dependency findings. Writing it there costs nothing you
+would not spend after. **Sending it there does:** a blocking finding can change
+a decision that is already in your partner's hands, and an answer to a question
+that no longer exists is worse than no answer. It goes out after the report,
+with every finding that touches an item folded into that item — never appended
+underneath it as a correction.
+
 Fix every blocking issue the reviewer returns; recommendations are advisory.
 **Then, before re-dispatching, in this order:**
 
@@ -303,6 +313,12 @@ After the spec review loop passes, **present every decision the spec leaves
 open, then ask for approval** — in that order, in one message. Asking someone
 to read a file is not presenting a decision: the decisions are the part of the
 spec they are best placed to settle and least likely to find on their own.
+
+**What arrives here was written during the review wait** ("Spec Review" above)
+and then reconciled with the report. Reconciled means every finding that
+touches a pending item changed that item: a package that reaches your partner
+unchanged after a round with blocking findings was written before those
+findings existed, and says so to anyone who reads both.
 
 Three places hold them, and all three are sources:
 

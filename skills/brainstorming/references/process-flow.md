@@ -66,7 +66,7 @@ digraph brainstorming {
     "User approves design?" -> "Write design doc,\ncommit it" [label="yes"];
     "Write design doc,\ncommit it" -> "Mechanical check\n(check-cross-references)";
     "Mechanical check\n(check-cross-references)" -> "Dispatch spec reviewer\nsubagent" [label="green or not — it never\nreplaces the review"];
-    "Dispatch spec reviewer\nsubagent" -> "Reviewer approves?";
+    "Dispatch spec reviewer\nsubagent" -> "Reviewer approves?" [label="write the pending-decisions\npackage while it runs —\nsend it after the report"];
     "Reviewer approves?" -> "Round = 3, or a fixed\nblocker came back?" [label="blocking issues"];
     "Round = 3, or a fixed\nblocker came back?" -> "Write design doc,\ncommit it" [label="no, fix and\nre-dispatch"];
     "Round = 3, or a fixed\nblocker came back?" -> "Escalate the open blockers\n(escalation shape)" [label="yes"];
