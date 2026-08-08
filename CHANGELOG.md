@@ -3450,6 +3450,92 @@ an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
+- **A security lens for the reviewers: measured, justified, and belonging to
+  the projects' own `CLAUDE.md` rather than to this repository.** Two classes
+  were measured on 2026-08-08 across the owner's Next/React + Postgres
+  projects, each with the commit that fixed it:
+  **(1) `EXECUTE` resurrected by `DROP`+`CREATE`** — `lux-marcas` `2c3b478`
+  (2026-07-02: a migration recreated a function via `DROP`+`CREATE` and
+  `anon`/`authenticated` got `EXECUTE` back, confirmed with
+  `has_function_privilege`) and `landing-page-lux` `61ecdff` (2026-07-23: a
+  `SECURITY DEFINER` trigger function callable over `/rest/v1/rpc`). The
+  mechanism is documented — PostgreSQL grants `EXECUTE` to `PUBLIC` by default
+  on functions and procedures (`postgresql.org/docs/current/ddl-priv.html`,
+  Table 5.2); what that page does **not** cover is `DROP`+`CREATE` versus
+  `CREATE OR REPLACE`, so that half is the owner's own measurement, not a
+  citation. **(2) The advisor finds what the review does not** — `61ecdff` was
+  raised by Supabase's security advisor, not by a reviewer; commits citing an
+  advisor number 17 in `landing-page-lux`, 6 in `lux-marcas` and **0 in
+  `gestao_condominios`**, the one holding billing and owner data.
+  **Why it is not built here:** [`CLAUDE.md`](CLAUDE.md), section "What does
+  not belong here", refuses a change needing an external tool or service, and
+  refuses anything that helps only one stack. A lens that runs a vendor's
+  advisor and checks grants after `DROP FUNCTION` is both. **The finding is
+  that it belongs one level down** — in the `CLAUDE.md` of the projects, where
+  the stack exists and the advisor can be required.
+
+- **A dependency-vulnerability check: advisory, never a gate, and also one
+  level down.** The question was whether `npm audit` could gate a spec's
+  dependency claims. **It cannot, and the reason is dated:** the command
+  "submits a description of the dependencies configured in your project to your
+  default registry and asks for a report of known vulnerabilities"
+  (`docs.npmjs.com/cli/v11/commands/npm-audit`), so the verdict is the state of
+  a remote database. Measured on 2026-08-08: the `next` advisories it reports
+  were published **2026-07-22** and the `nanoid` ones **2026-07-29**, while
+  `lux-marcas`' lockfile has not moved since **2026-07-15** and
+  `gestao_condominios`' since **2026-07-13**. The same lockfile was green on
+  the 21st and red on the 22nd with no line changed.
+  **Today's counts, same date:** `lux-marcas` 12 packages (9 high, 3 moderate),
+  5 high with dev dependencies omitted; `landing-page-lux` 7 high, 6 in
+  production; `gestao_condominios` 39 advisories across 12 modules, 21 across 8
+  in production. **Zero critical in all three** — a blocking gate would be born
+  red in every repository, which this project has already recorded as the way a
+  gate stops being read.
+  **And it would have missed the one dependency defect that actually cost
+  time:** `landing-page-lux` `62d9333` (2026-07-28), a prefetch denial of
+  service in `next@16.2.10`, found by reading the dependency's source and
+  measuring 45 s against 1 s in production — not by any advisory.
+  **The candidate that survives, for the projects' `CLAUDE.md`:** one line in
+  the review report carrying the command, the date and the counts, with no
+  verdict, compared against the previous report's list. A package that is new
+  in the list is signal; the five that have been there since July are not.
+
+- **No gate looks at code that is standing still, and that is the owner's
+  decision rather than an open task.** Correcting the premise that opened this:
+  `0abd065` (in `1.15.0`, not `1.15.1`) did not remove the review that found
+  the `lint-shell` defect. That dispatch was **asked for** — the request is in
+  the transcript at 19:40 on 2026-08-05, the dispatch went out at 19:44, one
+  subagent, one lens — which is exactly the form
+  [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md), section
+  "Review Lives in the Gates", prescribes. What the rule cuts is what followed
+  in the same window: **23 dispatches and 408,239 output tokens between 19:44
+  and 20:17.**
+  **The real gap is older and stays open by choice.** `scripts/lint-shell.sh`
+  has two commits in its whole history — created 2026-06-01 upstream, fixed
+  2026-08-05 — so it was never inside a diff this project reviewed. All five
+  gates are scoped to a diff or a document. **A diff gate answers "is what
+  changed correct?"; a sweep answers "is what has been sitting here, and never
+  looked at, correct?" — no lens inside the first produces the second.** The
+  owner's ruling, recorded so no later sweep reopens it: a repository sweep is
+  something he asks for when he wants one, and `1.15.0` governed its *form*
+  without touching who may ask for it.
+
+- **`1.15.0`'s effect is unmeasured, and the instrument to measure it is
+  declared here so the next work uses it.** Not tokens: the ratio of round-2 to
+  round-1 tokens per document has a baseline median of 0.91 across 6 documents
+  with a range of 0.44–1.81, and the two documents recorded under the new
+  template landed at 0.77 and 0.74 — inside the noise. **The number the rule
+  actually changes is verification commands**, since what it forbids is
+  reopening citations in untouched sections. Baseline, same document, round 1 →
+  round 2: 22 → 22, 18 → 24, 19 → 39 — **at or above 1.0 in 3 of 3 pairs.** The
+  first pair under the new template ran 26 → 5.
+  **The target, fixed before the measurement: a median ratio at or below 0.5
+  over 5 documents that run both rounds under the new template.**
+  **With one exception declared in advance: the plan face changes instrument
+  rather than shortening** — it builds the plan in a scratch copy and runs the
+  counterfactuals — so a flat ratio there is the design working, not the rule
+  failing. Its one recorded pair ran 16 → 15.
+
 - **The plan reviewer stays on the top tier. Decided, with the measurement
   that decided it, so no later sweep demotes it for economy.** The
   retrospective ran: three recorded plan reviews re-dispatched on a mid tier,
