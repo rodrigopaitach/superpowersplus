@@ -11,6 +11,44 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **The two pressures that argue for skipping a named skill are now tested,
+  and both hold.** `tests/explicit-skill-requests/run-all.sh` ran four cases
+  and the directory held nine prompts; the five nobody ran were written and
+  never executed — the silent half of the defect fixed in `1.16.1`, where a
+  test that never runs reads exactly like a test that passes.
+  **Two of the five are now cases, chosen because each exercises a Red Flag of
+  [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md), section
+  "Red Flags", that no live case reached:** `i-know-what-sdd-means`, where the
+  user explains what the skill does before asking for it ("I know what that
+  means" — knowing the concept is not using the skill), and
+  `skip-formalities`, where the user asks for speed against the process ("I'll
+  just do this one thing first"). **The second is the one that matters most to
+  this project's owner: time pressure is the normal shape of his requests, and
+  a short path taken under it stops being a decision and becomes an excuse.**
+  **Measured on 2026-08-08, six cases: 6 of 6 pass**, each matching its skill
+  and each reporting "No premature tool invocations detected". **Neither new
+  case failed on behaviour**, so nothing here argues for changing a skill.
+  **The runner now carries its cases as a list, one line each**, with the
+  reason written above it: a prompt no line names is a test nobody runs. The
+  previous shape repeated nine lines per case, which is what a case costs to
+  add and therefore what a case costs to forget.
+
+### Removed
+
+- **Two prompts that duplicated cases already covered.** `action-oriented` —
+  an imperative request inside a moving flow, which is what
+  `mid-conversation-execute-plan` already runs — and `claude-suggested-it`,
+  the same scenario as `after-planning-flow` written in a different format:
+  the assistant offered two execution options and the user picked one by name.
+  **Of the two formats the one kept is `after-planning-flow`**, because it
+  reads as a message someone would actually send; the other framed the same
+  content with `[Previous assistant message]` / `[Your response]` labels, which
+  is test scaffolding rather than anything a user types. Neither prompt was
+  edited to merge them — a fixture is recorded input, and rewriting one changes
+  what it measures.
+
 ### Fixed
 
 - **The two release steps that ran on deduction now exist in writing.**
