@@ -9,6 +9,36 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The release pushed the upstream's version tags into this repository, and
+  the step that did it was not written down anywhere.**
+  [`CLAUDE.md`](CLAUDE.md), section "Versioning", now names the three commands
+  — `git tag -a`, `git push origin main`, `git push origin vX.Y.Z`.
+  **Measured on 2026-08-08: `git push origin main --follow-tags` created 29
+  `v3.x`–`v6.x` tags from `obra/superpowers` on this project's remote**, which
+  went from 67 tags to 38 after they were deleted by name. They are reachable
+  from the common history, so every annotated tag of theirs travelled with the
+  release. None of this repository's own tags is affected — no `v1.x` exists
+  upstream, so the two sets separate without judgement, and all 29 were
+  verified present locally before the deletion.
+  **`--verify-tag` does not catch it: it verifies the tag you name, not the
+  ones you did not name.** That guard was already in place and the release was
+  otherwise correct.
+  **The finding is larger than the flag.** `grep` for `git push` across
+  `CLAUDE.md`, [`docs/releasing.md`](docs/releasing.md) and `scripts/` returned
+  **one** line, and it belongs to the Codex sync. **Between the release commit
+  and `gh release create` there was no procedure at all** — not the tag
+  creation, not either push. The step ran every version on whoever's habit was
+  at the keyboard, and habit chose the form that sends everything reachable.
+  **Two steps of the release are still undescribed after this fix**, listed so
+  the next gap is not found the same way: renaming `[Unreleased]` to the
+  version heading with its date (the principle is stated, the act is not), and
+  the post-publication check that `/releases/latest` and the README badge read
+  the new tag.
+
 ## [1.16.0] - 2026-08-08
 
 ### Changed
