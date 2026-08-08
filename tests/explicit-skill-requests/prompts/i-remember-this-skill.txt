@@ -1,0 +1,8 @@
+We ran subagent-driven-development together last week on the billing project and it
+went well — you already know how it works, so no need to go over it again.
+
+---
+
+Same thing here. Plan is at docs/superpowers/plans/auth-system.md.
+
+subagent-driven-development, please.

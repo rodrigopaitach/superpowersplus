@@ -68,12 +68,19 @@ echo "Running claude -p with explicit skill request..."
 echo "Prompt: $PROMPT"
 echo ""
 
+# TEST_MODEL pins the tier. Unset, the run takes whatever the operator's session
+# defaults to — which is fine for a working run and useless in a record, because
+# a result whose model is inferred cannot be compared against a later one.
+# The README records which tier produced which numbers; this is how it is set.
 timeout 300 claude -p "$PROMPT" \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
     --max-turns "$MAX_TURNS" \
+    ${TEST_MODEL:+--model "$TEST_MODEL"} \
     --output-format stream-json --verbose \
     > "$LOG_FILE" 2>&1 || true
+
+echo "Model: ${TEST_MODEL:-<operator default>}"
 
 echo ""
 echo "=== Results ==="
@@ -120,6 +127,28 @@ else
     echo "WARNING: No Skill invocation found at all"
 fi
 
+# Check the announcement the rule asks for
+# using-superpowers SKILL.md:24 — announce "Using [skill] to [purpose]".
+#
+# Matched by the skill NAME appearing in the agent's own text, never by the English
+# words: this harness does not isolate HOME, so the announcement arrives in whatever
+# language the operator's CLAUDE.md asks for. A run that loads a skill and never
+# names it is the failure this assertion exists to catch, in any language.
+echo ""
+echo "Checking for the announcement..."
+
+ANNOUNCE=$(jq -r 'select(.type=="assistant") | .message.content[]? | select(.type=="text") | .text' \
+    "$LOG_FILE" 2>/dev/null | grep -iF -- "$SKILL_NAME" || true)
+if [ -n "$ANNOUNCE" ]; then
+    echo "PASS: the run names '$SKILL_NAME' in its own text"
+    echo "$ANNOUNCE" | head -2
+    ANNOUNCED=true
+else
+    echo "FAIL: no assistant text names '$SKILL_NAME'"
+    echo "  using-superpowers SKILL.md:24 asks for \"Using [skill] to [purpose]\""
+    ANNOUNCED=false
+fi
+
 # Show first assistant message
 echo ""
 echo "First assistant response (truncated):"
@@ -129,8 +158,13 @@ echo ""
 echo "Full log: $LOG_FILE"
 echo "Timestamp: $TIMESTAMP"
 
-if [ "$TRIGGERED" = "true" ]; then
-    exit 0
-else
+# Two failures, two exit codes. Collapsing them into one loses which rule broke:
+# a skill that never loads and a skill that loads without announcing are different
+# defects, and the summary that reports them as one number cannot be acted on.
+if [ "$TRIGGERED" != "true" ]; then
     exit 1
+elif [ "$ANNOUNCED" != "true" ]; then
+    exit 2
+else
+    exit 0
 fi

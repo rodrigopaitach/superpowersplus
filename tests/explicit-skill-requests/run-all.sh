@@ -20,16 +20,15 @@ RESULTS=""
 N=0
 
 run_case() {
-    local skill="$1" prompt="$2"
+    local skill="$1" prompt="$2" rc=0
     N=$((N + 1))
     echo ">>> Test $N: $prompt"
-    if "$SCRIPT_DIR/run-test.sh" "$skill" "$PROMPTS_DIR/$prompt.txt"; then
-        PASSED=$((PASSED + 1))
-        RESULTS="$RESULTS\nPASS: $prompt"
-    else
-        FAILED=$((FAILED + 1))
-        RESULTS="$RESULTS\nFAIL: $prompt"
-    fi
+    "$SCRIPT_DIR/run-test.sh" "$skill" "$PROMPTS_DIR/$prompt.txt" || rc=$?
+    case "$rc" in
+        0) PASSED=$((PASSED + 1)); RESULTS="$RESULTS\nPASS: $prompt" ;;
+        2) FAILED=$((FAILED + 1)); RESULTS="$RESULTS\nFAIL (loaded, never announced): $prompt" ;;
+        *) FAILED=$((FAILED + 1)); RESULTS="$RESULTS\nFAIL (skill not invoked): $prompt" ;;
+    esac
     echo ""
 }
 
@@ -38,14 +37,23 @@ run_case "subagent-driven-development" "subagent-driven-development-please"
 run_case "systematic-debugging" "use-systematic-debugging"
 run_case "brainstorming" "please-use-brainstorming"
 
-# The user names it inside a flow that is already moving.
+# The user names it inside a flow that is already moving, and picks it BY NAME
+# from an offer the agent itself made — which is how the request arrives every
+# time the execution offer comes up.
 run_case "subagent-driven-development" "mid-conversation-execute-plan"
+run_case "subagent-driven-development" "after-planning-flow"
 
 # The two pressures that argue for skipping the skill, and are the reason the
 # rule exists: the user already explains what the skill does, and the user
 # asks for speed against the process.
 run_case "subagent-driven-development" "i-know-what-sdd-means"
 run_case "subagent-driven-development" "skip-formalities"
+
+# The two rationalizations the agent makes on its own behalf: the task is too
+# small to deserve the skill, and it has used the skill before so it can skip
+# reading it. Red Flags at using-superpowers SKILL.md:51 and :49.
+run_case "brainstorming" "skill-is-overkill"
+run_case "subagent-driven-development" "i-remember-this-skill"
 
 echo "=== Summary ==="
 echo -e "$RESULTS"

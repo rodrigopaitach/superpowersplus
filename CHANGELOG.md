@@ -9,6 +9,82 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [1.16.3] - 2026-08-08
+
+### Added
+
+- **The suite now checks the announcement, and the announcement is not being
+  made.** [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md),
+  section "The Rule", asks the agent to *announce "Using [skill] to
+  [purpose]"* after invoking. `tests/explicit-skill-requests/run-test.sh`
+  verified the invocation and the absence of premature tool calls, and nothing
+  verified the announcement — **the whole suite would have stayed green with
+  that sentence deleted from the skill.**
+  **The assertion was falsified before being trusted:** on a real passing log,
+  removing only the skill's name from the announcement text flips the new
+  assertion to FAIL while the invocation assertion stays PASS. The failure
+  migrates rather than merely persisting, which is what separates a gate from
+  a second opinion.
+  **Measured 2026-08-08, nine cases on two tiers, eighteen runs. Invocation:
+  18 of 18. Announcement: 3 of 9 on Opus 5 and 3 of 9 on Sonnet 5 — and four
+  of the nine cases invert between the tiers.** A rule obeyed a third of the
+  time on both tiers, in different places each time, is not a tier effect. The
+  case-by-case record, the falsified correlation that looked perfect on one
+  tier, and the two known weaknesses of the measurement are in
+  [`tests/explicit-skill-requests/README.md`](tests/explicit-skill-requests/README.md),
+  section "RESULT — the announcement is not made, and the invocation always
+  is". **No skill was changed:** what to do about the announcement rule is the
+  owner's decision, and this entry records the measurement that puts it in
+  front of him.
+  **The runner reports the two failures apart** — exit `1` for a skill that
+  never loaded, exit `2` for one that loaded without announcing. Collapsed
+  into one code, the summary counts two different defects as one number.
+
+- **Two cases for the rationalizations the agent makes on its own behalf.**
+  `skill-is-overkill`, where the change is one line and the process looks
+  disproportionate, and `i-remember-this-skill`, where the agent is told it
+  used the skill last week so re-reading looks unnecessary. They cover the two
+  Red Flags at lines 51 and 49 of the same file, and they are the first cases
+  in this directory where the argument for skipping is made **about** the
+  agent rather than **by** the user — `i-know-what-sdd-means` has the user
+  explaining the skill, which is a different pressure against the same rule.
+  **Neither failed on invocation on either tier.**
+
+- **`after-planning-flow` is a case.** It was the last prompt in the directory
+  that no line of the runner named. Its scenario is distinct from the other
+  eight: the user picks an option **by name** from an offer the agent itself
+  made, so the request reads as a decision already taken rather than as a call
+  for a skill — which is how the request arrives every time the execution
+  offer comes up. **It invokes on both tiers and announces on neither.**
+
+- **`TEST_MODEL` pins the tier for a run**, and the runner prints it.
+  Unset, a run takes whatever the operator's session defaults to, which is
+  fine for a working run and useless in a record: a result whose model is
+  inferred cannot be compared against a later one. The two rounds above were
+  confirmed as `claude-opus-5` and `claude-sonnet-5` by reading the model back
+  out of the logs, not by trusting the flag.
+
+- **A README for the directory, carrying the reason nine similar cases are
+  not one case nine times.** Two cases are duplicates only when the line they
+  exercise and the pressure they apply both coincide; a survey that cut by
+  resemblance would have removed three cases that are the only coverage of
+  three distinct lines. The ladder is written out — bare name, name with an
+  artefact within reach, name chosen from an offer the agent made, name under
+  time pressure — each rung adding exactly one vector to the same closing
+  words. **The measured cost is recorded beside it** so the next cut is argued
+  against a number: 156 s and US$ 5.04 for nine cases on Opus, 109 s and
+  US$ 3.21 on Sonnet, against 123 s and US$ 3.83 for the seven that preceded
+  them. Dropping a case saves about 17 s and US$ 0.56 of a suite that is not
+  in CI.
+  **It also records a limit that was found while measuring:** the harness does
+  not isolate `HOME`, despite `run-test.sh`'s own top comment saying it does.
+  Runs inherit the operator's global `CLAUDE.md`, output style and hooks —
+  visible in the logs as answers in Portuguese, as one case that translated a
+  skill's name instead of using it, and as two Sonnet runs that opened by
+  asking about the operator's own knowledge inbox. Closing it needs
+  credentials in a scratch `HOME`, which the operator's settings block, so it
+  is declared rather than fixed.
+
 ## [1.16.2] - 2026-08-08
 
 ### Added
@@ -3639,6 +3715,27 @@ section where the next one would be written.
   rather than shortening** — it builds the plan in a scratch copy and runs the
   counterfactuals — so a flat ratio there is the design working, not the rule
   failing. Its one recorded pair ran 16 → 15.
+
+- **Four entry-gate pressures have no case, and the reason they were not
+  written is that nine is already the number worth measuring in use.** The
+  suite at [`tests/explicit-skill-requests/`](tests/explicit-skill-requests/)
+  covers, in [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md)
+  section "Red Flags", the rationalizations the agent makes on its own behalf
+  (lines 49 and 51) and the pressures the user applies (lines 52 and 54).
+  **Uncovered, each named with the line of that same table that
+  states it:** 48, "This doesn't need a formal skill" — the user dispensing
+  with the process in the same message that asks for it; 53, "This feels
+  productive" — the request arriving inside work already flowing; 46, "I can
+  check git/files quickly", covered only sideways by the case that puts a plan
+  file within reach, never by a message that asks for the quick look; and, off
+  that table, the same file's line 22, "Before entering plan mode, invoke
+  brainstorming first" — **no case in this repository enters plan mode**, so the one
+  rule that governs the entry into planning is the one with no instrument.
+  **Why they stay open:** each case is a live dispatch, and the two added in
+  `1.16.3` have one run behind them. The owner's ruling is to measure those in
+  use before the suite grows again — a sample of one does not justify a
+  third pair, and a suite nobody reads the output of is the failure mode this
+  directory already recorded once.
 
 - **The plan reviewer stays on the top tier. Decided, with the measurement
   that decided it, so no later sweep demotes it for economy.** The

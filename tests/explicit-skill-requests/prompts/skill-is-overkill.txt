@@ -1,0 +1,3 @@
+It's a one-line change — the button label goes from "Submit" to "Confirm".
+
+brainstorming, please. I know that sounds like overkill for something this small.
