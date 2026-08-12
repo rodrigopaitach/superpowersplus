@@ -31,6 +31,39 @@ References below name them so a claim here can be traced there.
   while this one carries real values, a real builder and a real comparison,
   and is green whatever the code does. Reasoned, not measured.
 
+### Changed
+
+- **`requesting-code-review` licensed on its own initiative exactly what
+  `using-superpowers` had just prohibited.** [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md),
+  section "Review Lives in the Gates", added in `0abd065` (2026-08-06), says
+  *"Between them, do not dispatch a review subagent on your own initiative."*
+  That commit touched two files — the skill and this changelog — and never
+  swept the skill whose whole subject is dispatching reviewers. So
+  [`requesting-code-review/SKILL.md`](skills/requesting-code-review/SKILL.md),
+  section "When to Request Review", went on offering *"Optional but valuable:
+  When stuck · Before refactoring · After fixing complex bug"* — three
+  invitations to self-initiate, upstream text from `9c9547cc` (2025-10-16)
+  that this project had never revisited — plus a **mandatory** review *"After
+  completing major feature"*, a gate matching none of the five. **Two rules
+  loaded at once saying opposite things do not resolve; one of them gets
+  picked, and the expensive one is the permissive one**, because each ad-hoc
+  dispatch is a subagent reading a whole diff the branch gate reads again
+  later.
+  **Requalified rather than deleted.** Ad-hoc review is not the defect and had
+  been decided on purpose — `docs/superpowers/specs/2026-06-09-sdd-task-scoped-review-dispatch-design.md:33`
+  keeps this file as the broad template *"for final branch review and ad-hoc
+  review"* — and the gates rule governs it rather than banning it. What
+  changed is who starts one: your human partner, in a single dispatch carrying
+  every requested lens. The *"After completing major feature"* line is gone;
+  `Before merge to main` stays, because
+  [`final-review.md`](skills/subagent-driven-development/references/final-review.md)
+  and [`executing-plans/SKILL.md`](skills/executing-plans/SKILL.md) both reach
+  this skill by that bullet's name, and a branch built by hand is already
+  caught by [`finishing-a-development-branch/SKILL.md`](skills/finishing-a-development-branch/SKILL.md),
+  section "2b. The whole-branch code review", whose *"No review was run — a
+  branch built by hand"* row dispatches this skill on the spot. Reasoned, not
+  measured.
+
 ## [1.17.0] - 2026-08-08
 
 ### Changed

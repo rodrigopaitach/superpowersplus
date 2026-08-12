@@ -15,15 +15,19 @@ Dispatch a code reviewer subagent to catch issues before they cascade. The revie
 - At the final gate of the subagent path, once, over the whole branch — the
   review after each task there runs a different instrument,
   [task-reviewer-prompt.md](../subagent-driven-development/task-reviewer-prompt.md)
-- After completing major feature
 - Before merge to main — and superpowersplus:final-branch-audit runs BEFORE this
   review, not after: a reviewer judges the diff it is handed, and a task
   nobody implemented produces no diff to judge.
 
-**Optional but valuable:**
-- When stuck (fresh perspective)
-- Before refactoring (baseline check)
-- After fixing complex bug
+**Ad-hoc, and only when your human partner asks.** Review has gates — spec,
+plan, task, audit, branch — and
+[using-superpowers](../using-superpowers/SKILL.md), section "Review Lives in
+the Gates", holds everything between them. Stuck, mid-refactor, just past a
+complex bug, a feature that feels big enough: that is where the urge to
+dispatch one anyway arrives, and the urge is what the rule answers. The branch
+gate reads that same diff later, so a review you start on your own initiative
+is the work paid for twice. Asked for one: a single dispatch carrying every
+requested lens, never one per lens.
 
 ## How to Request
 
