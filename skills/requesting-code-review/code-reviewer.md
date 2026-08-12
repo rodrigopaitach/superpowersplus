@@ -63,6 +63,10 @@ Subagent (general-purpose):
       skipped, `xfail`, or `.only`? A green run over a shrunken suite is not
       a green branch — report it as an issue on its own.
     - Tests verify real behavior, not mocks?
+    - Expected values derived independently — literals, hand-checked
+      fixtures — and never computed by the code under test or by its
+      helpers? The same builder standing on both sides of an assertion
+      passes whatever that code does, and it reads like a real test.
     - Edge cases covered?
     - Integration tests where they matter?
     - Cannot run commands in this environment? Say so explicitly in your

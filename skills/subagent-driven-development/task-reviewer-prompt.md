@@ -125,6 +125,7 @@ Subagent (general-purpose):
     |---------|---------|
     | An assertion that cannot fail — `expect(true)`, `assert 1 == 1` — or a test body with no assertion at all | BLOCKING |
     | Assertions only on mock call counts or mock existence, never on the real component's behavior | BLOCKING |
+    | An expected value computed by the code under test or by its helpers — the same builder standing on both sides of the assertion. It reads like a real test, with real values, and passes whatever that code does | BLOCKING |
     | Happy path only, while the brief, the spec criterion it names, or the global constraints list edge cases. An `IR` criterion is where edge cases, concurrency, failure modes and limits live — its listed cases are the requirement | BLOCKING |
 
     A passing suite made of these tests is a passing suite that proves

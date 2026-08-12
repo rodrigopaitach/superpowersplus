@@ -9,6 +9,28 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **The mirror assertion was a rule only the producer was told, and both
+  reviewers now charge it.** [`test-driven-development/references/writing-good-tests.md`](skills/test-driven-development/references/writing-good-tests.md),
+  section "Principle 1: Name the Break", tells whoever writes a test to
+  *"Derive expectations independently"* and shows the `❌ Mirror assertion`
+  where one builder computes both sides. Nothing checked it: `grep -rn
+  "mirror" skills/` returned that file and nothing else, and the closest a
+  reviewer came was *"Tests verify real behavior, not mocks?"* — which catches
+  the mock, not the expectation. A row was added to the shallow-test litmus in
+  [`task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md),
+  section "Part 2: Code Quality", and a bullet to
+  [`code-reviewer.md`](skills/requesting-code-review/code-reviewer.md),
+  section "What to Check". **Half a rule is the quiet kind of failure — there
+  is no contradiction anywhere to find, only a defect class the gate was never
+  asked about.** The mirror is not covered by the litmus row above it: an
+  assertion that cannot fail is recognised by its shape (`expect(true)`),
+  while this one carries real values, a real builder and a real comparison,
+  and is green whatever the code does. Reasoned, not measured.
+
 ## [1.17.0] - 2026-08-08
 
 ### Changed
