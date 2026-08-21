@@ -154,5 +154,5 @@ Verify the `matcher` in `hooks.json` matches the event type your harness emits. 
 
 ## Related Issues
 
-- [anthropics/claude-code#9758](https://github.com/anthropics/claude-code/issues/9758) — `.sh` scripts open in editor on Windows
-- [anthropics/claude-code#3417](https://github.com/anthropics/claude-code/issues/3417) — Hooks don't work on Windows
+- `anthropics/claude-code#9758` — `.sh` scripts open in editor on Windows
+- `anthropics/claude-code#3417` — Hooks don't work on Windows

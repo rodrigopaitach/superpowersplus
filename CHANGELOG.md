@@ -9,6 +9,48 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The link gate read 12 of the 48 markdown files under `docs/`, and the
+  document describing it said it read all of them.**
+  [`check-links.sh`](scripts/check-links.sh) collected `docs/` with
+  `glob("*.md")` — first level only — while collecting `skills/` with
+  `rglob`. That left `docs/superpowers/specs/`, `docs/superpowers/plans/`,
+  `docs/plans/` and `docs/windows/` in no pass at all: 36 files, 18 specs and
+  17 plans among them. **Proved by difference before the change, not read off
+  the source:** the same broken link exited 0 inside
+  `docs/superpowers/specs/` and 1 inside `docs/`. Meanwhile
+  [`docs/docs-and-links.md`](docs/docs-and-links.md), section
+  "What check-links.sh reads", described the local-link pass as covering
+  *"everything in `docs/`"*. **A gate and its description disagreeing is worse
+  than either being wrong alone** — the description is what a reader consults
+  before deciding whether a document is covered, so the hole stayed invisible
+  to exactly the person who would have closed it.
+
+- **A live document was off the link diet the whole time, and nothing could
+  see it.** With the pass widened, `docs/windows/polyglot-hooks.md` turned out
+  to carry two URLs to a third party's issue tracker in its "Related Issues"
+  section. The link text already named each issue, which is what the diet asks
+  for — *"a name and a version identify a source without depending on somebody
+  else's URL scheme"* — so the fix was to drop the URL and keep the name. This
+  is the defect the hole was hiding, and it is why the widening was not
+  bookkeeping.
+
+### Changed
+
+- **Plans and specs are exempt from the third-party diet, and their local
+  links are not.** Widening the local-link pass to the subdirectories first
+  surfaced 15 off-diet URLs, 13 of them loopback addresses inside fenced test
+  examples in plans. The diet is a policy about the documents this project
+  hands to a reader — that reasoning is already written at
+  `scripts/check-links.sh` above `DIET_EXEMPT`, and a work record is its
+  contrapositive. **A gate that charges a plan for a port number is a gate
+  that stops being read.** The exemption is domain-only: a broken local link
+  inside an exempt plan still fails, which was proved by difference in the
+  same four-state run that proved the widening. Reasoned, not measured.
+
 ## [1.18.0] - 2026-08-12
 
 ### Added

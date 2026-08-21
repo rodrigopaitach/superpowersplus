@@ -30,8 +30,8 @@ different sets:
 
 | Pass | Covers | Charges |
 |---|---|---|
-| Local links | The institutional files at the root — `CLAUDE.md` among them — everything in `docs/`, and every markdown file under `skills/` | A link whose destination does not exist, or whose anchor names no heading |
-| Third-party diet | The same set, minus the two exemptions below, reading **raw lines, fenced blocks included** | A URL whose host is not on the allowlist |
+| Local links | The institutional files at the root — `CLAUDE.md` among them — every markdown file under `docs/`, **subdirectories included**, and every markdown file under `skills/` | A link whose destination does not exist, or whose anchor names no heading |
+| Third-party diet | The same set, minus the three exemptions below, reading **raw lines, fenced blocks included** | A URL whose host is not on the allowlist |
 | Section references | Every live markdown file, dated records excluded — plus `CHANGELOG.md`'s `## Open gaps` section, sliced out of the file around it | A section reference naming a file, or a heading, that does not exist |
 
 `skills/**` was in none of them while the fear was rebase churn — upstream text
@@ -99,15 +99,27 @@ for reasons unrelated to the commit gets ignored. A dead allowed link is still
 found by clicking it, and the diet is what makes that cheap: there is little
 left to rot.
 
-**Two exemptions from the diet only, for different reasons.**
+**Three exemptions from the diet, for different reasons.**
 [`docs/PLUS-CHANGELOG-historico.md`](PLUS-CHANGELOG-historico.md) cannot acquire
 a new link by construction — `check-frozen-history.sh` refuses any change to it
 — so watching it for new domains is a check with no function. Everything under
 `skills/` is exempt because a skill legitimately cites vendor documentation: the
 vendored best-practices point at the platform docs, and this fork's worked
 example of a citation comment points at the vendor whose call it grounds. The
-diet governs the documents this project hands to a reader.
+diet governs the documents this project hands to a reader. **Plans and specs
+— `docs/plans/` and `docs/superpowers/` — are exempt for that same reason
+read the other way: they are work records, not documents handed to anyone.**
+They carry test code, and test code carries addresses; when the local-link
+pass was first widened to the subdirectories, 13 of the 15 off-diet URLs it
+surfaced were loopback addresses inside fenced examples. A gate that charges
+a plan for a port number is a gate that stops being read.
 
-Their local links and anchors stay checked in both cases. Freezing a file does
+**Naming a scheme and a host in prose is itself a URL to this gate, and this
+paragraph tripped on its own example while being written.** The diet reads
+raw lines and cannot tell a link from a sentence about links. Describe the
+shape — loopback address, vendor documentation host — rather than writing
+one out.
+
+Their local links and anchors stay checked in every case. Freezing a file does
 not freeze the files it points at, and the domain policy is the only thing that
 stops at the directory boundary.
