@@ -11,6 +11,15 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **The execution-path criterion has one statement, at
+  [`execution-path.md`](skills/writing-plans/references/execution-path.md).**
+  It stood in eight places across three skills, so correcting it meant
+  correcting it three times. Extraction at the third occurrence is this
+  project's normal rule; the inversion that unifies a form in place governs
+  subagent output formats and does not reach here.
+
 ### Fixed
 
 - **The link gate read 12 of the 48 markdown files under `docs/`, and the
