@@ -51,6 +51,16 @@ References below name them so a claim here can be traced there.
   inside an exempt plan still fails, which was proved by difference in the
   same four-state run that proved the widening. Reasoned, not measured.
 
+- **Seven cases in [`test-check-links.sh`](tests/hooks/test-check-links.sh)
+  now hold both halves in place, and each was proved by the mutation that
+  attacks its mechanism.** Turning the recursion back off drops the three
+  subdirectory-coverage assertions plus the two that depend on a work record
+  being read at all; removing the two exemption lines drops exactly the two
+  diet assertions and nothing else. The pair that matters is the one nobody
+  writes: a plan is *not* charged for a loopback address and *is* charged for
+  a broken local link. **One of those assertions alone cannot tell an
+  exemption from a hole.**
+
 ## [1.18.0] - 2026-08-12
 
 ### Added
