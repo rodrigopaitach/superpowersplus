@@ -115,10 +115,18 @@ measurement does **not** cover, naming the turning point and the cost curve
 that its own author marks as unmeasured.
 
 It is marked as a third-party measurement, never as this project's. Its sources
-are named in text with no URL, because `docs/` is not exempt from the
-third-party link diet ([`docs/docs-and-links.md`](../../docs-and-links.md),
-section "The third-party link diet") and that diet allows four host
-prefixes, none of which covers them.
+are named in text with no URL, because it sits at the first level of `docs/`,
+which the third-party link diet governs
+([`docs/docs-and-links.md`](../../docs-and-links.md), section "The
+third-party link diet"), and that diet allows four host prefixes, none of
+which covers them.
+
+**The exemptions do not reach it, and one of them was created on this
+branch.** The diet exempts the frozen history, everything under `skills/`,
+and — since `76535f0` — the work records under `docs/plans/` and
+`docs/superpowers/`. A document at `docs/context-budget.md` is none of
+those: it is a document this project hands to a reader, which is precisely
+what the diet is a policy about.
 
 ### What does not change
 
@@ -243,9 +251,14 @@ prompt changes.
    ceiling.** Measured 2026-08-21 with `wc -l skills/*/SKILL.md`. This is why
    the canonical statement goes to `references/`.
 
-9. **`docs/` is not exempt from the third-party link diet, and the allowlist
-   has four prefixes.** [`docs/docs-and-links.md`](../../docs-and-links.md),
-   section "The third-party link diet":
+9. **The first level of `docs/` is governed by the third-party link diet, and
+   the allowlist has four prefixes.** The diet's exemptions are the frozen
+   history, everything under `skills/`, and the work records under
+   `docs/plans/` and `docs/superpowers/` — that last pair added on this
+   branch in `76535f0`, which is why the evidence document's own location
+   decides whether the diet reaches it.
+   [`docs/docs-and-links.md`](../../docs-and-links.md), section "The
+   third-party link diet":
    > "Everything under `skills/` is exempt because a skill legitimately cites vendor documentation"
 
    — the exemption names `skills/`, not `docs/`.
