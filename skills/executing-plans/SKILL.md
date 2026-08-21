@@ -11,7 +11,7 @@ Load plan, review critically, execute all tasks, report when complete.
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
-**Note:** This path is a legitimate choice, not a fallback. What decides between the two is the plan's size and whether its progress has to outlive the session — inline when the plan finishes in one sitting, superpowersplus:subagent-driven-development when it will not; superpowersplus:writing-plans makes that offer with the measured difference and writes the answer into the plan header's `**Execution:**` field. Where the harness has no subagents (Claude Code, Codex CLI, Codex App, Copilot CLI, and Gemini CLI all have them; see the per-platform tool refs in `../using-superpowers/references/`), there was no choice to present and this is the path.
+**Note:** This path is a legitimate choice, not a fallback. What decides between the two is whether the plan fits in one context window with slack for a correction round, and whether its tasks have a low-coupling boundary — the statement is in [execution-path.md](../writing-plans/references/execution-path.md), and superpowersplus:writing-plans makes the offer from it and writes the answer into the plan header's `**Execution:**` field. Where the harness has no subagents (Claude Code, Codex CLI, Codex App, Copilot CLI, and Gemini CLI all have them; see the per-platform tool refs in `../using-superpowers/references/`), there was no choice to present and this is the path.
 
 **Progress reports.** Report to your human partner at four fixed points, one
 line each:
@@ -59,9 +59,9 @@ for them later.
 **Resuming after an interruption.** This path records progress in session
 todos, and session todos do not outlive the session — compaction inside one
 loses them just as well. There is no ledger here to fall back on, and this
-skill does not create one: inline execution exists for work that finishes in
-one sitting, and a plan that keeps outliving its session is telling you it
-belonged on the subagent path. Say the limitation out loud when you start,
+skill does not create one: inline execution exists for work that fits in one
+window, and a plan that keeps outliving its session is telling you it belonged
+on the subagent path. Say the limitation out loud when you start,
 in the first report above, rather than letting your partner meet it later.
 
 When you do have to resume, reconstruct — do not guess. Read the plan, then

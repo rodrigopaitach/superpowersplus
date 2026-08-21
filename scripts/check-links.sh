@@ -60,7 +60,15 @@ ROOT = pathlib.Path(".").resolve()
 # scanning both reports every problem twice.
 TARGETS = ["README.md", "CONTRIBUTING.md", "SECURITY.md",
            "CODE_OF_CONDUCT.md", "CHANGELOG.md", "CLAUDE.md"]
-TARGETS += sorted(str(p) for p in pathlib.Path("docs").glob("*.md"))
+# docs/ is walked recursively. It was `glob("*.md")` — first level only —
+# which left docs/superpowers/specs/, docs/superpowers/plans/, docs/plans/
+# and docs/windows/ read by nothing: 36 of the 48 markdown files under
+# docs/. Proved by difference before the change: the same broken link
+# exited 0 inside docs/superpowers/specs/ and 1 inside docs/. The
+# companion document described this pass as covering everything in
+# docs/, which is what made the hole invisible — a gate and its
+# description disagreeing is worse than either being wrong alone.
+TARGETS += sorted(str(p) for p in pathlib.Path("docs").rglob("*.md"))
 TARGETS += sorted(str(p) for p in pathlib.Path("skills").rglob("*.md"))
 
 FENCE = re.compile(r"^\s*(```|~~~)")
@@ -203,6 +211,16 @@ ALLOWED_PREFIXES = (
 # doc that grounds a call is the citation rule working, not a leak.
 DIET_EXEMPT = {"docs/PLUS-CHANGELOG-historico.md"}
 DIET_EXEMPT |= {str(p) for p in pathlib.Path("skills").rglob("*.md")}
+#
+# Plans and specs are exempt from the DIET for the reason stated just
+# above: the diet is a policy about the documents this project hands to
+# a reader, and these are work records. They carry test code, and test
+# code carries URLs — 13 of the 15 off-diet URLs the recursive walk
+# first surfaced were loopback addresses in fenced examples. Charging a
+# plan for a port number is how a gate stops being read. Their local
+# links stay checked; only the domain policy stops here.
+DIET_EXEMPT |= {str(p) for p in pathlib.Path("docs/plans").rglob("*.md")}
+DIET_EXEMPT |= {str(p) for p in pathlib.Path("docs/superpowers").rglob("*.md")}
 
 
 def strip_fences(text):

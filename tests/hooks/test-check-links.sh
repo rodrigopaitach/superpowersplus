@@ -406,6 +406,62 @@ assert_run 1 "a renamed Open gaps heading fails loudly instead of scanning nothi
     "has no '## Open gaps' heading"
 
 echo
+echo "Test: docs/ is walked recursively, and work records are diet-exempt"
+
+# The local-link pass collected docs/ one level deep while collecting skills/
+# recursively, so every spec and plan was read by nothing. These cases hold the
+# recursion in place: without it the first assertion below exits 0, which is a
+# clean pass that has checked nothing.
+T="$(new_tree)"
+mkdir -p "$T/docs/superpowers/specs"
+printf '# Spec\n\n[gone](../../does-not-exist.md)\n' \
+    > "$T/docs/superpowers/specs/2026-01-01-a-design.md"
+assert_run 1 "a broken link inside docs/superpowers/specs/ is caught" "$T" \
+    'does-not-exist.md'
+
+T="$(new_tree)"
+mkdir -p "$T/docs/plans"
+printf '# Plan\n\n[gone](./does-not-exist.md)\n' > "$T/docs/plans/2026-01-01-a.md"
+assert_run 1 "a broken link inside docs/plans/ is caught" "$T" \
+    'does-not-exist.md'
+
+T="$(new_tree)"
+mkdir -p "$T/docs/windows"
+printf '# Note\n\n[gone](../does-not-exist.md)\n' > "$T/docs/windows/note.md"
+assert_run 1 "a broken link inside a docs/ subdirectory that is not a work record is caught" "$T" \
+    'does-not-exist.md'
+
+# The diet exemption for work records is domain-only. A plan carrying a
+# loopback address in a test example must not be charged; the same plan
+# carrying a broken local link must still fail. One assertion without the
+# other cannot tell an exemption from a hole.
+T="$(new_tree)"
+mkdir -p "$T/docs/superpowers/plans"
+printf '# Plan\n\n```bash\ncurl http://localhost:8080/health\n```\n' \
+    > "$T/docs/superpowers/plans/2026-01-01-a.md"
+assert_run 0 "a loopback address inside a plan is exempt from the diet" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/docs/superpowers/specs"
+printf '# Spec\n\nSee https://example.invalid/page for context.\n' \
+    > "$T/docs/superpowers/specs/2026-01-01-a-design.md"
+assert_run 0 "an off-diet host inside a spec is exempt from the diet" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/docs/superpowers/plans"
+printf '# Plan\n\n```bash\ncurl http://localhost:8080/health\n```\n\n[gone](./does-not-exist.md)\n' \
+    > "$T/docs/superpowers/plans/2026-01-01-a.md"
+assert_run 1 "a diet-exempt plan is still charged for a broken local link" "$T" \
+    'does-not-exist.md'
+
+# A document under docs/ that is NOT a work record keeps the diet.
+T="$(new_tree)"
+mkdir -p "$T/docs/windows"
+printf '# Note\n\nSee https://example.invalid/page for context.\n' > "$T/docs/windows/note.md"
+assert_run 1 "an off-diet host in a docs/ subdirectory that is not a work record is caught" "$T" \
+    'example.invalid'
+
+echo
 if [ "$FAILURES" -eq 0 ]; then
     echo "All check-links tests passed"
 else

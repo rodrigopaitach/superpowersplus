@@ -9,6 +9,110 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **The execution-path criterion has one statement, at
+  [`execution-path.md`](skills/writing-plans/references/execution-path.md).**
+  It stood in eight places across three skills, so correcting it meant
+  correcting it three times. Extraction at the third occurrence is this
+  project's normal rule; the inversion that unifies a form in place governs
+  subagent output formats and does not reach here.
+
+### Fixed
+
+- **The link gate read 12 of the 48 markdown files under `docs/`, and the
+  document describing it said it read all of them.**
+  [`check-links.sh`](scripts/check-links.sh) collected `docs/` with
+  `glob("*.md")` — first level only — while collecting `skills/` with
+  `rglob`. That left `docs/superpowers/specs/`, `docs/superpowers/plans/`,
+  `docs/plans/` and `docs/windows/` in no pass at all: 36 files, 18 specs and
+  17 plans among them. **Proved by difference before the change, not read off
+  the source:** the same broken link exited 0 inside
+  `docs/superpowers/specs/` and 1 inside `docs/`. Meanwhile
+  [`docs/docs-and-links.md`](docs/docs-and-links.md), section
+  "What check-links.sh reads", described the local-link pass as covering
+  *"everything in `docs/`"*. **A gate and its description disagreeing is worse
+  than either being wrong alone** — the description is what a reader consults
+  before deciding whether a document is covered, so the hole stayed invisible
+  to exactly the person who would have closed it.
+
+- **A live document was off the link diet the whole time, and nothing could
+  see it.** With the pass widened, `docs/windows/polyglot-hooks.md` turned out
+  to carry two URLs to a third party's issue tracker in its "Related Issues"
+  section. The link text already named each issue, which is what the diet asks
+  for — *"a name and a version identify a source without depending on somebody
+  else's URL scheme"* — so the fix was to drop the URL and keep the name. This
+  is the defect the hole was hiding, and it is why the widening was not
+  bookkeeping.
+
+- **The coupling definition must sit on one physical line in both files that
+  carry it, and a reflow had broken one of them.**
+  [`execution-path.md`](skills/writing-plans/references/execution-path.md) and
+  [`subagent-driven-development`](skills/subagent-driven-development/SKILL.md)
+  hold the same sentence near-verbatim by design, recorded in this branch's
+  spec. Nothing gates the pair — both carrier lists in
+  [`check-escalation-shape.sh`](scripts/check-escalation-shape.sh) and
+  [`check-evidence-line.sh`](scripts/check-evidence-line.sh) are hardcoded, so
+  a third gate is a new script, a new suite and a new CI step. **A wrapped
+  phrase is invisible until a gate looks for it**, and this project's gate
+  form for a copied form is a line-literal comparison: left split, the
+  reference would have failed such a gate the day it was written. Word streams
+  compared rather than read — the change is reflow only.
+
+### Changed
+
+- **Plans and specs are exempt from the third-party diet, and their local
+  links are not.** Widening the local-link pass to the subdirectories first
+  surfaced 15 off-diet URLs, 13 of them loopback addresses inside fenced test
+  examples in plans. The diet is a policy about the documents this project
+  hands to a reader — that reasoning is already written at
+  `scripts/check-links.sh` above `DIET_EXEMPT`, and a work record is its
+  contrapositive. **A gate that charges a plan for a port number is a gate
+  that stops being read.** The exemption is domain-only: a broken local link
+  inside an exempt plan still fails, which was proved by difference in the
+  same four-state run that proved the widening. Reasoned, not measured.
+
+- **Seven cases in [`test-check-links.sh`](tests/hooks/test-check-links.sh)
+  now hold both halves in place, and each was proved by the mutation that
+  attacks its mechanism.** Turning the recursion back off drops the three
+  subdirectory-coverage assertions plus the two that depend on a work record
+  being read at all; removing the two exemption lines drops exactly the two
+  diet assertions and nothing else. The pair that matters is the one nobody
+  writes: a plan is *not* charged for a loopback address and *is* charged for
+  a broken local link. **One of those assertions alone cannot tell an
+  exemption from a hole.**
+
+- **The execution-path offer asks about context budget, not about the clock.**
+  It recommended the subagent path "when the plan will not finish in one
+  sitting", and time does not predict occupancy: in the measurement recorded at
+  [`docs/context-budget.md`](docs/context-budget.md), a single-agent run ended
+  with its window at 74% full against the best configuration's 26% — both
+  figures corroborated by both sources — while their wall times, which came out
+  practically the same, rest on a number only one source carries. The offer now
+  reports the task count **and** the number of distinct files those tasks touch, and
+  says plainly that the occupancy judgement is the human partner's — nothing in
+  this plugin gives an agent its own window occupancy. Reasoned on a
+  third-party measurement, not measured here.
+
+- **[`executing-plans`](skills/executing-plans/SKILL.md) reads the criterion
+  from the one statement instead of carrying its own copy.** The
+  harness-without-subagents clause is untouched: where there are no subagents
+  there was never a choice to make, and that path is selected without the
+  criterion being consulted at all.
+
+- **Coupling is defined where the decision is taken, instead of being left to
+  judgement.** The decision graph in
+  [`subagent-driven-development`](skills/subagent-driven-development/SKILL.md)
+  asked "Tasks mostly independent?" and never said what independence was. It
+  now asks whether there is a boundary where the tasks share no file, no
+  interface and no state — and its first question is context budget, not the
+  clock. Coupling was named as a first-class variable only in
+  [`dispatching-parallel-agents`](skills/dispatching-parallel-agents/SKILL.md),
+  which is walled off from plan execution on purpose, so the variable the
+  measurement calls decisive had nowhere to be stated.
+
 ## [1.18.0] - 2026-08-12
 
 ### Added

@@ -439,11 +439,19 @@ After the plan review passes, offer the execution choice **in the escalation
 shape above** — it is a decision of your partner's, crossing the machine →
 human boundary, and the two option names alone do not carry what decides it.
 
-**Count the tasks in the plan first and say the number.** "Two options" tells
-your partner nothing about the size of what they are agreeing to; "eleven
-tasks" tells them whether this fits in one sitting.
+**Count the tasks in the plan first, and count the distinct files they touch.
+Say both numbers.** "Two options" tells your partner nothing about the size of
+what they are agreeing to. The task count alone tells them about time; the file
+count is what tells them about density, and density is what fills a window.
+Eleven tasks across three files and eleven across thirty are different
+decisions.
 
-**Say the difference that actually decides it: what survives an interruption.**
+**The occupancy judgement is the human partner's, and you say so.**
+This plugin does not expose your own window occupancy to you. So the offer
+reports what you can measure from the plan and asks; never estimate an
+occupancy figure, and never imply you read one.
+
+**Say the other half your partner will weigh: what survives an interruption.**
 The subagent path writes progress to a file — `.superpowers/sdd/<plan>/progress.md`
 — and a session that ends mid-plan is resumed from it. The inline path tracks
 with session todos, which do not outlive the session: an interruption there
@@ -453,7 +461,7 @@ care about after it costs them.
 
 The offer, filled in from the plan:
 
-> **"Plan complete, reviewed, and saved to `docs/superpowers/plans/<filename>.md`. It has <N> tasks. How should I run it?**
+> **"Plan complete, reviewed, and saved to `docs/superpowers/plans/<filename>.md`. It has <N> tasks across <F> files. How should I run it?**
 >
 > | Option | What it costs | What survives an interruption |
 > |---|---|---|
@@ -464,12 +472,12 @@ The offer, filled in from the plan:
 > - **Subagent-driven:** a fresh agent given an interrupted run found the resume point, presented it, and waited without touching a file — 3 of 3 criteria on the first run.
 > - **Inline:** three runs, three fixtures. The first two reconstructed the resume point correctly and then executed the rest of the plan before saying anything. The third stopped and waited, after the confirmation requirement was moved into the step that executes — one run, against two failures.
 >
-> **Recommend: subagent-driven when the plan will not finish in one sitting, or when a task's context would crowd out the next one — roughly, more than a handful of tasks. Inline when the plan is short enough to finish now and you want it done in this conversation.** Source: general practice for the sizing, plus this project's own adversarial runs for the resuming difference above.
+> **Recommend by the criterion, not by the clock: subagent-driven when the plan will not fit in one context window with slack left for a correction round, and there is a boundary where its tasks share no file, no interface and no state. Inline when it fits with room to spare.** The full statement, and why a subagent is context-budget management rather than a quality technique, is in [execution-path.md](references/execution-path.md). Source: this project's own adversarial runs for the resuming difference above, plus the third-party measurement recorded in [`docs/context-budget.md`](../../docs/context-budget.md) for the criterion itself — reasoned on top of it, not measured here.
 >
 > **Which one?"**
 
-State which side of that criterion **this** plan falls on, using the count you
-just took. A recommendation that recites the rule without applying it to the
+State which side of that criterion **this** plan falls on, using both counts
+you just took. A recommendation that recites the rule without applying it to the
 plan in front of you leaves your partner doing the arithmetic you already did.
 
 **Write the answer into the plan header's `**Execution:**` field** — the path
