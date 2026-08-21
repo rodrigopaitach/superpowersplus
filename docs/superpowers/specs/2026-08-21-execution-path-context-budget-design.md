@@ -26,7 +26,8 @@ Three, all located.
 1. **The selection criterion is temporal, and the measurement shows temporal
    does not predict occupancy.** The single-agent run of the third-party
    benchmark took practically the same wall time as the best configuration
-   measured — both sources state this — and ended with its context window at
+   measured — the PDF states this in words, and the excalidraw's own figures
+   are consistent with it — and ended with its context window at
    74% full against that configuration's 26%, leaving no budget for the
    correction round that follows a first pass. Same sitting, three times the
    occupancy. A plan can be short in time and dense in context, and the
