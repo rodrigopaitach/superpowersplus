@@ -95,10 +95,14 @@ Create `docs/context-budget.md` with exactly this content:
 # Context budget and subagent granularity
 
 **This records a third-party measurement. This project did not run it, did not
-reproduce it, and does not vouch for its method.** It is here because
-[`skills/writing-plans/references/execution-path.md`](../skills/writing-plans/references/execution-path.md)
-rests on it, and a rule resting on evidence nobody can open is a rule resting
-on nothing.
+reproduce it, and does not vouch for its method.** It is here because the
+execution-path criterion rests on it, and a rule resting on evidence nobody can
+open is a rule resting on nothing.
+
+**This document deliberately does not link to the skill that consumes it.** The
+criterion links here; linking back would make the two files a cycle, and a
+cycle cannot be built in any order — whichever lands first fails the link gate
+on a file that does not exist yet. Evidence does not point at its consumer.
 
 ## Sources
 
@@ -246,8 +250,9 @@ already spent the budget it needs for the first bug.
 
 **2. Is there a low-coupling boundary between the tasks?**
 
-Tasks are coupled when they share a file, share an interface, or share state.
-The boundary is the point where they stop doing all three. Where no such
+Tasks are coupled when they have a
+shared file, shared interface, or shared state. The boundary is the point where
+they stop having all three. Where no such
 boundary exists, splitting the work moves the coupling into the gaps between
 subagents, where nothing can see it.
 
@@ -290,15 +295,19 @@ Expected: the first line number is smaller than the second.
 
 ```bash
 grep -i 'not a quality technique' skills/writing-plans/references/execution-path.md
+grep -F "third party's measurement, not this project's" skills/writing-plans/references/execution-path.md
 scripts/check-escalation-shape.sh
 scripts/check-evidence-line.sh
 scripts/check-links.sh
 ```
 
-Expected: the grep matches; all three gates exit 0. The two carrier gates must
-report the same carrier counts as before this task — 6 and 8 respectively. A
-changed count means this file picked up one of the two forms and became a
-carrier the gate does not know about.
+Expected: both greps match; all three gates exit 0. The second grep is `T2.5`
+(spec `IR4`): the citation of the evidence document must name the third party
+rather than presenting the measurement as this project's.
+
+The two carrier gates must report the same carrier counts as before this task —
+6 and 8 respectively. A changed count means this file picked up one of the two
+forms and became a carrier the gate does not know about.
 
 - [ ] **Step 4: Add the changelog line and commit**
 
@@ -608,9 +617,11 @@ grep -F '](../writing-plans/references/execution-path.md)' skills/subagent-drive
 grep -rn 'one sitting' skills/
 ```
 
-Expected: the first two match. The third returns nothing — this is the task
-that removes the last occurrence, so a hit here means an earlier task's edit
-did not land.
+Expected: the first two match. The third returns **exactly one** hit —
+`skills/writing-plans/references/execution-path.md`, where the canonical
+statement quotes the rejected phrase in order to contrast it with the new
+criterion. That line is Task 2's own permanent content and states no choice.
+Any hit in a `SKILL.md` means an earlier task's edit did not land.
 
 - [ ] **Step 4: Run every gate**
 
