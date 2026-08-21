@@ -70,6 +70,17 @@ References below name them so a claim here can be traced there.
   a broken local link. **One of those assertions alone cannot tell an
   exemption from a hole.**
 
+- **The execution-path offer asks about context budget, not about the clock.**
+  It recommended the subagent path "when the plan will not finish in one
+  sitting", and time does not predict occupancy: in the measurement recorded at
+  [`docs/context-budget.md`](docs/context-budget.md), a single-agent run took
+  practically the same wall time as the best configuration and ended with its
+  window at 74% full against that configuration's 26%. The offer now reports
+  the task count **and** the number of distinct files those tasks touch, and
+  says plainly that the occupancy judgement is the human partner's — nothing in
+  this plugin gives an agent its own window occupancy. Reasoned on a
+  third-party measurement, not measured here.
+
 ## [1.18.0] - 2026-08-12
 
 ### Added
