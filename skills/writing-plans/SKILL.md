@@ -451,7 +451,7 @@ This plugin does not expose your own window occupancy to you. So the offer
 reports what you can measure from the plan and asks; never estimate an
 occupancy figure, and never imply you read one.
 
-**Say the difference that actually decides it: what survives an interruption.**
+**Say the other half your partner will weigh: what survives an interruption.**
 The subagent path writes progress to a file — `.superpowers/sdd/<plan>/progress.md`
 — and a session that ends mid-plan is resumed from it. The inline path tracks
 with session todos, which do not outlive the session: an interruption there
@@ -461,7 +461,7 @@ care about after it costs them.
 
 The offer, filled in from the plan:
 
-> **"Plan complete, reviewed, and saved to `docs/superpowers/plans/<filename>.md`. It has <N> tasks. How should I run it?**
+> **"Plan complete, reviewed, and saved to `docs/superpowers/plans/<filename>.md`. It has <N> tasks across <F> files. How should I run it?**
 >
 > | Option | What it costs | What survives an interruption |
 > |---|---|---|
@@ -472,12 +472,12 @@ The offer, filled in from the plan:
 > - **Subagent-driven:** a fresh agent given an interrupted run found the resume point, presented it, and waited without touching a file — 3 of 3 criteria on the first run.
 > - **Inline:** three runs, three fixtures. The first two reconstructed the resume point correctly and then executed the rest of the plan before saying anything. The third stopped and waited, after the confirmation requirement was moved into the step that executes — one run, against two failures.
 >
-> **Recommend by the criterion, not by the clock: subagent-driven when the plan will not fit in one context window with slack left for a correction round, and there is a boundary where its tasks stop sharing a file, an interface and state. Inline when it fits with room to spare.** The full statement, and why a subagent is context-budget management rather than a quality technique, is in [execution-path.md](references/execution-path.md). Source: this project's own adversarial runs for the resuming difference above, plus the third-party measurement recorded in [`docs/context-budget.md`](../../docs/context-budget.md) for the criterion itself — reasoned on top of it, not measured here.
+> **Recommend by the criterion, not by the clock: subagent-driven when the plan will not fit in one context window with slack left for a correction round, and there is a boundary where its tasks share no file, no interface and no state. Inline when it fits with room to spare.** The full statement, and why a subagent is context-budget management rather than a quality technique, is in [execution-path.md](references/execution-path.md). Source: this project's own adversarial runs for the resuming difference above, plus the third-party measurement recorded in [`docs/context-budget.md`](../../docs/context-budget.md) for the criterion itself — reasoned on top of it, not measured here.
 >
 > **Which one?"**
 
-State which side of that criterion **this** plan falls on, using the count you
-just took. A recommendation that recites the rule without applying it to the
+State which side of that criterion **this** plan falls on, using both counts
+you just took. A recommendation that recites the rule without applying it to the
 plan in front of you leaves your partner doing the arithmetic you already did.
 
 **Write the answer into the plan header's `**Execution:**` field** — the path

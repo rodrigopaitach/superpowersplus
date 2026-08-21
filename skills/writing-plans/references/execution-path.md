@@ -20,21 +20,21 @@ round?**
 
 Not "does it finish in one sitting". Those two come apart exactly where it is
 expensive: a plan can be short in time and dense in context. In the measurement
-this rests on, a single-agent run took practically the same wall time as the
-best configuration and ended with its window at 74% full against that
-configuration's 26% — same sitting, three times the occupancy, and no budget
-left for the round of corrections that follows a first pass.
+this rests on, a single-agent run ended with its window at 74% full against
+the best configuration's 26% — nearly three times the occupancy, and no budget
+left for the round of corrections that follows a first pass. Both artifacts
+carry those two figures. The wall times, which came out practically the same,
+rest on a number only one of them carries.
 
 The slack is the point. A run that ends green with the window nearly full has
 already spent the budget it needs for the first bug.
 
 **2. Is there a low-coupling boundary between the tasks?**
 
-Tasks are coupled when they have a
-shared file, shared interface, or shared state. The boundary is the point where
-they stop having all three. Where no such
-boundary exists, splitting the work moves the coupling into the gaps between
-subagents, where nothing can see it.
+Tasks are coupled when they have a shared file, shared interface, or shared
+state — any one of the three is enough. The boundary is the point where they
+share **none** of the three. Where no such boundary exists, splitting the work
+moves the coupling into the gaps between subagents, where nothing can see it.
 
 Both answers point the same way, or the criterion has not been applied: a plan
 that overflows the window but has no boundary is a plan to re-decompose, not a

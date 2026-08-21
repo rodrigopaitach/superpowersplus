@@ -73,10 +73,11 @@ References below name them so a claim here can be traced there.
 - **The execution-path offer asks about context budget, not about the clock.**
   It recommended the subagent path "when the plan will not finish in one
   sitting", and time does not predict occupancy: in the measurement recorded at
-  [`docs/context-budget.md`](docs/context-budget.md), a single-agent run took
-  practically the same wall time as the best configuration and ended with its
-  window at 74% full against that configuration's 26%. The offer now reports
-  the task count **and** the number of distinct files those tasks touch, and
+  [`docs/context-budget.md`](docs/context-budget.md), a single-agent run ended
+  with its window at 74% full against the best configuration's 26% — both
+  figures corroborated by both sources — while their wall times, which came out
+  practically the same, rest on a number only one source carries. The offer now
+  reports the task count **and** the number of distinct files those tasks touch, and
   says plainly that the occupancy judgement is the human partner's — nothing in
   this plugin gives an agent its own window occupancy. Reasoned on a
   third-party measurement, not measured here.
@@ -91,8 +92,8 @@ References below name them so a claim here can be traced there.
   judgement.** The decision graph in
   [`subagent-driven-development`](skills/subagent-driven-development/SKILL.md)
   asked "Tasks mostly independent?" and never said what independence was. It
-  now asks whether there is a boundary where the tasks stop sharing a file, an
-  interface and state — and its first question is context budget, not the
+  now asks whether there is a boundary where the tasks share no file, no
+  interface and no state — and its first question is context budget, not the
   clock. Coupling was named as a first-class variable only in
   [`dispatching-parallel-agents`](skills/dispatching-parallel-agents/SKILL.md),
   which is walled off from plan execution on purpose, so the variable the

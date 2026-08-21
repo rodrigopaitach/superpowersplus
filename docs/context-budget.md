@@ -6,9 +6,11 @@ execution-path criterion rests on it, and a rule resting on evidence nobody can
 open is a rule resting on nothing.
 
 **This document deliberately does not link to the skill that consumes it.** The
-criterion links here; linking back would make the two files a cycle, and a
-cycle cannot be built in any order — whichever lands first fails the link gate
-on a file that does not exist yet. Evidence does not point at its consumer.
+criterion links here, and evidence does not point at its consumer. The cost is
+concrete when the two are written in separate commits, as they were: a link
+back makes them a cycle, and whichever lands first fails the link gate on a
+file that does not exist yet. In one commit the gate reads the whole tree and
+never sees it — which is why the reason above is the durable one.
 
 ## Sources
 
