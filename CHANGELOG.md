@@ -87,6 +87,17 @@ References below name them so a claim here can be traced there.
   there was never a choice to make, and that path is selected without the
   criterion being consulted at all.
 
+- **Coupling is defined where the decision is taken, instead of being left to
+  judgement.** The decision graph in
+  [`subagent-driven-development`](skills/subagent-driven-development/SKILL.md)
+  asked "Tasks mostly independent?" and never said what independence was. It
+  now asks whether there is a boundary where the tasks stop sharing a file, an
+  interface and state — and its first question is context budget, not the
+  clock. Coupling was named as a first-class variable only in
+  [`dispatching-parallel-agents`](skills/dispatching-parallel-agents/SKILL.md),
+  which is walled off from plan execution on purpose, so the variable the
+  measurement calls decisive had nowhere to be stated.
+
 ## [1.18.0] - 2026-08-12
 
 ### Added

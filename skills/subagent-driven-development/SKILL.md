@@ -64,22 +64,30 @@ somebody was told.
 digraph when_to_use {
     "Have implementation plan?" [shape=diamond];
     "Subagents available in this harness?" [shape=diamond];
-    "Finishes in one sitting?" [shape=diamond];
-    "Tasks mostly independent?" [shape=diamond];
+    "Fits one window with slack for a correction round?" [shape=diamond];
+    "Low-coupling boundary between tasks?" [shape=diamond];
     "subagent-driven-development" [shape=box];
     "executing-plans" [shape=box];
     "Manual execution or brainstorm first" [shape=box];
+    "Re-decompose the plan" [shape=box];
 
     "Have implementation plan?" -> "Manual execution or brainstorm first" [label="no"];
     "Have implementation plan?" -> "Subagents available in this harness?" [label="yes"];
     "Subagents available in this harness?" -> "executing-plans" [label="no - no choice to present"];
-    "Subagents available in this harness?" -> "Finishes in one sitting?" [label="yes"];
-    "Finishes in one sitting?" -> "executing-plans" [label="yes - inline"];
-    "Finishes in one sitting?" -> "Tasks mostly independent?" [label="no - progress must survive"];
-    "Tasks mostly independent?" -> "subagent-driven-development" [label="yes"];
-    "Tasks mostly independent?" -> "Manual execution or brainstorm first" [label="no - re-decompose the plan"];
+    "Subagents available in this harness?" -> "Fits one window with slack for a correction round?" [label="yes"];
+    "Fits one window with slack for a correction round?" -> "executing-plans" [label="yes - inline"];
+    "Fits one window with slack for a correction round?" -> "Low-coupling boundary between tasks?" [label="no - the budget decides"];
+    "Low-coupling boundary between tasks?" -> "subagent-driven-development" [label="yes"];
+    "Low-coupling boundary between tasks?" -> "Re-decompose the plan" [label="no - splitting hides the coupling"];
 }
 ```
+
+**Coupling here means one thing.** Tasks are coupled when they have a
+shared file, shared interface, or shared state, and the boundary is where they
+stop having all three. That is the whole test — the full statement of both
+questions, and why a subagent is context-budget management rather than a
+quality technique, is in
+[execution-path.md](../writing-plans/references/execution-path.md).
 
 **The plan header's `**Execution:**` field may already answer this** — when
 superpowersplus:writing-plans handed the plan over, your partner picked the
