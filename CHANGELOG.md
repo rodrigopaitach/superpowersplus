@@ -81,6 +81,12 @@ References below name them so a claim here can be traced there.
   this plugin gives an agent its own window occupancy. Reasoned on a
   third-party measurement, not measured here.
 
+- **[`executing-plans`](skills/executing-plans/SKILL.md) reads the criterion
+  from the one statement instead of carrying its own copy.** The
+  harness-without-subagents clause is untouched: where there are no subagents
+  there was never a choice to make, and that path is selected without the
+  criterion being consulted at all.
+
 ## [1.18.0] - 2026-08-12
 
 ### Added
