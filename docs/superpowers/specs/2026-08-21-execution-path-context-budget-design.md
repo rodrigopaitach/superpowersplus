@@ -25,10 +25,12 @@ Three, all located.
 
 1. **The selection criterion is temporal, and the measurement shows temporal
    does not predict occupancy.** The single-agent run of the third-party
-   benchmark finished in 19 minutes — comfortably "one sitting" — and ended
-   with the context window at 74% full, leaving no budget for the correction
-   round that follows a first pass. A plan can be short in time and dense in
-   context, and the current criterion cannot tell them apart.
+   benchmark took practically the same wall time as the best configuration
+   measured — both sources state this — and ended with its context window at
+   74% full against that configuration's 26%, leaving no budget for the
+   correction round that follows a first pass. Same sitting, three times the
+   occupancy. A plan can be short in time and dense in context, and the
+   current criterion cannot tell the two apart.
 
 2. **The criterion is replicated in eight places across three skills.** No
    single statement owns it, so correcting it means correcting it three times
@@ -62,8 +64,9 @@ markdown link and stop repeating it.
 It goes to a reference rather than into `skills/writing-plans/SKILL.md` because
 that file is at 486 lines against a 500-line ceiling
 (`skills/writing-skills/anthropic-best-practices.md:1119`), and this
-repository's `CLAUDE.md` requires progressive disclosure rather than
-compression for a body over the line.
+repository's [`CLAUDE.md`](../../../CLAUDE.md), section "Where the obvious
+move is wrong", requires progressive disclosure rather than compression for a
+body over the line.
 
 Extraction at the third occurrence is this project's normal rule. The inversion
 — "unified in place, never extracted" — governs forms inside a subagent's
@@ -112,8 +115,9 @@ that its own author marks as unmeasured.
 
 It is marked as a third-party measurement, never as this project's. Its sources
 are named in text with no URL, because `docs/` is not exempt from the
-third-party link diet (`docs/docs-and-links.md`, section "The third-party link
-diet") and that diet allows four host prefixes, none of which covers them.
+third-party link diet ([`docs/docs-and-links.md`](../../docs-and-links.md),
+section "The third-party link diet") and that diet allows four host
+prefixes, none of which covers them.
 
 ### What does not change
 
@@ -144,8 +148,9 @@ prompt changes.
   `skills/subagent-driven-development/SKILL.md` carries the operational
   definition of coupling: shared file, shared interface, or shared state.
 - **AC9** — `docs/context-budget.md` exists and carries the scoreboard of the
-  four configurations, each row with grade, final window occupancy, token spend
-  and wall time.
+  four configurations (1, 3, 7 and 18 workers), with grade, final window
+  occupancy, token spend and wall time. A cell no source carries is left
+  explicitly empty; no cell is estimated, interpolated, or filled by inference.
 - **AC10** — `docs/context-budget.md` carries a section stating what the
   measurement does not cover, naming the single-to-multi turning point and the
   cost curve.
@@ -156,6 +161,9 @@ prompt changes.
   change.
 - **AC14** — `CHANGELOG.md` carries an `[Unreleased]` entry describing the
   change, staged in the same commit as the `skills/` change.
+- **AC15** — Every figure in that scoreboard is marked either as corroborated
+  by both artifacts or as carried by one, per the split recorded in
+  `## Assumptions to Confirm` item 2.
 
 ## Implicit Requirements
 
@@ -235,21 +243,34 @@ prompt changes.
    the canonical statement goes to `references/`.
 
 9. **`docs/` is not exempt from the third-party link diet, and the allowlist
-   has four prefixes.** `docs/docs-and-links.md`, section "The third-party link
-   diet":
+   has four prefixes.** [`docs/docs-and-links.md`](../../docs-and-links.md),
+   section "The third-party link diet":
    > "Everything under `skills/` is exempt because a skill legitimately cites vendor documentation"
 
    — the exemption names `skills/`, not `docs/`.
 
 10. **This project's plans do not live at the granularity the third-party
     measurement compared.** Measured 2026-08-21 over the 13 plans in
-    `docs/superpowers/plans/`, counting headings matching the same pattern
-    `scripts/task-brief` uses (`^#+[ \t]+Task[ \t]+[0-9]+`): median 7 tasks,
-    9 of 13 at 8 or fewer, one outlier at 23
-    (`docs/superpowers/plans/2026-05-06-lift-drill-into-evals.md`). One plan,
-    `docs/superpowers/plans/2026-06-09-visual-companion-issues.md`, matches
-    zero — it uses a different heading scheme and is a catalog, not a task
-    plan.
+    `docs/superpowers/plans/`, counting task headings exactly as
+    `skills/subagent-driven-development/scripts/task-brief:28-34` does —
+    pattern `^#+[ \t]+Task[ \t]+[0-9]+`, **and skipping fenced blocks**, which
+    that script does at line 29. The series is
+    `0 4 4 5 5 5 7 7 7 8 8 10 23`: median 7 tasks, 11 of 13 at 8 or fewer, one
+    outlier at 23 (`docs/superpowers/plans/2026-05-06-lift-drill-into-evals.md`).
+
+    **The fence rule is not a detail, and omitting it changes the answer.**
+    Three of these plans are plans about the SDD skill itself and quote
+    `## Task N` headings inside fenced examples. Counted without the fence
+    rule they read 9, 17 and 11 instead of 7, 5 and 8
+    (`docs/superpowers/plans/2026-06-09-sdd-task-scoped-review-dispatch.md`,
+    `docs/superpowers/plans/2026-07-06-sdd-plan-scoped-workspace.md`,
+    `docs/superpowers/plans/2026-07-15-sdd-fix-loop-redesign.md`), which moves
+    the "8 or fewer" count from 11 to 8. Any re-measurement of this finding
+    must skip fences or it is measuring a different thing.
+
+    One plan, `docs/superpowers/plans/2026-06-09-visual-companion-issues.md`,
+    matches zero — it uses a different heading scheme and is a catalog, not a
+    task plan.
 
 ## External Dependencies
 
@@ -265,17 +286,31 @@ handled under `## Assumptions to Confirm` below.
 1. **The benchmark's numbers are transcribed from the artifacts in `research/`,
    which are not under version control and which I could not independently
    reproduce.** Searched: `research/Aula — Sub-agents Benchmark
-   (Fakeflix).excalidraw` (582 elements, text extracted) and
+   (Fakeflix).excalidraw` (582 elements, text extracted with a JSON parse) and
    `research/Video Transcription Request - Google Gemini.pdf` (extracted with
-   `pdftotext`). The two agree on every figure used here. What could not be
-   confirmed is the benchmark itself — the runs, the harness, and the scoring
-   method are described in the artifacts and were not re-run. The document must
-   therefore attribute rather than assert.
+   `pdftotext`). What could not be confirmed is the benchmark itself — the
+   runs, the harness, and the scoring method are described in the artifacts and
+   were not re-run. The document must therefore attribute rather than assert.
 
-2. **The transcription PDF is a Gemini-produced summary of a video, not a
-   verbatim transcript, and says so in its own opening.** Figures taken from it
-   carry that provenance. Where the excalidraw and the PDF agree, the figure is
-   used; where only one carries a figure, it is not used.
+2. **The two artifacts are not two sources of equal weight, and treating them
+   as such was an error caught in spec review.** The excalidraw is the
+   benchmark author's own board and is the primary record: it alone carries the
+   full scoreboard. The PDF is a Gemini-produced summary of a video which
+   declares in its own opening that it is not a verbatim transcript. It
+   corroborates part of the board and is silent on the rest.
+
+   **Corroborated by both** — the 74% and 26% window occupancies, the 0.95,
+   0.93 and 0.81 grades, the 43-minute and 18-minute times, the ~25M and ~10M
+   token figures, and that the single-agent run took practically the same wall
+   time as the sweet-spot configuration.
+
+   **Carried by the excalidraw alone** — the single-agent run's 19 minutes and
+   9M tokens, and the entire 7-worker configuration (35m · 15M · 0.90).
+
+   The rule the design applies: a figure carried by one source may be recorded,
+   but it is marked as such and never used to carry an argument in the prose.
+   The first draft of this spec broke that rule by opening Problem 1 with the
+   19-minute figure; the prose now uses only corroborated figures.
 
 3. **Whether the human partner can in fact read a context meter is
    harness-dependent and was not verified per harness.** Searched:
@@ -310,7 +345,7 @@ handled under `## Assumptions to Confirm` below.
 | What happens to the review gate when tasks are grouped? | One reviewer, one cluster verdict | One reviewer, verdict per task | `skills/subagent-driven-development/SKILL.md:242-301` — the existing per-task gate |
 | What triggers grouping? | "What do the studies show?" — answered from the sources instead of chosen | The sources give a conjunction (window fit AND low-coupling boundary) and explicitly decline to give a threshold | The benchmark's own decision block and its "not validated" block |
 | Does this improve the plugin? | Proceed with criterion + coupling; grouping dropped | Criterion has direct evidence; grouping does not, and costs a certain gate for an unproven gain | Findings 4 and 10 |
-| How does the citation resolve, given the artifacts are untracked and 6.6M? | Summary in `docs/`, binaries stay out | Summary in `docs/` | `docs/docs-and-links.md`, section "The third-party link diet" |
+| How does the citation resolve, given the artifacts are untracked and 6.6M? | Summary in `docs/`, binaries stay out | Summary in `docs/` | [`docs/docs-and-links.md`](../../docs-and-links.md), section "The third-party link diet" |
 
 **Two corrections made during the interview, recorded because an approval that
 hides them is not auditable:** the first framing put task grouping in
