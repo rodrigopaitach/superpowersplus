@@ -85,9 +85,8 @@ digraph when_to_use {
 **Coupling here means one thing.** Tasks are coupled when they have a
 shared file, shared interface, or shared state — any one of the three is
 enough — and the boundary is where they share **none** of them. That is the
-whole test — the full statement of both
-questions, and why a subagent is context-budget management rather than a
-quality technique, is in
+whole test — the full statement of both questions, and why a subagent is
+context-budget management rather than a quality technique, is in
 [execution-path.md](../writing-plans/references/execution-path.md).
 
 **The plan header's `**Execution:**` field may already answer this** — when

@@ -12,6 +12,18 @@
 
 **Execution:** `inline` — progress recorded in session todos (not persisted). Chosen 2026-08-21 by the criterion this plan institutes: 5 tasks across 6 files, low-coupling boundaries present but the plan is small enough that the handoff cost outweighs them.
 
+> **Superseded text, marked rather than converted — 2026-08-21, after the
+> branch review.** The coupling boundary this plan prescribes at lines 255,
+> 374 and 601 reads "stop having all three" / "stop sharing a file, an
+> interface and state". That wording is **wrong and was corrected in the
+> branch**: coupling is disjunctive — any one of the three ties two tasks
+> together — so the boundary is where they share **none** of the three. The
+> current wording is in
+> [`execution-path.md`](../../../skills/writing-plans/references/execution-path.md).
+> This plan is a record of work already done and is not rewritten to match;
+> converting it would produce a document that looks as though it had passed
+> the gates in its corrected form. Read those three blocks as history.
+
 **Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
 2. **2–4 options with the cost of each**, always including doing nothing now.

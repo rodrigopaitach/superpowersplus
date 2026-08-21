@@ -47,6 +47,20 @@ References below name them so a claim here can be traced there.
   is the defect the hole was hiding, and it is why the widening was not
   bookkeeping.
 
+- **The coupling definition must sit on one physical line in both files that
+  carry it, and a reflow had broken one of them.**
+  [`execution-path.md`](skills/writing-plans/references/execution-path.md) and
+  [`subagent-driven-development`](skills/subagent-driven-development/SKILL.md)
+  hold the same sentence near-verbatim by design, recorded in this branch's
+  spec. Nothing gates the pair — both carrier lists in
+  [`check-escalation-shape.sh`](scripts/check-escalation-shape.sh) and
+  [`check-evidence-line.sh`](scripts/check-evidence-line.sh) are hardcoded, so
+  a third gate is a new script, a new suite and a new CI step. **A wrapped
+  phrase is invisible until a gate looks for it**, and this project's gate
+  form for a copied form is a line-literal comparison: left split, the
+  reference would have failed such a gate the day it was written. Word streams
+  compared rather than read — the change is reflow only.
+
 ### Changed
 
 - **Plans and specs are exempt from the third-party diet, and their local

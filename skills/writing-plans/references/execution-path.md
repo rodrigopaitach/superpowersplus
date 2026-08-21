@@ -31,9 +31,9 @@ already spent the budget it needs for the first bug.
 
 **2. Is there a low-coupling boundary between the tasks?**
 
-Tasks are coupled when they have a shared file, shared interface, or shared
-state — any one of the three is enough. The boundary is the point where they
-share **none** of the three. Where no such boundary exists, splitting the work
+Tasks are coupled when they have a
+shared file, shared interface, or shared state — any one of the three is
+enough. The boundary is the point where they share **none** of the three. Where no such boundary exists, splitting the work
 moves the coupling into the gaps between subagents, where nothing can see it.
 
 Both answers point the same way, or the criterion has not been applied: a plan
