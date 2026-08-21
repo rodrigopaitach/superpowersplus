@@ -94,9 +94,10 @@ field is not discovered at all.
   manifest's version changes, and with every manifest well formed the bump
   still succeeds.
 - **AC14** — `.github/workflows/ci.yml` gains a step running that suite.
-- **AC15** — That passage offers the human partner an explicit, enumerated set
-  of outcomes for the files at stake, and says the chosen one is carried out
-  before the worktree is removed.
+- **AC15** — The same passage of
+  `skills/finishing-a-development-branch/SKILL.md` offers the human partner an
+  explicit, enumerated set of outcomes for the files at stake, and says the
+  chosen one is carried out before the worktree is removed.
 - **AC16** — `scripts/lint-shell.sh` passes over the two shell suites this
   change creates. It runs in CI over the pushed range
   (`.github/workflows/ci.yml:133`) and fires here **because** this change adds
@@ -122,14 +123,26 @@ field is not discovered at all.
   manifests declared in `.version-bump.json` are JSON.
 - **IR5** — No reviewer prompt and no skill body other than
   `skills/finishing-a-development-branch/SKILL.md` is modified.
+- **IR7** — Every commit that stages a path under `skills/`, `scripts/` or
+  `.github/` carries its `CHANGELOG.md` entry in the same commit. This is not
+  settled by opening a line of the tree — it is a property of how the work is
+  committed, checked by `scripts/check-changelog.sh` against the index at
+  commit time and evidenced by a green commit. It is stated here because the
+  obligation is real and, without a criterion, would live only inside a gate
+  list that describes itself as something else.
 - **IR6** — The gates this change must not break stay green:
   `scripts/check-links.sh`, `scripts/check-changelog.sh`,
   `scripts/check-docs-sync.sh`, `scripts/check-skill-size.sh`,
   `scripts/check-escalation-shape.sh`, `scripts/check-evidence-line.sh`,
   `scripts/check-frozen-history.sh`, `scripts/check-skill-behavior-records.sh`.
-  **This list is the gates the change must not break, not every gate in
-  `scripts/`.** The one that fires because this change feeds it —
-  `scripts/lint-shell.sh` — is `AC16`, deliberately separate.
+  **This list is not every gate in `scripts/`, and it is not only gates the
+  change passively must not break.** Two of them fire *because* this change
+  feeds them, and each carries its own criterion rather than hiding inside
+  this one: `scripts/lint-shell.sh`, fed the two new shell suites, is `AC16`;
+  `scripts/check-changelog.sh`, whose
+  `CONTENT_PREFIXES=(skills/ scripts/ githooks/ .github/ hooks/)`
+  (`scripts/check-changelog.sh:49`) matches three of the paths this change
+  stages, is `IR7`.
 
 ## Codebase Findings
 
@@ -158,7 +171,9 @@ Every claim below was measured in this checkout on 2026-08-21, at `f575958`.
 
    **Nothing invokes it, and here is the search that says so rather than a
    description of one.** `grep -rn 'render-graphs' --exclude-dir=.git .`
-   returns three kinds of carrier and no caller: the script's own usage text
+   returns three kinds of carrier and no caller — plus this specification
+   itself, which is what a document about the tool inevitably adds to its own
+   measurement: the script's own usage text
    (`skills/writing-skills/render-graphs.js:7-8`, `:90`, `:96-97`), its
    documentation (`skills/writing-skills/SKILL.md:331-334`), and two
    historical changelog lines (`CHANGELOG.md:4280`,
@@ -275,22 +290,29 @@ No library, package, or service is added.
 
 | Category | State | Where it landed |
 |---|---|---|
-| Functional scope | Resolved — cut once, from "fix and resurrect" to "repair only", after the five-month measurement | `AC1`–`AC14`, and the scope line under Problem 1 |
+| Functional scope | Resolved — cut once, from "fix and resurrect" to "repair only", after the five-month measurement | `AC1`–`AC6`, `AC8`–`AC13`, `AC15`, and the scope line under Problem 1 |
 | Data and schema | Clear — no data store, no schema in this repository | — |
 | Concurrency | Clear — three single-shot scripts, no shared state, no parallelism | — |
 | Error handling | Resolved — the whole of Problems 2 and 3 is error handling that was missing | `AC2`, `AC8`, `AC11`, `AC12` |
-| Observability | Resolved — the skipped assertion must announce itself, and the bump must fail loudly rather than half-succeed | `IR2`, `AC11` |
+| Observability | Resolved — the skipped assertion announces itself (`AC6`), a missing Graphviz never reads as a code regression (`IR2`), and the bump fails loudly rather than half-succeeding (`AC11`) | `AC6`, `IR2`, `AC11` |
 | Limits and edge cases | Resolved — Graphviz absent, manifest unparseable, manifest field missing | `AC2`, `AC11`, `AC12` |
 | Security | Clear — the shell removal at `AC4` is defence in depth; the arguments are literals, so no injection path exists today | `AC4` |
 | Dependencies | Resolved — no dependency added, and the design was rewritten once to keep it that way | `IR1`, `IR4`, `## External Dependencies` |
-| Testing | **Partly resolved, and the gap is named.** Problems 1 and 3 each get a suite with a CI step. `AC5` and `AC13` prove their defect by difference — each suite fails against the file as it stands before the change. **Problem 2 carries no test at all:** it adds prose to a skill, and the only gate touching that file measures length, not content. This repository has `tests/skill-behavior/` for the "does the rule hold under pressure" question and no criterion here asks for one — a deliberate omission, recorded rather than left to be discovered | `AC5`, `AC6`, `AC7`, `AC13`, `AC14`, `AC16`; Problem 2: nothing |
+| Testing | **Partly resolved, and the gap is named.** Problems 1 and 3 each get a suite with a CI step. `AC5` and `AC13` prove their defect by difference — each suite fails against the file as it stands before the change. **Problem 2 carries no test at all:** it adds prose to a skill, and no gate reads the new passage — `check-skill-size.sh` measures the file's length and `check-evidence-line.sh` (`scripts/check-evidence-line.sh:64`) reads one specific form elsewhere in it, neither of which looks at what the guard says. This repository has `tests/skill-behavior/` for the "does the rule hold under pressure" question and no criterion here asks for one — a deliberate omission, recorded rather than left to be discovered | `AC5`, `AC6`, `AC7`, `AC13`, `AC14`, `AC16`; Problem 2: nothing |
 | Terminology | Clear — no new term is introduced | — |
+
+**`IR5`, `IR6` and `IR7` are in no row above, and that is not an omission.**
+The map has one row per design category; those three are process guardrails —
+what this change must not touch, what must stay green, and how the work is
+committed. No design category owns them, and inventing a row would make the
+map's shape argue that they were design questions. They are stated in
+`## Implicit Requirements` and charged there.
 
 ### Decision record
 
 | Question | Answer | Recommendation given | Source |
 |---|---|---|---|
-| Why install Graphviz at all? | Do not. Repair the script without adding it anywhere automated | Delete the script entirely | `CLAUDE.md:52`, plus Codebase Finding 4 |
+| Why install Graphviz at all? | Do not. Repair the script without adding it anywhere automated | Delete the script entirely | [`CLAUDE.md`](../../../CLAUDE.md), section "What does not belong here", plus Codebase Finding 4 |
 | Repair or delete? | Repair, minimally — an override of the recommendation below, not a conclusion from it | **Delete**, on the same evidence | Human partner's decision, 2026-08-21; the residual is in `## Assumptions to Confirm` item 1 |
 | Adopt the upstream's YAML manifest support? | No | No — all seven manifests are JSON | `.version-bump.json`, Codebase Finding 7 |
 | Fix the missing-field case the upstream's preflight misses? | Yes | Yes — one character, and it closes the silent case | Codebase Findings 9 and 10 |
