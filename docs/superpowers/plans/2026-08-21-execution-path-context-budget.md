@@ -8,7 +8,7 @@
 
 **Architecture:** One new reference file under `skills/writing-plans/references/` becomes the single statement of the criterion; the three `SKILL.md` files that repeat it today link to it instead. One new document under `docs/` records the third-party measurement the rule rests on. No script changes, no reviewer-prompt changes, and no new machinery — coupling enters as content of two nodes that already exist.
 
-**Tech Stack:** None. This is a zero-dependency plugin of markdown skills; the spec's `## External Dependencies` says "None". The only executables involved are gates already in this repository: `scripts/check-links.sh`, `scripts/check-skill-size.sh`, `scripts/check-changelog.sh`, `scripts/check-escalation-shape.sh`, `scripts/check-evidence-line.sh`.
+**Tech Stack:** None. This is a zero-dependency plugin of markdown skills; the spec's `## External Dependencies` says "None". The only executables involved are gates already in this repository. The four the spec's `IR6` names: `scripts/check-links.sh`, `scripts/check-changelog.sh`, `scripts/check-docs-sync.sh`, and the `SKILL.md` line ceiling (`scripts/check-skill-size.sh`). Two more are in play because the files this plan edits are declared carriers of a copied form: `scripts/check-escalation-shape.sh` and `scripts/check-evidence-line.sh`.
 
 **Execution:** [to be filled at the execution handoff]
 
@@ -39,7 +39,7 @@ Every task's requirements implicitly include this section.
 
 | Criterion | Spec criterion | Test type | Layer | Test |
 |-----------|----------------|-----------|-------|------|
-| T1.1 The evidence document exists and carries the four-configuration scoreboard | AC9 | grep | `docs/` | `grep -c '^| ' docs/context-budget.md` returns the four data rows plus header |
+| T1.1 The evidence document exists and carries the four-configuration scoreboard | AC9 | grep | `docs/` | `grep -c '^| ' docs/context-budget.md` returns 5 — header plus four data rows |
 | T1.2 No scoreboard cell is estimated — a cell no source carries is empty | AC9 | grep | `docs/` | `grep -F '| — |' docs/context-budget.md` matches the two window cells |
 | T1.3 The document states what the measurement does not cover, naming the turning point and the cost curve | AC10 | grep | `docs/` | `grep -i 'turning point' docs/context-budget.md` and `grep -i 'curve' docs/context-budget.md` |
 | T1.4 The document states the measurement is a third party's | AC11 | grep | `docs/` | `grep -i 'third-party measurement' docs/context-budget.md` |
@@ -49,19 +49,21 @@ Every task's requirements implicitly include this section.
 | T2.2 It presents the window-fit question before the coupling question | AC2 | grep | `skills/writing-plans/references/` | `grep -n 'context window' skills/writing-plans/references/execution-path.md` precedes `grep -n 'low-coupling'` |
 | T2.3 It asserts a subagent is context-budget management, not a quality technique | AC3 | grep | `skills/writing-plans/references/` | `grep -i 'not a quality technique' skills/writing-plans/references/execution-path.md` |
 | T2.4 It carries neither the escalation shape nor the evidence line | IR5 | gate | `tests/hooks/` | `scripts/check-escalation-shape.sh` and `scripts/check-evidence-line.sh` both exit 0 with unchanged carrier counts |
+| T2.5 The citation of the evidence document names the third party | IR4 | grep | `skills/writing-plans/references/` | `grep -F "third party's measurement, not this project's" skills/writing-plans/references/execution-path.md` |
 | T3.1 `writing-plans` reaches the criterion by markdown link and does not restate it | AC4 | grep | `skills/writing-plans/` | `grep -F '](references/execution-path.md)' skills/writing-plans/SKILL.md` |
-| T3.2 The offer states the slack judgement is the human partner's and the agent does not observe its own occupancy | AC6 | grep | `skills/writing-plans/` | `grep -i 'does not observe its own' skills/writing-plans/SKILL.md` |
-| T3.3 The offer reports the task count and the number of distinct files the tasks touch | AC7 | grep | `skills/writing-plans/` | `grep -i 'distinct files' skills/writing-plans/SKILL.md` |
-| T3.4 The 2026-08-04 resumability measurement survives in the offer | IR2 | grep | `skills/writing-plans/` | `grep -F 'Measured, 2026-08-04' skills/writing-plans/SKILL.md` |
-| T3.5 No rule added requires an agent to read its own window occupancy | IR3 | grep | `skills/writing-plans/` | `grep -icE 'read (your|its) own (context )?(window|occupancy)' skills/writing-plans/SKILL.md` returns 0 outside the disclaimer sentence |
-| T3.6 `writing-plans/SKILL.md` ends at or under 500 lines | AC13 | gate | `tests/hooks/` | `scripts/check-skill-size.sh` exits 0 |
-| T3.7 The commit carries a CHANGELOG entry under `[Unreleased]` | AC14 | gate | `tests/hooks/` | `scripts/check-changelog.sh` exits 0 against the staged set |
+| T3.2 The offer states the occupancy judgement is the human partner's | AC6 | grep | `skills/writing-plans/` | `grep -F "The occupancy judgement is the human partner's" skills/writing-plans/SKILL.md` |
+| T3.3 The offer states the plugin does not expose the agent's own window occupancy | AC6 | grep | `skills/writing-plans/` | `grep -F 'does not expose your own window occupancy' skills/writing-plans/SKILL.md` |
+| T3.4 The offer reports the task count and the number of distinct files the tasks touch | AC7 | grep | `skills/writing-plans/` | `grep -i 'distinct files' skills/writing-plans/SKILL.md` |
+| T3.5 The 2026-08-04 resumability measurement survives in the offer | IR2 | grep | `skills/writing-plans/` | `grep -F 'Measured, 2026-08-04' skills/writing-plans/SKILL.md` |
+| T3.6 No rule added requires an agent to read its own window occupancy | IR3 | grep | `skills/writing-plans/` | `grep -inE 'read (your|its) own (context )?(window|occupancy)' skills/writing-plans/SKILL.md` returns nothing |
+| T3.7 `writing-plans/SKILL.md` ends at or under 500 lines | AC13 | gate | `tests/hooks/` | `scripts/check-skill-size.sh` exits 0 |
+| T3.8 The commit carries a CHANGELOG entry under `[Unreleased]` | AC14 | gate | `tests/hooks/` | `scripts/check-changelog.sh` exits 0 against the staged set |
 | T4.1 `executing-plans` reaches the criterion by markdown link and does not restate it | AC4 | grep | `skills/executing-plans/` | `grep -F '](../writing-plans/references/execution-path.md)' skills/executing-plans/SKILL.md` |
 | T4.2 The harness-without-subagents case still selects inline without consulting the criterion | IR1 | grep | `skills/executing-plans/` | `grep -i 'no subagents' skills/executing-plans/SKILL.md` still names this path as the answer |
 | T5.1 The decision graph's independence node carries the operational definition of coupling | AC8 | grep | `skills/subagent-driven-development/` | `grep -F 'shared file, shared interface, or shared state' skills/subagent-driven-development/SKILL.md` |
 | T5.2 `subagent-driven-development` reaches the criterion by markdown link | AC4 | grep | `skills/subagent-driven-development/` | `grep -F '](../writing-plans/references/execution-path.md)' skills/subagent-driven-development/SKILL.md` |
 | T5.3 No occurrence of "one sitting" serves as the decision criterion anywhere under `skills/` | AC5 | grep | `skills/` | `grep -rn 'one sitting' skills/` returns no line stating the inline/subagent choice |
-| T5.4 Every gate this branch touches is green | IR6 | gate | `tests/hooks/` | `scripts/check-links.sh`, `scripts/check-skill-size.sh`, `scripts/check-escalation-shape.sh`, `scripts/check-evidence-line.sh` all exit 0 |
+| T5.4 The four gates the spec's IR6 names are green | IR6 | gate | `tests/hooks/` | `scripts/check-links.sh`, `scripts/check-changelog.sh`, `scripts/check-docs-sync.sh`, `scripts/check-skill-size.sh` all exit 0 |
 | T5.5 No reviewer prompt and no script under `skills/*/scripts/` was modified on this branch | IR5 | gate | `skills/` | `git diff --name-only main..HEAD -- 'skills/*/scripts/*' 'skills/*/*-prompt.md'` returns empty |
 
 ---
@@ -78,7 +80,7 @@ Every task's requirements implicitly include this section.
 - Produces: the path `docs/context-budget.md`, which Task 2 links to from the canonical statement. No symbol, no signature — a markdown file at a fixed path.
 
 **Acceptance criteria:**
-- T1.1: `docs/context-budget.md` exists and carries a scoreboard with exactly four data rows — 1, 3, 7 and 18 workers — each with grade, final window occupancy, token spend and wall time — test: `grep -c '^| ' docs/context-budget.md`
+- T1.1: `docs/context-budget.md` exists and carries a scoreboard with exactly four data rows — 1, 3, 7 and 18 workers — each with grade, final window occupancy, token spend and wall time — test: `grep -c '^| ' docs/context-budget.md` returns 5 (the header plus four data rows; the separator row starts `|-` and does not match)
 - T1.2: The two window-occupancy cells no source carries are written as `—`, not estimated — test: `grep -F '| — |' docs/context-budget.md`
 - T1.3: A section states what the measurement does not cover, naming the turning point and the cost curve — test: `grep -i 'turning point' docs/context-budget.md`
 - T1.4: The document states the measurement is a third party's and not this project's — test: `grep -i 'third-party measurement' docs/context-budget.md`
@@ -165,14 +167,14 @@ reasoning is in
 - [ ] **Step 2: Verify each content criterion**
 
 ```bash
-grep -c '^| ' docs/context-budget.md          # expect 6: header, separator, 4 data rows
+grep -c '^| ' docs/context-budget.md          # expect 5: header + 4 data rows
 grep -F '| — |' docs/context-budget.md        # expect the two rows with no window figure
 grep -i 'turning point' docs/context-budget.md
 grep -i 'third-party measurement' docs/context-budget.md
 grep -c '†' docs/context-budget.md            # expect non-zero
 ```
 
-Expected: every command prints a match; the first prints `6`.
+Expected: every command prints a match; the first prints `5`. **Five, not six** — the separator row is `|---|---|---|---|---|`, which starts `|-` and does not match the anchored pattern `^| `.
 
 - [ ] **Step 3: Run the link gate**
 
@@ -191,7 +193,7 @@ git commit -m "docs(context-budget): a medição que sustenta o critério é de 
 
 ### Task 2: The canonical statement
 
-**Spec criterion:** `AC1` (the statement exists), `AC2` (the two questions in order), `AC3` (the context-budget assertion), `IR5` (no reviewer prompt or skill script modified).
+**Spec criterion:** `AC1` (the statement exists), `AC2` (the two questions in order), `AC3` (the context-budget assertion), `IR4` (every citation of the evidence document names the third party), `IR5` (no reviewer prompt or skill script modified).
 
 **Files:**
 - Create: `skills/writing-plans/references/execution-path.md`
@@ -205,6 +207,7 @@ git commit -m "docs(context-budget): a medição que sustenta o critério é de 
 - T2.2: The window-fit question appears before the coupling question — test: `grep -n 'context window' … ` precedes `grep -n 'low-coupling' …`
 - T2.3: It states that a subagent is context-budget management and not a quality technique — test: `grep -i 'not a quality technique' …`
 - T2.4: It carries neither the escalation shape nor the evidence line, so the two carrier gates keep their existing counts — test: `scripts/check-escalation-shape.sh` and `scripts/check-evidence-line.sh` both exit 0
+- T2.5: The file's citation of the evidence document names the third party rather than presenting it as this project's measurement — test: `grep -F "third party's measurement, not this project's" skills/writing-plans/references/execution-path.md`
 
 - [ ] **Step 1: Write the statement**
 
@@ -266,9 +269,9 @@ screen. The offer asks; it does not assume, and it does not estimate.
 
 [`docs/context-budget.md`](../../../docs/context-budget.md) records the
 measurement, its four configurations, and — in its own section — the three
-things it did not measure, the turning point among them. **It is a third
-party's measurement, not this project's**, and the rule above is reasoned on
-top of it rather than measured here.
+things it did not measure, the turning point among them.
+**It is a third party's measurement, not this project's**, and the rule above
+is reasoned on top of it rather than measured here.
 
 This is why no number appears in the criterion. The one figure a threshold
 would need is the one the source declares it never took.
@@ -332,12 +335,13 @@ git commit -m "feat(writing-plans): o critério de execução passa a ter um enu
 
 **Acceptance criteria:**
 - T3.1: `skills/writing-plans/SKILL.md` links to the reference and no longer restates the criterion — test: `grep -F '](references/execution-path.md)' skills/writing-plans/SKILL.md`
-- T3.2: The offer states the slack judgement belongs to the human partner and that the agent does not observe its own occupancy — test: `grep -i 'does not observe its own' skills/writing-plans/SKILL.md`
-- T3.3: The offer reports the task count and the number of distinct files the tasks touch — test: `grep -i 'distinct files' skills/writing-plans/SKILL.md`
-- T3.4: The 2026-08-04 resumability block is still present and unedited — test: `grep -F 'Measured, 2026-08-04' skills/writing-plans/SKILL.md`
-- T3.5: No sentence added by this task asks an agent to read its own window occupancy; the only mention states the opposite — test: `grep -inE 'read (your|its) own (context )?(window|occupancy)' skills/writing-plans/SKILL.md`
-- T3.6: `scripts/check-skill-size.sh` exits 0 — test: `scripts/check-skill-size.sh`
-- T3.7: `scripts/check-changelog.sh` exits 0 against the staged set — test: `scripts/check-changelog.sh`
+- T3.2: The offer states that the occupancy judgement belongs to the human partner — test: `grep -F "The occupancy judgement is the human partner's" skills/writing-plans/SKILL.md`
+- T3.3: The offer states that the plugin does not expose the agent's own window occupancy — test: `grep -F 'does not expose your own window occupancy' skills/writing-plans/SKILL.md`
+- T3.4: The offer reports the task count and the number of distinct files the tasks touch — test: `grep -i 'distinct files' skills/writing-plans/SKILL.md`
+- T3.5: The 2026-08-04 resumability block is still present and unedited — test: `grep -F 'Measured, 2026-08-04' skills/writing-plans/SKILL.md`
+- T3.6: No sentence added by this task asks an agent to read its own window occupancy — test: `grep -inE 'read (your|its) own (context )?(window|occupancy)' skills/writing-plans/SKILL.md` returns nothing
+- T3.7: `scripts/check-skill-size.sh` exits 0 — test: `scripts/check-skill-size.sh`
+- T3.8: `scripts/check-changelog.sh` exits 0 against the staged set — test: `scripts/check-changelog.sh`
 
 - [ ] **Step 1: Record the starting line count**
 
@@ -381,23 +385,27 @@ count is what tells them about density, and density is what fills a window.
 Eleven tasks across three files and eleven across thirty are different
 decisions.
 
-**Say plainly that the occupancy judgement is theirs.** You do not observe your
-own context window — nothing in this plugin exposes it — so the offer reports
-what you can measure from the plan and asks. Never estimate an occupancy
-figure, and never imply you read one.
+**The occupancy judgement is the human partner's, and you say so.**
+This plugin does not expose your own window occupancy to you. So the offer
+reports what you can measure from the plan and asks; never estimate an
+occupancy figure, and never imply you read one.
 ```
 
 - [ ] **Step 4: Verify the content criteria**
 
 ```bash
 grep -F '](references/execution-path.md)' skills/writing-plans/SKILL.md
-grep -i 'does not observe its own\|do not observe your own' skills/writing-plans/SKILL.md
+grep -F "The occupancy judgement is the human partner's" skills/writing-plans/SKILL.md
+grep -F 'does not expose your own window occupancy' skills/writing-plans/SKILL.md
 grep -i 'distinct files' skills/writing-plans/SKILL.md
 grep -F 'Measured, 2026-08-04' skills/writing-plans/SKILL.md
+grep -inE 'read (your|its) own (context )?(window|occupancy)' skills/writing-plans/SKILL.md
 ```
 
-Expected: all four match. The last one confirms the resumability measurement
-was not removed while editing around it.
+Expected: the first five match; the last returns nothing. **Each search string
+must sit on one physical line of the file** — `grep` matches within a line, and
+a phrase split by a wrap never fires. The `Measured, 2026-08-04` hit confirms
+the resumability measurement was not removed while editing around it.
 
 - [ ] **Step 5: Run the gates**
 
@@ -535,7 +543,7 @@ git commit -m "feat(executing-plans): o critério vem do enunciado único"
 - T5.1: The independence node carries the operational definition of coupling — test: `grep -F 'shared file, shared interface, or shared state' skills/subagent-driven-development/SKILL.md`
 - T5.2: The skill links to the canonical statement — test: `grep -F '](../writing-plans/references/execution-path.md)' skills/subagent-driven-development/SKILL.md`
 - T5.3: `grep -rn 'one sitting' skills/` returns no line stating the inline/subagent choice — test: `grep -rn 'one sitting' skills/`
-- T5.4: `scripts/check-links.sh`, `scripts/check-skill-size.sh`, `scripts/check-escalation-shape.sh` and `scripts/check-evidence-line.sh` all exit 0 — test: the four commands
+- T5.4: The four gates the spec's `IR6` names all exit 0 — `scripts/check-links.sh`, `scripts/check-changelog.sh` (against the staged set), `scripts/check-docs-sync.sh`, and the line ceiling `scripts/check-skill-size.sh` — test: the four commands
 - T5.5: `git diff --name-only main..HEAD -- 'skills/*/scripts/*' 'skills/*/*-prompt.md'` returns empty — test: that command
 
 - [ ] **Step 1: Replace the decision graph**
@@ -579,10 +587,11 @@ one, and for checking that the field still fits what you are looking at.
 with:
 
 ```markdown
-**Tasks are coupled when they share a file, share an interface, or share
-state**; the boundary is where they stop doing all three. That is the whole
-test — the full statement of both questions, and why a subagent is
-context-budget management rather than a quality technique, is in
+**Coupling here means one thing.** Tasks are coupled when they have a
+shared file, shared interface, or shared state, and the boundary is where they
+stop having all three. That is the whole test — the full statement of both
+questions, and why a subagent is context-budget management rather than a
+quality technique, is in
 [execution-path.md](../writing-plans/references/execution-path.md).
 
 **The plan header's `**Execution:**` field may already answer this** — when
@@ -608,14 +617,19 @@ did not land.
 ```bash
 scripts/check-links.sh
 scripts/check-skill-size.sh
+scripts/check-docs-sync.sh
 scripts/check-escalation-shape.sh
 scripts/check-evidence-line.sh
 git diff --name-only main..HEAD -- 'skills/*/scripts/*' 'skills/*/*-prompt.md'
 ```
 
-Expected: the four gates exit 0; the `git diff` prints nothing. The two carrier
+Expected: all five gates exit 0; the `git diff` prints nothing. The two carrier
 gates must still report 6 and 8 carriers — a changed count means an edit
 touched one of the two copied forms.
+
+`scripts/check-changelog.sh`, the sixth gate the spec's `IR6` names, reads the
+staged set and so runs in Step 5 after `git add`, not here. The pre-commit hook
+runs it too; a green commit is the evidence for that half of `T5.4`.
 
 - [ ] **Step 5: Add the changelog line and commit**
 
