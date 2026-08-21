@@ -145,7 +145,32 @@ prompt changes.
 - **AC4** — Each of `skills/writing-plans/SKILL.md`,
   `skills/executing-plans/SKILL.md` and
   `skills/subagent-driven-development/SKILL.md` reaches the criterion by a
-  markdown link to that file, and none of them restates it.
+  markdown link to that file, and none of them carries the **full statement** —
+  the two questions with the reasoning behind them, which is what stood
+  duplicated in eight places and is what this criterion exists to remove.
+  **A pointer sentence naming the questions at the point of decision is
+  required, not forbidden.** `AC6`, `AC7` and `AC8` each demand some of that
+  text, and a call site reading only "see the link" tells a reader nothing they
+  can act on. What no call site may do is restate the reasoning the reference
+  owns.
+
+  **Amended 2026-08-21, after the branch review.** As first written this read
+  "and none of them restates it", which contradicted `AC6`, `AC7` and `AC8`
+  outright: a literal reading of it deletes what they require. The conformance
+  audit had already marked the restatement half unauditable — no `grep` decides
+  what counts as restating — and the branch review found the contradiction from
+  the other side. Left standing, the rotted half competes with the live one and
+  whoever reads `AC4` alone undoes `AC8` in good faith.
+
+  **One duplication survives on purpose and nothing gates it.** The operational
+  definition of coupling appears both in the reference and, near-verbatim, at
+  the decision point `AC8` names. This project's answer to a form copied on
+  purpose is normally a gate — `check-evidence-line.sh` and
+  `check-escalation-shape.sh` exist for exactly that. Both carrier lists are
+  declared rather than discovered, so a third gate is a new script, a new
+  suite and a new CI step: new scope, not a correction, and out of this
+  change's scope by decision on 2026-08-21. Recorded here so the next person
+  to find the two copies knows they were seen.
 - **AC5** — `grep -rn "one sitting" skills/` returns no occurrence that is
   serving as the decision criterion.
 - **AC6** — The offer in `skills/writing-plans/SKILL.md` states that the slack
