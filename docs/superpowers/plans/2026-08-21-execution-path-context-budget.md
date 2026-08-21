@@ -10,7 +10,7 @@
 
 **Tech Stack:** None. This is a zero-dependency plugin of markdown skills; the spec's `## External Dependencies` says "None". The only executables involved are gates already in this repository. The four the spec's `IR6` names: `scripts/check-links.sh`, `scripts/check-changelog.sh`, `scripts/check-docs-sync.sh`, and the `SKILL.md` line ceiling (`scripts/check-skill-size.sh`). Two more are in play because the files this plan edits are declared carriers of a copied form: `scripts/check-escalation-shape.sh` and `scripts/check-evidence-line.sh`.
 
-**Execution:** [to be filled at the execution handoff]
+**Execution:** `inline` — progress recorded in session todos (not persisted). Chosen 2026-08-21 by the criterion this plan institutes: 5 tasks across 6 files, low-coupling boundaries present but the plan is small enough that the handoff cost outweighs them.
 
 **Escalation shape** (detail and a worked example: `../using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
