@@ -59,6 +59,26 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A third gate for a copied form landed, and five sentences counting them
+  still said two.** The branch-wide review found the class: `docs/testing.md`
+  named thirteen suite directories where `ls -d tests/*/` returns fourteen and
+  "ten of the thirteen" in CI where it is now every static suite;
+  [`docs/review-scopes.md`](docs/review-scopes.md), section "Why the form is
+  copied rather than extracted", said "Two carry that weight" and "Both run
+  whole-tree" — while [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh)
+  sends its own failing readers to that very section; [`CLAUDE.md`](CLAUDE.md)
+  said "the two shapes", against its own rule that this file keeps a relation
+  or a condition and never a measured number. **The wording was changed so it
+  cannot age again**, not merely incremented: the lists are enumerated where
+  enumeration is the point and the counts are named as run-time output
+  everywhere else. Two comments this branch itself wrote — in
+  [`ci.yml`](.github/workflows/ci.yml) and
+  [`githooks/pre-commit`](githooks/pre-commit) — carried the same defect on
+  their first day and were rewritten the same way.
+  [`docs/pre-commit-cost.md`](docs/pre-commit-cost.md) declared one untimed
+  gate where there are three, and now states the condition instead of the
+  number.
+
 - **`bump-version.sh` wrote as it walked, and a manifest missing its field was
   not detected at all.** Measured by running the real script against three
   declared manifests: with the middle one holding unparseable JSON it exits 5

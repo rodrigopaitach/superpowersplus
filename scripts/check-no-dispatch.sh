@@ -33,10 +33,10 @@ from pathlib import Path
 
 root = Path(sys.argv[1])
 
-# Declared, not discovered — an eighth carrier is added here on purpose. Six
-# skills, seven files: subagent-driven-development carries it three times, once
-# per dispatched role, which is why a list of skill names is not a list of
-# carriers.
+# Declared, not discovered — a new carrier is added here on purpose.
+# subagent-driven-development carries it once per dispatched role, which is why
+# a list of skill names is not a list of carriers. The count is printed at run
+# time and written down nowhere: it ages every time the list grows.
 CARRIERS = [
     "skills/subagent-driven-development/implementer-prompt.md",
     "skills/subagent-driven-development/task-reviewer-prompt.md",

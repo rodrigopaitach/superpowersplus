@@ -45,7 +45,8 @@ shape moved out of that file and into the moment of use. A subagent reads its
 own output block; it does not follow a pointer out of it. The runs themselves
 are in [tests/skill-behavior/README.md](../tests/skill-behavior/README.md).
 
-**Without a gate, "unified in place" is just "copied."** Two carry that weight:
+**Without a gate, "unified in place" is just "copied."** Each of these carries
+that weight:
 
 - [check-evidence-line.sh](../scripts/check-evidence-line.sh) — comparing the
   evidence line's fields across every declared carrier, tolerating formatting.
@@ -56,8 +57,16 @@ are in [tests/skill-behavior/README.md](../tests/skill-behavior/README.md).
 - [check-escalation-shape.sh](../scripts/check-escalation-shape.sh) — six
   carriers, five skills, `subagent-driven-development` holding the shape twice.
   A list of skill names undercounts the files that have to agree.
+- [check-no-dispatch.sh](../scripts/check-no-dispatch.sh) — the clause saying a
+  review seat does not open another one, carried in every dispatched prompt.
+  It cannot live behind a link for a reason peculiar to it:
+  [using-superpowers/SKILL.md](../skills/using-superpowers/SKILL.md) opens with
+  a `<SUBAGENT-STOP>` block telling a dispatched subagent to ignore the skill,
+  so the one rule governing review dispatch cannot be read by anyone able to
+  violate it. The clause is therefore carried in the prompt body itself, never
+  in the skill's own prose around it.
 
-Both run whole-tree from the pre-commit hook rather than over the staged range:
+They run whole-tree from the pre-commit hook rather than over the staged range:
 the carriers are edited one at a time, so a range-scoped check would read the
 one being changed and never the others it must match. Both name what drifted
 when they fail.

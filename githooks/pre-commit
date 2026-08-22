@@ -39,5 +39,5 @@ repo_root="$(git rev-parse --show-toplevel)"
 "$repo_root/scripts/check-escalation-shape.sh"
 
 # The third form, and the reason it is whole-tree like the other two: the
-# seven prompts that carry the no-dispatch clause are edited one at a time.
+# prompts carrying the no-dispatch clause are edited one at a time.
 "$repo_root/scripts/check-no-dispatch.sh"

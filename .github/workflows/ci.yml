@@ -178,9 +178,10 @@ jobs:
       - name: The escalation shape is the same shape everywhere
         run: scripts/check-escalation-shape.sh
 
-      # The third copied form. Seven carriers, six skills:
-      # subagent-driven-development holds it three times, once per dispatched
-      # role, so a list of skill names is not a list of carriers.
+      # The third copied form. subagent-driven-development holds it once per
+      # dispatched role, so a list of skill names is not a list of carriers.
+      # The count is printed at run time and written down nowhere: it ages
+      # every time the list grows.
       - name: The no-dispatch clause is in every review seat
         run: scripts/check-no-dispatch.sh
 
