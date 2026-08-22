@@ -13,6 +13,18 @@ References below name them so a claim here can be traced there.
 
 ### Added
 
+- **A gate for the clause that keeps a review seat from opening another one.**
+  [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh) reads seven declared
+  carriers and fails when any has lost the clause. It is the third form this
+  project copies on purpose rather than extracting, joining
+  [`check-evidence-line.sh`](scripts/check-evidence-line.sh) and
+  [`check-escalation-shape.sh`](scripts/check-escalation-shape.sh), and it
+  exists for the reason [`docs/review-scopes.md`](docs/review-scopes.md),
+  section "Why the form is copied rather than extracted", states: unified in
+  place without a gate is just copied. The carrier list is declared in the
+  script rather than globbed, so a carrier that silently lost the clause stays
+  distinguishable from a file that never had it.
+
 - **The execution-path criterion has one statement, at
   [`execution-path.md`](skills/writing-plans/references/execution-path.md).**
   It stood in eight places across three skills, so correcting it meant
