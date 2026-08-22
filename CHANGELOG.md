@@ -22,6 +22,21 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **`git worktree remove` had no guard, and the class that loses most data
+  never triggers one.**
+  [`finishing-a-development-branch/SKILL.md`](skills/finishing-a-development-branch/SKILL.md),
+  section "Step 7: Cleanup Workspace", ran the removal with nothing said about
+  refusal — while git's own error names `--force` as the remedy, which deletes
+  files that exist in no other place. **Measured in a scratch repository: a
+  file matched by `.gitignore` produces no refusal at all.** The removal exits
+  0 and takes it, so `.env` and local credentials are lost on the happy path,
+  and `status --porcelain -uall` cannot see them — only `--ignored` reports the
+  `!!` lines. Untracked content now gets a rescue that was measured to lose
+  nothing (`git stash push -u`, then removal with no `--force`); ignored
+  content stops the removal, because `stash push -a` would sweep
+  `node_modules/` along with the `.env`, and no agent can tell them apart.
+  `--force` has no authorisation path.
+
 - **The link gate read 12 of the 48 markdown files under `docs/`, and the
   document describing it said it read all of them.**
   [`check-links.sh`](scripts/check-links.sh) collected `docs/` with
@@ -3924,6 +3939,15 @@ writing, which has now happened five times in one series of changes — each tim
 an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
+
+- **The `--force` prohibition is prose, and prose is not a guarantee.** A
+  `PreToolUse` hook refusing `git worktree remove --force` is the only layer
+  that holds regardless of what an agent decides, and deleting untracked files
+  is irreversible. It is deferred rather than dropped: it would be this
+  plugin's first `PreToolUse`, distributed to everyone who installs it, which
+  is a product decision and not a defect repair. Opened 2026-08-21 with
+  [the upstream-consult-fixes design](docs/superpowers/specs/2026-08-21-upstream-consult-fixes-design.md),
+  section "Implicit Requirements", `IR2`.
 
 - **A security lens for the reviewers: measured, justified, and belonging to
   the projects' own `CLAUDE.md` rather than to this repository.** Two classes
