@@ -880,7 +880,16 @@ matches the string either way, so nothing will tell you.
 | `skills/requesting-code-review/code-reviewer.md` | 4 spaces | `## What to Check` |
 | `skills/brainstorming/spec-document-reviewer-prompt.md` | 4 spaces | `## What to Check` |
 | `skills/writing-plans/plan-document-reviewer-prompt.md` | 4 spaces | `## What to Check` |
-| `skills/final-branch-audit/SKILL.md` | none | `## Dispatch` |
+| `skills/final-branch-audit/SKILL.md` | 4 spaces | `## Step 1: Resolve the Spec`, inside the auditor's prompt |
+
+**This row was wrong when the plan was written, and executing it proved so.**
+It read `none` / `## Dispatch`, which puts the clause in the skill's own
+prose — read by the **controller**, whose very next section instructs it to
+dispatch the auditor. The clause would have told the one agent that must
+dispatch never to, and told the auditor nothing. Corrected during execution
+to the anchor above; the sentence opening this step already said the clause
+goes inside the prompt body the subagent reads, and the table contradicted
+it. All seven carriers therefore share one indentation, not six plus one.
 
 ```markdown
 ## You Do Not Dispatch Subagents
