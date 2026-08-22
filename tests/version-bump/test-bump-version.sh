@@ -90,11 +90,34 @@ else
   printf '  ok: no field invented\n'
 fi
 
+printf 'a declared manifest that is missing writes nothing\n'
+lab="$(build_lab missingfile '{ "version": "1.0.0" }')"
+rm "$lab/b.json"
+set +e
+(cd "$lab" && ./scripts/bump-version.sh 2.0.0 >/dev/null 2>&1)
+status=$?
+set -e
+if [ "$status" -ne 0 ]; then
+  printf '  ok: exits non-zero (%s)\n' "$status"
+else
+  printf '  FAIL: expected non-zero exit, got 0 — six of seven is a split repo\n'
+  FAILURES=$((FAILURES + 1))
+fi
+assert_version "a.json untouched" "$lab/a.json" '1.0.0'
+assert_version "c.json untouched" "$lab/c.json" '1.0.0'
+
 printf 'all well formed still succeeds\n'
 lab="$(build_lab wellformed '{ "version": "1.0.0" }')"
 set +e
 (cd "$lab" && ./scripts/bump-version.sh 2.0.0 >/dev/null 2>&1)
+status=$?
 set -e
+if [ "$status" -eq 0 ]; then
+  printf '  ok: exits 0\n'
+else
+  printf '  FAIL: a correct bump exited %s\n' "$status"
+  FAILURES=$((FAILURES + 1))
+fi
 assert_version "a.json bumped" "$lab/a.json" '2.0.0'
 assert_version "b.json bumped" "$lab/b.json" '2.0.0'
 assert_version "c.json bumped" "$lab/c.json" '2.0.0'

@@ -183,7 +183,15 @@ cmd_bump() {
   local preflight_failed=0
   while IFS=$'\t' read -r path field; do
     local fullpath="$REPO_ROOT/$path"
-    [[ -f "$fullpath" ]] || continue
+    if [[ ! -f "$fullpath" ]]; then
+      # The third member of the same class: the write loop below prints
+      # "SKIP (missing)" and carries on, so the bump exits 0 having moved six
+      # manifests of seven. cmd_check already calls that drift; the two
+      # commands must not disagree about the same condition.
+      echo "error: $path: declared in .version-bump.json but missing" >&2
+      preflight_failed=1
+      continue
+    fi
     local jq_path
     jq_path=$(echo "$field" | sed -E 's/\.([0-9]+)/[\1]/g' | sed 's/^/./' | sed 's/\.\././g')
     if ! jq -e "$jq_path" "$fullpath" >/dev/null 2>&1; then

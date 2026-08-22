@@ -14,7 +14,8 @@ References below name them so a claim here can be traced there.
 ### Added
 
 - **Seven review seats could each open another one, and the rule against it
-  was unreadable by all of them.** `skills/using-superpowers/SKILL.md`, section
+  was unreadable by all of them.**
+  [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md), section
   "Review Lives in the Gates", carries *"Between them, do not dispatch a review
   subagent on your own initiative"* — and the same file opens with a
   `<SUBAGENT-STOP>` block telling any subagent dispatched for a specific task
@@ -67,6 +68,25 @@ References below name them so a claim here can be traced there.
   subagent output formats and does not reach here.
 
 ### Fixed
+
+- **Two more members of the class the version-bump preflight closes, and one
+  the spec measured wrong.** A manifest **declared in `.version-bump.json` but
+  absent** was skipped by the preflight and by the write loop, so the bump
+  exited 0 having moved six manifests of seven — the same split repository the
+  preflight exists to prevent, and a condition `--check` already reports as
+  drift, so the two commands disagreed. The difference is in the state and not
+  the exit code: before, the first manifest reached the new version and the
+  closing audit reported the drift *after* the write; now nothing is written.
+  Separately, `AC6` and the routing table said a modified file shows as `??`.
+  **Measured in a scratch repository: a modified tracked file reports ` M`,
+  never `??`, and refuses the removal with exit 128 exactly as an untracked one
+  does** — so a worktree holding only modified files matched no row of the
+  table at all, and the rescue that would have worked was never offered. The
+  row now reads "entries, but no `!!` line". Two more things the table never
+  said: the rescue's stash entry is reported to the human partner (`git stash
+  list` is the only way anyone finds it again), and a go-ahead on ignored
+  content authorises the **plain** removal — measured to exit 0 on ignored-only
+  content — never `--force`.
 
 - **A third gate for a copied form landed, and five sentences counting them
   still said two.** The branch-wide review found the class: `docs/testing.md`

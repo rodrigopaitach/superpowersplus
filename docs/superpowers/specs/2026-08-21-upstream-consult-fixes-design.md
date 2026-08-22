@@ -141,7 +141,12 @@ another one — stated where it can be read.
 - **AC5** — The skill states that `--force` is never passed to
   `git worktree remove` on the agent's own initiative, in any circumstance, and
   offers no authorisation path that would make it permissible.
-- **AC6** — Where the listing shows only untracked or modified entries (`??`),
+- **AC6** — Where the listing shows entries but none of them ignored (`??` for
+  untracked, ` M` for modified — **corrected during execution: a modified
+  tracked file reports ` M`, never `??`, measured in a scratch repository, and
+  it refuses the removal with exit 128 exactly as an untracked one does; this
+  criterion originally wrote "untracked or modified entries (`??`)", which left
+  a worktree holding only modified files matching no row of the table at all**),
   the skill offers the rescue —
   `git -C "$WORKTREE_PATH" stash push -u -m "<branch> <date>"` — and states that
   the removal proceeds without `--force` once it is taken, with nothing lost.

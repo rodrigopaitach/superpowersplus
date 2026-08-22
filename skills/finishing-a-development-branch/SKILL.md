@@ -233,8 +233,8 @@ git -C "$WORKTREE_PATH" status --porcelain -uall --ignored
 | What the listing shows | What to do |
 |---|---|
 | Nothing | Remove and prune, below |
-| Only `??` entries (untracked or modified) | Offer the rescue. `git -C "$WORKTREE_PATH" stash push -u -m "<branch> <date>"` moves them into the common repository's stash, where they survive the worktree's removal; the removal then succeeds with no `--force` and nothing is lost. Take it, then remove |
-| Any `!!` entry (ignored) | **Stop.** Show the list and wait for your human partner. Do not stash them: `stash push -a` is what would take them, and in a real checkout it sweeps `node_modules/`, `.venv/` and `dist/` along with the `.env` that actually matters. You cannot tell those apart, and they cannot both be right |
+| Entries, but no `!!` line — `??` for untracked, ` M` for modified | Offer the rescue. `git -C "$WORKTREE_PATH" stash push -u -m "<branch> <date>"` moves them into the common repository's stash, where they survive the worktree's removal; the removal then succeeds with no `--force` and nothing is lost. Take it, then **tell your partner the stash entry exists** — `git stash list` is the only way anyone finds it again — then remove |
+| Any `!!` entry (ignored) | **Stop.** Show the list and wait for your human partner. Do not stash them: `stash push -a` is what would take them, and in a real checkout it sweeps `node_modules/`, `.venv/` and `dist/` along with the `.env` that actually matters. You cannot tell those apart, and they cannot both be right. **What their go-ahead authorises is the plain removal below, never `--force`** — measured: `git worktree remove` exits 0 on ignored-only content, so no force is needed and the files go with the directory |
 
 **`--force` is never yours to pass.** Git's own refusal message names it —
 `use --force to delete it` — and that is the one instruction on the screen at
