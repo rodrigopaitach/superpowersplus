@@ -175,6 +175,28 @@ cmd_bump() {
   echo "Bumping all declared files to $new_version..."
   echo ""
 
+  # Preflight: read every declared field before writing any manifest. Without
+  # this the loop below discovers an unreadable manifest mid-walk and leaves
+  # the repository split across two versions. `jq -e` fails on both classes
+  # that matter — a file it cannot parse, and a field that is absent — which
+  # is why one check covers them.
+  local preflight_failed=0
+  while IFS=$'\t' read -r path field; do
+    local fullpath="$REPO_ROOT/$path"
+    [[ -f "$fullpath" ]] || continue
+    local jq_path
+    jq_path=$(echo "$field" | sed -E 's/\.([0-9]+)/[\1]/g' | sed 's/^/./' | sed 's/\.\././g')
+    if ! jq -e "$jq_path" "$fullpath" >/dev/null 2>&1; then
+      echo "error: $path: cannot read field '$field'" >&2
+      preflight_failed=1
+    fi
+  done < <(declared_files)
+
+  if [[ "$preflight_failed" -ne 0 ]]; then
+    echo "error: no file was modified" >&2
+    exit 1
+  fi
+
   while IFS=$'\t' read -r path field; do
     local fullpath="$REPO_ROOT/$path"
     if [[ ! -f "$fullpath" ]]; then

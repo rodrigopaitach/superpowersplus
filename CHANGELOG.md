@@ -22,6 +22,21 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **`bump-version.sh` wrote as it walked, and a manifest missing its field was
+  not detected at all.** Measured by running the real script against three
+  declared manifests: with the middle one holding unparseable JSON it exits 5
+  with the first manifest already bumped and the third still at the old
+  version — the repository split across two versions, and the audit that would
+  have reported the drift never runs because `set -euo pipefail` aborts first.
+  With the middle one **missing its declared field** it exits **0**, prints
+  `b.json (version)  null -> 2.0.0` as a success, and creates the field in a
+  manifest that never had it. A preflight now reads every declared field before
+  any manifest is written. **The upstream's one-character fix — `jq -r` to
+  `jq -er` in the shared reader — was not adopted:** that function has three
+  callers, and under `set -e` it would turn `--check`, whose whole job is to
+  list all seven and report drift, into a command that aborts at the first
+  manifest it cannot read.
+
 - **`git worktree remove` had no guard, and the class that loses most data
   never triggers one.**
   [`finishing-a-development-branch/SKILL.md`](skills/finishing-a-development-branch/SKILL.md),

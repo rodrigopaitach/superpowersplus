@@ -54,6 +54,9 @@ jobs:
       - name: Tests (shell lint script)
         run: bash tests/shell-lint/test-lint-shell.sh
 
+      - name: Tests (version bump preflight)
+        run: tests/version-bump/test-bump-version.sh
+
       - name: Tests (session-start hook)
         run: tests/hooks/test-session-start.sh
 
