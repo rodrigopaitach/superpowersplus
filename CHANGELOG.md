@@ -61,6 +61,24 @@ References below name them so a claim here can be traced there.
   reference would have failed such a gate the day it was written. Word streams
   compared rather than read — the change is reflow only.
 
+### Removed
+
+- **`render-graphs.js` is deleted — it had not run since 2026-03-15 and
+  nothing called it.** The script rendered a skill's ` ```dot ` blocks to SVG
+  by shelling out to Graphviz. `911fa1d` added a `package.json` declaring
+  `"type": "module"` for an unrelated opencode plugin test, which made every
+  `.js` in the package an ES module; the script uses `require`. **Five months
+  and six days, with no failing gate anywhere** — `git ls-files '*.svg'`
+  returns one file and it is the logo, and no `diagrams/` directory has ever
+  been committed. Repairing it was specified first and reversed: it would have
+  left a script whose only real function needs a binary that
+  [`CLAUDE.md`](CLAUDE.md), section "What does not belong here", keeps out of
+  every automated check — the exact condition under which it broke silently.
+  **The ten ` ```dot ` blocks and
+  [`graphviz-conventions.dot`](skills/writing-skills/graphviz-conventions.dot)
+  stay.** They never depended on the renderer: a model reads them as text, and
+  the renderer existed to produce pictures for a person.
+
 ### Changed
 
 - **Plans and specs are exempt from the third-party diet, and their local

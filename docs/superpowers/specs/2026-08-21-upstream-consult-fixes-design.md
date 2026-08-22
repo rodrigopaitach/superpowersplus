@@ -34,7 +34,8 @@ preflight local to the bump, not a change to the shared reader.
 
 ## Problem 1 — `render-graphs.js` does not load, and nothing uses it
 
-[`render-graphs.js`](../../../skills/writing-skills/render-graphs.js) extracts
+`skills/writing-skills/render-graphs.js` — a path that no longer resolves,
+because `AC1` below deletes it — extracts
 ` ```dot ` blocks from a skill's markdown and renders them to SVG by shelling
 out to Graphviz. It cannot start: the file uses CommonJS `require` while
 `package.json` declares the package an ES module (Codebase Finding 1). It has
