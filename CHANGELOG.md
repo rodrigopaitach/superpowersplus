@@ -45,8 +45,17 @@ References below name them so a claim here can be traced there.
   section "Why the form is copied rather than extracted", states: unified in
   place without a gate is just copied. The carrier list is declared in the
   script rather than globbed, so a carrier that silently lost the clause stays
-  distinguishable from a file that never had it. **It runs in both places its
-  two siblings do** — [`githooks/pre-commit`](githooks/pre-commit) and its own
+  distinguishable from a file that never had it. **It charges the form, not the
+  presence of a heading** — the heading must exist, be indented (which is what
+  puts it inside the `prompt: |` body the dispatched agent reads, rather than in
+  the skill's own prose that only the controller reads), and every carrier's
+  clause body must be the same text. The first version matched a bare marker,
+  and the branch review demonstrated two mutations that passed it: a carrier
+  whose body read *"Feel free to dispatch helpers when convenient"*, and the
+  clause parked in the controller's prose — **the exact defect this branch had
+  already caught by hand while executing**, in the one gate built to catch it.
+  All three now fail with their own message, each with a case in the suite.
+  **It runs in both places its two siblings do** — [`githooks/pre-commit`](githooks/pre-commit) and its own
   CI step, separate from the step running its test suite. A gate with a passing
   suite and no run of its own proves only that it *would* work.
 

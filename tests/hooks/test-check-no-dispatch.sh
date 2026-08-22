@@ -35,7 +35,8 @@ CARRIERS=(
   "skills/final-branch-audit/SKILL.md"
 )
 
-CLAUSE='## You Do Not Dispatch Subagents'
+CLAUSE='    ## You Do Not Dispatch Subagents'
+BODY='    Do all of this yourself. Never dispatch a subagent.'
 
 # $1 = lab name. Builds a tree with every carrier holding the clause.
 build_lab() {
@@ -46,7 +47,7 @@ build_lab() {
   local rel
   for rel in "${CARRIERS[@]}"; do
     mkdir -p "$dir/$(dirname "$rel")"
-    printf '# A carrier\n\n%s\n\nBody.\n' "$CLAUSE" >"$dir/$rel"
+    printf '# A carrier\n\n%s\n\n%s\n' "$CLAUSE" "$BODY" >"$dir/$rel"
   done
   printf '%s' "$dir"
 }
@@ -86,13 +87,65 @@ fi
 
 printf 'an undeclared file with the clause is ignored\n'
 lab="$(build_lab undeclared)"
-printf '# Not a carrier\n\n%s\n' "$CLAUSE" >"$lab/skills/decoy.md"
+printf '# Not a carrier\n\n%s\n\n%s\n' "$CLAUSE" "$BODY" >"$lab/skills/decoy.md"
 printf '# A carrier\n\nBody with no clause.\n' >"$lab/${CARRIERS[0]}"
 set +e
 (cd "$lab" && ./scripts/check-no-dispatch.sh >/dev/null 2>&1)
 status=$?
 set -e
 assert_exit "the decoy does not rescue a missing carrier" 1 "$status"
+
+
+printf 'a reworded clause body fails\n'
+lab="$(build_lab reworded)"
+printf '# A carrier\n\n%s\n\n    Feel free to dispatch helpers when convenient.\n' \
+  "$CLAUSE" >"$lab/${CARRIERS[1]}"
+set +e
+out="$(cd "$lab" && ./scripts/check-no-dispatch.sh 2>&1)"
+status=$?
+set -e
+assert_exit "exits 1" 1 "$status"
+if printf '%s' "$out" | grep -q 'body differs'; then
+  printf '  ok: names the disagreement, not a missing heading\n'
+else
+  printf '  FAIL: the heading survived, so the gate must charge the body\n'
+  printf '        output: %s\n' "$out"
+  FAILURES=$((FAILURES + 1))
+fi
+
+printf 'a flush-left clause fails\n'
+lab="$(build_lab flushleft)"
+printf '# A carrier\n\n%s\n\n%s\n' \
+  "$(printf '%s' "$CLAUSE" | sed 's/^ *//')" "$(printf '%s' "$BODY" | sed 's/^ *//')" \
+  >"$lab/${CARRIERS[6]}"
+set +e
+out="$(cd "$lab" && ./scripts/check-no-dispatch.sh 2>&1)"
+status=$?
+set -e
+assert_exit "exits 1" 1 "$status"
+if printf '%s' "$out" | grep -q 'flush-left'; then
+  printf '  ok: a clause outside the prompt body is not a clause\n'
+else
+  printf '  FAIL: flush-left placement was accepted\n'
+  printf '        output: %s\n' "$out"
+  FAILURES=$((FAILURES + 1))
+fi
+
+printf 'an unreadable carrier fails\n'
+lab="$(build_lab unreadable)"
+rm "$lab/${CARRIERS[2]}"
+set +e
+out="$(cd "$lab" && ./scripts/check-no-dispatch.sh 2>&1)"
+status=$?
+set -e
+assert_exit "exits 1" 1 "$status"
+if printf '%s' "$out" | grep -q 'could not be read'; then
+  printf '  ok: a renamed or deleted carrier is not silently a pass\n'
+else
+  printf '  FAIL: the unreadable branch did not report\n'
+  printf '        output: %s\n' "$out"
+  FAILURES=$((FAILURES + 1))
+fi
 
 if [ "$FAILURES" -eq 0 ]; then
   printf '\nAll cases passed.\n'

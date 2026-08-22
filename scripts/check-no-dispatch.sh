@@ -13,12 +13,22 @@
 #
 # Unifying in place without a gate is just copying. This is that gate.
 #
+# It charges the FORM, not the presence of a heading. Three things have to hold
+# in every declared carrier: the heading exists, it is INDENTED — which is what
+# puts it inside the `prompt: |` body the dispatched agent reads, rather than in
+# the skill's own prose, which only the controller reads — and the clause body
+# is the same text everywhere. A gate that matched the heading alone passes a
+# carrier whose body says the opposite of the rule.
+#
 # WHAT IT DOES NOT COVER — read this before trusting a pass:
-#   * Whether the clause is worded well. It matches a marker, not an argument.
+#   * Whether the clause is worded well. It compares the bodies to each other,
+#     not to an argument: seven carriers agreeing on the wrong sentence pass.
 #   * Whether an agent obeys it. That is what tests/skill-behavior/ measures,
 #     and no criterion in this change asks for such a record.
 #   * Whether the carriers are still the right ones. The list below is
-#     declared, not discovered: an eighth carrier means adding it here.
+#     declared, not discovered: a new carrier means adding it here.
+#   * Whether the indented heading is inside the RIGHT fenced block. It proves
+#     the clause is in an indented body, not which one.
 #
 # Usage:
 #   check-no-dispatch.sh    Exit 1 when a declared carrier has lost the clause
@@ -47,34 +57,37 @@ CARRIERS = [
     "skills/final-branch-audit/SKILL.md",
 ]
 
-MARKER = "You Do Not Dispatch Subagents"
+MARKER = "## You Do Not Dispatch Subagents"
 
 missing = []
+unindented = []
 unreadable = []
+bodies = {}
 for rel in CARRIERS:
     path = root / rel
     try:
-        text = path.read_text(encoding="utf-8")
+        lines = path.read_text(encoding="utf-8").split("\n")
     except OSError as exc:
         unreadable.append(f"{rel}: {exc}")
         continue
-    if MARKER not in text:
+    hit = next((i for i, l in enumerate(lines) if l.strip() == MARKER), None)
+    if hit is None:
         missing.append(rel)
+        continue
+    indent = len(lines[hit]) - len(lines[hit].lstrip())
+    if indent == 0:
+        unindented.append(rel)
+        continue
+    # The body is the first non-blank line under the heading. Normalized so a
+    # reflow is not a failure and a reword is.
+    body = next((l.strip() for l in lines[hit + 1:] if l.strip()), "")
+    bodies.setdefault(" ".join(body.split()), []).append(rel)
 
-if unreadable:
-    print("check-no-dispatch: declared carrier could not be read:", file=sys.stderr)
-    for line in unreadable:
+
+def fail(headline, detail):
+    print(f"check-no-dispatch: {headline}", file=sys.stderr)
+    for line in detail:
         print(f"  {line}", file=sys.stderr)
-    sys.exit(1)
-
-if missing:
-    print(
-        f"check-no-dispatch: {len(missing)} of {len(CARRIERS)} carrier(s) have lost "
-        f'the "{MARKER}" clause:',
-        file=sys.stderr,
-    )
-    for rel in missing:
-        print(f"  {rel}", file=sys.stderr)
     print(
         "\nThe clause is carried in each prompt on purpose — a subagent reads its\n"
         "own block and does not follow a pointer out of it. See\n"
@@ -85,5 +98,34 @@ if missing:
     )
     sys.exit(1)
 
-print(f"check-no-dispatch: {len(CARRIERS)} carrier(s) carry the clause")
+
+if unreadable:
+    fail("declared carrier could not be read:", unreadable)
+
+if missing:
+    fail(
+        f'{len(missing)} of {len(CARRIERS)} carrier(s) have lost the "{MARKER}" '
+        "clause:",
+        missing,
+    )
+
+if unindented:
+    fail(
+        f"{len(unindented)} carrier(s) hold the clause flush-left, which puts it "
+        "in the skill's own prose rather than in the prompt body the dispatched "
+        "agent reads:",
+        unindented,
+    )
+
+if len(bodies) > 1:
+    detail = []
+    for body, rels in sorted(bodies.items(), key=lambda kv: -len(kv[1])):
+        detail.append(f'{len(rels)} carrier(s): "{body[:70]}..."')
+        detail.extend(f"  {rel}" for rel in rels)
+    fail(f"the clause body differs across carriers ({len(bodies)} variants):", detail)
+
+print(
+    f"check-no-dispatch: {len(CARRIERS)} carrier(s) carry the clause, "
+    "indented, all agreeing on one body"
+)
 PY
