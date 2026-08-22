@@ -45,7 +45,10 @@ References below name them so a claim here can be traced there.
   section "Why the form is copied rather than extracted", states: unified in
   place without a gate is just copied. The carrier list is declared in the
   script rather than globbed, so a carrier that silently lost the clause stays
-  distinguishable from a file that never had it.
+  distinguishable from a file that never had it. **It runs in both places its
+  two siblings do** — [`githooks/pre-commit`](githooks/pre-commit) and its own
+  CI step, separate from the step running its test suite. A gate with a passing
+  suite and no run of its own proves only that it *would* work.
 
 - **The execution-path criterion has one statement, at
   [`execution-path.md`](skills/writing-plans/references/execution-path.md).**

@@ -37,3 +37,7 @@ repo_root="$(git rev-parse --show-toplevel)"
 # The same reason again, for the second form this project copies on purpose.
 # Six carriers across five skills — subagent-driven-development holds it twice.
 "$repo_root/scripts/check-escalation-shape.sh"
+
+# The third form, and the reason it is whole-tree like the other two: the
+# seven prompts that carry the no-dispatch clause are edited one at a time.
+"$repo_root/scripts/check-no-dispatch.sh"
