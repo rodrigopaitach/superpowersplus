@@ -34,6 +34,10 @@ Subagent (general-purpose):
 
     Your review is read-only on this checkout. Do not mutate the working tree, the index, HEAD, or branch state in any way. Use tools like `git show`, `git diff`, and `git log` to inspect history. If you need a working copy of a different revision, add a worktree under the project's own worktree directory — `.worktrees/`, or `worktrees/` where that is the one already in use — and remove it before you report: `git worktree add .worktrees/review-[SHA] [SHA]`, then `git worktree remove .worktrees/review-[SHA]`. Those are the locations superpowersplus:using-git-worktrees selects, and the only ones anything downstream cleans up; a review worktree anywhere else is left behind by everyone, so removing it is yours. Never move HEAD on this checkout.
 
+    ## You Do Not Dispatch Subagents
+
+    Do all of this yourself. Never dispatch a subagent — the controller owns every review seat, and one you create duplicates a seat this process already provides. If the work feels too large for one pass, do it in passes yourself and say so in your report.
+
     ## What to Check
 
     **Plan alignment:** does the implementation match the plan /

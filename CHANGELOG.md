@@ -13,6 +13,28 @@ References below name them so a claim here can be traced there.
 
 ### Added
 
+- **Seven review seats could each open another one, and the rule against it
+  was unreadable by all of them.** `skills/using-superpowers/SKILL.md`, section
+  "Review Lives in the Gates", carries *"Between them, do not dispatch a review
+  subagent on your own initiative"* — and the same file opens with a
+  `<SUBAGENT-STOP>` block telling any subagent dispatched for a specific task
+  to ignore the skill. Every reviewer and the implementer **is** such a
+  subagent, so the one rule in this repository governing review dispatch could
+  not be read by anyone able to violate it. The clause now sits in each of the
+  seven prompts, charged by
+  [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh). **All seven copies
+  are inside the prompt body the dispatched agent reads** — including
+  [`final-branch-audit`](skills/final-branch-audit/SKILL.md)'s, which belongs
+  in the auditor's prompt and not in the skill's own prose: placed there it
+  would have told the controller never to dispatch, immediately above the
+  section instructing it to. **The upstream measured the cost this avoids** —
+  9 of 9 depth-2 spawns across 4 corpora were reviewers created by the
+  implementer, and all 9 duplicated the review the controller dispatches
+  anyway; that measurement is theirs, taken on Codex, and none equivalent was
+  taken here. The dispatch graph itself was already correct: level 0 owns every
+  seat. What was missing was the other half of the rule, stated where it can be
+  read.
+
 - **A gate for the clause that keeps a review seat from opening another one.**
   [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh) reads seven declared
   carriers and fails when any has lost the clause. It is the third form this

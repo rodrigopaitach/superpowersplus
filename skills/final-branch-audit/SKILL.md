@@ -215,6 +215,10 @@ Subagent (general-purpose):
     The source spec is not passed to you: its path comes from the plan, and
     confirming that path is part of the audit.
 
+    ## You Do Not Dispatch Subagents
+
+    Do all of this yourself. Never dispatch a subagent — the controller owns every review seat, and one you create duplicates a seat this process already provides. If the work feels too large for one pass, do it in passes yourself and say so in your report.
+
     ## Step 1: Resolve the Spec
 
     Read the plan and find the source spec path it cites. Confirm the file
