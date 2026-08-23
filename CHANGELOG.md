@@ -13,6 +13,33 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **`assert_count` could not pass a zero, and eleven shellcheck warnings in
+  `tests/claude-code/` had never been read.** `grep -c` prints `0` when it
+  matches nothing **and exits 1 while doing it**, so the fallback
+  `|| echo "0"` appended a second zero and `[ "0\n0" -eq 0 ]` died with
+  *"integer expression expected"* — every `assert_count` expecting zero failed,
+  including the ones that were right. It is `|| true` now; all the fallback ever
+  had to do was neutralise the status. **Pre-existing, and measured as such**
+  against the tree before this change rather than assumed.
+
+  The warnings were fixed one at a time rather than as a batch, because two of
+  the three classes are not defects. The four `SC2088` are the tilde in
+  `~/.config/superpowers/worktrees` — **the string being searched FOR inside
+  skill files, not a path this script resolves**. Taking shellcheck's advice
+  would search for `/home/<user>/.config/…`, which appears in no skill, and all
+  four assertions would pass unconditionally: the suggested fix turns four real
+  assertions vacuous. A file-level `disable` records why. The five `SC2155`
+  were real, and separating declaration from assignment **introduced a defect
+  the warning does not mention**: callers source the helpers under `set -euo
+  pipefail`, so a `grep` that finds nothing now killed the script at the
+  assignment, before the two checks that report which pattern was missing —
+  `local` had been swallowing that status by accident. Verified by difference,
+  not by exit code, since both exit 1: without the explicit `|| true` the probe
+  prints nothing, with it the probe prints `[FAIL] … pattern A not found`.
+  `SC2320` was a real defect too — `$?` read after two `echo`s reported the
+  echo's status, so `EXECUTION FAILED (exit code: …)` always printed the wrong
+  number.
+
 - **Ten rules were still standing on rebase cost, which
   [`CLAUDE.md`](CLAUDE.md), section "Relationship with Superpowers", forbids as
   a criterion and instructs be reported on sight.** Measured against

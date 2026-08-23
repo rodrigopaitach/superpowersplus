@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 # Regression check: Superpowers should not route new worktrees through the old
 # global worktree directory.
+#
+# shellcheck disable=SC2088
+# The tildes below are deliberate and must NOT become $HOME: those strings are
+# the text being SEARCHED FOR inside skill files, not paths this script
+# resolves. The skills spell the retired location as
+# `~/.config/superpowers/worktrees`, so expanding it here would search for
+# /home/<user>/.config/... — which appears in no skill, making every one of
+# these assertions pass unconditionally. A vacuous assertion reads exactly like
+# a satisfied one, which is the whole failure this suite exists to catch.
 
 set -euo pipefail
 

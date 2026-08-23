@@ -7,7 +7,8 @@ run_claude() {
     local prompt="$1"
     local timeout="${2:-60}"
     local allowed_tools="${3:-}"
-    local output_file=$(mktemp)
+    local output_file
+    output_file=$(mktemp)
 
     # Build command as an argv array so timeout wraps claude directly.
     local cmd=(claude -p "$prompt")
@@ -76,7 +77,13 @@ assert_count() {
     local expected="$3"
     local test_name="${4:-test}"
 
-    local actual=$(echo "$output" | grep -ci "$pattern" || echo "0")
+    # `|| true`, never `|| echo "0"`: grep -c ALREADY prints 0 when it matches
+    # nothing, and exits 1 while doing it — so the echo appended a second zero
+    # and `[ "0\n0" -eq 0 ]` died with "integer expression expected". Every
+    # assert_count expecting 0 failed that way, including the ones that were
+    # right. All the fallback ever needed to do was neutralise the status.
+    local actual
+    actual=$(echo "$output" | grep -ci "$pattern" || true)
 
     if [ "$actual" -eq "$expected" ]; then
         echo "  [PASS] $test_name (found $actual instances)"
@@ -99,9 +106,20 @@ assert_order() {
     local pattern_b="$3"
     local test_name="${4:-test}"
 
-    # Get line numbers where patterns appear
-    local line_a=$(echo "$output" | grep -ni "$pattern_a" | head -1 | cut -d: -f1)
-    local line_b=$(echo "$output" | grep -ni "$pattern_b" | head -1 | cut -d: -f1)
+    # Get line numbers where patterns appear.
+    #
+    # `|| true` is load-bearing, not decoration: a pattern that is absent makes
+    # grep exit 1, and callers source this file under `set -euo pipefail`, so
+    # the assignment would kill the script HERE — before the two checks below
+    # that report which pattern was missing. The old `local line_a=$(...)` hid
+    # that by accident, because `local` returns its own status. Separating the
+    # declaration to satisfy SC2155 removes the accident, so the tolerance has
+    # to be stated. Verified by difference: without it the probe prints nothing
+    # and exits 1; with it, it prints "[FAIL] … pattern A not found" and exits 1.
+    local line_a
+    line_a=$(echo "$output" | grep -ni "$pattern_a" | head -1 | cut -d: -f1) || true
+    local line_b
+    line_b=$(echo "$output" | grep -ni "$pattern_b" | head -1 | cut -d: -f1) || true
 
     if [ -z "$line_a" ]; then
         echo "  [FAIL] $test_name: pattern A not found: $pattern_a"
@@ -131,7 +149,8 @@ assert_order() {
 # Create a temporary test project directory
 # Usage: test_project=$(create_test_project)
 create_test_project() {
-    local test_dir=$(mktemp -d)
+    local test_dir
+    test_dir=$(mktemp -d)
     echo "$test_dir"
 }
 
