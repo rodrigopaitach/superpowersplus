@@ -135,6 +135,14 @@ References below name them so a claim here can be traced there.
   carry a condition instead of a number, the treatment the same cycle applied
   to [`docs/pre-commit-cost.md`](docs/pre-commit-cost.md).
 
+- **[`docs/testing.md`](docs/testing.md) said counting the static suites here
+  would age, directly above a list naming all eleven of them.** A list of names
+  is a count wearing a disguise: it ages on exactly the same event. Both are
+  gone, replaced by the condition — every directory under `tests/` except the
+  three live-agent ones — plus the two commands that answer it, and the defect
+  to look for between them: a suite in `ls -d tests/*/` with no step in
+  `.github/workflows/ci.yml`.
+
 - **Two more members of the class the version-bump preflight closes, and one
   the spec measured wrong.** A manifest **declared in `.version-bump.json` but
   absent** was skipped by the preflight and by the write loop, so the bump
