@@ -48,6 +48,8 @@ jobs:
       # reads files directly, so none depends on the checkout's index — they
       # are safe before the rewind below. Live-agent suites stay out on
       # purpose: they cost tokens and are non-deterministic.
+      # Invoked through `bash` because this file is mode 100644 in git, unlike
+      # every other suite here. Nothing else about it is special.
       - name: Tests (shell lint script)
         run: bash tests/shell-lint/test-lint-shell.sh
 

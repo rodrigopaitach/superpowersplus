@@ -117,16 +117,24 @@ assert_run 1 "501 lines fails" "$tree" "501 lines"
 
 # --- The exemption ----------------------------------------------------------
 #
-# skills/writing-skills/SKILL.md is upstream's file at upstream's length. The
-# exemption is deliberate, so it is pinned: if someone removes it, this test
-# says so instead of the gate going red on a file nobody here may cut.
+# skills/writing-skills/SKILL.md is exempt on a DEADLINE, not a condition: it
+# holds while that file's structural review is open and falls when the review
+# closes, whatever the review decides — scripts/check-skill-size.sh and
+# docs/releasing.md, section "The SKILL.md ceiling exemption". The older reason,
+# "upstream's file at upstream's length", stopped being true (686 here against
+# 679 there) and stopped meaning anything when this project stopped pulling from
+# them. The exemption is pinned here: if someone removes it, this test says so
+# instead of the gate going red on a file nobody here may cut yet.
+#
+# The sizes below are synthetic — any value over the ceiling exercises the same
+# branch, and echoing the real file's line count would age this test with it.
 
 tree="$(new_tree)"
-add_skill "$tree" writing-skills 679
+add_skill "$tree" writing-skills 600
 assert_run 0 "the exempt skill is not measured" "$tree"
 
 tree="$(new_tree)"
-add_skill "$tree" writing-skills 679
+add_skill "$tree" writing-skills 600
 add_skill "$tree" fat-skill 564
 assert_run 1 "the exemption does not cover a second oversized skill" \
     "$tree" "skills/fat-skill/SKILL.md"

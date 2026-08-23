@@ -13,7 +13,7 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
-- **Nine rules were still standing on rebase cost, which
+- **Ten rules were still standing on rebase cost, which
   [`CLAUDE.md`](CLAUDE.md), section "Relationship with Superpowers", forbids as
   a criterion and instructs be reported on sight.** Measured against
   `upstream/main` rather than recalled: an earlier note counted five. The worst
@@ -50,7 +50,16 @@ References below name them so a claim here can be traced there.
   one called `tests/shell-lint/test-lint-shell.sh` "a file we do not otherwise
   touch", and one promised the changelog gate is safe because the "Upstream
   base" line "is updated at every rebase", which [`CHANGELOG.md`](CHANGELOG.md)
-  itself calls a fixed historical fact.
+  itself calls a fixed historical fact. **The tenth was found by the branch
+  review, in the one file of the class that executes**:
+  [`test-check-skill-size.sh`](tests/hooks/test-check-skill-size.sh) pinned the
+  exemption with the comment *"upstream's file at upstream's length"* — false
+  on its own terms at 686 against 679, and the same dead reason its sibling
+  script had already been moved off. A sweep that reads prose and skips the
+  test files misses the member that runs. Its fixture sizes stopped echoing the
+  real file's line count for the same reason: any value over the ceiling
+  exercises the same branch, and the removal of the exemption still turns the
+  test red, which is what the pin is for.
 
 ### Changed
 
@@ -62,8 +71,9 @@ References below name them so a claim here can be traced there.
   adapted from the upstream's own wording**, found by reading
   `obra/superpowers` v6.3.0 (`b36e082`, 2026-08-12), which added the same clause
   under the same heading after measuring the behaviour — 9 of 9 depth-2 spawns
-  across 4 corpora. Their version is three bodies, one per dispatched role;
-  this project keeps **one body across all seven carriers**, because
+  across 4 corpora. Their version is two bodies across four carriers — one for
+  the three reviewer seats, one for the implementer's; this project keeps **one
+  body across all seven carriers**, because
   [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh) charges that the seven
   agree with each other, and per-role variants would leave nothing to compare.
   The trade is deliberate: their wording is more specific, ours is the one a
@@ -4181,7 +4191,8 @@ section where the next one would be written.
   adopt.** `obra/superpowers` v6.3.0 (`b36e082`, 2026-08-12) split brainstorming
   into **Spike**, **Bounded** and **Architectural** paths, with terminal states
   bound to the path and a section named `Anti-Pattern: "Too Simple To Need
-  Approval"` — 117 lines added to their `skills/brainstorming/SKILL.md`. It
+  Approval"` — 108 lines added and 9 removed in their
+  `skills/brainstorming/SKILL.md`. It
   answers a real cost this project pays: brainstorming is mandatory before any
   creative work here, with no graduation, so a spike and an architecture change
   buy the same ceremony. It is **not** a cherry-pick: this project's
