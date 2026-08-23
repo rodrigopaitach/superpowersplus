@@ -4177,6 +4177,20 @@ an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
+- **The upstream's brainstorming three-path router, to investigate rather than
+  adopt.** `obra/superpowers` v6.3.0 (`b36e082`, 2026-08-12) split brainstorming
+  into **Spike**, **Bounded** and **Architectural** paths, with terminal states
+  bound to the path and a section named `Anti-Pattern: "Too Simple To Need
+  Approval"` — 117 lines added to their `skills/brainstorming/SKILL.md`. It
+  answers a real cost this project pays: brainstorming is mandatory before any
+  creative work here, with no graduation, so a spike and an architecture change
+  buy the same ceremony. It is **not** a cherry-pick: this project's
+  brainstorming has diverged from theirs, the change is behavioural in the most
+  used skill in the plugin, and adopting it goes through a spec like anything
+  else. Measured while consulting the upstream on 2026-08-22 — the same reading
+  that found the clause wording above, and that confirmed two of this project's
+  own rules had already been reached independently. Opened 2026-08-22.
+
 - **The `--force` prohibition is prose, and prose is not a guarantee.** A
   `PreToolUse` hook refusing `git worktree remove --force` is the only layer
   that holds regardless of what an agent decides, and deleting untracked files
