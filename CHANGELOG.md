@@ -92,6 +92,17 @@ References below name them so a claim here can be traced there.
   and on a reflowed reword exits 0 on the real tree, which is the difference,
   not a verdict.
 
+- **Three stale counts survived the sweep that declared them swept, two of them
+  in the files that same sweep edited.** The gate prints `8 carrier(s)`;
+  `.github/workflows/ci.yml` said "the five carriers of the test-evidence line"
+  and `githooks/pre-commit` said "the five carriers … never the four it must
+  match", both a few lines above a comment the sweep had just written — and
+  [`docs/review-scopes.md`](docs/review-scopes.md) still said "**Both** name
+  what drifted" of three gates. Root cause: the sweep matched the word "two"
+  across documents and never the counts inside code comments. All three now
+  carry a condition instead of a number, the treatment the same cycle applied
+  to [`docs/pre-commit-cost.md`](docs/pre-commit-cost.md).
+
 - **Two more members of the class the version-bump preflight closes, and one
   the spec measured wrong.** A manifest **declared in `.version-bump.json` but
   absent** was skipped by the preflight and by the write loop, so the bump

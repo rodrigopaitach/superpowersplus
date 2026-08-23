@@ -166,9 +166,10 @@ jobs:
       - name: Every SKILL.md stays under the line ceiling
         run: scripts/check-skill-size.sh
 
-      # The five carriers of the test-evidence line hold one form, copied on
-      # purpose because it cannot live behind a link. Without this, "unified
-      # in place" is just "copied".
+      # The carriers of the test-evidence line hold one form, copied on purpose
+      # because it cannot live behind a link. Without this, "unified in place"
+      # is just "copied". The count is printed at run time and written down
+      # nowhere: it ages every time a carrier is added.
       - name: The evidence line is the same line everywhere
         run: scripts/check-evidence-line.sh
 

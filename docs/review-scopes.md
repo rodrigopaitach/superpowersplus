@@ -68,5 +68,5 @@ that weight:
 
 They run whole-tree from the pre-commit hook rather than over the staged range:
 the carriers are edited one at a time, so a range-scoped check would read the
-one being changed and never the others it must match. Both name what drifted
-when they fail.
+one being changed and never the others it must match. Each names what drifted
+when it fails.
