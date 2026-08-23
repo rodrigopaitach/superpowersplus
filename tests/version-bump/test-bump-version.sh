@@ -135,6 +135,53 @@ else
   FAILURES=$((FAILURES + 1))
 fi
 
+printf 'check stays tolerant of a missing manifest too\n'
+lab="$(build_lab tolerantmissing '{ "version": "1.0.0" }')"
+rm "$lab/b.json"
+set +e
+out="$(cd "$lab" && ./scripts/bump-version.sh --check 2>&1)"
+status=$?
+set -e
+# The tolerance the bump preflight must NOT inherit. `--check` reports drift and
+# reads on; a shared existence guard hoisted out of the two commands would make
+# it stop at b.json, and this case is what catches that.
+if printf '%s' "$out" | grep -q 'MISSING' && printf '%s' "$out" | grep -q 'c.json'; then
+  printf '  ok: reports the missing manifest and reads past it\n'
+else
+  printf '  FAIL: --check did not report MISSING and carry on to c.json\n'
+  printf '        output: %s\n' "$out"
+  FAILURES=$((FAILURES + 1))
+fi
+if [ "$status" -ne 0 ]; then
+  printf '  ok: still reports drift (%s)\n' "$status"
+else
+  printf '  FAIL: a missing manifest is drift, and --check exited 0\n'
+  FAILURES=$((FAILURES + 1))
+fi
+
+printf 'a version argument carrying jq syntax is refused\n'
+lab="$(build_lab injection '{ "version": "1.0.0" }')"
+set +e
+(cd "$lab" && ./scripts/bump-version.sh '2.0.0" | .pwned = "yes' >/dev/null 2>&1)
+status=$?
+set -e
+if [ "$status" -ne 0 ]; then
+  printf '  ok: refused at the boundary (%s)\n' "$status"
+else
+  printf '  FAIL: accepted a version argument that is not X.Y.Z\n'
+  FAILURES=$((FAILURES + 1))
+fi
+# Asked of the JSON, never grepped: the injected string also appears inside the
+# field VALUE when the argument is passed as data, so a text match cannot tell
+# the safe case from the exploited one.
+if jq -e 'has("pwned")' "$lab/a.json" >/dev/null 2>&1; then
+  printf '  FAIL: the argument reached jq as program text, not as data\n'
+  FAILURES=$((FAILURES + 1))
+else
+  printf '  ok: no injected key in the manifest\n'
+fi
+assert_version "a.json untouched" "$lab/a.json" '1.0.0'
+
 if [ "$FAILURES" -eq 0 ]; then
   printf '\nAll cases passed.\n'
 else

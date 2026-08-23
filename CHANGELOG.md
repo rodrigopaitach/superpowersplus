@@ -69,6 +69,38 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A version argument was interpolated into a `jq` program, so an argument
+  carrying a quote wrote whatever it liked into every declared manifest.**
+  Reproduced before the fix: `bump-version.sh '2.0.0" | .pwned = "yes'`
+  left `"pwned": "yes"` in `a.json`. Two halves, and they are not redundant —
+  they fail in different places. The format check
+  ([`bump-version.sh`](scripts/bump-version.sh), `cmd_bump`) was **anchored at
+  the start only**, so it matched a prefix and accepted every character after
+  it, while its own error message says *"expected X.Y.Z"*; it is anchored at
+  both ends now. And `write_json_field` passes the value with `--arg`, as
+  **data** rather than as program text, which is what holds if that check is
+  ever loosened. **Measured, so the coverage is not overstated:** reverting
+  `--arg` alone leaves the suite green — the new case charges the boundary, and
+  `--arg` has no case of its own. Reverting the anchor alone fails it. The
+  assertion asks `jq has("pwned")` rather than grepping, because the injected
+  string appears inside the field *value* too when the argument is passed
+  safely, and a text match cannot tell the two apart.
+
+- **The write loop's `SKIP (missing)` branch became unreachable when the
+  preflight landed in front of it, and went on reading as a live fallback.**
+  It now aborts instead of skipping, named for what it actually is — a TOCTOU
+  backstop for a manifest that vanishes between the two walks. Carrying on is
+  the exact behaviour that let a bump move six manifests of seven and still
+  exit 0. **No case covers it**, because the condition is not reachable without
+  racing the script, and the comment says so rather than implying coverage.
+
+- **`--check`'s tolerance had a case for a missing FIELD and none for a missing
+  FILE**, which is the class the preflight had just added. The tolerance holds
+  today — `cmd_check` reports `MISSING` and reads on — but a future refactor
+  hoisting the existence guard into a helper shared with the bump would break
+  it in silence. Verified by that mutation: made `cmd_check` return at the
+  first absent manifest and the new case fails.
+
 - **The gate that charges the no-dispatch form charged two of its three
   conditions by exclusion, and the defect it exists to catch walked through
   both.** Reproduced before the fix, exit 0 each time: the clause parked in the
