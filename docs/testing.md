@@ -31,12 +31,14 @@ and is non-deterministic, so re-running one is a human decision:
 
 - `tests/claude-code/` — agent-behavior tests driving Claude Code sessions.
 - `tests/explicit-skill-requests/` — multi-turn and skill-name-prompted tests.
-- `tests/skill-behavior/` — the adversarial records. Today: **five
-  `FIXTURE-*.md`, six `RESULT-*.md`**, one `spec-under-test.md` carrying a
-  fixture into a reviewer, and the directory's own `README.md`, which is the
-  entry point — read it before adding anything. A rule can hold more than one
-  result: the escalation format has three, one per run, and the inline resume
-  route has one file covering its three runs.
+- `tests/skill-behavior/` — the adversarial records: a `FIXTURE-*.md` per
+  rule, a `RESULT-*.md` per run, a `spec-under-test.md` carrying a fixture into
+  a reviewer, and the directory's own `README.md`, which is the entry point —
+  read it before adding anything. **How many of each is not written here**: the
+  counts said five and six while `ls tests/skill-behavior/` answered seven and
+  eight, which is what a number in a document does when nobody re-runs it. A
+  rule can hold more than one result: the escalation format has one per run,
+  and the inline resume route has a single file covering its runs.
 
   **These never run in CI, and that is deliberate.** Each one dispatches a
   live agent: real tokens, minutes of wall clock, and a non-deterministic
