@@ -126,6 +126,10 @@ Subagent (general-purpose):
     one fact the call rests on. That is the shape the plan author was given,
     in this skill's `SKILL.md` under "Code That Calls a Dependency".
 
+    ## You Do Not Dispatch Subagents
+
+    Do all of this yourself. Never dispatch a subagent — the controller owns every review seat, and one you create duplicates a seat this process already provides. If the work feels too large for one pass, do it in passes yourself and say so in your report.
+
     ## What to Check
 
     | Category | What to Look For |

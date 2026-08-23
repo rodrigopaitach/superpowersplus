@@ -14,15 +14,17 @@ Two distinct kinds of tests. Only one of them lives in this repository:
 
 ## Plugin tests
 
-Thirteen directories under `tests/`. There is no single entry point and no
+Every directory under `tests/` is a suite. There is no single entry point and no
 `npm test` at the repository root — each suite is invoked the way its own
 directory expects, which is `run-tests.sh` for some and a named `test-*.sh` for
 others. `.github/workflows/ci.yml` holds the exact command for every one of
 them and is the reference when you are unsure.
 
-**CI runs ten of the thirteen on every push:** `antigravity`,
-`brainstorm-server`, `codex`, `codex-plugin-sync`, `hooks`, `kimi`, `opencode`,
-`pi`, `shell-lint` and `systematic-debugging`.
+**CI runs every static suite on every push** — every directory under `tests/`
+except the three below. Neither the count nor the list is written here: both
+age the moment a suite is added, and a list of names is a count wearing a
+disguise. `ls -d tests/*/` and `.github/workflows/ci.yml` answer it today, and
+a suite in the first without a step in the second is the defect to look for.
 
 **Three stay out**, because each dispatches a live agent — that costs tokens
 and is non-deterministic, so re-running one is a human decision:

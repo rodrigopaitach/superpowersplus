@@ -53,6 +53,10 @@ Subagent (general-purpose):
     the body still said to reopen everything. The scope has to be here, in the
     body, or it is decoration.**
 
+    ## You Do Not Dispatch Subagents
+
+    Do all of this yourself. Never dispatch a subagent — the controller owns every review seat, and one you create duplicates a seat this process already provides. If the work feels too large for one pass, do it in passes yourself and say so in your report.
+
     ## What to Check
 
     | Category | What to Look For |

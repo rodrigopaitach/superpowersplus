@@ -221,6 +221,30 @@ Step 3, from before that directory change.
 **If `WORKTREE_PATH` is under `.worktrees/` or `worktrees/`:** Superpowers
 created this worktree — we own cleanup:
 
+**Look before you remove — the loss you cannot see is the one that does not
+refuse.** A file matched by `.gitignore` produces no refusal at all:
+`git worktree remove` exits 0 and takes it, which is how a `.env` disappears
+on the happy path. `--ignored` is what makes that class visible:
+
+```bash
+git -C "$WORKTREE_PATH" status --porcelain -uall --ignored
+```
+
+| What the listing shows | What to do |
+|---|---|
+| Nothing | Remove and prune, below |
+| Entries, but no `!!` line — `??` for untracked, ` M` for modified | Offer the rescue. `git -C "$WORKTREE_PATH" stash push -u -m "<branch> <date>"` moves them into the common repository's stash, where they survive the worktree's removal; the removal then succeeds with no `--force` and nothing is lost. Take it, then **tell your partner the stash entry exists** — `git stash list` is the only way anyone finds it again — then remove |
+| Any `!!` entry (ignored) | **Stop.** Show the list and wait for your human partner. Do not stash them: `stash push -a` is what would take them, and in a real checkout it sweeps `node_modules/`, `.venv/` and `dist/` along with the `.env` that actually matters. You cannot tell those apart, and they cannot both be right. **What their go-ahead authorises is the plain removal below, never `--force`** — measured: `git worktree remove` exits 0 on ignored-only content, so no force is needed and the files go with the directory |
+
+**`--force` is never yours to pass.** Git's own refusal message names it —
+`use --force to delete it` — and that is the one instruction on the screen at
+the moment you want to move on. It deletes files that exist in no other place:
+a run's `<workspace>/progress.md` ledger among them. There is no authorisation
+path for it here, and asking for one is the rationalization below. If the
+removal is refused for any reason, stop, report what the listing showed, and
+leave the worktree standing. **A worktree left in place is a finished outcome,
+not a task you failed to complete.**
+
 ```bash
 git worktree remove "$WORKTREE_PATH"
 git worktree prune  # Self-healing: clean up any stale registrations
@@ -253,6 +277,7 @@ place. If your platform provides a workspace-exit tool, use it.
 | "'Yeah, get rid of it' counts as confirmation" | Only the typed word `discard` authorizes deletion. |
 | "The PR is up, so the worktree is clutter now" | PR feedback gets fixed in that worktree. It stays until the work lands. |
 | "This other worktree looks stale — I'll clean it too" | Clean up only worktrees under `.worktrees/` or `worktrees/`. Everything else belongs to the host. |
+| "`git worktree remove` refused — `--force` is what it says to use" | The refusal is the guard working, and the remedy git prints destroys files that exist nowhere else. Run the listing with `--ignored`, stash the untracked, and take anything ignored to your human partner. A worktree left standing costs a directory; `--force` costs whatever was in it. |
 | "The merged-result failure is probably flaky" | A failing merged result stops everything. Branch and worktree stay put while you investigate. |
 | "The base branch is obviously main" | Confirm the fork point or ask. Merging into the wrong base is expensive to undo. |
 | "The push was rejected — force-push will fix it" | A rejected push means the remote moved. Investigate; force-push only on your human partner's explicit request. |

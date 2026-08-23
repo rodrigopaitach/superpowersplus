@@ -29,11 +29,15 @@ repo_root="$(git rev-parse --show-toplevel)"
 # interpreter starts, just wc over fifteen files.
 "$repo_root/scripts/check-skill-size.sh"
 
-# Whole-tree too, and for a reason peculiar to it: the five carriers of the
-# evidence line are edited one at a time, so a range-scoped check would read
-# the one being changed and never the four it must match.
+# Whole-tree too, and for a reason peculiar to it: the carriers of the evidence
+# line are edited one at a time, so a range-scoped check would read the one
+# being changed and never the others it must match.
 "$repo_root/scripts/check-evidence-line.sh"
 
 # The same reason again, for the second form this project copies on purpose.
 # Six carriers across five skills — subagent-driven-development holds it twice.
 "$repo_root/scripts/check-escalation-shape.sh"
+
+# The third form, and the reason it is whole-tree like the other two: the
+# prompts carrying the no-dispatch clause are edited one at a time.
+"$repo_root/scripts/check-no-dispatch.sh"

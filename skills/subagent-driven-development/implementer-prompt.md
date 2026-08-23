@@ -33,6 +33,10 @@ Subagent (general-purpose):
     dependencies, assumptions, or anything else in the task description?
     **Ask now.** Raise every concern before starting work.
 
+    ## You Do Not Dispatch Subagents
+
+    Do all of this yourself. Never dispatch a subagent — the controller owns every review seat, and one you create duplicates a seat this process already provides. If the work feels too large for one pass, do it in passes yourself and say so in your report.
+
     ## Your Job
 
     Once you're clear on requirements:

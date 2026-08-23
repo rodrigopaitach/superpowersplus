@@ -42,6 +42,10 @@ Subagent (general-purpose):
     Your review is read-only on this checkout. Do not mutate the working
     tree, the index, HEAD, or branch state in any way.
 
+    ## You Do Not Dispatch Subagents
+
+    Do all of this yourself. Never dispatch a subagent — the controller owns every review seat, and one you create duplicates a seat this process already provides. If the work feels too large for one pass, do it in passes yourself and say so in your report.
+
     ## Scope
 
     Your scope is the findings list and the fix diff. Verdict every finding,

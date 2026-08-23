@@ -13,6 +13,53 @@ References below name them so a claim here can be traced there.
 
 ### Added
 
+- **Seven review seats could each open another one, and the rule against it
+  was unreadable by all of them.**
+  [`using-superpowers/SKILL.md`](skills/using-superpowers/SKILL.md), section
+  "Review Lives in the Gates", carries *"Between them, do not dispatch a review
+  subagent on your own initiative"* — and the same file opens with a
+  `<SUBAGENT-STOP>` block telling any subagent dispatched for a specific task
+  to ignore the skill. Every reviewer and the implementer **is** such a
+  subagent, so the one rule in this repository governing review dispatch could
+  not be read by anyone able to violate it. The clause now sits in each of the
+  seven prompts, charged by
+  [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh). **All seven copies
+  are inside the prompt body the dispatched agent reads** — including
+  [`final-branch-audit`](skills/final-branch-audit/SKILL.md)'s, which belongs
+  in the auditor's prompt and not in the skill's own prose: placed there it
+  would have told the controller never to dispatch, immediately above the
+  section instructing it to. **The upstream measured the cost this avoids** —
+  9 of 9 depth-2 spawns across 4 corpora were reviewers created by the
+  implementer, and all 9 duplicated the review the controller dispatches
+  anyway; that measurement is theirs, taken on Codex, and none equivalent was
+  taken here. The dispatch graph itself was already correct: level 0 owns every
+  seat. What was missing was the other half of the rule, stated where it can be
+  read.
+
+- **A gate for the clause that keeps a review seat from opening another one.**
+  [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh) reads seven declared
+  carriers and fails when any has lost the clause. It is the third form this
+  project copies on purpose rather than extracting, joining
+  [`check-evidence-line.sh`](scripts/check-evidence-line.sh) and
+  [`check-escalation-shape.sh`](scripts/check-escalation-shape.sh), and it
+  exists for the reason [`docs/review-scopes.md`](docs/review-scopes.md),
+  section "Why the form is copied rather than extracted", states: unified in
+  place without a gate is just copied. The carrier list is declared in the
+  script rather than globbed, so a carrier that silently lost the clause stays
+  distinguishable from a file that never had it. **It charges the form, not the
+  presence of a heading** — the heading must exist, be indented (which is what
+  puts it inside the `prompt: |` body the dispatched agent reads, rather than in
+  the skill's own prose that only the controller reads), and every carrier's
+  clause body must be the same text. The first version matched a bare marker,
+  and the branch review demonstrated two mutations that passed it: a carrier
+  whose body read *"Feel free to dispatch helpers when convenient"*, and the
+  clause parked in the controller's prose — **the exact defect this branch had
+  already caught by hand while executing**, in the one gate built to catch it.
+  All three now fail with their own message, each with a case in the suite.
+  **It runs in both places its two siblings do** — [`githooks/pre-commit`](githooks/pre-commit) and its own
+  CI step, separate from the step running its test suite. A gate with a passing
+  suite and no run of its own proves only that it *would* work.
+
 - **The execution-path criterion has one statement, at
   [`execution-path.md`](skills/writing-plans/references/execution-path.md).**
   It stood in eight places across three skills, so correcting it meant
@@ -21,6 +68,149 @@ References below name them so a claim here can be traced there.
   subagent output formats and does not reach here.
 
 ### Fixed
+
+- **A version argument was interpolated into a `jq` program, so an argument
+  carrying a quote wrote whatever it liked into every declared manifest.**
+  Reproduced before the fix: `bump-version.sh '2.0.0" | .pwned = "yes'`
+  left `"pwned": "yes"` in `a.json`. Two halves, and they are not redundant —
+  they fail in different places. The format check
+  ([`bump-version.sh`](scripts/bump-version.sh), `cmd_bump`) was **anchored at
+  the start only**, so it matched a prefix and accepted every character after
+  it, while its own error message says *"expected X.Y.Z"*; it is anchored at
+  both ends now. And `write_json_field` passes the value with `--arg`, as
+  **data** rather than as program text, which is what holds if that check is
+  ever loosened. **Measured, so the coverage is not overstated:** reverting
+  `--arg` alone leaves the suite green — the new case charges the boundary, and
+  `--arg` has no case of its own. Reverting the anchor alone fails it. The
+  assertion asks `jq has("pwned")` rather than grepping, because the injected
+  string appears inside the field *value* too when the argument is passed
+  safely, and a text match cannot tell the two apart.
+
+- **The write loop's `SKIP (missing)` branch became unreachable when the
+  preflight landed in front of it, and went on reading as a live fallback.**
+  It now aborts instead of skipping, named for what it actually is — a TOCTOU
+  backstop for a manifest that vanishes between the two walks. Carrying on is
+  the exact behaviour that let a bump move six manifests of seven and still
+  exit 0. **No case covers it**, because the condition is not reachable without
+  racing the script, and the comment says so rather than implying coverage.
+
+- **`--check`'s tolerance had a case for a missing FIELD and none for a missing
+  FILE**, which is the class the preflight had just added. The tolerance holds
+  today — `cmd_check` reports `MISSING` and reads on — but a future refactor
+  hoisting the existence guard into a helper shared with the bump would break
+  it in silence. Verified by that mutation: made `cmd_check` return at the
+  first absent manifest and the new case fails.
+
+- **The gate that charges the no-dispatch form charged two of its three
+  conditions by exclusion, and the defect it exists to catch walked through
+  both.** Reproduced before the fix, exit 0 each time: the clause parked in the
+  skill's own prose with **one** leading space instead of zero, and — once every
+  carrier wrapped its body the same way — a second sentence reworded to *"dispatch
+  as many helpers as you like"*. The first is
+  [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh)'s `indent == 0`, which
+  rejects a single state and accepts everything else, while CommonMark renders
+  1 to 3 spaces as a top-level heading exactly like zero; it now charges the set
+  it accepts, `indent < 4`, the indent every carrier's `prompt: |` body actually
+  uses. The second is that the body under comparison was the first non-blank
+  line, under a comment promising *"a reflow is not a failure and a reword
+  is"* — **false in both directions**, and measured so: an identical reflow
+  failed, and a reword after one survived. The body is now every line up to the
+  next heading, collapsed with the same normalization
+  [`check-escalation-shape.sh`](scripts/check-escalation-shape.sh) has used all
+  along. **This is the second cycle of one defect** — `074320f` was itself the
+  repair of a gate charging a title instead of the form, and it moved the
+  proxy rather than removing it. The two cases were added to the suite and
+  **watched to fail first**: the same command that exits 1 on a one-space indent
+  and on a reflowed reword exits 0 on the real tree, which is the difference,
+  not a verdict.
+
+- **Three stale counts survived the sweep that declared them swept, two of them
+  in the files that same sweep edited.** The gate prints `8 carrier(s)`;
+  `.github/workflows/ci.yml` said "the five carriers of the test-evidence line"
+  and `githooks/pre-commit` said "the five carriers … never the four it must
+  match", both a few lines above a comment the sweep had just written — and
+  [`docs/review-scopes.md`](docs/review-scopes.md) still said "**Both** name
+  what drifted" of three gates. Root cause: the sweep matched the word "two"
+  across documents and never the counts inside code comments. All three now
+  carry a condition instead of a number, the treatment the same cycle applied
+  to [`docs/pre-commit-cost.md`](docs/pre-commit-cost.md).
+
+- **[`docs/testing.md`](docs/testing.md) said counting the static suites here
+  would age, directly above a list naming all eleven of them.** A list of names
+  is a count wearing a disguise: it ages on exactly the same event. Both are
+  gone, replaced by the condition — every directory under `tests/` except the
+  three live-agent ones — plus the two commands that answer it, and the defect
+  to look for between them: a suite in `ls -d tests/*/` with no step in
+  `.github/workflows/ci.yml`.
+
+- **Two more members of the class the version-bump preflight closes, and one
+  the spec measured wrong.** A manifest **declared in `.version-bump.json` but
+  absent** was skipped by the preflight and by the write loop, so the bump
+  exited 0 having moved six manifests of seven — the same split repository the
+  preflight exists to prevent, and a condition `--check` already reports as
+  drift, so the two commands disagreed. The difference is in the state and not
+  the exit code: before, the first manifest reached the new version and the
+  closing audit reported the drift *after* the write; now nothing is written.
+  Separately, `AC6` and the routing table said a modified file shows as `??`.
+  **Measured in a scratch repository: a modified tracked file reports ` M`,
+  never `??`, and refuses the removal with exit 128 exactly as an untracked one
+  does** — so a worktree holding only modified files matched no row of the
+  table at all, and the rescue that would have worked was never offered. The
+  row now reads "entries, but no `!!` line". Two more things the table never
+  said: the rescue's stash entry is reported to the human partner (`git stash
+  list` is the only way anyone finds it again), and a go-ahead on ignored
+  content authorises the **plain** removal — measured to exit 0 on ignored-only
+  content — never `--force`.
+
+- **A third gate for a copied form landed, and five sentences counting them
+  still said two.** The branch-wide review found the class: `docs/testing.md`
+  named thirteen suite directories where `ls -d tests/*/` returns fourteen and
+  "ten of the thirteen" in CI where it is now every static suite;
+  [`docs/review-scopes.md`](docs/review-scopes.md), section "Why the form is
+  copied rather than extracted", said "Two carry that weight" and "Both run
+  whole-tree" — while [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh)
+  sends its own failing readers to that very section; [`CLAUDE.md`](CLAUDE.md)
+  said "the two shapes", against its own rule that this file keeps a relation
+  or a condition and never a measured number. **The wording was changed so it
+  cannot age again**, not merely incremented: the lists are enumerated where
+  enumeration is the point and the counts are named as run-time output
+  everywhere else. Two comments this branch itself wrote — in
+  [`ci.yml`](.github/workflows/ci.yml) and
+  [`githooks/pre-commit`](githooks/pre-commit) — carried the same defect on
+  their first day and were rewritten the same way.
+  [`docs/pre-commit-cost.md`](docs/pre-commit-cost.md) declared one untimed
+  gate where there are three, and now states the condition instead of the
+  number.
+
+- **`bump-version.sh` wrote as it walked, and a manifest missing its field was
+  not detected at all.** Measured by running the real script against three
+  declared manifests: with the middle one holding unparseable JSON it exits 5
+  with the first manifest already bumped and the third still at the old
+  version — the repository split across two versions, and the audit that would
+  have reported the drift never runs because `set -euo pipefail` aborts first.
+  With the middle one **missing its declared field** it exits **0**, prints
+  `b.json (version)  null -> 2.0.0` as a success, and creates the field in a
+  manifest that never had it. A preflight now reads every declared field before
+  any manifest is written. **The upstream's one-character fix — `jq -r` to
+  `jq -er` in the shared reader — was not adopted:** that function has three
+  callers, and under `set -e` it would turn `--check`, whose whole job is to
+  list all seven and report drift, into a command that aborts at the first
+  manifest it cannot read.
+
+- **`git worktree remove` had no guard, and the class that loses most data
+  never triggers one.**
+  [`finishing-a-development-branch/SKILL.md`](skills/finishing-a-development-branch/SKILL.md),
+  section "Step 7: Cleanup Workspace", ran the removal with nothing said about
+  refusal — while git's own error names `--force` as the remedy, which deletes
+  files that exist in no other place. **Measured in a scratch repository: a
+  file matched by `.gitignore` produces no refusal at all.** The removal exits
+  0 and takes it, so `.env` and local credentials are lost on the happy path,
+  and `status --porcelain -uall` cannot see them — only `--ignored` reports the
+  `!!` lines. Untracked content now gets a rescue that was measured to lose
+  nothing (`git stash push -u`, then removal with no `--force`); ignored
+  content stops the removal, because `stash push -a` would sweep
+  `node_modules/` along with the `.env`, and no agent can tell them apart.
+  `--force` has no authorisation path.
 
 - **The link gate read 12 of the 48 markdown files under `docs/`, and the
   document describing it said it read all of them.**
@@ -60,6 +250,24 @@ References below name them so a claim here can be traced there.
   form for a copied form is a line-literal comparison: left split, the
   reference would have failed such a gate the day it was written. Word streams
   compared rather than read — the change is reflow only.
+
+### Removed
+
+- **`render-graphs.js` is deleted — it had not run since 2026-03-15 and
+  nothing called it.** The script rendered a skill's ` ```dot ` blocks to SVG
+  by shelling out to Graphviz. `911fa1d` added a `package.json` declaring
+  `"type": "module"` for an unrelated opencode plugin test, which made every
+  `.js` in the package an ES module; the script uses `require`. **Five months
+  and six days, with no failing gate anywhere** — `git ls-files '*.svg'`
+  returns one file and it is the logo, and no `diagrams/` directory has ever
+  been committed. Repairing it was specified first and reversed: it would have
+  left a script whose only real function needs a binary that
+  [`CLAUDE.md`](CLAUDE.md), section "What does not belong here", keeps out of
+  every automated check — the exact condition under which it broke silently.
+  **The ten ` ```dot ` blocks and
+  [`graphviz-conventions.dot`](skills/writing-skills/graphviz-conventions.dot)
+  stay.** They never depended on the renderer: a model reads them as text, and
+  the renderer existed to produce pictures for a person.
 
 ### Changed
 
@@ -3906,6 +4114,15 @@ writing, which has now happened five times in one series of changes — each tim
 an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
+
+- **The `--force` prohibition is prose, and prose is not a guarantee.** A
+  `PreToolUse` hook refusing `git worktree remove --force` is the only layer
+  that holds regardless of what an agent decides, and deleting untracked files
+  is irreversible. It is deferred rather than dropped: it would be this
+  plugin's first `PreToolUse`, distributed to everyone who installs it, which
+  is a product decision and not a defect repair. Opened 2026-08-21 with
+  [the upstream-consult-fixes design](docs/superpowers/specs/2026-08-21-upstream-consult-fixes-design.md),
+  section "Implicit Requirements", `IR2`.
 
 - **A security lens for the reviewers: measured, justified, and belonging to
   the projects' own `CLAUDE.md` rather than to this repository.** Two classes

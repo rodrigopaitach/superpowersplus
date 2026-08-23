@@ -54,6 +54,9 @@ jobs:
       - name: Tests (shell lint script)
         run: bash tests/shell-lint/test-lint-shell.sh
 
+      - name: Tests (version bump preflight)
+        run: tests/version-bump/test-bump-version.sh
+
       - name: Tests (session-start hook)
         run: tests/hooks/test-session-start.sh
 
@@ -71,6 +74,9 @@ jobs:
 
       - name: Tests (escalation shape gate)
         run: tests/hooks/test-check-escalation-shape.sh
+
+      - name: Tests (no-dispatch gate)
+        run: tests/hooks/test-check-no-dispatch.sh
 
       - name: Tests (cross-reference check)
         run: tests/hooks/test-check-cross-references.sh
@@ -160,9 +166,10 @@ jobs:
       - name: Every SKILL.md stays under the line ceiling
         run: scripts/check-skill-size.sh
 
-      # The five carriers of the test-evidence line hold one form, copied on
-      # purpose because it cannot live behind a link. Without this, "unified
-      # in place" is just "copied".
+      # The carriers of the test-evidence line hold one form, copied on purpose
+      # because it cannot live behind a link. Without this, "unified in place"
+      # is just "copied". The count is printed at run time and written down
+      # nowhere: it ages every time a carrier is added.
       - name: The evidence line is the same line everywhere
         run: scripts/check-evidence-line.sh
 
@@ -171,6 +178,13 @@ jobs:
       # that have to agree.
       - name: The escalation shape is the same shape everywhere
         run: scripts/check-escalation-shape.sh
+
+      # The third copied form. subagent-driven-development holds it once per
+      # dispatched role, so a list of skill names is not a list of carriers.
+      # The count is printed at run time and written down nowhere: it ages
+      # every time the list grows.
+      - name: The no-dispatch clause is in every review seat
+        run: scripts/check-no-dispatch.sh
 
       # Integrity of the adversarial records only. The tests themselves are
       # never re-run here: they dispatch a live agent, cost tokens, and are
