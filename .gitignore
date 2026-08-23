@@ -18,3 +18,8 @@ evals/
 # A pattern that has to be extended by hand at every run is a pattern that is
 # stale at every run.
 .skillrun*/
+
+# Reading material kept beside the work — articles, transcripts, diagrams read
+# while deciding something here. Local to whoever is reading it, not part of
+# the published plugin, and heavy: the first one to land was 6.8 MB of PDF.
+research/
