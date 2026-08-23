@@ -9,6 +9,78 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **Ten rules were still standing on rebase cost, which
+  [`CLAUDE.md`](CLAUDE.md), section "Relationship with Superpowers", forbids as
+  a criterion and instructs be reported on sight.** Measured against
+  `upstream/main` rather than recalled: an earlier note counted five. The worst
+  three are the ones a user reads and follows — [`README.md`](README.md) and
+  both [`docs/README.en.md`](docs/README.en.md) /
+  [`docs/README.pt-BR.md`](docs/README.pt-BR.md) gave "rebase onto the
+  upstream" as **step 1** of updating the plugin, a procedure this project
+  ended on 2026-08-05, and one that now collides on contact:
+  `tests/version-bump/test-bump-version.sh` exists on both sides, written
+  independently. The step is gone from all three, replaced by what actually
+  updates the plugin.
+
+  In [`context-audit.md`](docs/context-audit.md): the veto on touching an
+  upstream file "unless the rebase cost is in Step 1's table" is gone — it was
+  not being followed anyway, `tests/shell-lint/test-lint-shell.sh` having taken
+  23 of this project's lines. The `writing-skills/SKILL.md` ceiling exemption
+  now gives the reason that already governs in
+  [`check-skill-size.sh`](scripts/check-skill-size.sh) — **a deadline, the open
+  structural review** — instead of a dead one competing with it; the old
+  reason's premise was also measured false, **686 lines here against 679
+  upstream, 17 added and 10 removed**, not "two changed lines, both the
+  namespace rename". **The upstream-divergence measurement itself stays, and
+  is the one thing here not deleted:** it is relabelled provenance rather than
+  rebase cost, because reading it on 2026-08-22 found a defect they had fixed
+  and this project had deleted instead, and two rules this project reached
+  independently.
+
+  [`SECURITY.md`](SECURITY.md) kept the visual companion's telemetry on, for a
+  reason that never needed rebase cost: the mechanism and the credit are both
+  Superpowers', and changing an inherited feature's default is a product
+  decision, not a defect repair. Behaviour is unchanged and the switch stays
+  documented. Two comments in
+  [`ci.yml`](.github/workflows/ci.yml) are deleted rather than rewritten —
+  one called `tests/shell-lint/test-lint-shell.sh` "a file we do not otherwise
+  touch", and one promised the changelog gate is safe because the "Upstream
+  base" line "is updated at every rebase", which [`CHANGELOG.md`](CHANGELOG.md)
+  itself calls a fixed historical fact. **The tenth was found by the branch
+  review, in the one file of the class that executes**:
+  [`test-check-skill-size.sh`](tests/hooks/test-check-skill-size.sh) pinned the
+  exemption with the comment *"upstream's file at upstream's length"* — false
+  on its own terms at 686 against 679, and the same dead reason its sibling
+  script had already been moved off. A sweep that reads prose and skips the
+  test files misses the member that runs. Its fixture sizes stopped echoing the
+  real file's line count for the same reason: any value over the ceiling
+  exercises the same branch, and the removal of the exemption still turns the
+  test red, which is what the pin is for.
+
+### Changed
+
+- **The no-dispatch clause names what a self-created reviewer is worth, which
+  is the half that closes the rationalisation.** It said such a reviewer
+  "duplicates a seat this process already provides" — true, and answerable with
+  *"then it is redundant, not harmful"*. It now says the duplicate runs **at
+  full cost and for a verdict that counts for nothing**. **The sentence is
+  adapted from the upstream's own wording**, found by reading
+  `obra/superpowers` v6.3.0 (`b36e082`, 2026-08-12), which added the same clause
+  under the same heading after measuring the behaviour — 9 of 9 depth-2 spawns
+  across 4 corpora. Their version is two bodies across four carriers — one for
+  the three reviewer seats, one for the implementer's; this project keeps **one
+  body across all seven carriers**, because
+  [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh) charges that the seven
+  agree with each other, and per-role variants would leave nothing to compare.
+  The trade is deliberate: their wording is more specific, ours is the one a
+  gate can verify. Their second sentence — *"that review is already scheduled.
+  Report instead."* — is not adopted for the same reason: it only makes sense in
+  the implementer's seat.
+
 ## [1.19.0] - 2026-08-22
 
 ### Added
@@ -4114,6 +4186,21 @@ writing, which has now happened five times in one series of changes — each tim
 an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
+
+- **The upstream's brainstorming three-path router, to investigate rather than
+  adopt.** `obra/superpowers` v6.3.0 (`b36e082`, 2026-08-12) split brainstorming
+  into **Spike**, **Bounded** and **Architectural** paths, with terminal states
+  bound to the path and a section named `Anti-Pattern: "Too Simple To Need
+  Approval"` — 108 lines added and 9 removed in their
+  `skills/brainstorming/SKILL.md`. It
+  answers a real cost this project pays: brainstorming is mandatory before any
+  creative work here, with no graduation, so a spike and an architecture change
+  buy the same ceremony. It is **not** a cherry-pick: this project's
+  brainstorming has diverged from theirs, the change is behavioural in the most
+  used skill in the plugin, and adopting it goes through a spec like anything
+  else. Measured while consulting the upstream on 2026-08-22 — the same reading
+  that found the clause wording above, and that confirmed two of this project's
+  own rules had already been reached independently. Opened 2026-08-22.
 
 - **The `--force` prohibition is prose, and prose is not a guarantee.** A
   `PreToolUse` hook refusing `git worktree remove --force` is the only layer

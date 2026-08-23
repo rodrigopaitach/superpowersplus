@@ -71,7 +71,7 @@ export SUPERPOWERS_DISABLE_TELEMETRY=1
 # DISABLE_TELEMETRY and CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC also work
 ```
 
-**The code default is on.** superpowersplus does not ship it disabled and does
-not modify that code — the upstream owns it, and rewriting their line would be
-a rebase conflict on every update. Turning it off is an action you take in your
-own environment.
+**The code default is on, and superpowersplus does not ship it disabled.**
+Changing the default of an inherited feature is a product decision about
+somebody else's work, not a defect repair. Turning it off is an action you take
+in your own environment.

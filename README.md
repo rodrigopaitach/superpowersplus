@@ -151,7 +151,7 @@ superpowersplus does not take contributions. Contributing to Superpowers itself 
 
 ## Updating
 
-Not on the official marketplace, so nothing updates itself: rebase onto Superpowers to pick up its improvements, then refresh the plugin from this marketplace. Full procedure in [Português](docs/README.pt-BR.md#atualizando) / [English](docs/README.en.md#updating).
+Not on the official marketplace, so nothing updates itself: refresh the plugin from this marketplace when a new version is cut. Superpowers stopped being a source of updates on 2026-08-05, so there is no rebase step. Full procedure in [Português](docs/README.pt-BR.md#atualizando) / [English](docs/README.en.md#updating).
 
 ## Visual companion telemetry
 
