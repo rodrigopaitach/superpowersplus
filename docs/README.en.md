@@ -59,17 +59,14 @@ Requires Claude Code.
 
 ## Updating
 
-superpowersplus is not on the official marketplace, so **nothing updates itself**. Two steps, in this order:
+superpowersplus is not on the official marketplace, so **nothing updates itself**. Refresh the installed plugin:
 
-1. **Rebase onto the upstream**, to bring in `obra/superpowers`'s changes. This is where the `plus.N` changes can conflict — and why they were written to touch as little as possible of the files the upstream edits often.
-2. **Refresh the installed plugin:**
+```
+/plugin marketplace update superpowersplus
+/reload-plugins
+```
 
-   ```
-   /plugin marketplace update superpowersplus
-   /reload-plugins
-   ```
-
-If you do not track Superpowers, only step 2 applies.
+**Superpowers is no longer a source of updates.** On 2026-08-05 this project stopped pulling from `obra/superpowers` ([`CLAUDE.md`](../CLAUDE.md), section "Relationship with Superpowers"), so there is no rebase step here any more; the remote stays for consultation. What each version brings is in [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## How it works
 

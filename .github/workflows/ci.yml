@@ -48,9 +48,6 @@ jobs:
       # reads files directly, so none depends on the checkout's index — they
       # are safe before the rewind below. Live-agent suites stay out on
       # purpose: they cost tokens and are non-deterministic.
-      # Invoked through `bash` because this one file is not executable in git
-      # (mode 100644) and it is upstream's — a mode change here is a rebase
-      # conflict on a file we do not otherwise touch.
       - name: Tests (shell lint script)
         run: bash tests/shell-lint/test-lint-shell.sh
 
@@ -145,10 +142,6 @@ jobs:
       # `git config core.hooksPath githooks` never runs — the exact silent
       # failure the header of this file says CI exists to make visible. CI
       # tested the scripts and did not apply them.
-      #
-      # A rebase onto the upstream does not trip the changelog gate: the
-      # "Upstream base" line in CHANGELOG.md is updated at every rebase, so the
-      # file is always in the range.
       - name: Content changes carry a changelog entry
         run: scripts/check-changelog.sh
 

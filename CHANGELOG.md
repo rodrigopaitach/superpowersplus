@@ -11,6 +11,47 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Nine rules were still standing on rebase cost, which
+  [`CLAUDE.md`](CLAUDE.md), section "Relationship with Superpowers", forbids as
+  a criterion and instructs be reported on sight.** Measured against
+  `upstream/main` rather than recalled: an earlier note counted five. The worst
+  three are the ones a user reads and follows — [`README.md`](README.md) and
+  both [`docs/README.en.md`](docs/README.en.md) /
+  [`docs/README.pt-BR.md`](docs/README.pt-BR.md) gave "rebase onto the
+  upstream" as **step 1** of updating the plugin, a procedure this project
+  ended on 2026-08-05, and one that now collides on contact:
+  `tests/version-bump/test-bump-version.sh` exists on both sides, written
+  independently. The step is gone from all three, replaced by what actually
+  updates the plugin.
+
+  In [`context-audit.md`](docs/context-audit.md): the veto on touching an
+  upstream file "unless the rebase cost is in Step 1's table" is gone — it was
+  not being followed anyway, `tests/shell-lint/test-lint-shell.sh` having taken
+  23 of this project's lines. The `writing-skills/SKILL.md` ceiling exemption
+  now gives the reason that already governs in
+  [`check-skill-size.sh`](scripts/check-skill-size.sh) — **a deadline, the open
+  structural review** — instead of a dead one competing with it; the old
+  reason's premise was also measured false, **686 lines here against 679
+  upstream, 17 added and 10 removed**, not "two changed lines, both the
+  namespace rename". **The upstream-divergence measurement itself stays, and
+  is the one thing here not deleted:** it is relabelled provenance rather than
+  rebase cost, because reading it on 2026-08-22 found a defect they had fixed
+  and this project had deleted instead, and two rules this project reached
+  independently.
+
+  [`SECURITY.md`](SECURITY.md) kept the visual companion's telemetry on, for a
+  reason that never needed rebase cost: the mechanism and the credit are both
+  Superpowers', and changing an inherited feature's default is a product
+  decision, not a defect repair. Behaviour is unchanged and the switch stays
+  documented. Two comments in
+  [`ci.yml`](.github/workflows/ci.yml) are deleted rather than rewritten —
+  one called `tests/shell-lint/test-lint-shell.sh` "a file we do not otherwise
+  touch", and one promised the changelog gate is safe because the "Upstream
+  base" line "is updated at every rebase", which [`CHANGELOG.md`](CHANGELOG.md)
+  itself calls a fixed historical fact.
+
 ### Changed
 
 - **The no-dispatch clause names what a self-created reviewer is worth, which

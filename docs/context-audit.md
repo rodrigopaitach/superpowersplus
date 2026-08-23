@@ -34,7 +34,7 @@ Four measurements, all of them commands rather than estimates:
 | Lines per `SKILL.md` and per `references/`, with the ratio between them | The ratio is the shape: a thin entry point over thick reference is the target, and a skill with nothing extracted has never been asked the question |
 | Lines per section of `CLAUDE.md` | The ceiling is enforced on the file; the decision is taken per section |
 | What loads **always** (hook + always-on rules) against what loads on demand | Always-on is the only budget nobody can opt out of |
-| Divergence of each file against `upstream/main` | This is the rebase cost, and it is an input to the decision, not a veto on it |
+| Divergence of each file against `upstream/main` | **Provenance, never rebase cost** — where a file came from and how far it has already moved. It answers "what changed on their side?", which on 2026-08-22 turned up a defect they had fixed and this project had deleted instead. It is **not** an input to whether a rule is cut |
 
 **Report the table BEFORE any judgment.** If a measurement diverges from what
 the request asserts, **STOP at that item and report it** instead of editing:
@@ -127,8 +127,6 @@ Never write "never do X" without a specific, demonstrable failure mode.
 - **It applies nothing.** It measures, classifies, and proposes. The decision is
   the owner's, item by item.
 - **It does not cut a rule for being bulky.** Volume is not a finding.
-- **It does not touch an upstream file** unless the rebase cost is already in
-  Step 1's table.
 
 ## Settled cases — do not reopen
 
@@ -138,5 +136,5 @@ Never write "never do X" without a specific, demonstrable failure mode.
 | The escalation shape, copied in place across every carrier `check-escalation-shape.sh` declares | A measured exception — [`escalation-format.md`](../skills/using-superpowers/references/escalation-format.md) records 1/3 behind a link, 3/3 once the form returned to the point of use. A form inside an output block does not go behind a link |
 | The no-dispatch clause, copied in place across every carrier [`check-no-dispatch.sh`](../scripts/check-no-dispatch.sh) declares | The same class as the escalation shape, with a reason peculiar to it: [`using-superpowers/SKILL.md`](../skills/using-superpowers/SKILL.md) opens with a `<SUBAGENT-STOP>` block, so a pointer out of a dispatched prompt reaches a file that same agent is told to ignore. The clause has to be in the prompt body, and the gate charges that it is — indented, and the same text in all of them |
 | The fake paths in [`skills/writing-skills/SKILL.md`](../skills/writing-skills/SKILL.md)'s teaching examples | They are the example, not the defect. "Correcting" a `❌ Bad` path teaches the opposite of what the section exists to teach |
-| [`skills/writing-skills/SKILL.md`](../skills/writing-skills/SKILL.md) at 679 lines | Exempt from the ceiling: 679 here and 679 upstream, two changed lines, both the namespace rename. Cutting it means rewriting a file somebody else maintains |
+| [`skills/writing-skills/SKILL.md`](../skills/writing-skills/SKILL.md) over the ceiling | Exempt **on a deadline, not a condition**: it holds while that file's structural review is open and falls when the review closes, whatever the review decides — [`releasing.md`](releasing.md), section "The SKILL.md ceiling exemption". The reason it used to give (same length as upstream, two changed lines) was measured false on 2026-08-22 and had stopped meaning anything the day this project stopped pulling from them |
 | The provenance inside `CLAUDE.md`'s "Preparing a commit" | **The provenance of a rule that survived Step 4's filter is not disposable RECORD — it is what holds the rule up.** It reads as history and classifies as RECORD, which is the trap: strip the `ab1cf41` story and "never chain preparation and `git commit`" becomes a rule with no symptom, and the *next* audit cuts it under the golden rule. A demonstrable failure mode stays beside the rule it demonstrates |
