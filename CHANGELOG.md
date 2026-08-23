@@ -69,6 +69,29 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **The gate that charges the no-dispatch form charged two of its three
+  conditions by exclusion, and the defect it exists to catch walked through
+  both.** Reproduced before the fix, exit 0 each time: the clause parked in the
+  skill's own prose with **one** leading space instead of zero, and — once every
+  carrier wrapped its body the same way — a second sentence reworded to *"dispatch
+  as many helpers as you like"*. The first is
+  [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh)'s `indent == 0`, which
+  rejects a single state and accepts everything else, while CommonMark renders
+  1 to 3 spaces as a top-level heading exactly like zero; it now charges the set
+  it accepts, `indent < 4`, the indent every carrier's `prompt: |` body actually
+  uses. The second is that the body under comparison was the first non-blank
+  line, under a comment promising *"a reflow is not a failure and a reword
+  is"* — **false in both directions**, and measured so: an identical reflow
+  failed, and a reword after one survived. The body is now every line up to the
+  next heading, collapsed with the same normalization
+  [`check-escalation-shape.sh`](scripts/check-escalation-shape.sh) has used all
+  along. **This is the second cycle of one defect** — `074320f` was itself the
+  repair of a gate charging a title instead of the form, and it moved the
+  proxy rather than removing it. The two cases were added to the suite and
+  **watched to fail first**: the same command that exits 1 on a one-space indent
+  and on a reflowed reword exits 0 on the real tree, which is the difference,
+  not a verdict.
+
 - **Two more members of the class the version-bump preflight closes, and one
   the spec measured wrong.** A manifest **declared in `.version-bump.json` but
   absent** was skipped by the preflight and by the write loop, so the bump

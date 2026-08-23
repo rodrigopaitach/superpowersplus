@@ -123,7 +123,7 @@ out="$(cd "$lab" && ./scripts/check-no-dispatch.sh 2>&1)"
 status=$?
 set -e
 assert_exit "exits 1" 1 "$status"
-if printf '%s' "$out" | grep -q 'flush-left'; then
+if printf '%s' "$out" | grep -q 'outside the prompt body'; then
   printf '  ok: a clause outside the prompt body is not a clause\n'
 else
   printf '  FAIL: flush-left placement was accepted\n'
@@ -143,6 +143,45 @@ if printf '%s' "$out" | grep -q 'could not be read'; then
   printf '  ok: a renamed or deleted carrier is not silently a pass\n'
 else
   printf '  FAIL: the unreadable branch did not report\n'
+  printf '        output: %s\n' "$out"
+  FAILURES=$((FAILURES + 1))
+fi
+
+printf 'a clause indented one space fails\n'
+lab="$(build_lab oneindent)"
+printf '# A carrier\n\n %s\n\n %s\n' \
+  "$(printf '%s' "$CLAUSE" | sed 's/^ *//')" "$(printf '%s' "$BODY" | sed 's/^ *//')" \
+  >"$lab/${CARRIERS[5]}"
+set +e
+out="$(cd "$lab" && ./scripts/check-no-dispatch.sh 2>&1)"
+status=$?
+set -e
+assert_exit "exits 1" 1 "$status"
+if printf '%s' "$out" | grep -q 'outside the prompt body'; then
+  printf '  ok: one to three spaces still render as a top-level heading\n'
+else
+  printf '  FAIL: an indent of one space was accepted as inside the prompt body\n'
+  printf '        output: %s\n' "$out"
+  FAILURES=$((FAILURES + 1))
+fi
+
+printf 'a reword hidden behind a uniform reflow fails\n'
+lab="$(build_lab reflow)"
+for rel in "${CARRIERS[@]}"; do
+  printf '# A carrier\n\n%s\n\n    Do all of this yourself.\n    Never dispatch a subagent.\n' \
+    "$CLAUSE" >"$lab/$rel"
+done
+printf '# A carrier\n\n%s\n\n    Do all of this yourself.\n    Dispatch as many helpers as you like.\n' \
+  "$CLAUSE" >"$lab/${CARRIERS[4]}"
+set +e
+out="$(cd "$lab" && ./scripts/check-no-dispatch.sh 2>&1)"
+status=$?
+set -e
+assert_exit "exits 1" 1 "$status"
+if printf '%s' "$out" | grep -q 'body differs'; then
+  printf '  ok: the body is the whole paragraph, not its first line\n'
+else
+  printf '  FAIL: a reworded second sentence survived a uniform reflow\n'
   printf '        output: %s\n' "$out"
   FAILURES=$((FAILURES + 1))
 fi

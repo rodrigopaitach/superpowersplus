@@ -14,11 +14,13 @@
 # Unifying in place without a gate is just copying. This is that gate.
 #
 # It charges the FORM, not the presence of a heading. Three things have to hold
-# in every declared carrier: the heading exists, it is INDENTED — which is what
-# puts it inside the `prompt: |` body the dispatched agent reads, rather than in
-# the skill's own prose, which only the controller reads — and the clause body
-# is the same text everywhere. A gate that matched the heading alone passes a
-# carrier whose body says the opposite of the rule.
+# in every declared carrier: the heading exists, it is INDENTED at least four
+# spaces — which is what puts it inside the `prompt: |` body the dispatched
+# agent reads, rather than in the skill's own prose, which only the controller
+# reads — and the clause body, all of it, is the same text everywhere. A gate
+# that matched the heading alone passes a carrier whose body says the opposite
+# of the rule; one that read the body's first line alone passes a carrier whose
+# LATER sentence does.
 #
 # WHAT IT DOES NOT COVER — read this before trusting a pass:
 #   * Whether the clause is worded well. It compares the bodies to each other,
@@ -58,6 +60,11 @@ CARRIERS = [
 ]
 
 MARKER = "## You Do Not Dispatch Subagents"
+# The indent every carrier's `prompt: |` body actually uses. Charged as the set
+# ACCEPTED, never as the one state excluded: `indent == 0` passed 1 to 3 spaces
+# in silence, and CommonMark still renders those as a top-level heading — the
+# skill's own prose, which is the state this check exists to reject.
+MIN_INDENT = 4
 
 missing = []
 unindented = []
@@ -75,13 +82,23 @@ for rel in CARRIERS:
         missing.append(rel)
         continue
     indent = len(lines[hit]) - len(lines[hit].lstrip())
-    if indent == 0:
+    if indent < MIN_INDENT:
         unindented.append(rel)
         continue
-    # The body is the first non-blank line under the heading. Normalized so a
-    # reflow is not a failure and a reword is.
-    body = next((l.strip() for l in lines[hit + 1:] if l.strip()), "")
-    bodies.setdefault(" ".join(body.split()), []).append(rel)
+    # The body is EVERY line under the heading up to the next heading or the end
+    # of the fenced block, collapsed to one string — the normalization
+    # check-escalation-shape.sh:68 already uses, and for the same reason: a
+    # reflow is not a failure and a reword is. Reading only the first non-blank
+    # line made that comment false in both directions — an identical reflow
+    # failed, and once every carrier wrapped the same way, a reword of any later
+    # sentence passed.
+    body = []
+    for line in lines[hit + 1:]:
+        stripped = line.strip()
+        if stripped.startswith("#") or stripped == "```":
+            break
+        body.append(stripped)
+    bodies.setdefault(" ".join(" ".join(body).split()), []).append(rel)
 
 
 def fail(headline, detail):
@@ -111,9 +128,10 @@ if missing:
 
 if unindented:
     fail(
-        f"{len(unindented)} carrier(s) hold the clause flush-left, which puts it "
-        "in the skill's own prose rather than in the prompt body the dispatched "
-        "agent reads:",
+        f"{len(unindented)} carrier(s) hold the clause outside the prompt body "
+        f"— indented fewer than {MIN_INDENT} spaces, which leaves it in the "
+        "skill's own prose rather than in the prompt body the dispatched agent "
+        "reads:",
         unindented,
     )
 
