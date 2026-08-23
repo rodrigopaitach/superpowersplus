@@ -9,6 +9,27 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **The no-dispatch clause names what a self-created reviewer is worth, which
+  is the half that closes the rationalisation.** It said such a reviewer
+  "duplicates a seat this process already provides" — true, and answerable with
+  *"then it is redundant, not harmful"*. It now says the duplicate runs **at
+  full cost and for a verdict that counts for nothing**. **The sentence is
+  adapted from the upstream's own wording**, found by reading
+  `obra/superpowers` v6.3.0 (`b36e082`, 2026-08-12), which added the same clause
+  under the same heading after measuring the behaviour — 9 of 9 depth-2 spawns
+  across 4 corpora. Their version is three bodies, one per dispatched role;
+  this project keeps **one body across all seven carriers**, because
+  [`check-no-dispatch.sh`](scripts/check-no-dispatch.sh) charges that the seven
+  agree with each other, and per-role variants would leave nothing to compare.
+  The trade is deliberate: their wording is more specific, ours is the one a
+  gate can verify. Their second sentence — *"that review is already scheduled.
+  Report instead."* — is not adopted for the same reason: it only makes sense in
+  the implementer's seat.
+
 ## [1.19.0] - 2026-08-22
 
 ### Added
