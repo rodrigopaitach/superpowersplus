@@ -6,7 +6,7 @@
 
 **Goal:** Carry five measured defect classes into the four skill files that would catch them.
 
-**Architecture:** Each rule lands in exactly one carrier, as prose. Four go into reviewer prompt files, which carry no line ceiling; one goes into `writing-plans/SKILL.md`, which has six lines of headroom. No mechanical gate is added — the spec's `IR1` places these judgements with a reader, on measured grounds. One rule, `AC2`, gets an adversarial behaviour record, because this project already measured its "before" state.
+**Architecture:** Each rule lands in exactly one carrier, as prose — with one carve-out the spec itself makes: `AC4` names *both* document reviewers, so its rule is written into two files and nowhere else. Four go into reviewer prompt files, which carry no line ceiling; one goes into `writing-plans/SKILL.md`, which has six lines of headroom. No mechanical gate is added — the spec's `IR1` places these judgements with a reader, on measured grounds. One rule, `AC2`, gets an adversarial behaviour record, because this project already measured its "before" state.
 
 **Tech Stack:** None added. Bash and the existing gate scripts, already in this repo — `scripts/check-skill-size.sh:26`, `scripts/check-links.sh`, `scripts/check-skill-behavior-records.sh`.
 
@@ -21,11 +21,13 @@
 ## Global Constraints
 
 - `skills/writing-plans/SKILL.md` is at 494 lines and the ceiling is 500 — `scripts/check-skill-size.sh:26`. If a rule does not fit, move the overflow into `skills/writing-plans/references/` behind a trigger; **never shorten an existing line to make room** (spec `IR7`).
-- Each rule lands in exactly one carrier. A rule repeated across carriers is out of scope — this repository charges copied shapes with a gate, and none exists for these (spec `IR4`).
+- Each rule lands in exactly one carrier. A rule repeated across carriers is out of scope — this repository charges copied shapes with a gate, and none exists for these (spec `IR4`). **The one carve-out, made by the spec and not by this plan: `AC4` names both document reviewers, so its rule is written into `skills/writing-plans/plan-document-reviewer-prompt.md` and `skills/brainstorming/spec-document-reviewer-prompt.md`, and into no third file.** Task 3 is that rule; no other task may place a phrase in two carriers.
 - No rule is added as a non-blocking advisory. A rule that cannot be stated precisely enough to block is not added (spec `IR2`).
 - The four review faces in `docs/review-scopes.md` — task reviewer, code reviewer, re-review, final branch audit — are not touched (spec `IR3`).
 - Every rule carries the measurement that motivated it as an anonymous session measurement: the effect and its size, never a path a reader outside this repository could not open (spec `AC6`).
 - `CHANGELOG.md` is staged with every commit that touches `skills/` — enforced by `scripts/check-changelog.sh` in the pre-commit hook (spec `IR6`).
+- "No rule added is enforced by `check-cross-references` or any other mechanical gate" — all five are judgements over prose (spec `IR1`). Operationally: no file under `scripts/` is added or modified, which Task 6 Step 4 measures.
+- "Every citation this design introduces into a skill resolves, and `check-links.sh` stays green" (spec `IR5`). A pointer to a file of this repository is written as a markdown link, never in backticks — `check-links.sh` resolves link syntax and nothing else ([`CLAUDE.md`](../../../CLAUDE.md), section "Writing a reference").
 
 ## Test Coverage Matrix
 
@@ -41,7 +43,7 @@
 | T1.4 No existing line was shortened to make room | IR7 | grep | — | Step 6 of Task 1: `git diff -U0 -- skills/writing-plans/SKILL.md` shows only added lines, no line both removed and re-added shorter |
 | T2.1 A test asserting a value the plan's own implementation would not produce is charged | AC1 | none — prose | `skills/` | No test. Declared in the spec's Coverage Map, row "Completion signals" |
 | T2.2 Two spec criteria that cannot both hold are charged | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/RESULT-criteria-read-in-pairs.md`, criterion 1 |
-| T2.3 Both rules carry their measurement, with no external path | AC6 | grep | — | Step 6 of Task 2: `grep -c 'Two rounds of adversarial' skills/writing-plans/plan-document-reviewer-prompt.md` returns 1, and `grep -c '\.claude/' skills/writing-plans/plan-document-reviewer-prompt.md` returns 0 |
+| T2.3 Both rules carry their measurement, with no external path | AC6 | grep | — | Step 6 of Task 2: `grep -c 'two rounds of adversarial' skills/writing-plans/plan-document-reviewer-prompt.md` returns 1, and `grep -c '\.claude/' skills/writing-plans/plan-document-reviewer-prompt.md` returns 0 |
 | T3.1 A state change measured only at its target is charged, in both document reviewers | AC4 | none — prose | `skills/` | No test. Declared in the spec's Coverage Map, row "Completion signals" |
 | T3.2 The four protected review faces are untouched | IR3 | grep | — | Step 5 of Task 3: `git diff --name-only` names neither `task-reviewer-prompt.md`, `code-reviewer.md`, `re-review-prompt.md` nor `final-branch-audit/SKILL.md` |
 | T4.1 A reviewer finding about a measurable fact is reproduced before it is acted on | AC5 | none — prose | `skills/` | No test. Declared in the spec's Coverage Map, row "Completion signals" |
@@ -51,7 +53,7 @@
 | T5.3 The reviewer catches the contradiction it previously missed | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/RESULT-criteria-read-in-pairs.md`, criterion 1 |
 | T6.1 Every citation added resolves | IR5 | gate | `scripts/` | Step 3 of Task 6: `scripts/check-links.sh` exits 0 |
 | T6.2 No rule was added as a non-blocking advisory | IR2 | grep | — | Step 3 of Task 6: every row added to a reviewer table reads `BLOCKING`, checked by `git diff` |
-| T6.3 Each rule lands in exactly one carrier | IR4 | grep | — | Step 4 of Task 6: `scripts/check-links.sh` plus a `git diff --stat` showing each rule's identifying phrase in one file only |
+| T6.3 Each rule lands in exactly one carrier, `AC4` in its two | IR4 | grep | — | Step 4 of Task 6: `grep -rlc '68 catalogue measurements' skills/ \| wc -l` returns `2` — the two carriers `AC4` names — and every other rule's identifying phrase returns `1` |
 | T6.4 No rule is enforced by a mechanical gate | IR1 | grep | — | Step 4 of Task 6: `git diff main...HEAD --name-only -- scripts/` returns nothing |
 
 ---
@@ -115,7 +117,9 @@ Expected: added lines only. A line appearing as both removed and re-added shorte
 
 - [ ] **Step 7: Write the changelog entry**
 
-Add under `## [Unreleased]` in `CHANGELOG.md`, in the `### Added` subsection, creating it if absent:
+**`CHANGELOG.md` has no `## [Unreleased]` heading right now** — `1.19.1` was cut and the section was renamed with it. This task creates the whole pair, `## [Unreleased]` followed by `### Added`, between the `References below name them…` paragraph and `## [1.19.1] - 2026-08-22`. Tasks 2 to 5 add under the heading this step creates.
+
+Add there:
 
 ```markdown
 - **`writing-plans` now tells the author to read the branch's own `git log` when the work is a replan.** Work from an earlier plan survives in the branch and does not appear in a diff against the main branch, so a task telling the implementer to build what is already there reads as new work at every gate downstream. Measured: 3 of 10 findings in one review were artifacts that already existed.
@@ -133,7 +137,7 @@ git commit -m "feat(writing-plans): read the branch's git log when replanning"
 **Spec criterion:** `AC1` — the plan reviewer charges a step whose test asserts a value the implementation the same plan specifies would not produce; and `AC2` — it requires the spec's acceptance criteria to be read in pairs and charges a pair that cannot both hold.
 
 **Files:**
-- Modify: `skills/writing-plans/plan-document-reviewer-prompt.md:82-97`
+- Modify: `skills/writing-plans/plan-document-reviewer-prompt.md:82-96`
 - Modify: `CHANGELOG.md`
 
 **Interfaces:**
@@ -147,7 +151,7 @@ git commit -m "feat(writing-plans): read the branch's git log when replanning"
 
 - [ ] **Step 1: Read the table you are extending**
 
-Run: `sed -n '82,84p' skills/writing-plans/plan-document-reviewer-prompt.md`
+Run: `sed -n '82,83p' skills/writing-plans/plan-document-reviewer-prompt.md`
 Expected: the `| Requirement | If it fails |` header and its separator, indented four spaces.
 
 - [ ] **Step 2: Add the `AC1` row**
@@ -168,8 +172,8 @@ Append immediately after:
 
 - [ ] **Step 4: Confirm both rows are inside the table**
 
-Run: `sed -n '/## The Plan Contract/,/^    ## /p' skills/writing-plans/plan-document-reviewer-prompt.md | tail -4`
-Expected: the two new rows, last in the table, before the next heading.
+Run: `sed -n '/^    ## The Plan Contract/,/^    ###/p' skills/writing-plans/plan-document-reviewer-prompt.md | grep '^    | ' | tail -2`
+Expected: exactly the two rows you just added, in the order you added them. The range ends at `^    ###`, the level-3 heading that follows the table; a range ending at `^    ## ` would run past it to the next level-2 heading and print unrelated prose.
 
 - [ ] **Step 5: Confirm both are BLOCKING**
 
@@ -178,7 +182,7 @@ Expected: `2`
 
 - [ ] **Step 6: Verify the measurements and the absence of external paths**
 
-Run: `grep -c 'Two rounds of adversarial' skills/writing-plans/plan-document-reviewer-prompt.md`
+Run: `grep -c 'two rounds of adversarial' skills/writing-plans/plan-document-reviewer-prompt.md`
 Expected: `1`
 
 Run: `grep -c '\.claude/' skills/writing-plans/plan-document-reviewer-prompt.md`
@@ -226,7 +230,7 @@ Append to the Plan Contract table, after Task 2's rows:
 
 - [ ] **Step 2: Read the spec reviewer's Groundedness table**
 
-Run: `sed -n '77,79p' skills/brainstorming/spec-document-reviewer-prompt.md`
+Run: `sed -n '77,78p' skills/brainstorming/spec-document-reviewer-prompt.md`
 Expected: the `| Finding | Verdict |` header and its separator, indented four spaces.
 
 - [ ] **Step 3: Add the row to the spec reviewer**
@@ -422,15 +426,17 @@ Expected: `1` or more.
 mkdir -p /tmp/skill-behavior-run
 sed '1,/^---$/d' tests/skill-behavior/FIXTURE-contradicting-criteria.md \
   > /tmp/skill-behavior-run/plan.md
-head -3 /tmp/skill-behavior-run/plan.md
+sed -n '1,4p' /tmp/skill-behavior-run/plan.md
 ```
-Expected: the plan's own title first — no fixture header.
+Expected: a blank line, then the plan's own title — no fixture header. `sed '1,/^---$/d'` deletes through the separator and the fixture keeps a blank line after it, so the title is the second line, not the first.
 
 - [ ] **Step 5: Run the measurement**
 
 Dispatch one subagent with the contents of `skills/writing-plans/plan-document-reviewer-prompt.md`, `[PLAN_FILE_PATH]` set to `/tmp/skill-behavior-run/plan.md`, `[ROUND]` set to `1`, and no other framing. Record the model used.
 
 - [ ] **Step 6: Write the record**
+
+Copy the shape of [`RESULT-main-branch-consent.md`](../../../tests/skill-behavior/RESULT-main-branch-consent.md) — `scripts/check-skill-behavior-records.sh:36-38` requires exactly three rows, `| **Date** |`, `| **Model** |` and `| **Verdict** |`, and Step 7 fails without them; the `| **Rule under test** |` row (in all 8 existing records) and the `| **Fixture** |` row (in 4 of the 8) are convention, not gate — write both anyway.
 
 Create `tests/skill-behavior/RESULT-criteria-read-in-pairs.md` with the date, the model, and a verdict per criterion:
 
@@ -472,7 +478,7 @@ git commit -m "test(skill-behavior): measure whether the pairs rule changes the 
 **Acceptance criteria:**
 - T6.1: `scripts/check-links.sh` exits 0 — test: Step 3
 - T6.2: Every reviewer row added reads `BLOCKING` — test: Step 3's diff read
-- T6.3: Each rule's identifying phrase appears in exactly one file — test: Step 4
+- T6.3: Each rule's identifying phrase appears in exactly one file, except `AC4`'s, which appears in the two document reviewers the spec names and in no third file — test: Step 4
 - T6.4: No file under `scripts/` was added or modified — test: Step 4
 
 - [ ] **Step 1: Confirm the branch is clean**
@@ -501,10 +507,15 @@ Expected: `2` — `AC4` is the one rule the spec places in two reviewers; every 
 Run: `git diff main...HEAD --name-only -- scripts/`
 Expected: empty.
 
-- [ ] **Step 5: Run every static suite**
+- [ ] **Step 5: Run every content gate CI runs**
 
-Run: `bash tests/hooks/run-tests.sh && bash tests/shell-lint/test-lint-shell.sh`
-Expected: both exit 0.
+There is no aggregate runner here — `.github/workflows/ci.yml:138-188` invokes each script as its own step. These are the gates whose input this branch changed; `tests/hooks/test-check-*.sh` are not in the list because they test the gate scripts, and `IR1` forbids touching those.
+
+Run: `for g in check-links check-skill-size check-evidence-line check-escalation-shape check-no-dispatch check-skill-behavior-records check-docs-sync check-frozen-history; do scripts/$g.sh || echo "FAILED: $g"; done`
+Expected: no line starting with `FAILED:`.
+
+Run: `bash tests/shell-lint/test-lint-shell.sh`
+Expected: exit 0.
 
 - [ ] **Step 6: Commit only if a check found something**
 
