@@ -550,12 +550,19 @@ assert_help_survives_header_edits() {
     cp "$script" "$dir/as-shipped"
     sed 's/^# Requires:/# Dependencies:/' "$script" >"$dir/end-marker-reworded"
     awk 'NR == 20 { print "" } { print }' "$script" >"$dir/blank-line-in-block"
+    # `AC21` names three edits and this suite exercised two. The line-added edit
+    # is the one a line-number slice cannot survive, and it was the untested one
+    # here and in tests/hooks/test-check-cross-references.sh both — the branch
+    # audit found the pair. Inserted mid-block, so a fixed range loses the
+    # header's LAST line and the anchor below sees it.
+    awk 'NR == 20 { print; print "#   A line added after the slice was written."; next } { print }' \
+        "$script" >"$dir/grown"
     sed 's/^# Usage:/# How to use:/' "$script" >"$dir/start-marker-gone"
     chmod +x "$dir"/*
 
     # A perturbation that changed nothing tests nothing, and would report PASS.
     local perturbed
-    for perturbed in end-marker-reworded blank-line-in-block start-marker-gone; do
+    for perturbed in end-marker-reworded blank-line-in-block grown start-marker-gone; do
         if cmp -s "$dir/as-shipped" "$dir/$perturbed"; then
             fail "perturbation '$perturbed' changed nothing — that copy tests nothing"
         fi
@@ -566,7 +573,7 @@ assert_help_survives_header_edits() {
     # a code block of the plan, and `Help … with '$variant'` never appears
     # literally anywhere — a matrix row naming it would be unresolvable.
     local variant out problems=0
-    for variant in as-shipped end-marker-reworded blank-line-in-block; do
+    for variant in as-shipped end-marker-reworded blank-line-in-block grown; do
         out="$("$BASH_UNDER_TEST" "$dir/$variant" --help 2>&1 || true)"
         if ! printf '%s' "$out" | grep -qF "rsync, git, gh (authenticated), python3."; then
             echo "        $variant: the Usage block was truncated before its last line"

@@ -483,6 +483,35 @@ References below name them so a claim here can be traced there.
   dropped a suite it could resolve but not open, in silence, where the citation
   pass three blocks below reports exactly that as a break. It reports it now too.
 
+- **The branch audit found an eighth member of this release's own defect class,
+  in the one carrier the earlier sweep had cleared.**
+  [`tests/hooks/test-check-cross-references.sh`](tests/hooks/test-check-cross-references.sh)
+  anchored its `--help` truncation check on the string `REPO_ROOT`, which sits
+  three lines short of the header's end. Measured by the audit: with
+  `sed -n '2,42p'` reinstalled in `usage()`, the header lost its final sentence
+  and the case reported PASS. Each copy is now anchored on its own last header
+  line, and where that line IS is asserted rather than assumed — the same repair
+  `tests/shell-lint/test-lint-shell.sh` got one commit earlier. **A review had
+  swept this class and reported the other two carriers covered**; that sweep
+  measured the rewording direction, not the anchor's reach, and "no other cases"
+  read the same for both.
+- **`AC21` names three header edits; two of the three suites exercised two.**
+  The line-added edit — the one a line-number slice cannot survive, and the one
+  the release's own commit message names as such — was missing from
+  `tests/hooks/test-check-cross-references.sh` and
+  [`tests/codex-plugin-sync/test-sync-to-codex-plugin.sh`](tests/codex-plugin-sync/test-sync-to-codex-plugin.sh).
+  Both now build a grown copy. Measured on the second: of the four combinations
+  of {shipped, line-number slice} × {as shipped, grown}, exactly one truncates —
+  so the copy is what separates the two implementations, and without it the
+  mutation passes. The plan's `T9.1` and `T9.3` had enumerated two edits where
+  the spec criterion requires three, and now enumerate three.
+- **A gate code path shipped one commit earlier with no test, on a branch whose
+  thesis is that this is not delivered.** `AC22` now states that a suite path
+  which resolves and will not open is reported rather than dropped, `T8.4`
+  covers it, and the case makes a real suite unreadable and requires both exit 1
+  and the reason. Where the mode bits do not bite — root, some filesystems — the
+  case says it could not measure instead of passing.
+
 ## [1.20.0] - 2026-08-24
 
 ### Added

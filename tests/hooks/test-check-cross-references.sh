@@ -645,6 +645,45 @@ else
     fail "the matrix is not charged against the suite it names — $suite_failed problem(s)"
 fi
 
+# --- a suite that resolves and will not open --------------------------------
+# Reporting beats dropping: the citation pass in the same script says exactly
+# that of a file it cannot read. Added after the branch audit found this path
+# shipped with no red state — new gate behaviour and nothing asserting it, on a
+# branch whose thesis is that such a thing is not delivered.
+unreadable_dir="$TEST_ROOT/matrix-suite-unreadable"
+make_repo "$unreadable_dir"
+mkdir -p "$unreadable_dir/tests"
+printf 'run_case "rejects the bad input" 0 "$FIXTURE"\n' >"$unreadable_dir/tests/suite.sh"
+chmod 000 "$unreadable_dir/tests/suite.sh"
+printf '%s\n' "$SUITE_PLAN" >"$unreadable_dir/docs/doc.md"
+unreadable_failed=0
+if head -c1 "$unreadable_dir/tests/suite.sh" >/dev/null 2>&1; then
+    # Running as root, or a filesystem ignoring the mode bits: the fixture is
+    # readable and this case cannot measure what it claims. Said out loud rather
+    # than passed — a case that quietly stops measuring is the defect this whole
+    # suite exists to catch.
+    echo "        the unreadable fixture is readable — this environment cannot measure this case"
+    unreadable_failed=1
+else
+    unreadable_actual=0
+    unreadable_out="$("$SCRIPT_UNDER_TEST" "$unreadable_dir/docs/doc.md" "$unreadable_dir" 2>&1)" ||
+        unreadable_actual=$?
+    if [[ "$unreadable_actual" != 1 ]]; then
+        echo "        expected exit 1, got $unreadable_actual"
+        unreadable_failed=$((unreadable_failed + 1))
+    fi
+    if ! printf '%s' "$unreadable_out" | grep -q 'cannot read'; then
+        echo "        the verdict does not name the file it could not read"
+        unreadable_failed=$((unreadable_failed + 1))
+    fi
+fi
+chmod 644 "$unreadable_dir/tests/suite.sh"
+if [[ "$unreadable_failed" -eq 0 ]]; then
+    pass "a suite that resolves and will not open is reported, not dropped"
+else
+    fail "a suite that resolves and will not open is reported, not dropped — $unreadable_failed problem(s)"
+fi
+
 # --- --help survives an edit to the header it prints ----------------------
 # `usage()` slices this script's own header, and both slicing rules it has
 # carried failed silently on a plausible edit: `sed -n '2,34p'` truncated when
@@ -659,10 +698,10 @@ fi
 # (runaway).
 help_failed=0
 check_help() {
-    local label="$1" script="$2" out
+    local label="$1" script="$2" tail_anchor="$3" out
     out="$("$script" --help 2>&1 || true)"
-    if ! printf '%s' "$out" | grep -q 'REPO_ROOT'; then
-        echo "        $label: the header was truncated before REPO_ROOT"
+    if ! printf '%s' "$out" | grep -qF "$tail_anchor"; then
+        echo "        $label: the header was truncated before its last line"
         help_failed=$((help_failed + 1))
     fi
     if printf '%s' "$out" | grep -q 'set -euo pipefail'; then
@@ -679,7 +718,24 @@ awk 'NR == 3 { print "" } { print }' "$SCRIPT_UNDER_TEST" >"$help_dir/blank-line
 # The header's final sentence, reworded. Nothing may key on its wording.
 sed 's/^# Exit 1 when anything does not resolve\./# Returns non-zero when anything fails to resolve./' \
     "$SCRIPT_UNDER_TEST" >"$help_dir/reworded"
-chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/reworded"
+# The header grows. `AC21` names three edits and this suite exercised two: the
+# line-added edit is the one a line-number slice cannot survive, and it was the
+# untested one. Inserted mid-header, so a fixed range loses the header's LAST
+# line and the anchor below sees it.
+awk 'NR == 3 { print; print "#   A line added after the slice was written."; next } { print }' \
+    "$SCRIPT_UNDER_TEST" >"$help_dir/grown"
+chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/reworded" "$help_dir/grown"
+
+# The anchor below is the header's LAST content line. Measured by the branch
+# audit: anchored on `REPO_ROOT` instead, which sits three lines short of the
+# end, `sed -n '2,42p'` truncated the header and this case reported PASS. An
+# anchor that is not the end measures nothing about the end, so where the end
+# IS is asserted rather than assumed.
+if ! sed -n '/^# Exit 1 when anything does not resolve\.$/,+2p' "$SCRIPT_UNDER_TEST" |
+    tail -1 | grep -q '^set -euo pipefail$'; then
+    echo "        the header no longer ends two lines after the anchor — the anchor is short again"
+    help_failed=$((help_failed + 1))
+fi
 
 # The two perturbations above are keyed on the carrier's current text: one on
 # its line 3, one on the wording of its final header sentence. Reword that
@@ -690,16 +746,20 @@ chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/reworded"
 # reinstalled, this case passed over the exact defect it was written for.
 # tests/hooks/test-check-evidence-line.sh:49 guards the same way, for the same
 # reason.
-for perturbed in blank-line reworded; do
+for perturbed in blank-line reworded grown; do
     if cmp -s "$help_dir/as-shipped" "$help_dir/$perturbed"; then
         echo "        $perturbed: the perturbation changed nothing — this copy tests nothing"
         help_failed=$((help_failed + 1))
     fi
 done
 
-check_help "as shipped" "$help_dir/as-shipped"
-check_help "blank line in the header" "$help_dir/blank-line"
-check_help "final sentence reworded" "$help_dir/reworded"
+# One anchor per copy: the two edits that MOVE the header's last line — the
+# rewording, which rewrites it, and the growth, which pushes it down — assert
+# nothing if every copy is measured against the shipped wording.
+check_help "as shipped" "$help_dir/as-shipped" 'Exit 1 when anything does not resolve.'
+check_help "blank line in the header" "$help_dir/blank-line" 'Exit 1 when anything does not resolve.'
+check_help "final sentence reworded" "$help_dir/reworded" 'Returns non-zero when anything fails to resolve.'
+check_help "a line added to the header" "$help_dir/grown" 'Exit 1 when anything does not resolve.'
 
 if [[ "$help_failed" -eq 0 ]]; then
     pass "--help prints the whole header and stops there, through header edits"

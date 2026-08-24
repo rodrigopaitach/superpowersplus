@@ -61,6 +61,7 @@
 | T8.1 A matrix naming a test no code block of the plan contains exits 1 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails` |
 | T8.2 A matrix naming a bash case the steps create exits 0 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a bash case named in the matrix is created` |
 | T8.3 A matrix naming a case its own suite lacks exits 1, and the same plan passes when the suite has it | AC22 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a case its own suite lacks fails, and the same plan passes when the suite has it` |
+| T8.4 A matrix cell naming a suite that resolves and will not open exits 1 and names the file | AC22 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a suite that resolves and will not open is reported, not dropped` |
 | T9.1 `check-cross-references --help` prints its whole header and stops at the first line of code | AC21 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > --help prints the whole header and stops there, through header edits` |
 | T9.2 `lint-shell.sh --help` prints its whole header and stops at the first line of code | AC21 | script | `tests/shell-lint/` | `tests/shell-lint/test-lint-shell.sh > --help prints the whole header and stops there, through header edits` |
 | T9.3 `sync-to-codex-plugin.sh --help` prints its Usage block to the end of the header | AC21 | script | `tests/codex-plugin-sync/` | `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help prints the whole header and stops there, through header edits` |
@@ -1489,6 +1490,7 @@ git commit -m "fix(sdd): task-brief fecha cerca pela regra CommonMark, nao por a
 - T8.1: A plan whose matrix names a test string that appears in no code block exits 1 — test: `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails`
 - T8.2: A plan whose matrix names a bash case its steps create exits 0 — test: `tests/hooks/test-check-cross-references.sh > a bash case named in the matrix is created`
 - T8.3: A plan whose matrix names a case its own suite does not contain exits 1, and the same plan passes when the suite has it — test: `tests/hooks/test-check-cross-references.sh > a matrix naming a case its own suite lacks fails, and the same plan passes when the suite has it`. **Added on 2026-08-24, after the whole-branch review**, which measured the limit the CHANGELOG had recorded as open: both documents of the pair carry the name inside a fenced block, so only reading the suite the cell names tells them apart.
+- T8.4: A matrix cell naming a suite that resolves and will not open exits 1 and names the file — test: `tests/hooks/test-check-cross-references.sh > a suite that resolves and will not open is reported, not dropped`. **Added on 2026-08-24, after the branch audit** found this path shipped with no red state: the check dropped such a suite in silence, and a check that goes quiet reads exactly like a check that passed.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -1668,6 +1670,30 @@ for suite, name in matrix_suites:
         absent_from_suite.append(f"`{name}` in `{suite}`")
 ```
 
+**Step 10, added 2026-08-24 after the branch audit — `T8.4`.** The block above
+reports a suite it cannot open; nothing asserted it, which on this branch means
+it is not delivered. The fixture is a suite the fixture repo really has, made
+unreadable:
+
+````bash
+chmod 000 "$unreadable_dir/tests/suite.sh"
+if head -c1 "$unreadable_dir/tests/suite.sh" >/dev/null 2>&1; then
+    # Root, or a filesystem ignoring the mode bits: said out loud rather than
+    # passed. A case that quietly stops measuring is the defect this suite is for.
+    echo "        the unreadable fixture is readable — this environment cannot measure this case"
+    unreadable_failed=1
+else
+    # exit 1 AND the reason: a verdict that does not name the unreadable file
+    # cannot be told from a verdict about some other broken reference.
+    ...
+fi
+pass "a suite that resolves and will not open is reported, not dropped"
+````
+
+Expected: FAIL with the `except OSError: continue` form restored — measured, the
+case reports `the verdict does not name the file it could not read` and exit 0
+where 1 was required.
+
 Expected: FAIL on the new case before the block above exists — the `absent`
 half exits 0 and the `present` half prints no reach. Measured after: the plan
 for this branch reports `matrix tests checked against their suite 34`, and the
@@ -1692,9 +1718,9 @@ gate still exits 0 over both of this branch's documents.
 - Produces: nothing a later task relies on.
 
 **Acceptance criteria:**
-- T9.1: A blank line inserted into `check-cross-references`'s header, or its final sentence reworded, leaves `--help` printing the whole header and no line of code — test: `tests/hooks/test-check-cross-references.sh > --help prints the whole header and stops there, through header edits`
+- T9.1: A blank line inserted into `check-cross-references`'s header, its final sentence reworded, or a line added to it, leaves `--help` printing the whole header and no line of code — test: `tests/hooks/test-check-cross-references.sh > --help prints the whole header and stops there, through header edits`
 - T9.2: The same two edits to `lint-shell.sh`, with the same two properties — test: `tests/shell-lint/test-lint-shell.sh > --help prints the whole header and stops there, through header edits`
-- T9.3: Rewording `sync-to-codex-plugin.sh`'s end marker, or inserting a blank line inside its Usage block, leaves `--help` printing that block whole and stopping at the end of the header — test: `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help prints the whole header and stops there, through header edits`
+- T9.3: Rewording `sync-to-codex-plugin.sh`'s end marker, inserting a blank line inside its Usage block, or adding a line to it, leaves `--help` printing that block whole and stopping at the end of the header — test: `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help prints the whole header and stops there, through header edits`
 - T9.4: Removing `sync-to-codex-plugin.sh`'s `# Usage:` marker makes `--help` exit non-zero with a message, never print nothing — test: `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help exits non-zero when the '# Usage:' marker is gone`
 
 - [ ] **Step 1: Write the failing tests**
