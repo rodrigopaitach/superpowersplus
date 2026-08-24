@@ -77,7 +77,7 @@ from mdfence import fence_mask, prose
 # Structural extractors read `prose_lines`/`prose_text`; content extractors
 # (the test finder, the citation pass, the id-citation pass) keep reading the
 # raw text, each for a measured reason recorded in the design.
-_, unclosed_at = fence_mask(lines)
+fenced, unclosed_at = fence_mask(lines)
 prose_lines = prose(lines)
 prose_text = "\n".join(prose_lines)
 
@@ -199,16 +199,18 @@ if task_headings:
 
 # ------------------------------------------------------------- tests
 # Every test named in the matrix is created by some step of some task.
-TEST_DEF = re.compile(
-    r"""(?:\bit|\btest|\bdescribe)\s*\(\s*["'`](.+?)["'`]"""
-    r"""|\bdef\s+(test_\w+)"""
-    r"""|\bfunc\s+(Test\w+)"""
-    r"""|\btest\s*\(\s*["'`](.+?)["'`]""",
-    re.X,
-)
-created = set()
-for m in TEST_DEF.finditer(text):
-    created |= {g for g in m.groups() if g}
+#
+# "Created" is deliberately language-blind: the name appears inside one of the
+# document's fenced code blocks, which is where a step writes a test. Parsing
+# test-definition syntax meant carrying a pattern per language, and it did not
+# carry this repository's own — bash suites name their cases with shell
+# function calls, and 26 real tests read as absent on the plan for this branch.
+#
+# Searching the whole document instead of the code blocks does NOT work:
+# writing-plans requires every task criterion to name its covering test, so the
+# criterion line carries the name even when a step renamed the test, and the
+# check passes on the one defect it exists for.
+in_code = "\n".join(ln for i, ln in enumerate(lines) if fenced[i])
 
 # Matrix cells name a test as `> name`, `file.py::name`, or `file:line > name`.
 named_in_matrix = set()
@@ -224,10 +226,7 @@ for ln in matrix_rows:
 
 if named_in_matrix:
     counts["tests named in matrix"] = len(named_in_matrix)
-    counts["tests created by a step"] = len(created)
-    missing = sorted(n for n in named_in_matrix
-                     if n not in created
-                     and not any(n in c or c in n for c in created))
+    missing = sorted(n for n in named_in_matrix if n not in in_code)
     if missing:
         failures.append(
             "tests named in the coverage matrix that no step creates: "

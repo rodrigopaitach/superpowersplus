@@ -104,6 +104,20 @@ References below name them so a claim here can be traced there.
   [`tests/hooks/test-task-brief.sh`](tests/hooks/test-task-brief.sh), where its
   only prior assertion checked where the brief file lands and ran in a suite CI
   does not execute.
+- **The test-name comparison knew five test vocabularies and not this
+  repository's.** `TEST_DEF` in
+  [`skills/writing-plans/scripts/check-cross-references`](skills/writing-plans/scripts/check-cross-references)
+  matched `it(...)`, `test(...)`, `describe(...)`, `def test_` and `func Test`;
+  every suite here is bash, naming its cases by shell function call. Measured on
+  this branch's own plan: 26 real tests reported absent at once. It now asks a
+  question no language answers differently — does the name appear inside one of
+  the document's fenced code blocks, which is where a step writes a test. The
+  simpler form, "the name appears anywhere outside the matrix", was measured and
+  rejected: `writing-plans` requires every task criterion to name its covering
+  test, so the criterion line carries the name even after a step renames the
+  test, and the check passes on the one desync it exists for. That difference is
+  a case of its own in the suite, and the rejected form fails exactly it and
+  nothing else.
 
 ## [1.20.0] - 2026-08-24
 

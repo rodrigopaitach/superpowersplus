@@ -316,6 +316,13 @@ git -C "$REPO_ROOT" show "$BASE_REF:skills/writing-plans/scripts/check-cross-ref
     >"$TEST_ROOT/ccr-before" 2>/dev/null && chmod +x "$TEST_ROOT/ccr-before"
 for doc in "$REPO_ROOT"/docs/superpowers/specs/*.md "$REPO_ROOT"/docs/superpowers/plans/*.md; do
     [ -s "$TEST_ROOT/ccr-before" ] || continue
+    # IR6 is scoped to the documents that PREDATE this branch. This branch's own
+    # spec and plan are excluded because they are the corpus the branch was
+    # written against, not evidence about it: the plan moves 1 -> 0 by design
+    # when the test-name comparison stops knowing languages, and charging that
+    # here would make the intended fix look like a regression.
+    rel="${doc#"$REPO_ROOT"/}"
+    git -C "$REPO_ROOT" cat-file -e "$BASE_REF:$rel" 2>/dev/null || continue
     before=0
     "$TEST_ROOT/ccr-before" "$doc" "$REPO_ROOT" >/dev/null 2>&1 || before=$?
     after=0
@@ -330,6 +337,46 @@ if [ "$corpus_moved" -eq 0 ]; then
 else
     fail "the committed corpus keeps its verdicts — $corpus_moved document(s) moved"
 fi
+
+# --- the test-name comparison knows no languages ---------------------------
+# Measured 2026-08-24 on this branch's own plan: TEST_DEF knows it(), test(),
+# describe(), def test_ and func Test, and reported all 26 of that plan's real
+# bash cases as absent. Two designs were measured. "The name appears outside the
+# matrix rows" is vacuous — writing-plans requires every task criterion to name
+# its covering test, so the criterion line carries the name even when a step
+# renamed the test. Searching the code blocks catches that mutation.
+BASH_PLAN='# Plan
+
+## Task 1: Build it
+
+Acceptance criteria:
+- T1.1 rejects the bad input
+
+Step 1: write the test.
+
+```bash
+run_case "rejects the bad input" 0 "$FIXTURE"
+```
+
+## Test Coverage Matrix
+
+| Criterion | Test |
+|---|---|
+| T1.1 | > rejects the bad input |'
+
+run_case "a bash case named in the matrix is created" 0 "$BASH_PLAN"
+
+run_case "a matrix naming a test no code block holds fails" 1 "$(printf '%s' "$BASH_PLAN" |
+    sed 's/| T1.1 | > rejects the bad input |/| T1.1 | > a case nobody wrote |/')"
+
+# The case that separates the two designs, and the only one that does. A step
+# renames its test; the matrix and the criterion line still carry the old name.
+# Searching the code blocks catches it. Searching the whole document does not,
+# because writing-plans REQUIRES the criterion line to name its covering test —
+# so the name is always somewhere outside the matrix, and the check that looks
+# there passes on the one desync it exists for.
+run_case "a renamed test is caught even though the criterion still names it" 1 "$(printf '%s' "$BASH_PLAN" |
+    sed 's/run_case "rejects the bad input"/run_case "rejects bad input"/')"
 
 echo
 if [[ "$FAILURES" -eq 0 ]]; then
