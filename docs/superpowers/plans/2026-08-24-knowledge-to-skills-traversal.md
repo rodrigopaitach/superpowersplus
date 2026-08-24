@@ -51,10 +51,10 @@
 | T5.1 The fixture carries the contradiction and does not announce itself as a test | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/FIXTURE-contradicting-criteria.md`, checked by Step 3 of Task 5 |
 | T5.2 The record is well formed | IR6 | gate | `scripts/` | Step 7 of Task 5: `scripts/check-skill-behavior-records.sh` exits 0 |
 | T5.3 The reviewer catches the contradiction it previously missed | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/RESULT-criteria-read-in-pairs.md`, criterion 1 |
-| T6.1 Every citation added resolves | IR5 | gate | `scripts/` | Step 3 of Task 6: `scripts/check-links.sh` exits 0 |
+| T6.1 Every citation added resolves | IR5 | gate (regression guard — green at the branch point too) | `scripts/` | Step 3 of Task 6: `scripts/check-links.sh` exits 0 |
 | T6.2 No rule was added as a non-blocking advisory | IR2 | grep | — | Step 3 of Task 6: every row added to a reviewer table reads `BLOCKING`, checked by `git diff` |
 | T6.3 Each rule lands in exactly one carrier, `AC4` in its two | IR4 | grep | — | Step 4 of Task 6: `grep -rlc '68 catalogue measurements' skills/ \| wc -l` returns `2` — the two carriers `AC4` names — and every other rule's identifying phrase returns `1` |
-| T6.4 No rule is enforced by a mechanical gate | IR1 | grep | — | Step 4 of Task 6: `git diff main...HEAD --name-only -- scripts/` returns nothing |
+| T6.4 No rule is enforced by a mechanical gate | IR1 | grep (regression guard — empty at the branch point too) | — | Step 4 of Task 6: `git diff main...HEAD --name-only -- scripts/` returns nothing |
 
 ---
 
@@ -478,7 +478,7 @@ git commit -m "test(skill-behavior): measure whether the pairs rule changes the 
 **Acceptance criteria:**
 - T6.1: `scripts/check-links.sh` exits 0 — test: Step 3
 - T6.2: Every reviewer row added reads `BLOCKING` — test: Step 3's diff read
-- T6.3: Each rule's identifying phrase appears in exactly one file, except `AC4`'s, which appears in the two document reviewers the spec names and in no third file — test: Step 4
+- T6.3: Each of the five rules' identifying phrases appears in exactly one file under `skills/`, except `AC4`'s, which appears in the two document reviewers the spec names and in no third file — test: Step 4's two greps, one per case
 - T6.4: No file under `scripts/` was added or modified — test: Step 4
 
 - [ ] **Step 1: Confirm the branch is clean**
@@ -501,15 +501,20 @@ Expected: `4` — one row for `AC1`, one for `AC2`, two for `AC4`.
 
 - [ ] **Step 4: Confirm single-carrier and no gate added**
 
-Run: `grep -rlc '68 catalogue measurements' skills/ | wc -l`
-Expected: `2` — `AC4` is the one rule the spec places in two reviewers; every other phrase appears once.
+Run: `grep -rl '68 catalogue measurements' skills/ | wc -l`
+Expected: `2` — `AC4` is the one rule the spec places in two reviewers.
+
+Run: `for ph in '3 of 10' 'diverging from the spec in silence' 'two rounds of adversarial' 'one file read'; do printf '%s: ' "$ph"; grep -rl "$ph" skills/ | wc -l; done`
+Expected: `1` for each — the identifying phrase of `AC3`, `AC1`, `AC2` and `AC5` in turn. Each of the four was measured absent from `skills/` before Task 1 ran, so a `1` here is the rule this branch wrote and not one already there.
 
 Run: `git diff main...HEAD --name-only -- scripts/`
-Expected: empty.
+Expected: empty. **A regression guard, not a discriminator** — it is empty whether or not the plan was implemented, because no task ever touches `scripts/`. It is here to catch a hand reaching for a gate, which is what `IR1` forbids.
 
-- [ ] **Step 5: Run every content gate CI runs**
+- [ ] **Step 5: Run the content gates whose input this branch changed**
 
-There is no aggregate runner here — `.github/workflows/ci.yml:138-188` invokes each script as its own step. These are the gates whose input this branch changed; `tests/hooks/test-check-*.sh` are not in the list because they test the gate scripts, and `IR1` forbids touching those.
+There is no aggregate runner here — `.github/workflows/ci.yml:138-188` invokes each script as its own step. Two gates in that range are deliberately outside the loop: `scripts/lint-shell.sh`, covered by the separate `Run:` at the end of this step, and `scripts/check-changelog.sh`, which reads `git diff --cached` and so has nothing to say in a task that stages nothing — the pre-commit hook already charged it on each of Tasks 1 to 5. `tests/hooks/test-check-*.sh` are absent for a different reason: they test the gate scripts, and `IR1` forbids touching those.
+
+**All eight are regression guards.** Every one exits 0 at the branch point too; they prove the change broke nothing, never that it did something. What this plan built is measured by the phrase greps in Step 4 and by Task 5's record.
 
 Run: `for g in check-links check-skill-size check-evidence-line check-escalation-shape check-no-dispatch check-skill-behavior-records check-docs-sync check-frozen-history; do scripts/$g.sh || echo "FAILED: $g"; done`
 Expected: no line starting with `FAILED:`.
