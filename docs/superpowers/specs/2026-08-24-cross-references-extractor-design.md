@@ -42,8 +42,8 @@ One fence mask, computed once from the document's lines, consulted by the **stru
 
 | Extractor | Fence-aware | Why, measured |
 |---|---|---|
-| `section()` `:72` | **yes** | 182 `##` headings live inside fences across 16 documents; a fenced `## Acceptance Criteria` would define or truncate the id list |
-| `task_headings` `:158` | **yes** | 27 fenced task headings; the false red above |
+| `section()` `:72` | **yes** | The fenced `##` headings counted under Defect A above; a fenced `## Acceptance Criteria` would define or truncate the id list |
+| `task_headings` `:158` | **yes** | The fenced task headings counted under Defect A; the false red above |
 | the `has N tasks` scan `:161` | **yes** | Same class — a fenced example reading "has 4 tasks" fires the comparison |
 | `matrix_rows` `:117`, `outside_matrix` `:129` | **yes** | Zero occurrences today, but a fenced example table is exactly what a plan documenting the format carries |
 | `all_task_crit` `:114` | **yes** | It is the `task criteria` count the script prints |
@@ -110,7 +110,7 @@ None. The script uses `python3` and `git`, both already invoked by the file unde
 
 ## Assumptions to Confirm
 
-- **Whether the same naive fence toggle changes any verdict of `task-brief` or `check-links.sh` was not tested.** Searched: compared the naive toggle against the CommonMark rule over every file in `docs/` and `skills/`, which found 77 structural headings classified differently across 16 documents — including files `check-links.sh` reads. What was **not** run is `check-links.sh` itself before and after a corrected mask, so whether any link verdict moves is unknown. Deliberately out of scope: another script, another commit.
+- **Whether the same naive fence toggle changes any verdict of `task-brief` or `check-links.sh` was not tested.** Searched: implemented both masks and diffed them line by line over `pathlib.Path("docs").rglob("*.md")` and the same for `skills/` — the corpus [`scripts/check-links.sh:71`](../../../scripts/check-links.sh) and `:72` walk, so every document the divergence lands in is one it reads. The result is the divergence stated once in `## The design` and not restated here, because a number written twice is a number that desyncs. What was **not** run is `check-links.sh` itself before and after a corrected mask, so whether any link verdict moves is unknown. Deliberately out of scope: another script, another commit.
 - **Whether `## Acceptance Criteria` organised under `###` subsections is the intended spec shape.** Searched: every committed spec under `docs/superpowers/specs/` for a level-2 AC or IR section containing level-3 subsections — exactly one does, `2026-08-21-upstream-consult-fixes-design.md`. Nothing in [`skills/brainstorming/SKILL.md:234`](../../../skills/brainstorming/SKILL.md) forbids or requires subsections, so this spec treats the script as wrong rather than the document. If the convention is meant to be flat sections, AC4 becomes a lint rule for specs instead, and that is a different change.
 
 ## Coverage Map
@@ -122,7 +122,7 @@ None. The script uses `python3` and `git`, both already invoked by the file unde
 | Interaction flow | Resolved — the script's states are pass, fail, and unreadable input; the missing one was an unterminated fence, which turned the checks off instead of failing them | AC11 |
 | Non-functional attributes | Clear — the mask is a single O(n) pass over lines the script already reads, on documents of a few hundred lines; the observable output is the existing counts line, whose numbers this change corrects rather than reshapes | `## The design`; no new output field |
 | Integrations and external dependencies | Clear — zero-dependency project, no lockfile in the checkout, and the change adds no import beyond `re` and `pathlib`, already used | `## External Dependencies` |
-| Edge cases and failures | Resolved — nested fences (44 four-backtick and 2 five-backtick openers), indented openers (6 files), tilde fences (none present, accepted for one character), unterminated fences (none present today) | IR1, IR2, IR3, AC11 |
+| Edge cases and failures | Resolved — nested fences, indented openers and tilde fences, each measured in `## The design`; and unterminated fences, of which the repository has none today | IR1, IR2, IR3, AC11 |
 | Constraints and tradeoffs | Resolved — zero dependencies means a hand-rolled scanner; two naive implementations already exist in this repository and are deliberately not unified with it or corrected here | IR7, IR8, and the first item of `## Assumptions to Confirm` |
 | Terminology | Resolved — "structural extractor" (reads document shape: sections, headings, matrix rows, id labels) versus "content extractor" (reads what the document contains: tests, citations, id citations). The split is what the design turns on | The table in `## The design` |
 | Completion signals | Resolved — every criterion is settled by running the script against a named document or a fixture and reading its exit code and summary line, and each test must first be seen red | AC1–AC12, IR4, IR6 |
