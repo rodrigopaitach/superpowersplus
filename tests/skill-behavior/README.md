@@ -206,7 +206,7 @@ lives in `plan-document-reviewer-prompt.md`, in the Plan Contract table.
 |------|-----------|
 | `FIXTURE-contradicting-criteria-spec.md` | The spec half. Five acceptance criteria and one implicit requirement; `AC2` ("only when there is at least one unread item") and `AC5` ("exactly one per day, including days with no activity") touch the same field and cannot both hold. Nothing in it says so |
 | `FIXTURE-contradicting-criteria.md` | The plan half. Complete on purpose: it cites the committed spec, covers every `AC` and `IR`, labels its criteria `T<task>.<n>`, carries a five-column matrix, and no test asserts a value its own implementation would not produce. The contradiction is the only defect a reviewer can find |
-| `RESULT-criteria-read-in-pairs.md` | Two recorded runs: the first on an instrument that did not exercise the rule, the second on the repaired one, with the subagent's report in full |
+| `RESULT-criteria-read-in-pairs.md` | Two recorded runs: the first on an instrument that did not exercise the rule, the second on the repaired one. Selected quotations per criterion, not the full report — the verdicts cite the excerpt that settles each one |
 
 **Both fixtures are stripped and committed into a throwaway repository** before
 the run — `sed '1,/^---$/d'` removes each header, and the spec has to be

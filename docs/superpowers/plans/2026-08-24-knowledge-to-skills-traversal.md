@@ -49,12 +49,13 @@
 | T4.1 A reviewer finding about a measurable fact is reproduced before it is acted on | AC5 | none — prose | `skills/` | No test. Declared in the spec's Coverage Map, row "Completion signals" |
 | T4.2 The rule states the cost of not reproducing | AC5 | grep | — | Step 5 of Task 4: `grep -n 'one file read' skills/receiving-code-review/SKILL.md` returns one line |
 | T5.1 The fixture carries the contradiction and does not announce itself as a test | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/FIXTURE-contradicting-criteria.md`, checked by Step 3 of Task 5 |
-| T5.2 The record is well formed | IR6 | gate | `scripts/` | Step 7 of Task 5: `scripts/check-skill-behavior-records.sh` exits 0 |
+| T5.2 The record is well formed | AC2 | gate | `scripts/` | Step 7 of Task 5: `scripts/check-skill-behavior-records.sh` exits 0 |
 | T5.3 The reviewer catches the contradiction it previously missed | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/RESULT-criteria-read-in-pairs.md`, criterion 1 |
 | T6.1 Every citation added resolves | IR5 | gate (regression guard — green at the branch point too) | `scripts/` | Step 3 of Task 6: `scripts/check-links.sh` exits 0 |
 | T6.2 No rule was added as a non-blocking advisory | IR2 | grep | — | Step 3 of Task 6: every row added to a reviewer table reads `BLOCKING`, checked by `git diff` |
 | T6.3 Each rule lands in exactly one carrier, `AC4` in its two | IR4 | grep | — | Step 4 of Task 6: `grep -rlc '68 catalogue measurements' skills/ \| wc -l` returns `2` — the two carriers `AC4` names — and every other rule's identifying phrase returns `1` |
 | T6.4 No rule is enforced by a mechanical gate | IR1 | grep (regression guard — empty at the branch point too) | — | Step 4 of Task 6: `git diff main...HEAD --name-only -- scripts/` returns nothing |
+| T6.5 Every commit touching `skills/` staged `CHANGELOG.md` with it | IR6 | git | — | Step 5 of Task 6: each commit in `git log main..HEAD -- skills/` also names `CHANGELOG.md` in its own `--name-only` |
 
 ---
 
@@ -142,7 +143,7 @@ git commit -m "feat(writing-plans): read the branch's git log when replanning"
 
 **Interfaces:**
 - Consumes: nothing.
-- Produces: the two blocking rows Task 5 measures. Task 5's record is written against the `AC2` row exactly as worded here — if the wording changes, the record's criterion changes with it.
+- Produces: the two blocking rows. Task 5 measures the second of them — its record is written against the `AC2` row exactly as worded here, so if that wording changes the record's criterion changes with it. The `AC1` row is unmeasured.
 
 **Acceptance criteria:**
 - T2.1: The Plan Contract table carries a row charging a test whose asserted value contradicts the implementation the same plan specifies — test: none, prose; settled by opening the file and reading the row
@@ -462,6 +463,7 @@ git commit -m "test(skill-behavior): measure whether the pairs rule changes the 
 - T6.2: Every reviewer row added reads `BLOCKING` — test: Step 3's diff read
 - T6.3: Each of the five rules' identifying phrases appears in exactly one file under `skills/`, except `AC4`'s, which appears in the two document reviewers the spec names and in no third file — test: Step 4's two greps, one per case
 - T6.4: No file under `scripts/` was added or modified — test: Step 4
+- T6.5: Every commit on this branch that touches `skills/` also carries `CHANGELOG.md` — test: Step 5's loop over `git log main..HEAD -- skills/`
 
 - [ ] **Step 1: Confirm the branch is clean**
 
@@ -503,6 +505,11 @@ Expected: no line starting with `FAILED:`.
 
 Run: `bash tests/shell-lint/test-lint-shell.sh`
 Expected: exit 0.
+
+The pre-commit hook charges `IR6` one commit at a time and cannot see the branch. This reads the whole range at once:
+
+Run: `for c in $(git log --format=%h main..HEAD -- skills/); do git show --name-only --format= "$c" | grep -q '^CHANGELOG.md$' || echo "MISSING: $c"; done`
+Expected: no line starting with `MISSING:`. **This one discriminates** — a commit that reached `skills/` without its changelog entry, whether through `--no-verify` or a hook that was not installed, prints its own hash.
 
 - [ ] **Step 6: Commit only if a check found something**
 
