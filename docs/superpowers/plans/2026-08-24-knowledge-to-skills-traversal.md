@@ -229,7 +229,7 @@ git commit -m "feat(plan-reviewer): charge test-vs-implementation and contradict
 Append to the Plan Contract table, after Task 2's rows:
 
 ```markdown
-    | A task changing a permission, privilege, or system state states how the executor reaches it | BLOCKING — measuring that the target state is correct is not the same as establishing that whoever applies the change can get there. Measured: four independent review lenses and 68 catalogue measurements passed a defect where the target was right and nobody asked whether the applying role held the grant. The gap was one line |
+    | A task whose artifact changes a permission, privilege, or system state states how the role that applies it reaches that state | BLOCKING — measuring that the target state is correct is not the same as establishing that the role applying the change can get there. The role, not the implementer: the row beginning "No task's deliverable lives outside the repository" already keeps the applying itself outside the plan, so what this one charges is the in-repo artifact that will do it — a migration, a hook, a config. Measured: four independent review lenses and 68 catalogue measurements passed a defect where the target was right and nobody asked whether the applying role held the grant. The gap was one line |
 ```
 
 - [ ] **Step 2: Read the spec reviewer's Groundedness table**
@@ -242,7 +242,7 @@ Expected: the `| Finding | Verdict |` header and its separator, indented four sp
 Append to that Groundedness table:
 
 ```markdown
-    | A claim that a permission, privilege, or system state will be changed, with no statement of how the executor reaches it | BLOCKING — the target state being correct is a different claim from the change being applicable, and only the first is usually checked. Measured: four independent review lenses and 68 catalogue measurements passed a defect of exactly this shape |
+    | A claim that a permission, privilege, or system state will be changed, with no statement of how the role that applies it reaches that state | BLOCKING — the target state being correct is a different claim from the change being applicable, and only the first is usually checked. Measured: four independent review lenses and 68 catalogue measurements passed a defect of exactly this shape |
 ```
 
 - [ ] **Step 4: Confirm both rows landed inside their tables**
@@ -296,7 +296,7 @@ Expected: the `### From External Reviewers` heading and the first lines under it
 Insert immediately before the next `##` heading:
 
 ```markdown
-**A finding about a gate, a test result, or any measurable fact is reproduced before it is acted on.** Run the command yourself. A reviewer reading an artifact under a stale version convention reported three type errors with file, line and error code; running it again showed zero — the finding was an artifact of the review, formatted exactly like a real one. And when two reviewers assert opposite facts about the same code, the cost of settling it is one file read, not a judgement about which reviewer is more specialized.
+**A finding about a gate, a test result, or any measurable fact is reproduced before it is acted on.** Run the command yourself. Measured: a reviewer reading an artifact under a stale version convention reported three type errors with file, line and error code; running it again showed zero — the finding was an artifact of the review, formatted exactly like a real one. And when two reviewers assert opposite facts about the same code, the cost of settling it is one file read, not a judgement about which reviewer is more specialized.
 ```
 
 - [ ] **Step 3: Confirm placement**

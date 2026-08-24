@@ -4995,14 +4995,17 @@ section where the next one would be written.
 - **`check-cross-references` counts `## Task` headings inside fenced example
   blocks.** Measured 2026-08-24: run against
   [`docs/superpowers/plans/2026-07-06-sdd-plan-scoped-workspace.md`](docs/superpowers/plans/2026-07-06-sdd-plan-scoped-workspace.md)
-  it reports `tasks present 17` for a plan whose real task headings are far
-  fewer — the rest live inside fenced blocks that document the format. The
-  extractor reads the file as flat text. Two consequences share the one cause: a
-  plan that quotes the task format in a fence gets an inflated count, and a task
-  criterion label carrying a letter suffix is not matched by `TASK_CRIT` at all.
-  Left open because the fix is a change to the extractor with its own tests, and
-  the script's green verdict is not affected — only the counts it prints.
-  Opened 2026-08-24.
+  it reports `tasks present 17` for a plan whose real headings number five — the
+  other twelve live inside fenced blocks that document the format. The extractor
+  reads the file as flat text.
+  **A second defect lives in the same script and is a different cause**, stated
+  apart because collapsing the two would hide one under the other's fix:
+  `TASK_CRIT` carries no optional letter suffix while the `AC_IR` pattern on the
+  line above it does, so a task criterion labelled `T2.3a` is not matched at all.
+  That one is a regex omission and would survive a markdown-aware extractor.
+  Both are left open because the fix is a change to the extractor with its own
+  tests, and neither affects the script's green verdict — only the counts it
+  prints. Opened 2026-08-24.
 
 Most rules in this project are reasoned rather than measured. Four have been
 measured, over eleven adversarial runs: the external-content rule, which held on
