@@ -476,7 +476,17 @@ Expected: empty.
 - [ ] **Step 2: Read the whole diff of the branch**
 
 Run: `git diff main...HEAD --stat`
-Expected: 11 files, insertions only. `skills/writing-plans/SKILL.md`, `skills/writing-plans/plan-document-reviewer-prompt.md`, `skills/brainstorming/spec-document-reviewer-prompt.md`, `skills/receiving-code-review/SKILL.md`, three new files under `tests/skill-behavior/` — two fixtures and one record — plus `tests/skill-behavior/README.md`, `CHANGELOG.md`, and the spec and this plan. **A deletion anywhere in this stat is an `IR7` violation at branch scale**: no line of any carrier was shortened to make room, so the branch adds and removes nothing.
+Expected: 11 files. `skills/writing-plans/SKILL.md`, `skills/writing-plans/plan-document-reviewer-prompt.md`, `skills/brainstorming/spec-document-reviewer-prompt.md`, `skills/receiving-code-review/SKILL.md`, three new files under `tests/skill-behavior/` — two fixtures and one record — plus `tests/skill-behavior/README.md`, `CHANGELOG.md`, and the spec and this plan.
+
+**Read `IR7` per carrier, never off the branch total.** The spec words it as *no existing line of that `SKILL.md` is shortened to make room*, so the check is that every carrier file is `N 0` in `git diff --numstat` — run it and read the second column:
+
+```bash
+git diff --numstat cafec49..HEAD -- skills/
+```
+
+Expected: `0` in the second column of every row. A non-zero there is the `IR7` violation.
+
+A deletion elsewhere in the stat is not. `CHANGELOG.md` carries live prose — the paragraph counting how many rules have been measured is rewritten every time that count changes — and an expectation of "insertions only" at branch scale charges that rewrite as a violation it is not. This step said exactly that until the final audit measured the branch at 4 deletions, all of them in `CHANGELOG.md`, with every carrier still at `N 0`.
 
 - [ ] **Step 3: Run the link gate and confirm no advisory rows**
 
