@@ -66,6 +66,14 @@ Every extractor scans `lines` or `text` with no idea that a fenced code block is
 
 **Measured, and it resolves exactly:** seventeen entries, eleven real sections, the six above with no section, and no section without an entry. Removing the six leaves eleven, one per section.
 
+### H — the test-name comparison knows every test vocabulary but this repository's
+
+`TEST_DEF` recognises `it(...)`, `test(...)`, `describe(...)`, `def test_` and `func Test`. Every suite in this repository is bash, naming its cases by shell function call: **68 `assert_run` and 9 `run_case`** across `tests/hooks/`. The check that every test named in a coverage matrix is created by some step therefore reports every one of them as absent.
+
+**Measured 2026-08-24, on the plan for this branch:** 26 matrix-named tests, all real, all reported missing. Any plan this repository writes about its own suites hits it.
+
+**Two designs were measured, and the obvious one is vacuous.** Asking whether the name appears anywhere outside the matrix rows fails the defect that matters: `writing-plans` requires every task criterion to name its covering test, so the criterion line carries the name and the check passes even when a step renamed the test. Proved by mutation — a step renamed with the matrix left stale exits 0. Searching the document's **fenced code blocks** catches both mutations, and is language-blind for the same reason a plan creates its tests inside code blocks in the first place.
+
 ## The design
 
 ### One scanner, and where it has to live
@@ -119,6 +127,7 @@ A fence closes only on the same fence character, at a length greater than or equ
 - **AC16** — The table of contents of [`skills/writing-skills/anthropic-best-practices.md`](../../../skills/writing-skills/anthropic-best-practices.md) has one entry per real section and no entry without one: eleven entries, eleven sections.
 - **AC17** — `scripts/check-links.sh` exits 0 over the repository once AC13 and AC16 are both delivered.
 - **AC18** — Neither `check-cross-references` nor `check-links.sh` contains fence-scanning logic of its own; each obtains the mask from the shared module.
+- **AC20** — A coverage matrix naming a test that no code block of the plan contains exits 1, whatever language the test is written in. A plan whose matrix names a bash case its steps create exits 0.
 - **AC19** — The Codex archive carries the shared module and still contains no `^scripts/` path: [`tests/codex/test-package-codex-plugin.sh`](../../../tests/codex/test-package-codex-plugin.sh) passes on a clean tree.
 
 ## Implicit Requirements
@@ -174,7 +183,7 @@ None. The carriers use `python3`'s standard library, `awk`, and `git`, all alrea
 
 | Category | State | Where it landed |
 |---|---|---|
-| Functional scope and behavior | Resolved — the request named four defects in one script; measuring the other two carriers found a fifth firing with visible damage and a sixth latent, and the damage itself is a seventh item | AC1–AC19 |
+| Functional scope and behavior | Resolved — the request named four defects in one script; measuring the other two carriers found a fifth firing with visible damage and a sixth latent, the damage itself is a seventh item, and running the gate over this branch's own plan found an eighth | AC1–AC20 |
 | Domain and data model | Resolved — the entities are the document structures each carrier extracts, and which of them is structural was decided by measuring what lives inside fences today rather than by symmetry | The table in `### Which extractors become fence-aware` |
 | Interaction flow | Resolved — the states are pass, fail, and unreadable input; the missing one was an unterminated fence, which turned the checks off instead of failing them | AC11 |
 | Non-functional attributes | Clear — the mask is a single O(n) pass over lines each carrier already reads, on documents of a few hundred lines; no new output field is added to any carrier | `## The design` |
@@ -182,7 +191,7 @@ None. The carriers use `python3`'s standard library, `awk`, and `git`, all alrea
 | Edge cases and failures | Resolved — nested fences, indented openers and tilde fences, each measured in `### The closing rule, and why the naive one does not survive`; and unterminated fences, of which the repository has none today | IR1, IR2, IR3, AC11 |
 | Constraints and tradeoffs | Resolved — zero dependencies means a hand-rolled scanner; `task-brief` keeps a second implementation in awk because a cross-skill import inside the shipped plugin costs more than one copy in the carrier measured at zero defects | IR8, IR9, and `### One scanner, and where it has to live` |
 | Terminology | Resolved — "structural extractor" (reads document shape) versus "content extractor" (reads what the document contains). The split is what the design turns on | `### Which extractors become fence-aware` |
-| Completion signals | Resolved — every criterion is settled by running a carrier against a named document or fixture and reading its exit code and output, and each test must first be seen red | AC1–AC19, IR5, IR7 |
+| Completion signals | Resolved — every criterion is settled by running a carrier against a named document or fixture and reading its exit code and output, and each test must first be seen red | AC1–AC20, IR5, IR7 |
 | Placeholders and vague adjectives | Resolved — "fix it the best way" and "attack the cause" were quantified by measuring each carrier's status and each extractor against the corpus | `## What was measured` |
 
 ### Decision record
@@ -194,6 +203,8 @@ None. The carriers use `python3`'s standard library, `awk`, and `git`, all alrea
 | When a document opens a fenced block and never closes it, should the script fail or continue? | Fail, naming the opening line | Recommended failing. The alternatives either read the document against a shape that disagrees with how it renders, or print green for a document the script stopped checking half-way. Source: order 1, `scripts/check-no-dispatch.sh:120` fails when it cannot read its input |
 | Given the cause is duplication, what form should the fix take? | A shared module for the python carriers, `task-brief` fixed in place | Recommended it over three independent copies and over rewriting `task-brief` in python. Three copies leave the cause standing; rewriting `task-brief` trades a defect measured at zero for regression risk on a script whose only assertion checks file placement. **The location was not part of the recommendation and was forced afterwards** by `scripts/package-codex-plugin.sh:336`, which fails the Codex build on any `^scripts/` path — so the module lives under `skills/`, not at the root. Source: order 1, the packager and `tests/codex/test-package-codex-plugin.sh:183` |
 | What about the six broken table-of-contents entries? | Investigate before deciding, then remove them | The investigation settled it: the entries are this project's own, added whole by `46cf5c4`, and the arithmetic in Defect G closes exactly, leaving one entry per section and no section unlisted. Source: order 1, measured in this repository |
+
+| Does the test-name comparison's blindness to this repository's own test vocabulary enter the branch? | Yes, with the language-blind form | Recommended replacing the question rather than adding bash to the pattern: teaching it one more syntax bakes this project's shell function names into a public skill script and buys the next language nothing. **The first language-blind form offered was wrong and the measurement caught it**: "the name appears outside the matrix" passes the realistic desync, because the task criterion line names the test too. The form that survived both mutations searches the fenced code blocks. Source: order 1, measured on this branch's own plan |
 
 ## What this design does not do
 
