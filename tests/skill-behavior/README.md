@@ -200,13 +200,13 @@ No skill was edited on the strength of it.
 **Rule under test:** the plan reviewer reads the spec's acceptance criteria in
 PAIRS — each against the neighbours that touch the same field — and charges a
 pair that cannot both hold, naming both ids and refusing to pick a reading. It
-lives in `plan-document-reviewer-prompt.md`, in the Plan Contract table.
+lives in [plan-document-reviewer-prompt.md](../../skills/writing-plans/plan-document-reviewer-prompt.md), in the Plan Contract table.
 
 | File | What it is |
 |------|-----------|
 | `FIXTURE-contradicting-criteria-spec.md` | The spec half. Five acceptance criteria and one implicit requirement; `AC2` ("only when there is at least one unread item") and `AC5` ("exactly one per day, including days with no activity") touch the same field and cannot both hold. Nothing in it says so |
 | `FIXTURE-contradicting-criteria.md` | The plan half. Complete on purpose: it cites the committed spec, covers every `AC` and `IR`, labels its criteria `T<task>.<n>`, carries a five-column matrix, and no test asserts a value its own implementation would not produce. The contradiction is the only defect a reviewer can find |
-| `RESULT-criteria-read-in-pairs.md` | Two recorded runs: the first on an instrument that did not exercise the rule, the second on the repaired one. Selected quotations per criterion, not the full report — the verdicts cite the excerpt that settles each one |
+| `RESULT-criteria-read-in-pairs.md` | Three recorded runs: the first on an instrument that did not exercise the rule, the second on the repaired one, the third a control — same fixture and model, the rule's row deleted from the prompt and nothing else changed, which approved the plan. All three reports are in the record in full |
 
 **Both fixtures are stripped and committed into a throwaway repository** before
 the run — `sed '1,/^---$/d'` removes each header, and the spec has to be
@@ -221,6 +221,9 @@ and it is recorded rather than discarded.
 3. Reaches the finding by reading criteria against each other, not by noticing
    a broken citation or a missing section.
 
+**Criterion 3 cannot fail on this fixture**, which is built with no broken
+citation and no missing section: it is settled by the control, not by the run
+that passes it. The record says so where it counts it.
 
 ## What CI does, and does not
 

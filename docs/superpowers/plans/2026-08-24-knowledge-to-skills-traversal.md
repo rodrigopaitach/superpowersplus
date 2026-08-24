@@ -43,12 +43,12 @@
 | T1.4 No existing line was shortened to make room | IR7 | grep | — | Step 6 of Task 1: `git diff -U0 -- skills/writing-plans/SKILL.md` shows only added lines, no line both removed and re-added shorter |
 | T2.1 A test asserting a value the plan's own implementation would not produce is charged | AC1 | none — prose | `skills/` | No test. Declared in the spec's Coverage Map, row "Completion signals" |
 | T2.2 Two spec criteria that cannot both hold are charged | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/RESULT-criteria-read-in-pairs.md`, criterion 1 |
-| T2.3 Both rules carry their measurement, with no external path | AC6 | grep | — | Step 6 of Task 2: `grep -c 'two rounds of adversarial' skills/writing-plans/plan-document-reviewer-prompt.md` returns 1, and `grep -c '\.claude/' skills/writing-plans/plan-document-reviewer-prompt.md` returns 0 |
+| T2.3 Both rules carry their measurement, with no external path | AC6 | grep | — | Step 6 of Task 2: one grep per rule — `grep -c "one item where the plan's own formula yielded two"` returns 1 and `grep -c 'two rounds of adversarial'` returns 1, both over `skills/writing-plans/plan-document-reviewer-prompt.md`, and `grep -c '\.claude/'` over the same file returns 0 |
 | T3.1 A state change measured only at its target is charged, in both document reviewers | AC4 | none — prose | `skills/` | No test. Declared in the spec's Coverage Map, row "Completion signals" |
 | T3.2 The four protected review faces are untouched | IR3 | grep | — | Step 5 of Task 3: `git diff --name-only` names neither `task-reviewer-prompt.md`, `code-reviewer.md`, `re-review-prompt.md` nor `final-branch-audit/SKILL.md` |
 | T4.1 A reviewer finding about a measurable fact is reproduced before it is acted on | AC5 | none — prose | `skills/` | No test. Declared in the spec's Coverage Map, row "Completion signals" |
 | T4.2 The rule states the cost of not reproducing | AC5 | grep | — | Step 5 of Task 4: `grep -n 'one file read' skills/receiving-code-review/SKILL.md` returns one line |
-| T5.1 The fixture carries the contradiction and does not announce itself as a test | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/FIXTURE-contradicting-criteria.md`, checked by Step 3 of Task 5 |
+| T5.1 The fixture carries the contradiction and does not announce itself as a test | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/FIXTURE-contradicting-criteria-spec.md` carries the pair, `tests/skill-behavior/FIXTURE-contradicting-criteria.md` the plan that implements both; each file's header is checked by Step 3 of Task 5 |
 | T5.2 The record is well formed | AC2 | gate | `scripts/` | Step 7 of Task 5: `scripts/check-skill-behavior-records.sh` exits 0 |
 | T5.3 The reviewer catches the contradiction it previously missed | AC2 | behaviour | `tests/skill-behavior/` | `tests/skill-behavior/RESULT-criteria-read-in-pairs.md`, criterion 1 |
 | T6.1 Every citation added resolves | IR5 | gate (regression guard — green at the branch point too) | `scripts/` | Step 3 of Task 6: `scripts/check-links.sh` exits 0 |
@@ -148,7 +148,7 @@ git commit -m "feat(writing-plans): read the branch's git log when replanning"
 **Acceptance criteria:**
 - T2.1: The Plan Contract table carries a row charging a test whose asserted value contradicts the implementation the same plan specifies — test: none, prose; settled by opening the file and reading the row
 - T2.2: The Plan Contract table carries a row charging two spec criteria that cannot both hold, and instructs reading them in pairs against neighbours touching the same field — test: `tests/skill-behavior/RESULT-criteria-read-in-pairs.md`, criterion 1
-- T2.3: Both rows carry their measurement and name no path outside this repository — test: Step 6's two greps
+- T2.3: Both rows carry their measurement and name no path outside this repository — test: Step 6's three greps, one per rule plus the external-path check
 
 - [ ] **Step 1: Read the table you are extending**
 
@@ -160,7 +160,7 @@ Expected: the `| Requirement | If it fails |` header and its separator, indented
 Append to the Plan Contract table, keeping the four-space indent every row in that block carries:
 
 ```markdown
-    | No step's test asserts a value the implementation this plan specifies would not produce | BLOCKING — the two are independent statements about the same behaviour and each reads as correct alone. An implementer on a cheap model resolves the disagreement by changing the implementation to match the test, diverging from the spec in silence; it was caught by reading the implementer's report, not its status. Read each test's expected value against the formula or code the same task specifies |
+    | No step's test asserts a value the implementation this plan specifies would not produce | BLOCKING — the two are independent statements about the same behaviour and each reads as correct alone. Measured: a test expected one item where the plan's own formula yielded two, and an implementer on a cheap model resolved the disagreement by changing the implementation to match the test, diverging from the spec in silence; it was caught by reading the implementer's report, not its status. Read each test's expected value against the formula or code the same task specifies |
 ```
 
 - [ ] **Step 3: Add the `AC2` row**
@@ -183,8 +183,11 @@ Expected: `2`
 
 - [ ] **Step 6: Verify the measurements and the absence of external paths**
 
+Run: `grep -c "one item where the plan's own formula yielded two" skills/writing-plans/plan-document-reviewer-prompt.md`
+Expected: `1` — the `AC1` row's measurement. One grep per rule: a single grep over a criterion that says "both rows" settles half of it, and the half it does not reach reads as covered.
+
 Run: `grep -c 'two rounds of adversarial' skills/writing-plans/plan-document-reviewer-prompt.md`
-Expected: `1`
+Expected: `1` — the `AC2` row's measurement.
 
 Run: `grep -c '\.claude/' skills/writing-plans/plan-document-reviewer-prompt.md`
 Expected: `0`
@@ -443,7 +446,7 @@ Add a `###` section under `## Tests in this directory`, in the shape the existin
 Add under `## [Unreleased]`, `### Added`, then:
 
 ```bash
-git add tests/skill-behavior/FIXTURE-contradicting-criteria.md tests/skill-behavior/RESULT-criteria-read-in-pairs.md tests/skill-behavior/README.md CHANGELOG.md
+git add tests/skill-behavior/FIXTURE-contradicting-criteria-spec.md tests/skill-behavior/FIXTURE-contradicting-criteria.md tests/skill-behavior/RESULT-criteria-read-in-pairs.md tests/skill-behavior/README.md CHANGELOG.md
 git commit -m "test(skill-behavior): measure whether the pairs rule changes the reviewer"
 ```
 

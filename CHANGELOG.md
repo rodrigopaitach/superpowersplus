@@ -21,7 +21,7 @@ References below name them so a claim here can be traced there.
 
 - **`receiving-code-review` now says a finding about a measurable fact is reproduced before it is acted on.** Measured: a reviewer reading an artifact under a stale version convention reported three type errors with file, line and error code, and running it again showed zero. Separately, two reviewers asserted opposite facts about the same code — the cost of settling that is one file read.
 
-- **The pairs rule is measured, not just written.** [`tests/skill-behavior/RESULT-criteria-read-in-pairs.md`](tests/skill-behavior/RESULT-criteria-read-in-pairs.md) records two runs against a planted contradiction. The second passed all three criteria — the reviewer named both ids, refused to pick a reading, and routed the conflict back to the spec's owner — and the contradiction was the only blocking finding in its report. The first run is recorded too, and it did **not** measure the rule: the fixture cited a spec path that did not exist, so the reviewer stopped at the Plan Contract row above and reported the pairs check as *unverifiable rather than checked-and-passed*. That is a finding about the rule's reach — when the spec cannot be opened, the rule does not fall back to the criteria the plan itself quotes on each task's `**Spec criterion:**` line — and it cost nothing to collect.
+- **The pairs rule is measured against a control, not just written.** [`tests/skill-behavior/RESULT-criteria-read-in-pairs.md`](tests/skill-behavior/RESULT-criteria-read-in-pairs.md) records three runs against a planted contradiction. **The control is what the verdict rests on:** the same fixture, the same model, the same prompt with the rule's row deleted and nothing else changed — it listed `AC2` and `AC5` among the criteria it had cross-checked one by one, said all six were covered, and **approved the plan**. A verdict read off a single state cannot tell a rule that works from a behaviour that was there anyway. The second run passed all three criteria — the reviewer named both ids, refused to pick a reading, and routed the conflict back to the spec's owner — and the contradiction was the only blocking finding in its report. The first run is recorded too, and it did **not** measure the rule: the fixture cited a spec path that did not exist, so the reviewer stopped at the Plan Contract row above and reported the pairs check as *unverifiable rather than checked-and-passed*. That is a finding about the rule's reach — when the spec cannot be opened, the rule does not fall back to the criteria the plan itself quotes on each task's `**Spec criterion:**` line — and it cost nothing to collect.
 
 ## [1.19.1] - 2026-08-22
 
@@ -4965,12 +4965,54 @@ section where the next one would be written.
   file gone. **This is a known consequence, not a finding — do not re-report it
   as a broken reference.** (opened 1.7.0)
 
-Most rules in this project are reasoned rather than measured. Three have been
-measured, over eight adversarial runs: the external-content rule, which held on
+- **The pairs rule does not fall back when the spec cannot be opened, and
+  nothing says whether it should.** The row added to the Plan Contract in
+  [`skills/writing-plans/plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md),
+  section "The Plan Contract (blocking)", says to read *the spec's* criteria in
+  pairs. Measured: on the first run recorded in
+  [`tests/skill-behavior/RESULT-criteria-read-in-pairs.md`](tests/skill-behavior/RESULT-criteria-read-in-pairs.md),
+  section "Run 1 — the rule was never exercised", the fixture's spec was not
+  committed, an earlier contract row fired first, and the reviewer declared the
+  pairs check *unverifiable rather than checked-and-passed* — with both criterion
+  ids and both texts sitting in the plan under review, on the tasks'
+  `**Spec criterion:**` lines. An unopenable spec is ordinary (an uncommitted
+  path, a wrong filename, a worktree without it), and in every such case the rule
+  silently does not run. Whether it should fall back to the plan's own quotations
+  is a design decision nobody has made. Opened 2026-08-24.
+
+- **Four of the five rules added in this cycle ship unmeasured.** Only the pairs
+  rule has an adversarial record. The other four — the test-contradicts-its-own-
+  implementation row, the applying-role row in both document reviewers, and the
+  reproduce-before-acting rule in
+  [`skills/receiving-code-review/SKILL.md`](skills/receiving-code-review/SKILL.md),
+  section "From External Reviewers" — were placed by reasoning about carrier and
+  wording, and nothing has shown they change what a reviewer finds. The deferral
+  was deliberate: the pairs rule was chosen because its "before" state was already
+  measured, which none of the other four had. It is still a gap, in a suite whose
+  own README opens by distinguishing a rule that was measured from one that was
+  written down and assumed to work. Opened 2026-08-24.
+
+- **`check-cross-references` counts `## Task` headings inside fenced example
+  blocks.** Measured 2026-08-24: run against
+  [`docs/superpowers/plans/2026-07-06-sdd-plan-scoped-workspace.md`](docs/superpowers/plans/2026-07-06-sdd-plan-scoped-workspace.md)
+  it reports `tasks present 17` for a plan whose real task headings are far
+  fewer — the rest live inside fenced blocks that document the format. The
+  extractor reads the file as flat text. Two consequences share the one cause: a
+  plan that quotes the task format in a fence gets an inflated count, and a task
+  criterion label carrying a letter suffix is not matched by `TASK_CRIT` at all.
+  Left open because the fix is a change to the extractor with its own tests, and
+  the script's green verdict is not affected — only the counts it prints.
+  Opened 2026-08-24.
+
+Most rules in this project are reasoned rather than measured. Four have been
+measured, over eleven adversarial runs: the external-content rule, which held on
 its first run; the escalation format, which took two corrections and three runs
-to hold; and the resume route, which split — the subagent half held on its first
+to hold; the resume route, which split — the subagent half held on its first
 run, the inline half failed twice and held on the third after one structural
-change. Six remain queued in the gap above.
+change; and the criteria-in-pairs rule, whose first run tripped a neighbouring
+gate and never reached it, and which then held on the repaired instrument
+against a control run that approved the same fixture with the rule removed. Six
+remain queued in the gap listing the eight precaution rules above.
 
 [1.11.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.11.0
 [1.10.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.10.0
