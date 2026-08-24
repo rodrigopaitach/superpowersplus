@@ -56,7 +56,7 @@
 | T6.3 The link gate exits 0 over this repository | AC17 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > the gate passes over this repository itself` |
 | T6.4 Neither python carrier contains fence-scanning logic of its own | AC18 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > carriers hold no fence logic of their own` |
 | T7.1 `task-brief` does not treat a fenced `## Task N` as a task | AC15 | script | `tests/hooks/` | `tests/hooks/test-task-brief.sh > a fenced task heading is not extracted` |
-| T7.2 The branch changes only the files the spec allows | IR8 | script | `tests/hooks/` | `tests/hooks/test-task-brief.sh > the branch touches only its declared files` |
+| T7.2 The branch changes only the files the spec allows | IR8 | audit | branch diff | audit re-run of `git diff --name-status` against the branch point — spec `IR8` states this criterion takes no permanent test |
 | T8.1 A matrix naming a test no code block of the plan contains exits 1 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails` |
 | T8.2 A matrix naming a bash case the steps create exits 0 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a bash case named in the matrix is created` |
 
@@ -1161,7 +1161,7 @@ git commit -m "fix(gates): check-links le cercas pela regra CommonMark, e nao pe
 
 **Acceptance criteria:**
 - T7.1: A plan whose only `## Task 2` sits inside a four-backtick example yields an empty brief for task 2 — test: `tests/hooks/test-task-brief.sh > a fenced task heading is not extracted`
-- T7.2: `git diff --name-only` against the branch point lists only the files the spec allows — test: `tests/hooks/test-task-brief.sh > the branch touches only its declared files`
+- T7.2: `git diff --name-status` against the branch point lists only the files the spec allows — evidence: the conformance audit re-runs that command and reads it against `IR8`'s class list. **No permanent test covers this, by the spec's own instruction**: a suite asserting a branch's file list is vacuous once the branch merges (the base becomes HEAD, the diff empties) and wrong on the next branch (it charges someone else's files). The assertion Step 1 below originally created was removed for exactly that.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1224,20 +1224,11 @@ else
     sed 's/^/        /' "$brief"
 fi
 
-# --- the branch touches only its declared files ---------------------------
-ALLOWED='^(skills/writing-plans/scripts/(mdfence\.py|check-cross-references)|skills/writing-skills/anthropic-best-practices\.md|skills/subagent-driven-development/scripts/task-brief|scripts/check-links\.sh|tests/hooks/test-(mdfence|check-cross-references|check-links|task-brief)\.sh|\.github/workflows/ci\.yml|CHANGELOG\.md|docs/superpowers/(specs|plans)/2026-08-24-cross-references-extractor.*\.md)$'
-base="$(git -C "$REPO_ROOT" merge-base main HEAD 2>/dev/null || echo "")"
-if [ -z "$base" ]; then
-    pass "the branch touches only its declared files (no base to compare)"
-else
-    stray="$(git -C "$REPO_ROOT" diff --name-only "$base"..HEAD | grep -Ev "$ALLOWED" || true)"
-    if [ -z "$stray" ]; then
-        pass "the branch touches only its declared files"
-    else
-        fail "the branch touches only its declared files"
-        printf '%s\n' "$stray" | sed 's/^/        /'
-    fi
-fi
+# T7.2 had an assertion here and it was REMOVED, not forgotten. It derived its
+# baseline from `git merge-base main HEAD` and matched the diff against a regex
+# of this branch's own file list: vacuous once the branch merges, wrong on the
+# next branch anyone cuts. Spec `IR8` now states the criterion's evidence is the
+# conformance audit's own `git diff --name-status`. Do not re-add it.
 
 echo
 if [ "$FAILURES" -eq 0 ]; then

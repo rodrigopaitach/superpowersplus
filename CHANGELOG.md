@@ -194,6 +194,18 @@ References below name them so a claim here can be traced there.
   comparison that replaced it has no separate count to report. The design note
   said "no new counts field", and removing one is within that letter, but the
   line every user of this gate reads did change.
+- **The matrix check cannot see a plan that quotes a test it never ships, and
+  this release is the demonstration.** `check-cross-references` builds the set
+  of created tests from the plan's own fenced blocks, which is what makes it
+  language-blind. A plan whose step *quotes* a test it then does not write
+  therefore passes: the name is in a code block. Measured on this release's own
+  plan — the coverage matrix named
+  `tests/hooks/test-task-brief.sh > the branch touches only its declared files`
+  after that assertion had been deleted, and the gate reported `exit=0`,
+  `tests named in matrix 29`. The conformance audit caught it by opening the
+  suite. Reading the shipped test files instead of the plan's code blocks is a
+  different instrument, not a tightening of this one; the limit is recorded
+  rather than closed.
 
 ## [1.20.0] - 2026-08-24
 
