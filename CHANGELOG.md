@@ -15,6 +15,8 @@ References below name them so a claim here can be traced there.
 
 - **`writing-plans` now tells the author to read the branch's own `git log` when the work is a replan.** Work from an earlier plan survives in the branch and does not appear in a diff against the main branch, so a task telling the implementer to build what is already there reads as new work at every gate downstream. Measured: 3 of 10 findings in one review were artifacts that already existed.
 
+- **The plan reviewer charges two defects it could not see before.** A step whose test asserts a value the implementation the same plan specifies would not produce — two independent statements about one behaviour, each correct alone, which a cheap implementer settles by changing the implementation. And two spec criteria that cannot both hold: the reviewer now reads criteria in pairs, each against the neighbours touching the same field. Measured: such a pair survived two rounds of adversarial spec review and surfaced only while writing the plan.
+
 ## [1.19.1] - 2026-08-22
 
 ### Fixed
