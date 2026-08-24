@@ -55,7 +55,8 @@ root="${2:-$PWD}"
   exit 1
 }
 
-python3 - "$doc" "$root" <<'PY'
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+python3 - "$doc" "$root" "$script_dir" <<'PY'
 import re
 import sys
 from pathlib import Path
@@ -65,6 +66,20 @@ root = Path(sys.argv[2])
 text = doc.read_text(encoding="utf-8")
 lines = text.splitlines()
 
+# The module is a sibling of this script. Resolve it from the script's own
+# path, never the working directory: this gate runs from a pre-commit hook and
+# against documents in other repositories. `dont_write_bytecode` keeps the
+# import from leaving a __pycache__ inside an installed plugin.
+sys.dont_write_bytecode = True
+sys.path.insert(0, sys.argv[3])
+from mdfence import prose
+
+# Structural extractors read `prose_lines`/`prose_text`; content extractors
+# (the test finder, the citation pass, the id-citation pass) keep reading the
+# raw text, each for a measured reason recorded in the design.
+prose_lines = prose(lines)
+prose_text = "\n".join(prose_lines)
+
 failures = []
 counts = {}
 
@@ -72,7 +87,7 @@ counts = {}
 def section(title_re):
     """Body of the first `## <title>` section matching, or None."""
     start = None
-    for i, line in enumerate(lines):
+    for i, line in enumerate(prose_lines):
         if re.match(r"^#{2,3}\s", line):
             if start is not None:
                 return "\n".join(lines[start:i])
@@ -111,11 +126,11 @@ if defined_ac:
         )
 
 # Task criteria: defined by the task bodies, cited by the matrix.
-all_task_crit = set(TASK_CRIT.findall(text))
+all_task_crit = set(TASK_CRIT.findall(prose_text))
 counts["task criteria"] = len(all_task_crit)
 
 matrix_rows = [
-    ln for ln in lines
+    ln for ln in prose_lines
     if ln.lstrip().startswith("|") and TASK_CRIT.search(ln)
 ]
 matrix_labels = set()
@@ -126,7 +141,7 @@ body_only = all_task_crit - matrix_labels
 matrix_only = matrix_labels - (all_task_crit - matrix_labels) - set()
 # A label that appears ONLY inside matrix rows is defined nowhere else.
 outside_matrix = set()
-for ln in lines:
+for ln in prose_lines:
     if ln.lstrip().startswith("|"):
         continue
     outside_matrix |= set(TASK_CRIT.findall(ln))
@@ -155,10 +170,10 @@ if matrix_labels:
         )
 
 # ------------------------------------------------------------- tasks
-task_headings = [ln for ln in lines if re.match(r"^#{2,3}\s+Task\s+\d+\b", ln)]
+task_headings = [ln for ln in prose_lines if re.match(r"^#{2,3}\s+Task\s+\d+\b", ln)]
 if task_headings:
     counts["tasks present"] = len(task_headings)
-    for m in re.finditer(r"\b(?:has|with)\s+(\d+)\s+tasks?\b", text, re.I):
+    for m in re.finditer(r"\b(?:has|with)\s+(\d+)\s+tasks?\b", prose_text, re.I):
         announced = int(m.group(1))
         if announced != len(task_headings):
             failures.append(

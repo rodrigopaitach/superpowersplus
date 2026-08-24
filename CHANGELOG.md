@@ -36,6 +36,26 @@ References below name them so a claim here can be traced there.
   list had one entry per real section once these six were removed, with none
   left over on either side.
 
+- **`check-cross-references` read the whole document as flat text.** Every
+  structural extractor in
+  [`skills/writing-plans/scripts/check-cross-references`](skills/writing-plans/scripts/check-cross-references)
+  now reads through the shared fence scanner: sections, task headings, the
+  announced-task-count comparison, coverage-matrix rows and the task-criteria
+  count. Three extractors deliberately keep reading the raw text — the test
+  finder, because a plan creates its tests inside fenced blocks; the citation
+  pass, because no `file:line` citation in `docs/` sits inside a fence and one
+  in a code comment is legitimate; and the id-citation pass, because a real
+  citation of `IR2` does live inside a fence. Measured: the extractor reported
+  `tasks present 17` for a plan carrying five real task headings, and failed a
+  plan that correctly announced its own count.
+- **The cross-reference suite reported only its first failure, and never its
+  summary.** In [`tests/hooks/test-check-cross-references.sh`](tests/hooks/test-check-cross-references.sh)
+  the diagnostic re-run in the failure branch is a pipeline whose first command
+  exits non-zero by design; under `set -euo pipefail` that aborted the whole
+  script, so every failure after the first was invisible and the
+  `N test(s) failed` line was unreachable. Found while running five new cases
+  red at once and seeing one.
+
 ## [1.20.0] - 2026-08-24
 
 ### Added

@@ -51,7 +51,11 @@ run_case() {
         pass "$name (exit $actual)"
     else
         fail "$name — expected exit $expected, got $actual"
-        "$SCRIPT_UNDER_TEST" "$dir/docs/doc.md" "$dir" 2>&1 | sed 's/^/        /'
+        # `|| true`: the script exits non-zero by design here, and under
+        # `set -euo pipefail` a bare failing pipeline aborts the whole suite at
+        # the first failure — which made the "N test(s) failed" summary below
+        # unreachable and hid every failure after the first one.
+        { "$SCRIPT_UNDER_TEST" "$dir/docs/doc.md" "$dir" 2>&1 | sed 's/^/        /'; } || true
     fi
 }
 
@@ -128,6 +132,86 @@ run_case "matrix naming a test no step creates fails" 1 "$(printf '%s' "$CLEAN_P
 run_case "announced task count that disagrees fails" 1 "${CLEAN_PLAN}
 
 This plan has 4 tasks."
+
+# --- fence awareness ------------------------------------------------------
+# A plan that documents the plan format carries `## Task N` inside fenced
+# examples. Measured 2026-08-24: the fence-blind extractor reported 17 tasks for
+# a real plan carrying five, and 10 for a document carrying none.
+FENCED_TASKS="$(printf '%s\n' "$CLEAN_PLAN" '' '````markdown' '## Task 7: an example' '' '```js' 'it("nothing", () => {})' '```' '````')"
+
+run_case "fenced task headings are not counted" 0 "$FENCED_TASKS
+
+This plan has 1 task."
+
+run_case "announced count matches when the extras are fenced" 0 "$FENCED_TASKS
+
+This plan has 1 task."
+
+# The `## Notes` heading is load-bearing. Without it the fenced section runs to
+# the end of the file, swallows the AC9 citation below, and AC9 reads as
+# DEFINED — so the case passes before the fix, for a mechanism its own name
+# disclaims. With it, the pre-fix run charges AC9 as dangling and the case is
+# red until the fenced heading stops starting a section.
+run_case "a fenced acceptance-criteria heading defines nothing" 0 '# Doc
+
+```markdown
+## Acceptance Criteria
+
+- AC1 only an example
+```
+
+## Notes
+
+The design also satisfies AC9, which no list defines.'
+
+run_case "a fenced matrix table raises no orphan label" 0 "${CLEAN_PLAN}
+
+An example of the shape:
+
+\`\`\`markdown
+| T9.9 | > a test nobody wrote |
+\`\`\`"
+
+run_case "fenced task criteria are not counted" 0 "${CLEAN_PLAN}
+
+\`\`\`markdown
+- T4.4 an example criterion
+\`\`\`"
+
+run_case "a fenced citation past end of file fails" 1 "${CLEAN_SPEC}
+
+\`\`\`bash
+# see \`src/verify.ts:99\` for the detail
+\`\`\`"
+
+# AC8: a plan creates its tests inside fenced code blocks, so the test finder
+# must keep reading them. This case is the guard that the fence work above did
+# not reach into it — the plan's only test lives inside a fenced block, and the
+# matrix names it.
+run_case "a fenced step still creates its test" 0 '# Plan
+
+## Task 1: Build it
+
+Acceptance criteria:
+- T1.1 rejects the bad input
+
+Step 1: write the test.
+
+```js
+it("rejects the bad input", () => {})
+```
+
+## Test Coverage Matrix
+
+| Criterion | Test |
+|---|---|
+| T1.1 | > rejects the bad input |'
+
+run_case "a fenced undefined id still fails" 1 "${CLEAN_SPEC}
+
+\`\`\`markdown
+The design also satisfies AC9, which no list defines.
+\`\`\`"
 
 echo
 if [[ "$FAILURES" -eq 0 ]]; then
