@@ -88,6 +88,7 @@ Subagent (general-purpose):
     | No `## Codebase Findings`, `## External Dependencies`, or `## Assumptions to Confirm` section | BLOCKING — "None" is how the spec says there are none. An absent section and an empty one must not look alike: the absent one is the spec that never looked, and no later reader can tell the two apart |
     | Item in `## Assumptions to Confirm` that IS verifiable in the code | BLOCKING — not a legitimate assumption. Go verify it yourself; if the code answers it, the spec had to cite it. |
     | Item in `## Assumptions to Confirm` with no search record | BLOCKING — see below |
+    | A claim that a permission, privilege, or system state will be changed, with no statement of how the role that applies it reaches that state | BLOCKING — the target state being correct is a different claim from the change being applicable, and only the first is usually checked. Measured: four independent review lenses and 68 catalogue measurements passed a defect of exactly this shape |
 
     `## Assumptions to Confirm` is not an exemption. Every item there must state
     what was searched and why the code could not answer it: the searches run

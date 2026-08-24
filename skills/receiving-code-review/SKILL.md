@@ -85,6 +85,8 @@ IF conflicts with your human partner's prior decisions:
 
 **your human partner's rule:** "External feedback - be skeptical, but check carefully"
 
+**A finding about a gate, a test result, or any measurable fact is reproduced before it is acted on.** Run the command yourself. Measured: a reviewer reading an artifact under a stale version convention reported three type errors with file, line and error code; running it again showed zero — the finding was an artifact of the review, formatted exactly like a real one. And when two reviewers assert opposite facts about the same code, the cost of settling it is one file read, not a judgement about which reviewer is more specialized.
+
 ## YAGNI Check for "Professional" Features
 
 ```

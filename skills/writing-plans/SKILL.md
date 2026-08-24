@@ -22,6 +22,8 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
 
+**If this is a replan, read the branch's own `git log` before writing a task.** Work from an earlier plan survives in the branch and does not show up in a diff against the main branch, so a task telling the implementer to build what is already built reads as new work to everyone downstream. Measured: 3 of 10 findings in one review were artifacts that already existed.
+
 ## File Structure
 
 Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
