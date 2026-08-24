@@ -406,6 +406,24 @@ References below name them so a claim here can be traced there.
   classes — is what caught the second defect, and it is the direction a check
   written from a hand-copied list cannot have: the copy was more generous than
   the document, which is why it passed.
+- **The third of the three `--help` carriers had two perturbed copies for the
+  three edits its criterion names, and its anchor measured the wrong line.**
+  `AC21` names a line added, a blank line and a sentence reworded;
+  [`tests/shell-lint/test-lint-shell.sh`](tests/shell-lint/test-lint-shell.sh)
+  carried the first two. Measured: reinstalling
+  `sed -n '2,/baseline, or pass files explicitly/p'` in
+  [`scripts/lint-shell.sh`](scripts/lint-shell.sh)'s `usage()` — the very form
+  the same release had already had to remove — left this suite green, while both
+  sibling carriers caught their version of it. The seventh member of this
+  branch's own class: a criterion whose cited test cannot fail by the mechanism
+  its name announces. Fixing it exposed a second one in the same block: every
+  copy was checked against the last header line **of the file as shipped**,
+  but two of the three edits move that line off the end — the copy that grows
+  the header appended a sentence and then asserted an earlier one survived,
+  perturbing in one direction and measuring in another. Each copy is now
+  anchored on its own last header line. Both mutations now turn the suite red,
+  and the growth copy fails under the line-number slice it exists for, which it
+  did not before.
 
 ## [1.20.0] - 2026-08-24
 

@@ -203,6 +203,11 @@ assert_contains "$output" "refusing to lint an empty file list" \
 # Differential over PERTURBED COPIES: the failure is triggered by an edit to the
 # header, not by any input. Two anchors, one per direction — the header's last
 # line must survive (truncation) and no line of code may appear (runaway).
+#
+# One copy per edit `AC21` names — a line added, a blank line, a sentence
+# reworded. The third was missing, and its absence is not academic: measured,
+# `sed -n '2,/baseline, or pass files explicitly/p'` reinstalled in usage() left
+# this suite green, while both sibling carriers caught their version of it.
 help_failed=0
 help_dir="$TEST_ROOT/usage"
 mkdir -p "$help_dir"
@@ -212,21 +217,34 @@ awk 'NR == 3 { print "" } { print }' "$SCRIPT_UNDER_TEST" >"$help_dir/blank-line
 # The header grows. This is the edit the line-number slice could not survive.
 awk 'NR == 10 { print; print "# A sentence added after the slice was written."; next } { print }' \
   "$SCRIPT_UNDER_TEST" >"$help_dir/grown"
-chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/grown"
+# The header's last sentence is reworded, keeping no phrase of the original. A
+# slice keyed on the TEXT it prints loses its end pattern and runs to the end of
+# the file; a slice keyed on the header's SHAPE does not notice the edit.
+awk 'NR == 10 { print "# baseline; name files on the command line for a narrower run."; next } { print }' \
+  "$SCRIPT_UNDER_TEST" >"$help_dir/reworded"
+chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/grown" "$help_dir/reworded"
 
 # A perturbation that changed nothing tests nothing, and would report PASS.
 # tests/hooks/test-check-evidence-line.sh guards the same way, for the same
 # reason.
-for perturbed in blank-line grown; do
+for perturbed in blank-line grown reworded; do
   if cmp -s "$help_dir/as-shipped" "$help_dir/$perturbed"; then
     echo "        $perturbed: the perturbation changed nothing — this copy tests nothing"
     help_failed=$((help_failed + 1))
   fi
 done
 
-for variant in as-shipped blank-line grown; do
+# The truncation anchor is each copy's OWN last header line. Anchoring every
+# copy on the shipped one leaves the two edits that MOVE that line — the growth
+# and the rewording — asserting nothing about what they changed.
+for variant in as-shipped blank-line grown reworded; do
+  case "$variant" in
+    grown) tail_anchor='A sentence added after the slice was written.' ;;
+    reworded) tail_anchor='baseline; name files on the command line for a narrower run.' ;;
+    *) tail_anchor='baseline, or pass files explicitly' ;;
+  esac
   help_out="$("$help_dir/$variant" --help 2>&1 || true)"
-  if ! printf '%s' "$help_out" | grep -q 'baseline, or pass files explicitly'; then
+  if ! printf '%s' "$help_out" | grep -qF "$tail_anchor"; then
     echo "        $variant: the header was truncated before its last line"
     help_failed=$((help_failed + 1))
   fi
