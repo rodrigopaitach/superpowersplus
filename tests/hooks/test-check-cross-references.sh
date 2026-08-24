@@ -386,8 +386,18 @@ Both are grounded in the module under test.'
 # TASK_CRIT carried no optional letter suffix while AC_IR on the line above did.
 # Anchored with \b, `T1.1a` matched nothing at all, so the matrix row stopped
 # being a matrix row and the three checks that depend on it stopped running.
-run_case "a suffixed criterion label is still checked" 1 "$(printf '%s' "$CLEAN_PLAN" |
+# Two substitutions, and only the second is load-bearing for the exit code: if
+# the first ever stopped matching, this case would still exit 1 and pass while
+# measuring nothing about AC7's letter suffix. Every other perturbation in this
+# branch carries a "the perturbation changed nothing" guard; this one is the
+# case that most needs it, because its subject IS the label being rewritten.
+suffixed="$(printf '%s' "$CLEAN_PLAN" |
     sed 's/T1\.1/T1.1a/g; s/| > rejects the bad input |/| > a test nobody wrote |/')"
+if printf '%s' "$suffixed" | grep -q 'T1\.1a'; then
+    run_case "a suffixed criterion label is still checked" 1 "$suffixed"
+else
+    fail "a suffixed criterion label is still checked — the suffix substitution changed nothing"
+fi
 
 # IR5: the nine cases this suite carried before the branch are named here, so
 # a later edit that quietly drops one is a failure rather than a smaller suite.

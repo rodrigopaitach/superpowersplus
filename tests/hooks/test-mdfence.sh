@@ -151,21 +151,39 @@ else
 fi
 
 # --- one scanner, not three -------------------------------------------------
-# AC18: a carrier that keeps its own pattern is a copy that will drift, which is
-# the defect this module exists to end.
+# AC18 has two halves, and only the second can be asserted: "neither carrier
+# contains fence-scanning logic of its own" AND "each obtains the mask from the
+# shared module".
+#
+# The first half was all this case used to check, by grepping for four literal
+# spellings — and all four were text this branch had just deleted, so the case
+# detected the PAST rather than the property. Measured 2026-08-24: a correct,
+# independent CommonMark scanner written into `check-links.sh` under fresh names,
+# with the import removed, left every suite and every gate green. A blacklist of
+# spellings cannot be completed; a second implementation only has to avoid the
+# words someone thought to list.
+#
+# The second half can be asserted, and it is a positive: the import is there, or
+# the mask comes from somewhere else. That fires whatever the replacement is
+# called. The spelling grep is kept beside it — a carrier could import the
+# module AND keep a stale pattern — but it is no longer what carries the case.
 carrier_logic=0
 for carrier in "$REPO_ROOT/scripts/check-links.sh" \
                "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"; do
+    if ! grep -q 'from mdfence import' "$carrier"; then
+        echo "        $(basename "$carrier"): does not import the shared module"
+        carrier_logic=$((carrier_logic + 1))
+    fi
     if grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" >/dev/null 2>&1; then
-        echo "        $(basename "$carrier"):"
+        echo "        $(basename "$carrier"): keeps a fence pattern of its own"
         { grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" | sed 's/^/          /'; } || true
         carrier_logic=$((carrier_logic + 1))
     fi
 done
 if [ "$carrier_logic" -eq 0 ]; then
-    pass "carriers hold no fence logic of their own"
+    pass "carriers take their mask from the shared module and keep none of their own"
 else
-    fail "carriers hold no fence logic of their own — $carrier_logic carrier(s)"
+    fail "carriers take their mask from the shared module and keep none of their own — $carrier_logic problem(s)"
 fi
 
 echo

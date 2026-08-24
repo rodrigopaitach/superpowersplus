@@ -561,19 +561,32 @@ assert_help_survives_header_edits() {
         fi
     done
 
-    local variant out
+    # ONE literal case name across the three variants, not one interpolated per
+    # variant. The coverage matrix names a test by a string that must appear in
+    # a code block of the plan, and `Help … with '$variant'` never appears
+    # literally anywhere — a matrix row naming it would be unresolvable.
+    local variant out problems=0
     for variant in as-shipped end-marker-reworded blank-line-in-block; do
         out="$("$BASH_UNDER_TEST" "$dir/$variant" --help 2>&1 || true)"
-        assert_contains "$out" "rsync, git, gh (authenticated), python3." \
-            "Help is complete with '$variant'"
+        if ! printf '%s' "$out" | grep -qF "rsync, git, gh (authenticated), python3."; then
+            echo "        $variant: the Usage block was truncated before its last line"
+            problems=$((problems + 1))
+        fi
         # NOT "set -euo pipefail": the old sed form was `s/^# …//p`, which
         # prints only lines whose substitution succeeded — so its runaway
         # spilled the body's COMMENTS, never a raw line of code, and that
         # anchor stayed green over the exact defect. Measured: the runaway ran
         # to 48 lines and the first thing past the header is this banner.
-        assert_not_contains "$out" "Config — edit as upstream" \
-            "Help stops at the end of the header with '$variant'"
+        if printf '%s' "$out" | grep -qF "Config — edit as upstream"; then
+            echo "        $variant: --help ran past the end of the header"
+            problems=$((problems + 1))
+        fi
     done
+    if [[ "$problems" -eq 0 ]]; then
+        pass "Help prints the whole header and stops there, through header edits"
+    else
+        fail "Help prints the whole header and stops there, through header edits — $problems problem(s)"
+    fi
 
     # Losing the start marker must fail loudly. An empty --help is a broken
     # script, never a script with no usage.

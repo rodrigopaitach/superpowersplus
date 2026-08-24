@@ -16,10 +16,17 @@ usage() {
   # header grew past nine lines, and ended --help mid-sentence at "Use --all for
   # the full tracked" with nothing to notice it.
   #
-  # `NF == 0` and not `/^[[:space:]]*$/`: mawk is the default awk on Debian and
-  # Ubuntu and does not implement POSIX character classes. A blank line is a
-  # record with zero fields under the default FS in every awk, which POSIX and
-  # mawk(1) document in the same terms.
+  # `NF == 0` and not `/^[[:space:]]*$/`: a blank line is a record with zero
+  # fields under the default FS, which POSIX (awk, DESCRIPTION: "a field is a
+  # string of non-<blank> non-<newline> characters") and mawk(1) section 11
+  # document in the same terms — so the rule needs no character class at all,
+  # and cannot depend on whether a given awk implements them.
+  #
+  # An earlier version of this comment justified it the other way, claiming mawk
+  # does not implement POSIX classes, read out of mawk(1) section 3 listing the
+  # metacharacters and naming none. That inference from documentation silence is
+  # FALSE: measured on mawk 1.3.4 20260302, `[[:space:]]`, `[[:upper:]]` and
+  # `[[:digit:]]` all match. The code was right for a reason that was not.
   awk '
     NR == 1 { next }
     /^#/ { sub(/^# ?/, ""); print; next }

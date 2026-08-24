@@ -186,6 +186,19 @@ else
   fail "archive preserves executable script mode"
 fi
 
+# AC19 has two halves — the archive CARRIES the shared module, and it still holds
+# no `^scripts/` path — and this suite only ever asserted the second. Measured
+# 2026-08-24: deleting `skills/writing-plans/scripts/mdfence.py` and committing
+# left this suite exit 0 while `tests/hooks/test-mdfence.sh` went red, so AC19's
+# own stated instrument could not fail for the thing AC19 asserts. The module is
+# a runtime dependency of a shipped skill: absent from the archive, the gate it
+# carries raises ImportError for every Codex user.
+if [[ -f "$extracted/skills/writing-plans/scripts/mdfence.py" ]]; then
+  pass "archive carries the shared fence scanner"
+else
+  fail "archive carries the shared fence scanner"
+fi
+
 zip_times="$(python3 - "$archive" <<'PY'
 import sys
 import zipfile

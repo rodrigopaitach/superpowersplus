@@ -149,11 +149,17 @@ usage() {
   # sed range whose end pattern never matches runs to end of file: reword
   # `# Requires:` and --help dumps the script itself. Measured: 13 lines to 48.
   #
-  # `NF == 0` and not `/^[[:space:]]*$/`: mawk is the default awk on Debian and
-  # Ubuntu and does not implement POSIX character classes — mawk(1) section 3
-  # names the metacharacters it honours and lists none of them. A blank line is
-  # a record with zero fields under the default FS in every awk, which POSIX
-  # and mawk(1) section 11 document in the same terms.
+  # `NF == 0` and not `/^[[:space:]]*$/`: a blank line is a record with zero
+  # fields under the default FS, which POSIX (awk, DESCRIPTION: "a field is a
+  # string of non-<blank> non-<newline> characters") and mawk(1) section 11
+  # document in the same terms — so the rule needs no character class at all,
+  # and cannot depend on whether a given awk implements them.
+  #
+  # An earlier version of this comment justified it the other way, claiming mawk
+  # does not implement POSIX classes, read out of mawk(1) section 3 listing the
+  # metacharacters and naming none. That inference from documentation silence is
+  # FALSE: measured on mawk 1.3.4 20260302, `[[:space:]]`, `[[:upper:]]` and
+  # `[[:digit:]]` all match. The code was right for a reason that was not.
   #
   # Blank lines are held rather than printed, so a paragraph break inside the
   # block survives while none trails the output.

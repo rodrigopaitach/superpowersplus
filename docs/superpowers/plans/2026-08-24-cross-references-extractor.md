@@ -59,6 +59,10 @@
 | T7.2 The branch changes only the files the spec allows | IR8 | audit | branch diff | audit re-run of `git diff --name-status` against the branch point — spec `IR8` states this criterion takes no permanent test |
 | T8.1 A matrix naming a test no code block of the plan contains exits 1 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails` |
 | T8.2 A matrix naming a bash case the steps create exits 0 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a bash case named in the matrix is created` |
+| T9.1 `check-cross-references --help` prints its whole header and stops at the first line of code | AC21 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > --help prints the whole header and stops there, through header edits` |
+| T9.2 `lint-shell.sh --help` prints its whole header and stops at the first line of code | AC21 | script | `tests/shell-lint/` | `tests/shell-lint/test-lint-shell.sh > --help prints the whole header and stops there, through header edits` |
+| T9.3 `sync-to-codex-plugin.sh --help` prints its Usage block to the end of the header | AC21 | script | `tests/codex-plugin-sync/` | `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help prints the whole header and stops there, through header edits` |
+| T9.4 `sync-to-codex-plugin.sh --help` exits non-zero when its start marker is gone | AC21 | script | `tests/codex-plugin-sync/` | `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help exits non-zero when the '# Usage:' marker is gone` |
 
 **`IR7` has no row, and that is a finding rather than an omission.** It requires each test to be shown failing against the pre-fix code. Nothing in this repository records a red run in a file, so no `file:line` citation can settle it and the final audit will charge it as unauditable. Every task below carries the red run as its own Step 2, so the requirement is *met*; what is missing is a way to *prove* it later. Raised with your human partner at the handoff rather than dropped.
 
@@ -1562,4 +1566,110 @@ Expected: three paths, and the grep reports no matches.
 ```bash
 git add skills/writing-plans/scripts/check-cross-references tests/hooks/test-check-cross-references.sh CHANGELOG.md
 git commit -m "fix(writing-plans): a comparacao de testes para de conhecer linguagens"
+```
+
+---
+
+### Task 9: The three `--help` slices
+
+**Spec criterion:** `AC21 A carrier that builds its --help from its own header prints that header whole and stops at the first line of code`.
+
+**Written after the work, and saying so.** Tasks 1 to 8 were executed, audited and reviewed before this task existed. The three carriers were fixed under `IR8`, which permits files to change and states nothing about what they must do, so the conformance audit charged the work as scope nobody specified — correctly. This task and `AC21` close that, and the record of the order matters: the tests below already existed and went red under the mutations named here before the criterion was written down.
+
+**Files:**
+- Modify: `scripts/lint-shell.sh` — `usage()`
+- Modify: `scripts/sync-to-codex-plugin.sh` — `usage()`
+- Modify: `skills/writing-plans/scripts/check-cross-references` — `usage()`
+- Test: `tests/shell-lint/test-lint-shell.sh`, `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh`, `tests/hooks/test-check-cross-references.sh`
+
+**Interfaces:**
+- Consumes: nothing. Each carrier keeps its own `usage()`; extracting a shared one would make three standalone scripts source a fourth file, which is a heavier structure than the four lines it would save.
+- Produces: nothing a later task relies on.
+
+**Acceptance criteria:**
+- T9.1: A blank line inserted into `check-cross-references`'s header, or its final sentence reworded, leaves `--help` printing the whole header and no line of code — test: `tests/hooks/test-check-cross-references.sh > --help prints the whole header and stops there, through header edits`
+- T9.2: The same two edits to `lint-shell.sh`, with the same two properties — test: `tests/shell-lint/test-lint-shell.sh > --help prints the whole header and stops there, through header edits`
+- T9.3: Rewording `sync-to-codex-plugin.sh`'s end marker, or inserting a blank line inside its Usage block, leaves `--help` printing that block whole and stopping at the end of the header — test: `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help prints the whole header and stops there, through header edits`
+- T9.4: Removing `sync-to-codex-plugin.sh`'s `# Usage:` marker makes `--help` exit non-zero with a message, never print nothing — test: `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help exits non-zero when the '# Usage:' marker is gone`
+
+- [ ] **Step 1: Write the failing tests**
+
+Each suite builds perturbed copies of its own carrier and asserts two anchors per copy: a late header line survives (truncation) and no line past the header appears (runaway). A perturbation that changed nothing is itself a failure, or the case reports a pass over an untested copy.
+
+```bash
+help_failed=0
+help_dir="$TEST_ROOT/usage"
+mkdir -p "$help_dir"
+cp "$SCRIPT_UNDER_TEST" "$help_dir/as-shipped"
+awk 'NR == 3 { print "" } { print }' "$SCRIPT_UNDER_TEST" >"$help_dir/blank-line"
+sed 's/^# Exit 1 when anything does not resolve\./# Returns non-zero when anything fails to resolve./' \
+    "$SCRIPT_UNDER_TEST" >"$help_dir/reworded"
+chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/reworded"
+
+for perturbed in blank-line reworded; do
+    if cmp -s "$help_dir/as-shipped" "$help_dir/$perturbed"; then
+        echo "        $perturbed: the perturbation changed nothing — this copy tests nothing"
+        help_failed=$((help_failed + 1))
+    fi
+done
+
+if [[ "$help_failed" -eq 0 ]]; then
+    pass "--help prints the whole header and stops there, through header edits"
+else
+    fail "--help prints the whole header and stops there, through header edits — $help_failed problem(s)"
+fi
+```
+
+The `sync-to-codex-plugin.sh` suite prints a section rather than the whole header, so it keeps one literal start marker and must fail loudly when it is gone:
+
+```bash
+if [[ "$problems" -eq 0 ]]; then
+    pass "Help prints the whole header and stops there, through header edits"
+else
+    fail "Help prints the whole header and stops there, through header edits — $problems problem(s)"
+fi
+
+rc=0
+out="$("$BASH_UNDER_TEST" "$dir/start-marker-gone" --help 2>&1)" || rc=$?
+if [[ "$rc" -eq 0 ]]; then
+    fail "Help exits non-zero when the '# Usage:' marker is gone"
+else
+    pass "Help exits non-zero when the '# Usage:' marker is gone"
+fi
+```
+
+- [ ] **Step 2: Run the tests to verify they fail**
+
+Run each suite against the carrier as it stood before this task.
+Expected, measured 2026-08-24:
+- `lint-shell.sh` with `sed -n '2,9p'`: three problems, all `the header was truncated before its last line` — the header had already grown past nine lines, so even the unperturbed copy fails.
+- `check-cross-references` with an awk exiting on the first non-comment line: one problem, `blank line in the header: the header was truncated before REPO_ROOT`.
+- `check-cross-references` with a `sed` range keyed on the final sentence: three problems, all `--help ran past the header into the code`.
+- `sync-to-codex-plugin.sh` with the two-marker `sed` range: `Help stops at the end of the header` fails for `end-marker-reworded`, and both start-marker cases fail.
+
+- [ ] **Step 3: Slice by the header's shape**
+
+Every comment or blank line before the first line of code. A blank line is not code, so it passes through; `NF == 0` says so without a character class.
+
+```bash
+usage() {
+  awk '
+    NR == 1 { next }
+    /^#/ { sub(/^# ?/, ""); print; next }
+    NF == 0 { print; next }
+    { exit }
+  ' "$0"
+}
+```
+
+- [ ] **Step 4: Run the tests to verify they pass**
+
+Run: `tests/hooks/test-check-cross-references.sh`, `tests/shell-lint/test-lint-shell.sh`, `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh`
+Expected: PASS in all three.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add scripts/lint-shell.sh scripts/sync-to-codex-plugin.sh skills/writing-plans/scripts/check-cross-references tests/ CHANGELOG.md
+git commit -m "fix(scripts): os tres --help que fatiam o proprio cabecalho quebravam em silencio"
 ```

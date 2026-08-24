@@ -257,6 +257,37 @@ References below name them so a claim here can be traced there.
   the original and fails if they are the same, the guard
   [`tests/hooks/test-check-evidence-line.sh`](tests/hooks/test-check-evidence-line.sh)
   already uses for the same reason.
+- **The criterion guarding this release's whole thesis could not fail for it.**
+  `AC18` says neither markdown gate keeps fence-scanning logic of its own and
+  each takes the mask from the shared module. Its test grepped the two carriers
+  for four literal spellings — and all four were text this release had just
+  deleted, so it detected the past rather than the property. Measured: a
+  correct, independent CommonMark scanner written into
+  [`scripts/check-links.sh`](scripts/check-links.sh) under fresh names, with the
+  import removed, left every suite and every gate green. A blacklist of
+  spellings cannot be completed; a second implementation only has to avoid the
+  words someone thought to list. The case now asserts the positive half — the
+  import is present — which fires whatever the replacement is called, and keeps
+  the spelling grep beside it because a carrier could import the module and
+  still keep a stale pattern.
+- **`AC19`'s named evidence was empty for half of what `AC19` asserts.** It
+  claims the Codex archive carries the shared module *and* holds no `scripts/`
+  path, and named a suite that only ever checked the second. Measured: deleting
+  the module and committing left that suite green while the module's own suite
+  went red. [`tests/codex/test-package-codex-plugin.sh`](tests/codex/test-package-codex-plugin.sh)
+  now asserts the module is in the extracted archive — it is a runtime
+  dependency of a shipped skill, so its absence is an `ImportError` for every
+  Codex user, not a packaging detail.
+- **The file-scope criterion permitted a directory where it meant four files,
+  in the one class that had already been fixed elsewhere for that.** `IR8`'s
+  test class read "under `tests/hooks/`" — the same directory form that, one
+  class down, silently absorbed another branch's document and was replaced by
+  an explicit list. Both classes now name their files, and the method recorded
+  beside them now says which diff to charge: the branch point against the
+  **working tree** plus untracked files, never `<branch point>..HEAD`. Measured:
+  the committed-only form reported a pass on a tree whose uncommitted change
+  touched a file no class named — the check could not see the violation it
+  exists to catch.
 - **All three carriers that build `--help` by slicing their own header were
   broken or one edit away from it, and none of the three had a test.** The
   pattern is the same everywhere: the usage text and the header comment are one
@@ -275,17 +306,25 @@ References below name them so a claim here can be traced there.
   by design, `# Usage:`, because it prints a section rather than the whole
   header; losing that marker now exits 2 with a message instead of printing
   nothing.
-- **`NF == 0`, not `/^[[:space:]]*$/`, for "this line is blank" in awk.** The
-  first version of the shape above used a POSIX character class. `mawk` is the
-  default `awk` on Debian and Ubuntu and does not implement them — `mawk(1)`
-  section 3 enumerates the metacharacters it honours and names no class — so
-  the guard would have degraded silently on the distributions most contributors
-  run. A blank line is a record with zero fields under the default field
-  separator, which POSIX (`awk`, DESCRIPTION: "a field is a string of
-  non-`<blank>` non-`<newline>` characters") and `mawk(1)` section 11 document
-  in the same terms. Swept every tracked file with a shell shebang: this was
-  the only POSIX class in an `awk` program; the two that remain are `bash`
-  constructs, where they are native and correct.
+- **`NF == 0`, not `/^[[:space:]]*$/`, for "this line is blank" in awk — and
+  the first reason given for it was false.** A blank line is a record with zero
+  fields under the default field separator, which POSIX (`awk`, DESCRIPTION: "a
+  field is a string of non-`<blank>` non-`<newline>` characters") and `mawk(1)`
+  section 11 document in the same terms, so the rule needs no character class at
+  all and cannot depend on whether a given `awk` implements them. That is the
+  reason, and it is the whole reason.
+  **What this release first wrote instead was that `mawk` — the default `awk` on
+  Debian and Ubuntu — does not implement POSIX classes**, inferred from `mawk(1)`
+  section 3 enumerating the metacharacters it honours and naming none. Measured
+  afterwards on `mawk 1.3.4 20260302`: `[[:space:]]`, `[[:upper:]]` and
+  `[[:digit:]]` all match. **Documentation silence is not absence**, and this
+  project's own rule says a tool finding needs the vendor's document *and* a
+  local measurement; the document was read for an absence and no `mawk` was ever
+  run. The code was already right; the sentence under it was not, in three
+  source files and here. Swept every tracked file with a shell shebang: this was
+  the only POSIX class in an `awk` program, and the two that remain are `bash`
+  constructs where they are native and correct — that sweep stands, only its
+  stated motive was wrong.
 - **The release's own file-scope criterion named two of its classes loosely, and
   a check written from the criterion's text found it.** Reading the class list
   out of the document — rather than from a list typed alongside it — and
