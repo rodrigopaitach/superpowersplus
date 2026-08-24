@@ -471,7 +471,7 @@ Expected: empty.
 - [ ] **Step 2: Read the whole diff of the branch**
 
 Run: `git diff main...HEAD --stat`
-Expected: `skills/writing-plans/SKILL.md`, `skills/writing-plans/plan-document-reviewer-prompt.md`, `skills/brainstorming/spec-document-reviewer-prompt.md`, `skills/receiving-code-review/SKILL.md`, two files under `tests/skill-behavior/`, `tests/skill-behavior/README.md`, `CHANGELOG.md`, and the spec and this plan.
+Expected: 11 files, insertions only. `skills/writing-plans/SKILL.md`, `skills/writing-plans/plan-document-reviewer-prompt.md`, `skills/brainstorming/spec-document-reviewer-prompt.md`, `skills/receiving-code-review/SKILL.md`, three new files under `tests/skill-behavior/` — two fixtures and one record — plus `tests/skill-behavior/README.md`, `CHANGELOG.md`, and the spec and this plan. **A deletion anywhere in this stat is an `IR7` violation at branch scale**: no line of any carrier was shortened to make room, so the branch adds and removes nothing.
 
 - [ ] **Step 3: Run the link gate and confirm no advisory rows**
 
