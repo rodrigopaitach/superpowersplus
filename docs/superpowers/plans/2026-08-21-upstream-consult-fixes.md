@@ -262,7 +262,7 @@ In the same file's `## Common Rationalizations` table, after the row beginning `
 - [ ] **Step 4: Verify the file still fits its ceiling**
 
 Run: `scripts/check-skill-size.sh`
-Expected: PASS. The file was 258 lines against `MAX=500` (`scripts/check-skill-size.sh:26`) before this task; the additions are roughly 30 lines.
+Expected: PASS. The file was 258 lines against `MAX=500` (`scripts/check-skill-size.sh:34`) before this task; the additions are roughly 30 lines.
 
 - [ ] **Step 5: Write the changelog entry**
 
@@ -910,7 +910,7 @@ runs", must read identically before and after this task.
 - [ ] **Step 3: Verify the size ceiling still holds**
 
 Run: `scripts/check-skill-size.sh`
-Expected: PASS. The largest carrier is `skills/final-branch-audit/SKILL.md` at 368 lines against `MAX=500` (`scripts/check-skill-size.sh:26`); the clause adds about six.
+Expected: PASS. The largest carrier is `skills/final-branch-audit/SKILL.md` at 368 lines against `MAX=500` (`scripts/check-skill-size.sh:34`); the clause adds about six.
 
 - [ ] **Step 4: Run the gate and watch the failure migrate to a pass**
 

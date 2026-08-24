@@ -383,7 +383,7 @@ unless it is marked as a third party's measurement.
 
 14. **Room in the files being edited.**
     `skills/finishing-a-development-branch/SKILL.md` is 258 lines and
-    `scripts/check-skill-size.sh:26` sets `MAX=500`, with `:35` exempting only
+    `scripts/check-skill-size.sh:34` sets `MAX=500`, with `:43` exempting only
     `skills/writing-skills/SKILL.md`. The seven carriers of `AC14` run from 140
     to 368 lines — `re-review-prompt.md` at 140 and
     `final-branch-audit/SKILL.md` at 368, the rest between — room that `AC9` and

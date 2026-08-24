@@ -58,10 +58,10 @@ Every claim below was located in this checkout on 2026-08-23.
 | `receiving-code-review` handles external reviewer feedback in its own section and says nothing about validating a finding before acting | `skills/receiving-code-review/SKILL.md:67` |
 | `writing-plans` opens with a `## Scope Check` that decides what the plan covers before any task is written | `skills/writing-plans/SKILL.md:21` |
 | `executing-plans` reads the branch's `git log` to *resume* an interrupted run — not to replan | `skills/executing-plans/SKILL.md:68` |
-| Every `SKILL.md` is held under a 500-line ceiling, counting the whole file including frontmatter | `scripts/check-skill-size.sh:26` (`MAX=500`), rationale at `:3-19` |
-| The ceiling gate holds exactly one exemption, and it runs on a deadline | `scripts/check-skill-size.sh:35` |
+| Every `SKILL.md` is held under a 500-line ceiling, counting the whole file including frontmatter | `scripts/check-skill-size.sh:34` (`MAX=500`), rationale at `:3-27` |
+| The ceiling gate holds exactly one exemption, and it runs on a deadline | `scripts/check-skill-size.sh:43` |
 | `skills/writing-plans/SKILL.md` is 494 lines — six below the ceiling | measured 2026-08-23, `wc -l` |
-| The reviewer prompt files are not `SKILL.md` and are not subject to the ceiling — the gate iterates `skills/*/SKILL.md` | `scripts/check-skill-size.sh:45` |
+| The reviewer prompt files are not `SKILL.md` and are not subject to the ceiling — the gate iterates `skills/*/SKILL.md` | `scripts/check-skill-size.sh:53` |
 | The four review faces this project forbids harmonizing are the task reviewer, the code reviewer, the re-review and the final branch audit — the spec and plan *document* reviewers are not among them | [`docs/review-scopes.md`](../../review-scopes.md), section "What each face runs" |
 | `writing-plans` already uses progressive disclosure into `references/`, so the pattern exists | `skills/writing-plans/references/execution-path.md` |
 

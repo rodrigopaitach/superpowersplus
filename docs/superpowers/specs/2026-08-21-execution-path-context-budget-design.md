@@ -291,9 +291,9 @@ prompt changes.
 10. **This project's plans do not live at the granularity the third-party
     measurement compared.** Measured 2026-08-21 over the 13 plans in
     `docs/superpowers/plans/`, counting task headings exactly as
-    `skills/subagent-driven-development/scripts/task-brief:28-34` does —
+    `skills/subagent-driven-development/scripts/task-brief:42-59` does —
     pattern `^#+[ \t]+Task[ \t]+[0-9]+`, **and skipping fenced blocks**, which
-    that script does at line 29. The series is
+    that script does at line 55. The series is
     `0 4 4 5 5 5 7 7 7 8 8 10 23`: median 7 tasks, 11 of 13 at 8 or fewer, one
     outlier at 23 (`docs/superpowers/plans/2026-05-06-lift-drill-into-evals.md`).
 

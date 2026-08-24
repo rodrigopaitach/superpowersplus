@@ -288,6 +288,17 @@ References below name them so a claim here can be traced there.
   the committed-only form reported a pass on a tree whose uncommitted change
   touched a file no class named — the check could not see the violation it
   exists to catch.
+- **Twelve `file:line` citations in seven live documents were broken by this
+  release and repaired.** Two edits caused it: removing six table-of-contents
+  lines from `anthropic-best-practices.md`, and adding comment lines to
+  [`scripts/check-skill-size.sh`](scripts/check-skill-size.sh), which pushed
+  `MAX=500` from `:26` to `:34` — a line six other documents cite. The release's
+  own file-scope criterion had named two of the seven, because two was what had
+  been noticed; the class was always "every citation this branch's edits
+  invalidated" and now says so. **No gate finds these**: the cross-reference
+  check verifies only that a cited file opens and is long enough, and it charges
+  no citation whose path carries no dotted extension — one of this release's own
+  citations had been wrong since the day it was written for exactly that reason.
 - **All three carriers that build `--help` by slicing their own header were
   broken or one edit away from it, and none of the three had a test.** The
   pattern is the same everywhere: the usage text and the header comment are one

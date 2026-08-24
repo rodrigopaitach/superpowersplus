@@ -8,7 +8,7 @@
 
 **Architecture:** Each rule lands in exactly one carrier, as prose — with one carve-out the spec itself makes: `AC4` names *both* document reviewers, so its rule is written into two files and nowhere else. Four go into reviewer prompt files, which carry no line ceiling; one goes into `writing-plans/SKILL.md`, which has six lines of headroom. No mechanical gate is added — the spec's `IR1` places these judgements with a reader, on measured grounds. One rule, `AC2`, gets an adversarial behaviour record, because this project already measured its "before" state.
 
-**Tech Stack:** None added. Bash and the existing gate scripts, already in this repo — `scripts/check-skill-size.sh:26`, `scripts/check-links.sh`, `scripts/check-skill-behavior-records.sh`.
+**Tech Stack:** None added. Bash and the existing gate scripts, already in this repo — `scripts/check-skill-size.sh:34`, `scripts/check-links.sh`, `scripts/check-skill-behavior-records.sh`.
 
 **Execution:** `inline` — chosen 2026-08-24, run in the session that wrote this plan. Progress: session todos (not persisted). If that session ended mid-plan, where things stood is rebuilt from `git log` on this branch and the unchecked steps below; the checkboxes here are not updated as it runs.
 
@@ -20,7 +20,7 @@
 
 ## Global Constraints
 
-- `skills/writing-plans/SKILL.md` is at 494 lines and the ceiling is 500 — `scripts/check-skill-size.sh:26`. If a rule does not fit, move the overflow into `skills/writing-plans/references/` behind a trigger; **never shorten an existing line to make room** (spec `IR7`).
+- `skills/writing-plans/SKILL.md` is at 494 lines and the ceiling is 500 — `scripts/check-skill-size.sh:34`. If a rule does not fit, move the overflow into `skills/writing-plans/references/` behind a trigger; **never shorten an existing line to make room** (spec `IR7`).
 - Each rule lands in exactly one carrier. A rule repeated across carriers is out of scope — this repository charges copied shapes with a gate, and none exists for these (spec `IR4`). **The one carve-out, made by the spec and not by this plan: `AC4` names both document reviewers, so its rule is written into `skills/writing-plans/plan-document-reviewer-prompt.md` and `skills/brainstorming/spec-document-reviewer-prompt.md`, and into no third file.** Task 3 is that rule; no other task may place a phrase in two carriers.
 - No rule is added as a non-blocking advisory. A rule that cannot be stated precisely enough to block is not added (spec `IR2`).
 - The four review faces in `docs/review-scopes.md` — task reviewer, code reviewer, re-review, final branch audit — are not touched (spec `IR3`).
