@@ -286,6 +286,19 @@ References below name them so a claim here can be traced there.
   in the same terms. Swept every tracked file with a shell shebang: this was
   the only POSIX class in an `awk` program; the two that remain are `bash`
   constructs, where they are native and correct.
+- **The release's own file-scope criterion named two of its classes loosely, and
+  a check written from the criterion's text found it.** Reading the class list
+  out of the document — rather than from a list typed alongside it — and
+  charging the branch diff against it in three directions surfaced two defects
+  no reading had. One class said its two carriers came "with their suites" and
+  named no path for either, so both suites belonged to no class. Another said
+  "this branch's own spec and plan, under `docs/superpowers/`", and the
+  directory form permits any document under that tree: measured, it silently
+  absorbed a second branch's spec that a different class already covered. Both
+  now name their files one by one. The third direction — a file claimed by two
+  classes — is what caught the second defect, and it is the direction a check
+  written from a hand-copied list cannot have: the copy was more generous than
+  the document, which is why it passed.
 
 ## [1.20.0] - 2026-08-24
 
