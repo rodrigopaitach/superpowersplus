@@ -263,6 +263,28 @@ rm -rf "$copy_module_dir/__pycache__"
 ( cd "$real_root" && ./scripts/check-links.sh >/dev/null 2>&1 ) || true
 carrier_ran="$( cd "$real_root" && ./skills/writing-plans/scripts/check-cross-references \
     docs/superpowers/specs/2026-08-24-cross-references-extractor-design.md . 2>&1 )" || true
+# --- the ignore rule covers what the flags do not ---------------------------
+# `AC23`. The case above guards two callers by name; this one asserts the rule
+# that covers every caller, including the ones nobody has written. It matters
+# because `skills/` ships to Codex wholesale, so a stray .pyc is committable
+# into a shipped tree. `git check-ignore` is asked WHICH rule matched, not
+# merely whether one did — an ignore that happened for some unrelated reason
+# would answer the second question the same way.
+#
+# `cut -f1` is load-bearing. `check-ignore -v` prints `source:line:pattern` and
+# then a TAB and the path it was asked about — and that path contains the very
+# string this case greps for. Measured: without the cut, deleting the rule from
+# .gitignore left this case green, because `*.pyc` still matched and the path in
+# the output carried `__pycache__`. The probe was reading itself.
+ignore_probe="skills/writing-plans/scripts/__pycache__/mdfence.cpython-999.pyc"
+ignore_rule="$( cd "$REPO_ROOT" && git check-ignore -v "$ignore_probe" 2>/dev/null | cut -f1 || true )"
+if printf '%s' "$ignore_rule" | grep -qE '__pycache__|[*]\.pyc'; then
+    pass "bytecode beside the module is ignored by git"
+else
+    fail "bytecode beside the module is ignored by git"
+    echo "        git check-ignore -v said: ${ignore_rule:-<no rule matched>}"
+fi
+
 if [ ! -f "$copy_module_dir/mdfence.py" ]; then
     fail "running a carrier leaves no bytecode beside the module"
     echo "        the copy this case reads was never built: $copy_module_dir"

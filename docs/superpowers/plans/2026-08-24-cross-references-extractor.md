@@ -10,7 +10,7 @@
 
 **Tech Stack:** `python3` standard library (`re` only) and `awk`, both already required by the files under change — spec `## External Dependencies`, which reads "None". No lockfile exists in this repository and none is added.
 
-**Execution:** **`inline`, and all nine tasks have run.** superpowersplus:executing-plans, chosen by the human partner on 2026-08-24; executed the same day, one commit per task. **Progress was recorded in this session's todo list, which is not persisted — the durable record is `git log`**, where each task's commit names what it touched: Task 1 `84cc400`, Task 2 `24d6cdd`, Task 3 `5bcecb1`, Task 4 `5c45b81`, Task 5 `00e77f8`, Task 6 `174c121`, Task 7 `6fb9f1f`, Task 8 `c6b1269`, Task 9 `71b43d9` — written into the plan afterwards as `AC21`, and saying so. All 21 CI test steps pass — the count is `grep -cE '^\s+- name: Tests' .github/workflows/ci.yml`, and it read 20 here until the audit measured it: the multi-line `Tests (brainstorm-server, node + shell)` step was missed by a narrower pattern. **Both end-of-branch gates have since run**, dispatched by the human partner: superpowersplus:final-branch-audit and the whole-branch code review, round 1 over `2929bc2` and round 2 over the tip. Their open rows are fixed in counted rounds, capped at three.
+**Execution:** **`inline`, and all ten tasks have run.** superpowersplus:executing-plans, chosen by the human partner on 2026-08-24; executed the same day, one commit per task. **Progress was recorded in this session's todo list, which is not persisted — the durable record is `git log`**, where each task's commit names what it touched: Task 1 `84cc400`, Task 2 `24d6cdd`, Task 3 `5bcecb1`, Task 4 `5c45b81`, Task 5 `00e77f8`, Task 6 `174c121`, Task 7 `6fb9f1f`, Task 8 `c6b1269`, Task 9 `71b43d9`, Task 10 `3784e85` and `e5ac704` — the last two written into the plan afterwards as `AC21`, `AC23` and `AC24`, and saying so. Tasks 9 and 10 both exist because the end-of-branch gates found work that had reached the branch under `IR8`, which permits a file to change and states nothing about what it must do. All 21 CI test steps pass — the count is `grep -cE '^\s+- name: Tests' .github/workflows/ci.yml`, and it read 20 here until the audit measured it: the multi-line `Tests (brainstorm-server, node + shell)` step was missed by a narrower pattern. **Both end-of-branch gates have since run**, dispatched by the human partner: superpowersplus:final-branch-audit and the whole-branch code review, round 1 over `2929bc2` and round 2 over the tip. Their open rows are fixed in counted rounds, capped at three.
 
 **Escalation shape** (detail and a worked example: `../../../skills/using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
@@ -66,6 +66,8 @@
 | T9.2 `lint-shell.sh --help` prints its whole header and stops at the first line of code | AC21 | script | `tests/shell-lint/` | `tests/shell-lint/test-lint-shell.sh > --help prints the whole header and stops there, through header edits` |
 | T9.3 `sync-to-codex-plugin.sh --help` prints its Usage block to the end of the header | AC21 | script | `tests/codex-plugin-sync/` | `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help prints the whole header and stops there, through header edits` |
 | T9.4 `sync-to-codex-plugin.sh --help` exits non-zero when its start marker is gone | AC21 | script | `tests/codex-plugin-sync/` | `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help exits non-zero when the '# Usage:' marker is gone` |
+| T10.1 Bytecode beside the shared module is ignored by git | AC23 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > bytecode beside the module is ignored by git` |
+| T10.2 The gate list in `docs/testing.md` is the set the workflow runs | AC24 | audit | `docs/` | audit-charged, by `AC24`'s own instruction |
 
 **`IR7` has no row, and that is a finding rather than an omission.** It requires each test to be shown failing against the pre-fix code. Nothing in this repository records a red run in a file, so no `file:line` citation can settle it and the final audit will charge it as unauditable. Every task below carries the red run as its own Step 2, so the requirement is *met*; what is missing is a way to *prove* it later. Raised with your human partner at the handoff rather than dropped.
 
@@ -1804,3 +1806,39 @@ Expected: PASS in all three.
 git add scripts/lint-shell.sh scripts/sync-to-codex-plugin.sh skills/writing-plans/scripts/check-cross-references tests/ CHANGELOG.md
 git commit -m "fix(scripts): os tres --help que fatiam o proprio cabecalho quebravam em silencio"
 ```
+
+---
+
+### Task 10: The two files the review's Minor findings named
+
+**Spec criterion:** `AC23 Bytecode compiled beside the shared module is ignored by git`, `AC24 The gate list in docs/testing.md names every gate the workflow runs and no others`.
+
+**Written after the work, and saying so.** Both files were changed in `3784e85` and `e5ac704`, under an `IR8` class the human partner authorised after the branch review reported them. The branch audit then made the point `AC21` had already made once: a permission is not a requirement — `IR8` permits a file to change and states nothing about what it must do, so both files were reaching the branch with nothing saying what they were for. This task and its two criteria close that, and the record of the order matters.
+
+**Files:**
+- Modify: `.gitignore`
+- Modify: `docs/testing.md`
+- Modify: `tests/hooks/test-mdfence.sh`
+- Modify: `CHANGELOG.md`
+
+**Acceptance criteria:**
+- T10.1: `git check-ignore` resolves a `.pyc` under the module's directory to an ignore rule — test: `tests/hooks/test-mdfence.sh > bytecode beside the module is ignored by git`
+- T10.2: The gate names in `docs/testing.md`, section "Gates CI runs beyond the suites", are exactly the set `grep -oE 'scripts/check-[a-z-]+\.sh|scripts/lint-shell\.sh' .github/workflows/ci.yml` returns — **audit-charged and by no test**, on `IR8`'s terms and for the reason `AC24` gives.
+
+- [ ] **Step 1: Assert the rule, not the probe**
+
+````bash
+# `cut -f1` is load-bearing: check-ignore -v prints `source:line:pattern`, a TAB,
+# and the path it was asked about — and that path contains the string this case
+# greps for. Without the cut, deleting the rule left the case green.
+ignore_rule="$( cd "$REPO_ROOT" && git check-ignore -v "$ignore_probe" 2>/dev/null | cut -f1 || true )"
+if printf '%s' "$ignore_rule" | grep -qE '__pycache__|[*]\.pyc'; then
+    pass "bytecode beside the module is ignored by git"
+else
+    fail "bytecode beside the module is ignored by git"
+    echo "        git check-ignore -v said: ${ignore_rule:-<no rule matched>}"
+fi
+````
+
+Expected: FAIL with both rules deleted from `.gitignore` — measured, `<no rule matched>`. PASS with only the directory rule deleted, which is correct: `AC23` requires the bytecode to be ignored, not a particular rule to do it.
+

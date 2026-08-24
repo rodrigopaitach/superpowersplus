@@ -672,8 +672,16 @@ else
         echo "        expected exit 1, got $unreadable_actual"
         unreadable_failed=$((unreadable_failed + 1))
     fi
-    if ! printf '%s' "$unreadable_out" | grep -q 'cannot read'; then
+    # The criterion says "exits 1 AND names the file". Grepping the phrase
+    # `cannot read` measures the message this suite's author wrote, not the
+    # property the criterion states: measured by the branch audit, a message
+    # stripped of the filename passed. The PATH is what has to appear.
+    if ! printf '%s' "$unreadable_out" | grep -qF 'tests/suite.sh'; then
         echo "        the verdict does not name the file it could not read"
+        unreadable_failed=$((unreadable_failed + 1))
+    fi
+    if ! printf '%s' "$unreadable_out" | grep -q 'cannot read'; then
+        echo "        the verdict names the file but not what went wrong with it"
         unreadable_failed=$((unreadable_failed + 1))
     fi
 fi
@@ -718,11 +726,18 @@ awk 'NR == 3 { print "" } { print }' "$SCRIPT_UNDER_TEST" >"$help_dir/blank-line
 # The header's final sentence, reworded. Nothing may key on its wording.
 sed 's/^# Exit 1 when anything does not resolve\./# Returns non-zero when anything fails to resolve./' \
     "$SCRIPT_UNDER_TEST" >"$help_dir/reworded"
-# The header grows. `AC21` names three edits and this suite exercised two: the
-# line-added edit is the one a line-number slice cannot survive, and it was the
-# untested one. Inserted mid-header, so a fixed range loses the header's LAST
-# line and the anchor below sees it.
-awk 'NR == 3 { print; print "#   A line added after the slice was written."; next } { print }' \
+# The header grows — `AC21`'s third named edit, and the one this suite lacked.
+#
+# It grows by TWELVE lines, not one. At one line this copy was redundant with
+# `blank-line`: both shift the header down by exactly one, so for any range
+# ending at the old last line they fail together and never separately — measured
+# by the branch audit, which also found that `sed -n '2,45p'`, a range tuned to
+# today's header, passed all four copies. A range is written against the file in
+# front of its author; what it cannot survive is the header outgrowing it later.
+# Twelve lines is a sample of that, not a proof: no fixed number of inserted
+# lines rules out a range tuned past it, and this comment claims only what the
+# copy measures.
+awk 'NR == 3 { print; for (i = 1; i <= 12; i++) print "#   Added line " i "."; next } { print }' \
     "$SCRIPT_UNDER_TEST" >"$help_dir/grown"
 chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/reworded" "$help_dir/grown"
 

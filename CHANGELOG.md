@@ -512,6 +512,45 @@ References below name them so a claim here can be traced there.
   and the reason. Where the mode bits do not bite — root, some filesystems — the
   case says it could not measure instead of passing.
 
+- **The ninth and tenth instances of this release's own defect class, both
+  written by the pass that closed the eighth.** `T8.4` requires the gate to exit
+  1 **and name the file** it could not read; the assertion grepped the phrase
+  `cannot read`, which is the message its author had just written rather than
+  the property the criterion states. Measured by the branch audit: a message
+  stripped of the filename passed. It now greps the path. Then the new `AC23`
+  case asked `git check-ignore -v` whether a rule matched and grepped
+  `__pycache__` in the answer — but that command prints the pattern, a TAB, and
+  **the path it was asked about**, and the path contains `__pycache__`. Measured:
+  with the rule deleted the case stayed green, because `*.pyc` still matched and
+  the probe was reading its own input back. `cut -f1` now reduces the output to
+  the rule. Both failures have one shape: **an assertion written against the
+  output in front of its author rather than against the property being claimed**,
+  which passes at the moment it is written and can only be told apart by a
+  mutation nobody had reason to run.
+- **A claim in this release's own comment was false, and the audit measured it.**
+  The `grown` copy added for `AC21`'s third edit was described as the one a
+  line-number slice cannot survive. It is not: `grown` and `blank-line` both
+  shift the header by exactly one line, so any range ending at the old last line
+  fails on both together — and `sed -n '2,45p'`, a range tuned to today's
+  header, passed all four copies. The copy now grows the header by twelve lines
+  and the comment claims only what it measures: no fixed number of inserted
+  lines rules out a range tuned past it.
+- **`.gitignore` and `docs/testing.md` had reached the branch on a permission
+  with no requirement**, which is the shape `AC21` was written to eliminate, one
+  `IR8` class over. `AC23` and `AC24` state what each is for, Task 10 carries
+  them, and `AC23` has a test whose red state is measured. `AC24` is charged by
+  the audit and by no test, on `IR8`'s terms: this repository has no
+  documentation suite, and the document carries the command that answers it.
+- **Three `file:line` citations in this branch's own spec had gone stale inside
+  the branch** — `scripts/check-links.sh:266` and `:361` are now `:277` and
+  `:372`, and `AC14`'s named instrument moved from
+  `tests/hooks/test-check-links.sh:184` to `:189`. None carries a dotted path
+  the cross-reference gate can charge, which is the same blind spot recorded
+  earlier in this release. Two measured numbers inside `IR8` had also aged —
+  eight classes where there are nine, 25 files where there are 27 — and are
+  dated rather than re-updated, since a re-updated number ages again on the next
+  commit.
+
 ## [1.20.0] - 2026-08-24
 
 ### Added
