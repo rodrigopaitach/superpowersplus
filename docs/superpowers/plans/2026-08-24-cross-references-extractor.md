@@ -10,7 +10,7 @@
 
 **Tech Stack:** `python3` standard library (`re` only) and `awk`, both already required by the files under change — spec `## External Dependencies`, which reads "None". No lockfile exists in this repository and none is added.
 
-**Execution:** **Not started, and the path is not chosen.** The plan was written, reviewed over two rounds and approved on 2026-08-24; the execution offer was presented and the session ended before it was answered. Eight tasks across eleven files. **Whoever picks this up: no task has run.** `git log` on this branch shows spec and plan commits only — no commit touching `skills/`, `scripts/` or `tests/` — which is the check that separates a plan that never started from one whose record was lost. Ask for the path before executing, and write the answer here.
+**Execution:** **`inline`** — superpowersplus:executing-plans, chosen by the human partner on 2026-08-24 after the offer was presented. **Progress is recorded in this session's todo list, which is not persisted**: it does not survive the session, and compaction inside one loses it too. Whoever picks this plan up after an interruption reconstructs the resume point from two sources instead — this plan and `git log` on the branch, where each task's commit names what it touched — and confirms that reconstruction with the human partner before the first edit. Eight tasks across eleven files.
 
 **Escalation shape** (detail and a worked example: `../../../skills/using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
