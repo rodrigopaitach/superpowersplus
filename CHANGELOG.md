@@ -257,26 +257,35 @@ References below name them so a claim here can be traced there.
   the original and fails if they are the same, the guard
   [`tests/hooks/test-check-evidence-line.sh`](tests/hooks/test-check-evidence-line.sh)
   already uses for the same reason.
-
-### Known leftovers
-
-- **[`scripts/lint-shell.sh:14`](scripts/lint-shell.sh) truncates its own
-  `--help` today.** `sed -n '2,9p' "$0"` against a header whose first line of
-  code is at `:11`: the output ends mid-sentence at "Use --all for the full
-  tracked", dropping "baseline, or pass files explicitly to lint a smaller
-  set." It is the same defect the `check-cross-references` entry above closes,
-  live in a second carrier. Not fixed here: this file is outside the class list
-  the release's own spec permits the change to touch, and widening that list to
-  reach it is the scope creep the list exists to stop.
-- **[`scripts/sync-to-codex-plugin.sh:147`](scripts/sync-to-codex-plugin.sh) is
-  the third carrier of the same class, and it is armed rather than broken.**
-  `sed -n '/^# Usage:/,/^# Requires:/s/^# \{0,1\}//p' "$0"` is correct today —
-  13 lines — because both literal markers still exist. Measured: rewording
-  `# Requires:` at `:27` takes `--help` from 13 lines to 48, running past the
-  header into the code, which is the same runaway the entry above describes.
-  Outside the permitted class list for the same reason. The three carriers all
-  want the shape now in `check-cross-references`: slice by the header's form,
-  never by a line number and never by a sentence.
+- **All three carriers that build `--help` by slicing their own header were
+  broken or one edit away from it, and none of the three had a test.** The
+  pattern is the same everywhere: the usage text and the header comment are one
+  source, and the slice that joins them is keyed on something that moves.
+  [`scripts/lint-shell.sh`](scripts/lint-shell.sh) sliced by line number
+  (`sed -n '2,9p'`) against a ten-line header, so the released tree ended
+  `--help` mid-sentence at "Use --all for the full tracked" — the missing clause
+  is back.
+  [`scripts/sync-to-codex-plugin.sh`](scripts/sync-to-codex-plugin.sh) sliced
+  between two literal markers, and a `sed` range whose end pattern stops
+  matching runs to end of file: measured, rewording `# Requires:` took `--help`
+  from 13 lines to 48. Both now slice by the header's *shape* — every comment
+  or blank line before the first line of code — and both carry a differential
+  case over perturbed copies of themselves, including a guard that fails when a
+  perturbation stops perturbing anything. The second keeps one literal marker
+  by design, `# Usage:`, because it prints a section rather than the whole
+  header; losing that marker now exits 2 with a message instead of printing
+  nothing.
+- **`NF == 0`, not `/^[[:space:]]*$/`, for "this line is blank" in awk.** The
+  first version of the shape above used a POSIX character class. `mawk` is the
+  default `awk` on Debian and Ubuntu and does not implement them — `mawk(1)`
+  section 3 enumerates the metacharacters it honours and names no class — so
+  the guard would have degraded silently on the distributions most contributors
+  run. A blank line is a record with zero fields under the default field
+  separator, which POSIX (`awk`, DESCRIPTION: "a field is a string of
+  non-`<blank>` non-`<newline>` characters") and `mawk(1)` section 11 document
+  in the same terms. Swept every tracked file with a shell shebang: this was
+  the only POSIX class in an `awk` program; the two that remain are `bash`
+  constructs, where they are native and correct.
 
 ## [1.20.0] - 2026-08-24
 

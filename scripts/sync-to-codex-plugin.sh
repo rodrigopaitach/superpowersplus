@@ -144,7 +144,39 @@ LOCAL_CHECKOUT=""
 BOOTSTRAP=0
 
 usage() {
-  sed -n '/^# Usage:/,/^# Requires:/s/^# \{0,1\}//p' "$0"
+  # Sliced from the Usage line to the END OF THE HEADER by shape, never between
+  # two literal markers. The old range was `/^# Usage:/,/^# Requires:/`, and a
+  # sed range whose end pattern never matches runs to end of file: reword
+  # `# Requires:` and --help dumps the script itself. Measured: 13 lines to 48.
+  #
+  # `NF == 0` and not `/^[[:space:]]*$/`: mawk is the default awk on Debian and
+  # Ubuntu and does not implement POSIX character classes — mawk(1) section 3
+  # names the metacharacters it honours and lists none of them. A blank line is
+  # a record with zero fields under the default FS in every awk, which POSIX
+  # and mawk(1) section 11 document in the same terms.
+  #
+  # Blank lines are held rather than printed, so a paragraph break inside the
+  # block survives while none trails the output.
+  local text
+  text="$(awk '
+    /^# Usage:/ { on = 1 }
+    !on { next }
+    /^#/ {
+      sub(/^# ?/, "")
+      while (held > 0) { print ""; held-- }
+      print
+      next
+    }
+    NF == 0 { held++; next }
+    { exit }
+  ' "$0")"
+  # The start marker is still one literal string, and this is what keeps its
+  # loss loud: an empty slice is a broken script, never a script with no usage.
+  if [ -z "$text" ]; then
+    echo "sync-to-codex-plugin.sh: no '# Usage:' line in this script's header — the usage text cannot be built" >&2
+    exit 2
+  fi
+  printf '%s\n' "$text"
   exit "${1:-0}"
 }
 

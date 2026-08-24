@@ -11,7 +11,21 @@
 set -euo pipefail
 
 usage() {
-  sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'
+  # Sliced by SHAPE — every comment or blank line before the first line of
+  # code — never by line number. `sed -n '2,9p'` dropped line 10 the moment the
+  # header grew past nine lines, and ended --help mid-sentence at "Use --all for
+  # the full tracked" with nothing to notice it.
+  #
+  # `NF == 0` and not `/^[[:space:]]*$/`: mawk is the default awk on Debian and
+  # Ubuntu and does not implement POSIX character classes. A blank line is a
+  # record with zero fields under the default FS in every awk, which POSIX and
+  # mawk(1) document in the same terms.
+  awk '
+    NR == 1 { next }
+    /^#/ { sub(/^# ?/, ""); print; next }
+    NF == 0 { print; next }
+    { exit }
+  ' "$0"
 }
 
 die() {

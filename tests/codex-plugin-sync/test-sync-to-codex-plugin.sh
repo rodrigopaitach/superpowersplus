@@ -533,6 +533,60 @@ write_bootstrap_destination_fixture() {
     commit_fixture "$repo" "Initial bootstrap destination fixture"
 }
 
+# --- --help survives an edit to the header it prints -----------------------
+# usage() slices this script's own header. The slice it carried was a sed range
+# between two literal markers, `/^# Usage:/,/^# Requires:/`, and a sed range
+# whose END pattern never matches runs to end of file: rewording `# Requires:`
+# took --help from 13 lines to 48, dumping the script itself. The START marker
+# is still literal by design, and losing it must be loud rather than empty.
+#
+# Differential over PERTURBED COPIES, because the failure is triggered by an
+# edit to the header rather than by any input.
+assert_help_survives_header_edits() {
+    local dir="$TEST_ROOT/usage-robustness"
+    local script="$REPO_ROOT/scripts/sync-to-codex-plugin.sh"
+    mkdir -p "$dir"
+
+    cp "$script" "$dir/as-shipped"
+    sed 's/^# Requires:/# Dependencies:/' "$script" >"$dir/end-marker-reworded"
+    awk 'NR == 20 { print "" } { print }' "$script" >"$dir/blank-line-in-block"
+    sed 's/^# Usage:/# How to use:/' "$script" >"$dir/start-marker-gone"
+    chmod +x "$dir"/*
+
+    # A perturbation that changed nothing tests nothing, and would report PASS.
+    local perturbed
+    for perturbed in end-marker-reworded blank-line-in-block start-marker-gone; do
+        if cmp -s "$dir/as-shipped" "$dir/$perturbed"; then
+            fail "perturbation '$perturbed' changed nothing — that copy tests nothing"
+        fi
+    done
+
+    local variant out
+    for variant in as-shipped end-marker-reworded blank-line-in-block; do
+        out="$("$BASH_UNDER_TEST" "$dir/$variant" --help 2>&1 || true)"
+        assert_contains "$out" "rsync, git, gh (authenticated), python3." \
+            "Help is complete with '$variant'"
+        # NOT "set -euo pipefail": the old sed form was `s/^# …//p`, which
+        # prints only lines whose substitution succeeded — so its runaway
+        # spilled the body's COMMENTS, never a raw line of code, and that
+        # anchor stayed green over the exact defect. Measured: the runaway ran
+        # to 48 lines and the first thing past the header is this banner.
+        assert_not_contains "$out" "Config — edit as upstream" \
+            "Help stops at the end of the header with '$variant'"
+    done
+
+    # Losing the start marker must fail loudly. An empty --help is a broken
+    # script, never a script with no usage.
+    local rc=0
+    out="$("$BASH_UNDER_TEST" "$dir/start-marker-gone" --help 2>&1)" || rc=$?
+    if [[ "$rc" -eq 0 ]]; then
+        fail "Help exits non-zero when the '# Usage:' marker is gone"
+    else
+        pass "Help exits non-zero when the '# Usage:' marker is gone"
+    fi
+    assert_contains "$out" "no '# Usage:' line" "Help says why it could not build the usage text"
+}
+
 main() {
     local upstream
     local mixed_only_upstream
@@ -724,6 +778,10 @@ Locally modified fixture content." "Dirty local apply preserves tracked working-
     assert_not_contains "$script_source" "regenerated inline" "Source drops regenerated inline phrasing"
     assert_not_contains "$script_source" "Brand Assets directory" "Source drops Brand Assets directory phrasing"
     assert_not_contains "$script_source" "--assets-src" "Source drops --assets-src"
+
+    echo ""
+    echo "Help robustness assertions..."
+    assert_help_survives_header_edits
 
     if [[ $FAILURES -ne 0 ]]; then
         echo ""

@@ -57,10 +57,17 @@ usage() {
   # non-comment line" it broke on a blank line — a paragraph break inside the
   # header cut --help at that point, silently, which is the truncation this
   # function started from. A blank line is not code, so it passes through.
+  #
+  # `NF == 0` and not `/^[[:space:]]*$/`: mawk is the default awk on Debian and
+  # Ubuntu and does not implement POSIX character classes — mawk(1) section 3
+  # lists the metacharacters it honours and names none of them. A blank line is
+  # a record with zero fields under the default FS in both, which POSIX (awk,
+  # DESCRIPTION: "a field is a string of non-<blank> non-<newline> characters")
+  # and mawk(1) section 11 document in the same terms.
   awk '
     NR == 1 { next }
     /^#/ { sub(/^# ?/, ""); print; next }
-    /^[[:space:]]*$/ { print; next }
+    NF == 0 { print; next }
     { exit }
   ' "$0"
 }

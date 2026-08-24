@@ -194,6 +194,54 @@ assert_not_contains "$output" "No shell files found." \
 assert_contains "$output" "refusing to lint an empty file list" \
   "says why it refused"
 
+# --- --help survives an edit to the header it prints -----------------------
+# usage() slices this script's own header, and the slice it carried
+# (`sed -n '2,9p'`) was already wrong: the header had grown to ten lines, so
+# --help ended mid-sentence at "Use --all for the full tracked" and nobody
+# noticed, because nothing read --help at all.
+#
+# Differential over PERTURBED COPIES: the failure is triggered by an edit to the
+# header, not by any input. Two anchors, one per direction — the header's last
+# line must survive (truncation) and no line of code may appear (runaway).
+help_failed=0
+help_dir="$TEST_ROOT/usage"
+mkdir -p "$help_dir"
+cp "$SCRIPT_UNDER_TEST" "$help_dir/as-shipped"
+# A paragraph break inside the header. A blank line is not a line of code.
+awk 'NR == 3 { print "" } { print }' "$SCRIPT_UNDER_TEST" >"$help_dir/blank-line"
+# The header grows. This is the edit the line-number slice could not survive.
+awk 'NR == 10 { print; print "# A sentence added after the slice was written."; next } { print }' \
+  "$SCRIPT_UNDER_TEST" >"$help_dir/grown"
+chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/grown"
+
+# A perturbation that changed nothing tests nothing, and would report PASS.
+# tests/hooks/test-check-evidence-line.sh guards the same way, for the same
+# reason.
+for perturbed in blank-line grown; do
+  if cmp -s "$help_dir/as-shipped" "$help_dir/$perturbed"; then
+    echo "        $perturbed: the perturbation changed nothing — this copy tests nothing"
+    help_failed=$((help_failed + 1))
+  fi
+done
+
+for variant in as-shipped blank-line grown; do
+  help_out="$("$help_dir/$variant" --help 2>&1 || true)"
+  if ! printf '%s' "$help_out" | grep -q 'baseline, or pass files explicitly'; then
+    echo "        $variant: the header was truncated before its last line"
+    help_failed=$((help_failed + 1))
+  fi
+  if printf '%s' "$help_out" | grep -q 'set -euo pipefail'; then
+    echo "        $variant: --help ran past the header into the code"
+    help_failed=$((help_failed + 1))
+  fi
+done
+
+if [[ "$help_failed" -eq 0 ]]; then
+  pass "--help prints the whole header and stops there, through header edits"
+else
+  fail "--help prints the whole header and stops there, through header edits — $help_failed problem(s)"
+fi
+
 if [[ "$FAILURES" -eq 0 ]]; then
   echo "All shell lint script tests passed"
 else
