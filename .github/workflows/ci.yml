@@ -83,6 +83,9 @@ jobs:
       - name: Tests (fence scanner)
         run: tests/hooks/test-mdfence.sh
 
+      - name: Tests (task brief)
+        run: tests/hooks/test-task-brief.sh
+
       - name: Tests (codex plugin sync)
         run: tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 

@@ -89,6 +89,21 @@ References below name them so a claim here can be traced there.
   prose, because the inner opener had already closed the outer block. It now
   shares the scanner with `check-cross-references`, and a test asserts that
   neither carrier keeps fence logic of its own.
+- **`task-brief` carried the same naive fence toggle, and now carries the
+  CommonMark rule in awk.** It keeps its own implementation rather than
+  importing the shared scanner: reaching a module in another skill's directory
+  would make one shipped skill depend on another's internals. **It was recorded
+  as latent and it is not.** Measured 2026-08-24 over all 204 task extractions
+  of every plan under `docs/` — 17 plans, task numbers 1 through 12 — 202 are
+  byte-identical under both rules and 2 diverge, both in the plan that
+  introduced nested fences to this repository. Task 2 came out at 286 lines
+  instead of 141, running past its own end because the next task's heading read
+  as fenced; task 7 came out at 59 instead of 204, stopping at the first
+  four-backtick opener. The same defect in both directions, in the document that
+  describes it. It also gains its first suite:
+  [`tests/hooks/test-task-brief.sh`](tests/hooks/test-task-brief.sh), where its
+  only prior assertion checked where the brief file lands and ran in a suite CI
+  does not execute.
 
 ## [1.20.0] - 2026-08-24
 
