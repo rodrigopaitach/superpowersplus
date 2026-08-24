@@ -40,7 +40,7 @@
 | T3.2 The announced-count comparison reads prose only | AC2 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > announced count matches when the extras are fenced` |
 | T3.3 A section heading inside a fence does not start a section | AC3 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced acceptance-criteria heading defines nothing` |
 | T3.4 Coverage-matrix rows are read from prose only | AC5 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced matrix table raises no orphan label` |
-| T3.5 The printed task-criteria count is read from prose only | AC6 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > fenced task criteria are not counted` |
+| T3.5 The printed task-criteria count is read from prose only | AC6 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the printed task-criteria count omits fenced labels` |
 | T3.6 A test created inside a fenced code block is still discovered | AC8 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced step still creates its test` |
 | T3.7 A citation inside a fenced code block is still checked | AC9 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced citation past end of file fails` |
 | T3.8 An id cited inside a fenced code block still counts as cited | AC10 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced undefined id still fails` |
@@ -493,7 +493,7 @@ git commit -m "fix(writing-skills): seis entradas de sumario apontando para head
 - T3.2: The same plan announcing that prose count exits 0 — test: `tests/hooks/test-check-cross-references.sh > announced count matches when the extras are fenced`
 - T3.3: A document whose only `## Acceptance Criteria` heading is fenced defines no ids — test: `tests/hooks/test-check-cross-references.sh > a fenced acceptance-criteria heading defines nothing`
 - T3.4: A fenced example matrix table raises no orphan-label failure — test: `tests/hooks/test-check-cross-references.sh > a fenced matrix table raises no orphan label`
-- T3.5: The `task criteria` count in the summary omits fenced labels — test: `tests/hooks/test-check-cross-references.sh > fenced task criteria are not counted`
+- T3.5: The `task criteria` count in the summary omits fenced labels — test: `tests/hooks/test-check-cross-references.sh > the printed task-criteria count omits fenced labels`. **Not the `run_case` of the same fixture**, which reads only the exit code and stays green when the count goes wrong: the criterion is the number, so the covering test is the one that reads the number.
 - T3.6: A test created inside a fenced block is still discovered — test: `tests/hooks/test-check-cross-references.sh > a fenced step still creates its test`
 - T3.7: A citation inside a fenced block that points past the end of its file fails — test: `tests/hooks/test-check-cross-references.sh > a fenced citation past end of file fails`
 - T3.8: An id cited only inside a fenced block is still charged as cited — test: `tests/hooks/test-check-cross-references.sh > a fenced undefined id still fails`
@@ -541,6 +541,25 @@ run_case "fenced task criteria are not counted" 0 "${CLEAN_PLAN}
 - T4.4 an example criterion
 \`\`\`"
 
+# T3.5's criterion is a NUMBER, and run_case reads only the exit code. The case
+# above cannot fail for it: reverting the extractor to raw text leaves this
+# document exiting 0 and moves the summary from `task criteria 1` to
+# `task criteria 2` — green, with the number wrong. Read the number.
+count_dir="$TEST_ROOT/printed_task_criteria"
+make_repo "$count_dir"
+printf '%s\n' "${CLEAN_PLAN}
+
+\`\`\`markdown
+- T4.4 an example criterion
+\`\`\`" >"$count_dir/docs/doc.md"
+count_out="$("$SCRIPT_UNDER_TEST" "$count_dir/docs/doc.md" "$count_dir" 2>&1 || true)"
+if printf '%s' "$count_out" | grep -q 'task criteria 1,'; then
+    pass "the printed task-criteria count omits fenced labels"
+else
+    fail "the printed task-criteria count omits fenced labels"
+    { printf '%s' "$count_out" | grep -o 'task criteria [0-9]*' | sed 's/^/        /'; } || true
+fi
+
 run_case "a fenced citation past end of file fails" 1 "${CLEAN_SPEC}
 
 \`\`\`bash
@@ -580,7 +599,7 @@ The design also satisfies AC9, which no list defines.
 - [ ] **Step 2: Run the tests to verify they fail**
 
 Run: `tests/hooks/test-check-cross-references.sh`
-Expected: FAIL on the first five new cases — `fenced task headings are not counted` and `announced count matches when the extras are fenced` report `expected exit 0, got 1` with `the document announces 1 tasks and carries 2`; `a fenced acceptance-criteria heading defines nothing` reports `ids cited but not defined … AC9`; `a fenced matrix table raises no orphan label` reports an orphan label for the example row inside the fence; `fenced task criteria are not counted` reports the fenced example criterion as having no matrix row. The last two — `a fenced citation past end of file fails` and `a fenced undefined id still fails` — PASS already: they are the regression guards for the extractors that must stay fence-blind, and they go red only if the fix over-reaches.
+Expected: FAIL on the first five new cases — `fenced task headings are not counted` and `announced count matches when the extras are fenced` report `expected exit 0, got 1` with `the document announces 1 tasks and carries 2`; `a fenced acceptance-criteria heading defines nothing` reports `ids cited but not defined … AC9`; `a fenced matrix table raises no orphan label` reports an orphan label for the example row inside the fence; `fenced task criteria are not counted` reports the fenced example criterion as having no matrix row, and `the printed task-criteria count omits fenced labels` reads `task criteria 2` where the criterion requires 1. The last two — `a fenced citation past end of file fails` and `a fenced undefined id still fails` — PASS already: they are the regression guards for the extractors that must stay fence-blind, and they go red only if the fix over-reaches.
 
 - [ ] **Step 3: Wire the mask in**
 

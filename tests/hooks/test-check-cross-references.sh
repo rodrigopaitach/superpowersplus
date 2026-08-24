@@ -360,6 +360,8 @@ fi
 # the one AC4 exists for, and it changes by LOSING a fabricated failure while
 # keeping the real one, so its exit code does not move.
 corpus_moved=0
+corpus_compared=0
+corpus_total=0
 corpus_skipped=""
 if ! git -C "$REPO_ROOT" cat-file -e "$BASE_REF^{commit}" 2>/dev/null; then
     corpus_skipped="baseline commit $BASE_REF is not in this repository"
@@ -376,6 +378,8 @@ else
     fi
 fi
 for doc in "$REPO_ROOT"/docs/superpowers/specs/*.md "$REPO_ROOT"/docs/superpowers/plans/*.md; do
+    [ -f "$doc" ] || continue
+    corpus_total=$((corpus_total + 1))
     [ -n "$corpus_skipped" ] && break
     [ -s "$TEST_ROOT/ccr-before" ] || continue
     # IR6 is scoped to the documents that PREDATE this branch. This branch's own
@@ -385,6 +389,7 @@ for doc in "$REPO_ROOT"/docs/superpowers/specs/*.md "$REPO_ROOT"/docs/superpower
     # here would make the intended fix look like a regression.
     rel="${doc#"$REPO_ROOT"/}"
     git -C "$REPO_ROOT" cat-file -e "$BASE_REF:$rel" 2>/dev/null || continue
+    corpus_compared=$((corpus_compared + 1))
     before=0
     "$TEST_ROOT/ccr-before" "$doc" "$REPO_ROOT" >/dev/null 2>&1 || before=$?
     after=0
@@ -397,7 +402,10 @@ done
 if [ -n "$corpus_skipped" ]; then
     fail "the committed corpus keeps its verdicts — could not run: $corpus_skipped"
 elif [ "$corpus_moved" -eq 0 ]; then
-    pass "the committed corpus keeps its verdicts"
+    # The count is printed because the comment on BASE_REF above says this case
+    # narrows as the corpus grows, and a claim about decay that no command
+    # answers is the thing this repository refuses everywhere else.
+    pass "the committed corpus keeps its verdicts ($corpus_compared of $corpus_total documents compared)"
 else
     fail "the committed corpus keeps its verdicts — $corpus_moved document(s) moved"
 fi
@@ -441,6 +449,52 @@ run_case "a matrix naming a test no code block holds fails" 1 "$(printf '%s' "$B
 # there passes on the one desync it exists for.
 run_case "a renamed test is caught even though the criterion still names it" 1 "$(printf '%s' "$BASH_PLAN" |
     sed 's/run_case "rejects the bad input"/run_case "rejects bad input"/')"
+
+# --- --help survives an edit to the header it prints ----------------------
+# `usage()` slices this script's own header, and both slicing rules it has
+# carried failed silently on a plausible edit: `sed -n '2,34p'` truncated when
+# the header grew, and `sed -n '2,/<final sentence>/p'` printed the entire
+# script — heredoc included — when that sentence was reworded. Neither had a
+# red state, in a suite whose subject is that a repair without one is not a
+# repair.
+#
+# Differential over PERTURBED COPIES, because the failure is triggered by an
+# edit to the header rather than by any input. Two anchors, one per direction:
+# a late header line must survive (truncation), and no line of code may appear
+# (runaway).
+help_failed=0
+check_help() {
+    local label="$1" script="$2" out
+    out="$("$script" --help 2>&1 || true)"
+    if ! printf '%s' "$out" | grep -q 'REPO_ROOT'; then
+        echo "        $label: the header was truncated before REPO_ROOT"
+        help_failed=$((help_failed + 1))
+    fi
+    if printf '%s' "$out" | grep -q 'set -euo pipefail'; then
+        echo "        $label: --help ran past the header into the code"
+        help_failed=$((help_failed + 1))
+    fi
+}
+
+help_dir="$TEST_ROOT/usage"
+mkdir -p "$help_dir"
+cp "$SCRIPT_UNDER_TEST" "$help_dir/as-shipped"
+# A paragraph break inside the header. A blank line is not a line of code.
+awk 'NR == 3 { print "" } { print }' "$SCRIPT_UNDER_TEST" >"$help_dir/blank-line"
+# The header's final sentence, reworded. Nothing may key on its wording.
+sed 's/^# Exit 1 when anything does not resolve\./# Returns non-zero when anything fails to resolve./' \
+    "$SCRIPT_UNDER_TEST" >"$help_dir/reworded"
+chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/reworded"
+
+check_help "as shipped" "$help_dir/as-shipped"
+check_help "blank line in the header" "$help_dir/blank-line"
+check_help "final sentence reworded" "$help_dir/reworded"
+
+if [[ "$help_failed" -eq 0 ]]; then
+    pass "--help prints the whole header and stops there, through header edits"
+else
+    fail "--help prints the whole header and stops there, through header edits — $help_failed problem(s)"
+fi
 
 echo
 if [[ "$FAILURES" -eq 0 ]]; then

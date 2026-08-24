@@ -189,11 +189,15 @@ References below name them so a claim here can be traced there.
   printing the python heredoc with it. It now slices by the header's *shape* —
   every comment line before the first line of code — which no wording can
   break.
-- **The gate's summary line quietly lost a field.** `tests created by a step`
-  no longer appears in `check-cross-references` output; the language-blind
-  comparison that replaced it has no separate count to report. The design note
-  said "no new counts field", and removing one is within that letter, but the
-  line every user of this gate reads did change.
+- **The gate's summary line quietly lost a field, and that is a deviation from
+  this release's own design note.** `tests created by a step` no longer appears
+  in `check-cross-references` output; the language-blind comparison that
+  replaced it has no separate count to report. The note reads "It does not
+  change what any carrier reports, only what each one reads. No new counts
+  field, no new output shape" — the second sentence permits this and the first
+  forbids it, so recording it as compliance would be reading half the bullet.
+  The carrier reports one field fewer and the output shape changed. Deviation,
+  accepted, written down.
 - **The matrix check cannot see a plan that quotes a test it never ships, and
   this release is the demonstration.** `check-cross-references` builds the set
   of created tests from the plan's own fenced blocks, which is what makes it
@@ -206,6 +210,37 @@ References below name them so a claim here can be traced there.
   suite. Reading the shipped test files instead of the plan's code blocks is a
   different instrument, not a tightening of this one; the limit is recorded
   rather than closed.
+- **`usage()` traded the runaway back for a truncation, and neither form ever
+  had a red state.** Slicing the header at "the first non-comment line" cut
+  `--help` at the first blank line: measured, one paragraph break inside the
+  header dropped the output from 44 lines to 19, silently — the same failure
+  the line-number slice had. A blank line is not a line of code, and the rule
+  now says so. The three slicing rules this function has carried each broke on
+  a plausible edit to the text they print, so
+  [`tests/hooks/test-check-cross-references.sh`](tests/hooks/test-check-cross-references.sh)
+  now runs `--help` over three copies of the carrier — as shipped, with a blank
+  line inserted in the header, and with the header's final sentence reworded —
+  and asserts a late header line survives and no line of code appears. Both
+  directions have a mutation that turns it red.
+- **The coverage matrix named a case that could not fail for the criterion it
+  covered.** `T3.5` is a *number* — the `task criteria` count omitting fenced
+  labels — and the plan named a `run_case`, which reads only the exit code.
+  Measured: reverting the extractor to raw text moves the printed count from 1
+  to 2 and leaves that case green. The covering test exists and reads the
+  number; the plan now names it, and carries it in the step that creates it.
+  Found by the conformance audit, which opens the suite — not by the matrix
+  gate, which cannot.
+
+### Known leftovers
+
+- **[`scripts/lint-shell.sh:14`](scripts/lint-shell.sh) truncates its own
+  `--help` today.** `sed -n '2,9p' "$0"` against a header whose first line of
+  code is at `:11`: the output ends mid-sentence at "Use --all for the full
+  tracked", dropping "baseline, or pass files explicitly to lint a smaller
+  set." It is the same defect the `check-cross-references` entry above closes,
+  live in a second carrier. Not fixed here: this file is outside the class list
+  the release's own spec permits the change to touch, and widening that list to
+  reach it is the scope creep the list exists to stop.
 
 ## [1.20.0] - 2026-08-24
 

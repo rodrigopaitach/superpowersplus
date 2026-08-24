@@ -53,9 +53,16 @@ usage() {
   # header's last sentence fixed the truncation and replaced it with the
   # opposite failure: reword that sentence and the range runs to end of file,
   # printing the whole script, python heredoc included. The header is every
-  # comment line before the first line of code, which is a property no wording
-  # can break.
-  awk 'NR == 1 { next } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "$0"
+  # comment line before the first line of CODE. Written as "the first
+  # non-comment line" it broke on a blank line — a paragraph break inside the
+  # header cut --help at that point, silently, which is the truncation this
+  # function started from. A blank line is not code, so it passes through.
+  awk '
+    NR == 1 { next }
+    /^#/ { sub(/^# ?/, ""); print; next }
+    /^[[:space:]]*$/ { print; next }
+    { exit }
+  ' "$0"
 }
 
 if [[ $# -lt 1 || "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
