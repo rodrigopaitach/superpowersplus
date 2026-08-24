@@ -194,9 +194,9 @@ References below name them so a claim here can be traced there.
   in `check-cross-references` output; the language-blind comparison that
   replaced it has no separate count to report. The note reads "It does not
   change what any carrier reports, only what each one reads. No new counts
-  field, no new output shape" — the second sentence permits this and the first
-  forbids it, so recording it as compliance would be reading half the bullet.
-  The
+  field, no new output shape" — only the second sentence's first clause permits
+  this; its second clause and the sentence before it both forbid it, so
+  recording it as compliance would be quoting a third of the bullet. The
   carrier reports one field fewer and the output shape changed. Deviation,
   accepted, written down.
 - **The matrix check cannot see a plan that quotes a test it never ships, and
@@ -268,6 +268,15 @@ References below name them so a claim here can be traced there.
   live in a second carrier. Not fixed here: this file is outside the class list
   the release's own spec permits the change to touch, and widening that list to
   reach it is the scope creep the list exists to stop.
+- **[`scripts/sync-to-codex-plugin.sh:147`](scripts/sync-to-codex-plugin.sh) is
+  the third carrier of the same class, and it is armed rather than broken.**
+  `sed -n '/^# Usage:/,/^# Requires:/s/^# \{0,1\}//p' "$0"` is correct today —
+  13 lines — because both literal markers still exist. Measured: rewording
+  `# Requires:` at `:27` takes `--help` from 13 lines to 48, running past the
+  header into the code, which is the same runaway the entry above describes.
+  Outside the permitted class list for the same reason. The three carriers all
+  want the shape now in `check-cross-references`: slice by the header's form,
+  never by a line number and never by a sentence.
 
 ## [1.20.0] - 2026-08-24
 
