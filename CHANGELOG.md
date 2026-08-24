@@ -19,6 +19,8 @@ References below name them so a claim here can be traced there.
 
 - **Both document reviewers now ask whether a state change can be applied, not only whether its target is right.** Measuring the target state and establishing that whoever applies the change can reach it are two claims, and only the first was ever checked. Measured: four independent review lenses and 68 catalogue measurements passed a defect of this shape; the gap was one line.
 
+- **`receiving-code-review` now says a finding about a measurable fact is reproduced before it is acted on.** Measured: a reviewer reading an artifact under a stale version convention reported three type errors with file, line and error code, and running it again showed zero. Separately, two reviewers asserted opposite facts about the same code — the cost of settling that is one file read.
+
 ## [1.19.1] - 2026-08-22
 
 ### Fixed
