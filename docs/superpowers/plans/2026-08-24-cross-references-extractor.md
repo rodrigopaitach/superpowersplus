@@ -34,14 +34,14 @@
 | T1.2 A fence opener indented by up to three spaces is recognised | IR2 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > indented opener is recognised` |
 | T1.3 A tilde fence is recognised on the same terms as a backtick fence | IR3 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > tilde fence behaves like a backtick fence` |
 | T1.4 The module imports nothing outside the standard library | IR9 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > module imports only re` |
-| T1.5 The Codex archive carries the module and still has no root scripts path | AC19 | script | `tests/codex/` | `tests/codex/test-package-codex-plugin.sh > archive preserves executable script mode` |
+| T1.5 The module sits where the packager stages and the packager still forbids the root scripts path | AC19 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > the module ships where the packager stages` |
 | T2.1 The table of contents has one entry per real section and no entry without one | AC16 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > every table-of-contents anchor in anthropic-best-practices resolves` |
 | T3.1 Task headings inside fenced blocks are not counted | AC1 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > fenced task headings are not counted` |
 | T3.2 The announced-count comparison reads prose only | AC2 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > announced count matches when the extras are fenced` |
 | T3.3 A section heading inside a fence does not start a section | AC3 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced acceptance-criteria heading defines nothing` |
 | T3.4 Coverage-matrix rows are read from prose only | AC5 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced matrix table raises no orphan label` |
 | T3.5 The printed task-criteria count is read from prose only | AC6 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > fenced task criteria are not counted` |
-| T3.6 A test created inside a fenced code block is still discovered | AC8 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > clean plan passes` |
+| T3.6 A test created inside a fenced code block is still discovered | AC8 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced step still creates its test` |
 | T3.7 A citation inside a fenced code block is still checked | AC9 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced citation past end of file fails` |
 | T3.8 An id cited inside a fenced code block still counts as cited | AC10 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced undefined id still fails` |
 | T4.1 An unterminated fence fails, naming the opening line | AC11 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > an unterminated fence fails naming its line` |
@@ -49,14 +49,16 @@
 | T5.1 A section ends only at a heading of the same or shallower level | AC4 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a section survives its own subsections` |
 | T5.2 A criterion label carrying a letter suffix is matched | AC7 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a suffixed criterion label is still checked` |
 | T5.3 `body_only` and `matrix_only` no longer exist in the file | AC12 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > no dead names survive` |
-| T5.4 The nine pre-existing cases still pass unmodified | IR5 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > clean spec passes` |
+| T5.4 The nine pre-existing cases still pass unmodified | IR5 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the nine original cases are still here` |
 | T5.5 No committed document under `docs/` changes verdict except as AC4 requires | IR6 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the committed corpus keeps its verdicts` |
 | T6.1 A heading inside a fenced code block produces no anchor | AC13 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > a nested-fence heading produces no anchor` |
-| T6.2 Links written inside fenced code blocks are still ignored | AC14 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > links inside fenced code are ignored` |
+| T6.2 A link written inside a nested fenced block is still ignored | AC14 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > a link inside a nested fenced block is ignored` |
 | T6.3 The link gate exits 0 over this repository | AC17 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > every table-of-contents anchor in anthropic-best-practices resolves` |
 | T6.4 Neither python carrier contains fence-scanning logic of its own | AC18 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > carriers hold no fence logic of their own` |
 | T7.1 `task-brief` does not treat a fenced `## Task N` as a task | AC15 | script | `tests/hooks/` | `tests/hooks/test-task-brief.sh > a fenced task heading is not extracted` |
 | T7.2 The branch changes only the files the spec allows | IR8 | script | `tests/hooks/` | `tests/hooks/test-task-brief.sh > the branch touches only its declared files` |
+| T8.1 A matrix naming a test no code block of the plan contains exits 1 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails` |
+| T8.2 A matrix naming a bash case the steps create exits 0 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a bash case named in the matrix is created` |
 
 **`IR7` has no row, and that is a finding rather than an omission.** It requires each test to be shown failing against the pre-fix code. Nothing in this repository records a red run in a file, so no `file:line` citation can settle it and the final audit will charge it as unauditable. Every task below carries the red run as its own Step 2, so the requirement is *met*; what is missing is a way to *prove* it later. Raised with your human partner at the handoff rather than dropped.
 
@@ -85,7 +87,7 @@
 - T1.2: A fence opener indented by one to three spaces is recognised — test: `tests/hooks/test-mdfence.sh > indented opener is recognised`
 - T1.3: A tilde fence opens and closes on the same terms as a backtick fence — test: `tests/hooks/test-mdfence.sh > tilde fence behaves like a backtick fence`
 - T1.4: The module's only import is `re` — test: `tests/hooks/test-mdfence.sh > module imports only re`
-- T1.5: The built Codex archive contains the module and no path beginning `scripts/` — test: `tests/codex/test-package-codex-plugin.sh > archive preserves executable script mode`
+- T1.5: The module's path is under `skills/`, which the packager stages, and the packager's forbidden-prefix list still rejects `scripts/` — test: `tests/hooks/test-mdfence.sh > the module ships where the packager stages`
 
 - [ ] **Step 1: Write the failing test**
 
@@ -171,6 +173,22 @@ assert out[0] == "## real"
 assert out[2] == ""
 assert out[4] == "## also real"
 '
+
+# --- the module ships where the packager stages ----------------------------
+# scripts/package-codex-plugin.sh stages `skills` wholesale and fails the build
+# on any archived path beginning `scripts/`. A module at the repository root
+# would reach Claude Code, whose plugin cache is a full checkout, and not Codex,
+# where check-cross-references still ships and would fail to import.
+packager="$REPO_ROOT/scripts/package-codex-plugin.sh"
+if [ -f "$MODULE_DIR/mdfence.py" ] &&
+   printf '%s' "$MODULE_DIR" | grep -q "/skills/" &&
+   grep -q '\^scripts/' "$packager"; then
+    pass "the module ships where the packager stages"
+else
+    fail "the module ships where the packager stages"
+    echo "        module dir: $MODULE_DIR"
+    grep -n '\^scripts/' "$packager" | sed 's/^/        /'
+fi
 
 # --- the module carries no dependency and the carriers carry no logic --------
 if grep -nE "^(import|from) " "$MODULE_DIR/mdfence.py" | grep -qvE "^[0-9]+:import re$"; then
@@ -470,7 +488,7 @@ git commit -m "fix(writing-skills): seis entradas de sumario apontando para head
 - T3.3: A document whose only `## Acceptance Criteria` heading is fenced defines no ids — test: `tests/hooks/test-check-cross-references.sh > a fenced acceptance-criteria heading defines nothing`
 - T3.4: A fenced example matrix table raises no orphan-label failure — test: `tests/hooks/test-check-cross-references.sh > a fenced matrix table raises no orphan label`
 - T3.5: The `task criteria` count in the summary omits fenced labels — test: `tests/hooks/test-check-cross-references.sh > fenced task criteria are not counted`
-- T3.6: A test created inside a fenced block is still discovered — test: `tests/hooks/test-check-cross-references.sh > clean plan passes`
+- T3.6: A test created inside a fenced block is still discovered — test: `tests/hooks/test-check-cross-references.sh > a fenced step still creates its test`
 - T3.7: A citation inside a fenced block that points past the end of its file fails — test: `tests/hooks/test-check-cross-references.sh > a fenced citation past end of file fails`
 - T3.8: An id cited only inside a fenced block is still charged as cited — test: `tests/hooks/test-check-cross-references.sh > a fenced undefined id still fails`
 
@@ -522,6 +540,29 @@ run_case "a fenced citation past end of file fails" 1 "${CLEAN_SPEC}
 \`\`\`bash
 # see \`src/verify.ts:99\` for the detail
 \`\`\`"
+
+# AC8: a plan creates its tests inside fenced code blocks, so the test finder
+# must keep reading them. This case is the guard that the fence work above did
+# not reach into it — the plan's only test lives inside a fenced block, and the
+# matrix names it.
+run_case "a fenced step still creates its test" 0 '# Plan
+
+## Task 1: Build it
+
+Acceptance criteria:
+- T1.1 rejects the bad input
+
+Step 1: write the test.
+
+```js
+it("rejects the bad input", () => {})
+```
+
+## Test Coverage Matrix
+
+| Criterion | Test |
+|---|---|
+| T1.1 | > rejects the bad input |'
 
 run_case "a fenced undefined id still fails" 1 "${CLEAN_SPEC}
 
@@ -749,7 +790,7 @@ git commit -m "fix(writing-plans): cerca nao fechada reprova o documento em vez 
 - T5.1: A spec whose `## Acceptance Criteria` organises criteria under `###` subsections defines all of them — test: `tests/hooks/test-check-cross-references.sh > a section survives its own subsections`
 - T5.2: A plan whose criterion label carries a trailing letter, and whose matrix row names a test no step creates, exits 1 — test: `tests/hooks/test-check-cross-references.sh > a suffixed criterion label is still checked`
 - T5.3: The strings `body_only` and `matrix_only` do not appear in the script — test: `tests/hooks/test-check-cross-references.sh > no dead names survive`
-- T5.4: The nine cases the suite carried before this branch still pass with their text unchanged — test: `tests/hooks/test-check-cross-references.sh > clean spec passes`
+- T5.4: The nine case names the suite carried before this branch are all still present — test: `tests/hooks/test-check-cross-references.sh > the nine original cases are still here`
 - T5.5: Every committed document under `docs/` holds the exit code it held before the branch, except `2026-08-21-upstream-consult-fixes-design.md`, whose fourteen fabricated dangling-id failures disappear — test: `tests/hooks/test-check-cross-references.sh > the committed corpus keeps its verdicts`
 
 - [ ] **Step 1: Write the failing tests**
@@ -786,6 +827,30 @@ Both are grounded in the module under test.'
 # being a matrix row and the three checks that depend on it stopped running.
 run_case "a suffixed criterion label is still checked" 1 "$(printf '%s' "$CLEAN_PLAN" |
     sed 's/T1\.1/T1.1a/g; s/| > rejects the bad input |/| > a test nobody wrote |/')"
+
+# IR5: the nine cases this suite carried before the branch are named here, so
+# a later edit that quietly drops one is a failure rather than a smaller suite.
+missing_original=0
+for original in \
+    "clean spec passes" \
+    "spec citing an undefined id fails" \
+    "spec citing past the end of a file fails" \
+    "spec citing a file that does not exist fails" \
+    "clean plan passes" \
+    "matrix label with no criterion in a task body fails" \
+    "task criterion with no matrix row fails" \
+    "matrix naming a test no step creates fails" \
+    "announced task count that disagrees fails"; do
+    if ! grep -Fq "\"$original\"" "$0"; then
+        echo "        missing: $original"
+        missing_original=$((missing_original + 1))
+    fi
+done
+if [ "$missing_original" -eq 0 ]; then
+    pass "the nine original cases are still here"
+else
+    fail "the nine original cases are still here — $missing_original dropped"
+fi
 
 if grep -q 'body_only\|matrix_only' "$SCRIPT_UNDER_TEST"; then
     fail "no dead names survive"
@@ -935,7 +1000,7 @@ git commit -m "fix(writing-plans): nivel de secao, sufixo de letra no id e dois 
 
 **Acceptance criteria:**
 - T6.1: A document whose only `## Heading` sits inside a four-backtick block containing a three-backtick block, linked as `#heading`, exits 1 — test: `tests/hooks/test-check-links.sh > a nested-fence heading produces no anchor`
-- T6.2: The pre-existing case for links written inside fenced code still passes — test: `tests/hooks/test-check-links.sh > links inside fenced code are ignored`
+- T6.2: A link written inside a three-backtick block nested in a four-backtick block is not checked — test: `tests/hooks/test-check-links.sh > a link inside a nested fenced block is ignored`
 - T6.3: The gate exits 0 over this repository — test: `tests/hooks/test-check-links.sh > every table-of-contents anchor in anthropic-best-practices resolves`
 - T6.4: Neither `check-links.sh` nor `check-cross-references` defines a fence pattern or a fence toggle of its own — test: `tests/hooks/test-mdfence.sh > carriers hold no fence logic of their own`
 
@@ -952,6 +1017,14 @@ T="$(new_tree)"
 printf '# Doc\n\n[to the example](#inner-heading)\n\n````markdown\n# Template\n\n```md\n## Inner heading\n```\n````\n' \
     > "$T/README.md"
 assert_run 1 "a nested-fence heading produces no anchor" "$T" "inner-heading"
+
+# AC14: the other half of the same change. Blanking MORE than before would break
+# the pass that ignores links inside code; the nested shape is where a wider
+# mask would reach first.
+T="$(new_tree)"
+printf '# Doc\n\n````markdown\n# Template\n\n```bash\ncat [not](a/link.md)\n```\n````\n' \
+    > "$T/README.md"
+assert_run 0 "a link inside a nested fenced block is ignored" "$T"
 ```
 
 And append to `tests/hooks/test-mdfence.sh`, before its final summary block:
@@ -1248,4 +1321,161 @@ Expected: four paths — `skills/subagent-driven-development/scripts/task-brief`
 ```bash
 git add skills/subagent-driven-development/scripts/task-brief tests/hooks/test-task-brief.sh .github/workflows/ci.yml CHANGELOG.md
 git commit -m "fix(sdd): task-brief fecha cerca pela regra CommonMark, nao por alternador"
+```
+
+---
+
+### Task 8: The test-name comparison stops knowing languages
+
+**Spec criterion:** `AC20 A coverage matrix naming a test that no code block of the plan contains exits 1, whatever language the test is written in`.
+
+**Files:**
+- Modify: `skills/writing-plans/scripts/check-cross-references:170-205`
+- Modify: `tests/hooks/test-check-cross-references.sh`
+- Modify: `CHANGELOG.md`
+
+**Interfaces:**
+- Consumes: `fence_mask(lines) -> (list[bool], int | None)` from `mdfence`, already imported by Task 3 — this task uses the mask the other way round, keeping the fenced lines instead of dropping them.
+- Produces: nothing consumed by a later task.
+
+**The smaller structure is the one that knows nothing.** `TEST_DEF` is a pattern per language and it already missed this repository's own; adding bash to it buys the next language nothing and bakes this project's shell function names into a skill script every project runs. Replacing it removes code rather than adding a case.
+
+**Acceptance criteria:**
+- T8.1: A plan whose matrix names a test string that appears in no code block exits 1 — test: `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails`
+- T8.2: A plan whose matrix names a bash case its steps create exits 0 — test: `tests/hooks/test-check-cross-references.sh > a bash case named in the matrix is created`
+
+- [ ] **Step 1: Write the failing tests**
+
+Append to `tests/hooks/test-check-cross-references.sh`, before its final summary block:
+
+````bash
+# Measured 2026-08-24 on this branch's own plan: TEST_DEF knows it(), test(),
+# describe(), def test_ and func Test, and reported all 26 of that plan's real
+# bash cases as absent. Two designs were measured. "The name appears outside the
+# matrix rows" is vacuous — writing-plans requires every task criterion to name
+# its covering test, so the criterion line carries the name even when a step
+# renamed the test. Searching the code blocks catches that mutation.
+BASH_PLAN='# Plan
+
+## Task 1: Build it
+
+Acceptance criteria:
+- T1.1 rejects the bad input
+
+Step 1: write the test.
+
+```bash
+run_case "rejects the bad input" 0 "$FIXTURE"
+```
+
+## Test Coverage Matrix
+
+| Criterion | Test |
+|---|---|
+| T1.1 | > rejects the bad input |'
+
+run_case "a bash case named in the matrix is created" 0 "$BASH_PLAN"
+
+run_case "a matrix naming a test no code block holds fails" 1 "$(printf '%s' "$BASH_PLAN" |
+    sed 's/| T1.1 | > rejects the bad input |/| T1.1 | > a case nobody wrote |/')"
+````
+
+- [ ] **Step 2: Run the tests to verify they fail**
+
+Run: `tests/hooks/test-check-cross-references.sh`
+Expected: FAIL on `a bash case named in the matrix is created` — `expected exit 0, got 1`, reporting `tests named in the coverage matrix that no step creates: \`rejects the bad input\``, because the step writes a shell function call the pattern does not recognise. The second case, `a matrix naming a test no code block holds fails`, PASSES already — with nothing recognised, everything reads as missing, and it is the regression guard that the replacement still catches a real one.
+
+- [ ] **Step 3: Replace the pattern with the question**
+
+In `skills/writing-plans/scripts/check-cross-references`, delete the `TEST_DEF` regex and the `created` set built from it, and record the matrix rows by index so their own lines can be excluded. Where `matrix_rows` is built, use:
+
+```python
+matrix_row_idx = {
+    i for i, ln in enumerate(prose_lines)
+    if ln.lstrip().startswith("|") and TASK_CRIT.search(ln)
+}
+matrix_rows = [prose_lines[i] for i in sorted(matrix_row_idx)]
+```
+
+Then replace the test-existence pass with:
+
+```python
+# Every test named in the matrix is created by some step of some task.
+#
+# "Created" is deliberately language-blind: the name appears inside one of the
+# document's fenced code blocks, which is where a step writes a test. Parsing
+# test-definition syntax meant carrying a pattern per language, and it did not
+# carry this repository's own — bash suites name their cases with shell
+# function calls, and 26 real tests read as absent on the plan for this branch.
+#
+# Searching the whole document instead of the code blocks does NOT work:
+# writing-plans requires every task criterion to name its covering test, so the
+# criterion line carries the name even when a step renamed the test, and the
+# check passes on the one defect it exists for.
+in_code = "\n".join(ln for i, ln in enumerate(lines) if fenced[i])
+```
+
+And the comparison itself:
+
+```python
+if named_in_matrix:
+    counts["tests named in matrix"] = len(named_in_matrix)
+    missing = sorted(n for n in named_in_matrix if n not in in_code)
+    if missing:
+        failures.append(
+            "tests named in the coverage matrix that no step creates: "
+            + "; ".join(f"`{n}`" for n in missing)
+        )
+```
+
+Remove the now-unused `counts["tests created by a step"]` line with the set it counted.
+
+- [ ] **Step 4: Run the tests to verify they pass**
+
+Run: `tests/hooks/test-check-cross-references.sh`
+Expected: PASS — every case, including the nine originals and `matrix naming a test no step creates fails`, which must still exit 1.
+
+- [ ] **Step 5: Run the gate over this branch's own plan**
+
+```bash
+./skills/writing-plans/scripts/check-cross-references \
+    docs/superpowers/plans/2026-08-24-cross-references-extractor.md .
+```
+
+Expected: exit 0. This is the measurement the task exists for: the same command reported 26 real tests as absent before the change.
+
+- [ ] **Step 6: Write the changelog entry**
+
+Under `## [Unreleased]`, in the `### Fixed` subsection, add:
+
+```markdown
+- **The test-name comparison knew five test vocabularies and not this
+  repository's.** `TEST_DEF` in
+  [`skills/writing-plans/scripts/check-cross-references`](skills/writing-plans/scripts/check-cross-references)
+  matched `it(...)`, `test(...)`, `describe(...)`, `def test_` and `func Test`;
+  every suite here is bash, naming its cases by shell function call — 68
+  `assert_run` and 9 `run_case` across `tests/hooks/`. Measured on this branch's
+  own plan: 26 real tests reported absent at once. It now asks a question no
+  language answers differently — does the name appear inside one of the
+  document's fenced code blocks, which is where a step writes a test. The
+  simpler form, "the name appears anywhere outside the matrix", was measured and
+  rejected: `writing-plans` requires every task criterion to name its covering
+  test, so the criterion line carries the name even after a step renames the
+  test, and the check passes on the one desync it exists for.
+```
+
+- [ ] **Step 7: Verify the preparation produced what you expect**
+
+```bash
+git diff --stat
+grep -n 'TEST_DEF\|tests created by a step' skills/writing-plans/scripts/check-cross-references || echo "0 — pattern and its count are gone"
+```
+
+Expected: three paths, and the grep reports no matches.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add skills/writing-plans/scripts/check-cross-references tests/hooks/test-check-cross-references.sh CHANGELOG.md
+git commit -m "fix(writing-plans): a comparacao de testes para de conhecer linguagens"
 ```
