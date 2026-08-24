@@ -541,15 +541,38 @@ References below name them so a claim here can be traced there.
   them, and `AC23` has a test whose red state is measured. `AC24` is charged by
   the audit and by no test, on `IR8`'s terms: this repository has no
   documentation suite, and the document carries the command that answers it.
-- **Three `file:line` citations in this branch's own spec had gone stale inside
-  the branch** — `scripts/check-links.sh:266` and `:361` are now `:277` and
-  `:372`, and `AC14`'s named instrument moved from
-  `tests/hooks/test-check-links.sh:184` to `:189`. None carries a dotted path
-  the cross-reference gate can charge, which is the same blind spot recorded
-  earlier in this release. Two measured numbers inside `IR8` had also aged —
-  eight classes where there are nine, 25 files where there are 27 — and are
-  dated rather than re-updated, since a re-updated number ages again on the next
-  commit.
+- **Two measured numbers inside `IR8` had aged** — eight classes where there are
+  nine, 25 files where there are 27 — and are dated rather than re-updated,
+  since a re-updated number ages again on the next commit.
+
+- **Three citations in this release's own spec were "repaired" into a defect,
+  and the repair was reverted.** A review round reported
+  `scripts/check-links.sh:266`, `:361` and `tests/hooks/test-check-links.sh:184`
+  as stale; they were renumbered to their post-fix lines. The spec's own
+  governing paragraph forbids exactly that — *"Every `file:line` citation in this
+  document is a PRE-FIX line number, and they are left that way on purpose"*,
+  and *"Renumbering them is what would be wrong"* — because a design document
+  renumbered to match the code it produced reads as if it had described the
+  result. The same paragraph **already listed** `test-check-links.sh:184` among
+  the nine citations known to have shifted: the document had measured and
+  recorded the very fact the repair was reacting to. The three are back to their
+  pre-fix values. **A finding that names a real difference is not yet a defect** —
+  what makes it one is a rule, and the rule was three lines above the line being
+  edited.
+
+- **The eleventh instance of this release's defect class, in the sibling of the
+  carrier where the tenth was found.** The `grown` copy added to
+  [`tests/codex-plugin-sync/test-sync-to-codex-plugin.sh`](tests/codex-plugin-sync/test-sync-to-codex-plugin.sh)
+  inserted one line at the same position as `blank-line-in-block`, so the two
+  shift the header identically and no slicing rule can fail on one without the
+  other. Measured by the branch audit: `sed -n '15,28p'`, a range tuned to
+  today's header, passed all four copies and the case reported PASS — leaving
+  `T9.3`'s third named edit asserting nothing. The copy now grows the block by
+  twelve lines. Measured after: of {shipped, tuned range} × {one-line copy,
+  twelve-line copy}, only the tuned range against the twelve-line copy truncates.
+  **The same fix had been applied to the other carrier one commit earlier and
+  not replicated here** — the pass that closed instance ten grew one copy of the
+  pair it had just written.
 
 ## [1.20.0] - 2026-08-24
 

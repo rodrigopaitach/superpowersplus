@@ -550,12 +550,18 @@ assert_help_survives_header_edits() {
     cp "$script" "$dir/as-shipped"
     sed 's/^# Requires:/# Dependencies:/' "$script" >"$dir/end-marker-reworded"
     awk 'NR == 20 { print "" } { print }' "$script" >"$dir/blank-line-in-block"
-    # `AC21` names three edits and this suite exercised two. The line-added edit
-    # is the one a line-number slice cannot survive, and it was the untested one
-    # here and in tests/hooks/test-check-cross-references.sh both — the branch
-    # audit found the pair. Inserted mid-block, so a fixed range loses the
-    # header's LAST line and the anchor below sees it.
-    awk 'NR == 20 { print; print "#   A line added after the slice was written."; next } { print }' \
+    # `AC21`'s third edit, and this suite lacked it.
+    #
+    # It grows the block by TWELVE lines, not one. At one line this copy was
+    # redundant with `blank-line-in-block`: both shift the header down by exactly
+    # one, so any range ending at the old last line fails on both together and on
+    # neither alone. Measured by the branch audit: with a one-line copy here,
+    # `sed -n '15,28p'` — a range tuned to today's header — passed all four
+    # copies and this case reported PASS. Twelve lines is a sample of a header
+    # that outgrows its range, not a proof: no fixed number of inserted lines
+    # rules out a range tuned past it, and this comment claims only what the copy
+    # measures.
+    awk 'NR == 20 { print; for (i = 1; i <= 12; i++) print "#   Added line " i "."; next } { print }' \
         "$script" >"$dir/grown"
     sed 's/^# Usage:/# How to use:/' "$script" >"$dir/start-marker-gone"
     chmod +x "$dir"/*

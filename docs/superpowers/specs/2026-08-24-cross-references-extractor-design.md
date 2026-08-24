@@ -101,7 +101,7 @@ Structural extractors read the document's shape; content extractors read what th
 | `CITATION` `:243` | **no** | Measured: **zero** `file:line` citations inside fences across `docs/`. A citation in a code comment is legitimate and required by `writing-plans` |
 | `cited_ac` `:99` | **no** | Measured: **one** id inside a fence, a real citation of `IR2` at [`docs/superpowers/plans/2026-08-21-upstream-consult-fixes.md:299`](../plans/2026-08-21-upstream-consult-fixes.md). Fence-awareness would discard it |
 
-`check-links.sh` uses the mask for both of its existing calls, at [`:277`](../../../scripts/check-links.sh) and `:372` — the heading collection that builds anchors, and the link scan.
+`check-links.sh` uses the mask for both of its existing calls, at [`:266`](../../../scripts/check-links.sh) and `:361` — the heading collection that builds anchors, and the link scan.
 
 ### The closing rule, and why the naive one does not survive
 
@@ -124,7 +124,7 @@ A fence closes only on the same fence character, at a length greater than or equ
 - **AC11** — A document that opens a fence and never closes it exits 1, and the message names the line the fence opened on.
 - **AC12** — `body_only` and `matrix_only` no longer exist in the file.
 - **AC13** — `check-links.sh` treats a heading inside a fenced code block as producing no anchor. A fixture whose only `## Heading` is inside a four-backtick block containing a three-backtick block, linked as `#heading`, exits 1.
-- **AC14** — `check-links.sh` still ignores links written inside fenced code blocks. The existing case at [`tests/hooks/test-check-links.sh:189`](../../../tests/hooks/test-check-links.sh) still passes.
+- **AC14** — `check-links.sh` still ignores links written inside fenced code blocks. The existing case at [`tests/hooks/test-check-links.sh:184`](../../../tests/hooks/test-check-links.sh) still passes.
 - **AC15** — `task-brief` does not treat a `## Task N` heading inside a fenced block as a task. A fixture plan whose only `## Task 2` is inside a four-backtick example yields an empty brief for task 2.
 - **AC16** — The table of contents of [`skills/writing-skills/anthropic-best-practices.md`](../../../skills/writing-skills/anthropic-best-practices.md) has one entry per real section and no entry without one: eleven entries, eleven sections.
 - **AC17** — `scripts/check-links.sh` exits 0 over the repository once AC13 and AC16 are both delivered.
@@ -173,7 +173,7 @@ A fence closes only on the same fence character, at a length greater than or equ
 - **An unreadable file is already a failure, not a skip** — `:264`: `unresolved.append(f"`{rel}:{first}` — cannot read: {exc}")`.
 - **A gate in this project fails when it cannot read its input** — [`scripts/check-no-dispatch.sh:120`](../../../scripts/check-no-dispatch.sh): `fail("declared carrier could not be read:", unreadable)`.
 - **`check-links.sh`'s fence pattern matches a prefix and toggles** — [`scripts/check-links.sh:74`](../../../scripts/check-links.sh): `FENCE = re.compile(r"^\s*(```|~~~)")`, and `:232`: `out, in_fence = [], False`, flipped on every match.
-- **It masks for two different passes** — `:277`: `for line in strip_fences(text):` collects headings for anchors; `:372`: `for number, line in enumerate(strip_fences(raw), 1):` scans links. A wrong mask moves both.
+- **It masks for two different passes** — `:266`: `for line in strip_fences(text):` collects headings for anchors; `:361`: `for number, line in enumerate(strip_fences(raw), 1):` scans links. A wrong mask moves both.
 - **It runs from the repository root** — `:42`: `cd "$REPO_ROOT"`.
 - **`task-brief`'s awk toggles on any three-backtick prefix** — [`skills/subagent-driven-development/scripts/task-brief:28`](../../../skills/subagent-driven-development/scripts/task-brief): `awk -v n="$n" '`, and `:29`: `/^```/ { infence = !infence }`.
 - **Its only assertion checks placement, not content** — [`tests/claude-code/test-sdd-workspace.sh:123`](../../../tests/claude-code/test-sdd-workspace.sh): `brief_out="$(cd "$repo" && "$SDD_SCRIPTS/task-brief" plan-a.md 1)"`.
