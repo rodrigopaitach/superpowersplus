@@ -219,7 +219,31 @@ References below name them so a claim here can be traced there.
   removes none. Measured on this branch's own plan: 34 cells resolved to a
   suite, 0 absent. Its test is the pair only this instrument can tell apart —
   both documents carry the name inside a fenced block, so the code-block search
-  passes on both.
+  passes on both. **One residual, named rather than denied:** the case name is
+  searched as a substring of the whole suite file, so a name surviving only in a
+  comment still passes — measured the same day, when a renamed case kept its old
+  wording in the section header above it and the matrix stayed green until that
+  header was fixed. Requiring the name outside a comment would put a comment
+  syntax per language back into the check whose point is knowing none.
+
+- **Five findings from the whole-branch review's Minor bucket, closed.**
+  `.gitignore` had no `__pycache__` rule, so the bytecode the shared module can
+  produce was committable into a `skills/` tree that ships to Codex wholesale —
+  the two `sys.dont_write_bytecode` flags guard two callers by name, and the
+  ignore rule covers the ones nobody has written yet.
+  [`tests/hooks/test-mdfence.sh`](tests/hooks/test-mdfence.sh) deleted a
+  directory out of the developer's own checkout as a setup step and now runs
+  that case against the copy the neighbouring case already builds. Its case
+  `the module ships where the packager stages` asserted neither half of its own
+  name — a file test on a path the suite hardcodes, and a property of the
+  packager — and is renamed to what it reaches; the archive half is `AC19`'s and
+  measured in [`tests/codex/test-package-codex-plugin.sh`](tests/codex/test-package-codex-plugin.sh).
+  A comment in [`tests/hooks/test-task-brief.sh`](tests/hooks/test-task-brief.sh)
+  counted five fenced task numbers where the loop checks four. And `IR4` said
+  each carrier resolves the module from its own path while
+  [`scripts/check-links.sh`](scripts/check-links.sh) inserts a cwd-relative one:
+  legitimate, because that script has already `cd`-ed to a `$0`-derived root by
+  then, and now written down so the next reader does not "fix" it.
 - **`usage()` traded the runaway back for a truncation, and neither form ever
   had a red state.** Slicing the header at "the first non-comment line" cut
   `--help` at the first blank line: measured, one paragraph break inside the

@@ -83,7 +83,7 @@ assert out[2] == ""
 assert out[4] == "## also real"
 '
 
-# --- the module ships where the packager stages ----------------------------
+# --- the packager forbids the root scripts path ----------------------------
 # scripts/package-codex-plugin.sh stages `skills` wholesale and fails the build
 # on any archived path beginning `scripts/`. A module at the repository root
 # would reach Claude Code, whose plugin cache is a full checkout, and not Codex,
@@ -91,11 +91,19 @@ assert out[4] == "## also real"
 packager="$REPO_ROOT/scripts/package-codex-plugin.sh"
 # Two conjuncts, not three: `printf '%s' "$MODULE_DIR" | grep -q "/skills/"`
 # tested a string this same script hardcoded above, and could not fail.
+#
+# The name says what the two conjuncts REACH, and no more. Neither asserts that
+# the archive carries the module — the first is a file test on a path this
+# script hardcodes at :15, the second a property of the packager — so narrowing
+# `scripts/package-codex-plugin.sh:241` from `skills` to a subset would leave
+# this case green. That half is `AC19`'s, held by
+# `tests/codex/test-package-codex-plugin.sh > archive carries the shared fence
+# scanner`, whose red state was measured by deleting the module and committing.
 if [ -f "$MODULE_DIR/mdfence.py" ] &&
    grep -q '\^scripts/' "$packager"; then
-    pass "the module ships where the packager stages"
+    pass "the packager forbids the root scripts path, and the module is not under it"
 else
-    fail "the module ships where the packager stages"
+    fail "the packager forbids the root scripts path, and the module is not under it"
     echo "        module dir: $MODULE_DIR"
     { grep -n '\^scripts/' "$packager" | sed 's/^/        /'; } || true
 fi
@@ -134,22 +142,6 @@ mask, _ = fence_mask(lines)
 assert mask[3] is True, "three backticks cannot close five"
 assert mask[5] is False, "five can"
 '
-
-# --- the import leaves no bytecode beside the module ------------------------
-# Both carriers set sys.dont_write_bytecode. They run from a pre-commit hook,
-# inside an installed plugin directory, and .gitignore has no __pycache__ rule:
-# without the guard each run drops a .pyc that is untracked and committable.
-rm -rf "$MODULE_DIR/__pycache__"
-( cd "$REPO_ROOT" && ./scripts/check-links.sh >/dev/null 2>&1 ) || true
-( cd "$REPO_ROOT" && ./skills/writing-plans/scripts/check-cross-references \
-    docs/superpowers/specs/2026-08-24-cross-references-extractor-design.md . >/dev/null 2>&1 ) || true
-if [ -d "$MODULE_DIR/__pycache__" ]; then
-    fail "running a carrier leaves no bytecode beside the module"
-    { ls "$MODULE_DIR/__pycache__" | sed 's/^/        /'; } || true
-    rm -rf "$MODULE_DIR/__pycache__"
-else
-    pass "running a carrier leaves no bytecode beside the module"
-fi
 
 # --- one scanner, not three: the carrier's ANSWER must depend on the module ---
 # AC18 says each carrier "obtains the mask from the shared module". Five
@@ -247,6 +239,28 @@ if [ "$carrier_logic" -eq 0 ]; then
     pass "each carrier's verdict moves when the shared module's behaviour changes"
 else
     fail "each carrier's verdict moves when the shared module's behaviour changes — $carrier_logic problem(s)"
+fi
+
+# --- the import leaves no bytecode beside the module ------------------------
+# Both carriers set sys.dont_write_bytecode. They run from a pre-commit hook and
+# from inside an installed plugin directory, where a .pyc dropped beside the
+# module ships with the plugin. `.gitignore` has carried a `__pycache__/` rule
+# since 2026-08-24, so a stray file is no longer committable — this case is the
+# guard in depth, and the only one that notices the flags going away.
+#
+# It runs against the COPY built above, never the developer's checkout: a suite
+# that deletes directories out of the tree it is testing is one typo away from
+# deleting something else, and the copy answers the same question.
+copy_module_dir="$real_root/skills/writing-plans/scripts"
+rm -rf "$copy_module_dir/__pycache__"
+( cd "$real_root" && ./scripts/check-links.sh >/dev/null 2>&1 ) || true
+( cd "$real_root" && ./skills/writing-plans/scripts/check-cross-references \
+    docs/superpowers/specs/2026-08-24-cross-references-extractor-design.md . >/dev/null 2>&1 ) || true
+if [ -d "$copy_module_dir/__pycache__" ]; then
+    fail "running a carrier leaves no bytecode beside the module"
+    { ls "$copy_module_dir/__pycache__" | sed 's/^/        /'; } || true
+else
+    pass "running a carrier leaves no bytecode beside the module"
 fi
 
 echo

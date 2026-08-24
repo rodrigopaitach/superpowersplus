@@ -34,7 +34,7 @@
 | T1.2 A fence opener indented by up to three spaces is recognised | IR2 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > indented opener is recognised` |
 | T1.3 A tilde fence is recognised on the same terms as a backtick fence | IR3 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > tilde fence behaves like a backtick fence` |
 | T1.4 The module imports nothing outside the standard library | IR9 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > module imports only re` |
-| T1.5 The module sits where the packager stages and the packager still forbids the root scripts path | AC19 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > the module ships where the packager stages` |
+| T1.5 The module sits where the packager stages and the packager still forbids the root scripts path | AC19 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > the packager forbids the root scripts path, and the module is not under it` |
 | T1.6 The Codex archive carries the shared module | AC19 | script | `tests/codex/` | `tests/codex/test-package-codex-plugin.sh > archive carries the shared fence scanner` |
 | T2.1 The table of contents has one entry per real section and no entry without one | AC16 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > every table-of-contents anchor in anthropic-best-practices resolves` |
 | T3.1 Task headings inside fenced blocks are not counted | AC1 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the documents AC1 and AC4 name read the numbers they state` |
@@ -93,7 +93,7 @@
 - T1.2: A fence opener indented by one to three spaces is recognised — test: `tests/hooks/test-mdfence.sh > indented opener is recognised`
 - T1.3: A tilde fence opens and closes on the same terms as a backtick fence — test: `tests/hooks/test-mdfence.sh > tilde fence behaves like a backtick fence`
 - T1.4: The module's only import is `re` — test: `tests/hooks/test-mdfence.sh > module imports only re`
-- T1.5: The module's path is under `skills/`, which the packager stages, and the packager's forbidden-prefix list still rejects `scripts/` — test: `tests/hooks/test-mdfence.sh > the module ships where the packager stages`
+- T1.5: The module's path is under `skills/`, which the packager stages, and the packager's forbidden-prefix list still rejects `scripts/` — test: `tests/hooks/test-mdfence.sh > the packager forbids the root scripts path, and the module is not under it`. **Renamed on 2026-08-24 after the whole-branch review**, which measured that neither conjunct asserts the archive carries the module: the first is a file test on a path the suite hardcodes, the second a property of the packager. That half is `AC19`'s and lives in `tests/codex/test-package-codex-plugin.sh`; the name now says what these two reach.
 - T1.6: The archive the Codex packager builds contains `skills/writing-plans/scripts/mdfence.py` — test: `tests/codex/test-package-codex-plugin.sh > archive carries the shared fence scanner`. **`AC19` has two halves and T1.5 covered one.** Measured: deleting the module and committing left the packaging suite green while the module's own suite went red, so the archive-carries-it half had no instrument at all. The module is a runtime dependency of a shipped skill — absent from the archive it is an `ImportError` for every Codex user, not a packaging detail.
 
 - [ ] **Step 1: Write the failing test**
@@ -181,7 +181,7 @@ assert out[2] == ""
 assert out[4] == "## also real"
 '
 
-# --- the module ships where the packager stages ----------------------------
+# --- the packager forbids the root scripts path, and the module is not under it ----------------------------
 # scripts/package-codex-plugin.sh stages `skills` wholesale and fails the build
 # on any archived path beginning `scripts/`. A module at the repository root
 # would reach Claude Code, whose plugin cache is a full checkout, and not Codex,
@@ -191,9 +191,9 @@ packager="$REPO_ROOT/scripts/package-codex-plugin.sh"
 # tested a string this same script hardcoded ten lines above and could not fail.
 if [ -f "$MODULE_DIR/mdfence.py" ] &&
    grep -q '\^scripts/' "$packager"; then
-    pass "the module ships where the packager stages"
+    pass "the packager forbids the root scripts path, and the module is not under it"
 else
-    fail "the module ships where the packager stages"
+    fail "the packager forbids the root scripts path, and the module is not under it"
     echo "        module dir: $MODULE_DIR"
     grep -n '\^scripts/' "$packager" | sed 's/^/        /'
 fi

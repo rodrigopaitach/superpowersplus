@@ -184,7 +184,7 @@ fi
 
 # The differential proves the two AGREE; it cannot prove either is right. This
 # pair does: tasks 1 to 5 are real and each must come out non-empty, and the
-# five numbers that appear only inside fenced examples must come out empty.
+# four numbers that appear only inside fenced examples must come out empty.
 shape_failed=0
 for n in 1 2 3 4 5; do
     [ -s "$TEST_ROOT/awk-$n.md" ] || { echo "        real task $n came out empty"; shape_failed=$((shape_failed + 1)); }

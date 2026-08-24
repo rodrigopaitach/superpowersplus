@@ -340,6 +340,13 @@ def resolve(rel):
 # does not exist yet is not a defect — a plan is written before its tests — so
 # an unresolvable path falls back to the code-block search above rather than
 # failing. This check ADDS reach; it removes none.
+#
+# Residual, measured 2026-08-24: the name is searched as a substring of the
+# whole suite file, so a name surviving only in a COMMENT still passes. It
+# happened here — a case was renamed and the section header above it kept the
+# old wording, which held the matrix green until the header was fixed too.
+# Requiring the name outside a comment would put a comment syntax per language
+# back into a check whose whole point is knowing none.
 checked_against_suite = 0
 absent_from_suite = []
 for suite, name in matrix_suites:

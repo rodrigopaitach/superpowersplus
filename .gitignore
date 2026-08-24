@@ -23,3 +23,12 @@ evals/
 # while deciding something here. Local to whoever is reading it, not part of
 # the published plugin, and heavy: the first one to land was 6.8 MB of PDF.
 research/
+
+# Python bytecode. `skills/writing-plans/scripts/mdfence.py` is imported by
+# gates that run from a pre-commit hook and from inside an installed plugin
+# directory; without this, any invocation without `-B` drops a committable
+# .pyc into a `skills/` tree that ships to Codex wholesale. The two carriers
+# also set sys.dont_write_bytecode — this rule is the one that covers callers
+# nobody has written yet.
+__pycache__/
+*.pyc
