@@ -9,6 +9,12 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **`writing-plans` now tells the author to read the branch's own `git log` when the work is a replan.** Work from an earlier plan survives in the branch and does not appear in a diff against the main branch, so a task telling the implementer to build what is already there reads as new work at every gate downstream. Measured: 3 of 10 findings in one review were artifacts that already existed.
+
 ## [1.19.1] - 2026-08-22
 
 ### Fixed
