@@ -59,8 +59,15 @@ A suite CI does not run blocks nothing. If you add a suite, add its CI step.
 
 The same scripts the pre-commit hook runs, applied to the pushed range:
 `lint-shell.sh`, `check-docs-sync.sh`, `check-changelog.sh`,
-`check-frozen-history.sh`, `check-links.sh`, `check-skill-size.sh` and
-`check-skill-behavior-records.sh`.
+`check-frozen-history.sh`, `check-links.sh`, `check-skill-size.sh`,
+`check-evidence-line.sh`, `check-escalation-shape.sh`, `check-no-dispatch.sh`
+and `check-skill-behavior-records.sh`.
+
+This list is a condition, not a tally: it is what
+`grep -oE 'scripts/check-[a-z-]+\.sh|scripts/lint-shell\.sh' .github/workflows/ci.yml`
+answers today. It stood at seven while the workflow ran ten — the three added
+with the review gates were never written in — which is the drift the paragraph
+below deliberately avoids for the suites.
 
 ## Two caveats that have cost debugging time
 

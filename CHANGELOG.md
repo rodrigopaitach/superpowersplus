@@ -457,6 +457,14 @@ References below name them so a claim here can be traced there.
   and the growth copy fails under the line-number slice it exists for, which it
   did not before.
 
+- **[`docs/testing.md`](docs/testing.md), section "Gates CI runs beyond the
+  suites", listed seven of the ten gates the workflow runs.** The three added
+  with the review gates — `check-evidence-line.sh`, `check-escalation-shape.sh`
+  and `check-no-dispatch.sh` — were never written in. Not this branch's defect;
+  it predates it, and it sits three lines above the paragraph explaining why the
+  suite list was deliberately not written down. The list now carries the command
+  that answers it, so it is a condition rather than a tally.
+
 ## [1.20.0] - 2026-08-24
 
 ### Added
