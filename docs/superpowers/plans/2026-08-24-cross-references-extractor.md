@@ -41,10 +41,10 @@
 | T3.3 A section heading inside a fence does not start a section | AC3 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced acceptance-criteria heading defines nothing` |
 | T3.4 Coverage-matrix rows are read from prose only | AC5 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced matrix table raises no orphan label` |
 | T3.5 The printed task-criteria count is read from prose only | AC6 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the printed task-criteria count omits fenced labels` |
-| T3.6 A test created inside a fenced code block is still discovered | AC8 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced step still creates its test` |
+| T3.6 A test created inside a fenced code block is still discovered | AC8 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced step creates its test and prose does not` |
 | T3.7 A citation inside a fenced code block is still checked | AC9 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced citation past end of file fails` |
 | T3.8 An id cited inside a fenced code block still counts as cited | AC10 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced undefined id still fails` |
-| T4.1 An unterminated fence fails, naming the opening line | AC11 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > an unterminated fence fails naming its line` |
+| T4.1 An unterminated fence fails, naming the opening line | AC11 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the unterminated-fence message names the opening line` |
 | T4.2 The module is resolved from the script's own path, not the working directory | IR4 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > runs from an unrelated working directory` |
 | T5.1 A section ends only at a heading of the same or shallower level | AC4 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a section survives its own subsections` |
 | T5.2 A criterion label carrying a letter suffix is matched | AC7 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a suffixed criterion label is still checked` |
@@ -494,7 +494,7 @@ git commit -m "fix(writing-skills): seis entradas de sumario apontando para head
 - T3.3: A document whose only `## Acceptance Criteria` heading is fenced defines no ids — test: `tests/hooks/test-check-cross-references.sh > a fenced acceptance-criteria heading defines nothing`
 - T3.4: A fenced example matrix table raises no orphan-label failure — test: `tests/hooks/test-check-cross-references.sh > a fenced matrix table raises no orphan label`
 - T3.5: The `task criteria` count in the summary omits fenced labels — test: `tests/hooks/test-check-cross-references.sh > the printed task-criteria count omits fenced labels`. **Not the `run_case` of the same fixture**, which reads only the exit code and stays green when the count goes wrong: the criterion is the number, so the covering test is the one that reads the number.
-- T3.6: A test created inside a fenced block is still discovered — test: `tests/hooks/test-check-cross-references.sh > a fenced step still creates its test`
+- T3.6: A test created inside a fenced block is still discovered — test: `tests/hooks/test-check-cross-references.sh > a fenced step creates its test and prose does not`. **A pair, and it has to be one**: the name a matrix row cites is extracted from that row, and rows are prose, so a single passing document cannot tell a fence-aware finder from a fence-blind one. The second half names a test written only in prose and requires it to fail.
 - T3.7: A citation inside a fenced block that points past the end of its file fails — test: `tests/hooks/test-check-cross-references.sh > a fenced citation past end of file fails`
 - T3.8: An id cited only inside a fenced block is still charged as cited — test: `tests/hooks/test-check-cross-references.sh > a fenced undefined id still fails`
 
@@ -570,7 +570,25 @@ run_case "a fenced citation past end of file fails" 1 "${CLEAN_SPEC}
 # must keep reading them. This case is the guard that the fence work above did
 # not reach into it — the plan's only test lives inside a fenced block, and the
 # matrix names it.
-run_case "a fenced step still creates its test" 0 '# Plan
+# A PAIR, and it has to be one. The name a matrix row cites is extracted FROM
+# that row, and rows are prose — so a single passing document cannot separate a
+# fence-aware finder from a fence-blind one: blind the finder to prose and the
+# name is still found, in the row that named it. The second document is what
+# discriminates.
+fence_pair_failed=0
+fence_case() {
+    local label="$1" expected="$2" doc="$3" dir actual=0
+    dir="$TEST_ROOT/fence_pair_$label"
+    make_repo "$dir"
+    printf '%s\n' "$doc" >"$dir/docs/doc.md"
+    "$SCRIPT_UNDER_TEST" "$dir/docs/doc.md" "$dir" >/dev/null 2>&1 || actual=$?
+    if [ "$actual" != "$expected" ]; then
+        echo "        $label: expected exit $expected, got $actual"
+        fence_pair_failed=$((fence_pair_failed + 1))
+    fi
+}
+
+fence_case defined_in_fence 0 '# Plan
 
 ## Task 1: Build it
 
@@ -580,14 +598,35 @@ Acceptance criteria:
 Step 1: write the test.
 
 ```js
-it("rejects the bad input", () => {})
+it("only inside the fence", () => {})
 ```
 
 ## Test Coverage Matrix
 
 | Criterion | Test |
 |---|---|
+| T1.1 | > only inside the fence |'
+
+fence_case named_only_in_prose 1 '# Plan
+
+## Task 1: Build it
+
+Acceptance criteria:
+- T1.1 rejects the bad input
+
+Step 1: the test is described here and written nowhere — it rejects the bad input.
+
+## Test Coverage Matrix
+
+| Criterion | Test |
+|---|---|
 | T1.1 | > rejects the bad input |'
+
+if [ "$fence_pair_failed" -eq 0 ]; then
+    pass "a fenced step creates its test and prose does not"
+else
+    fail "a fenced step creates its test and prose does not — $fence_pair_failed wrong"
+fi
 
 run_case "a fenced undefined id still fails" 1 "${CLEAN_SPEC}
 
@@ -599,7 +638,7 @@ The design also satisfies AC9, which no list defines.
 - [ ] **Step 2: Run the tests to verify they fail**
 
 Run: `tests/hooks/test-check-cross-references.sh`
-Expected: FAIL on the first five new cases — `fenced task headings are not counted` and `announced count matches when the extras are fenced` report `expected exit 0, got 1` with `the document announces 1 tasks and carries 2`; `a fenced acceptance-criteria heading defines nothing` reports `ids cited but not defined … AC9`; `a fenced matrix table raises no orphan label` reports an orphan label for the example row inside the fence; `fenced task criteria are not counted` reports the fenced example criterion as having no matrix row, and `the printed task-criteria count omits fenced labels` reads `task criteria 2` where the criterion requires 1. The last two — `a fenced citation past end of file fails` and `a fenced undefined id still fails` — PASS already: they are the regression guards for the extractors that must stay fence-blind, and they go red only if the fix over-reaches.
+Expected: FAIL on the first six new cases — `fenced task headings are not counted` and `announced count matches when the extras are fenced` report `expected exit 0, got 1` with `the document announces 1 tasks and carries 2`; `a fenced acceptance-criteria heading defines nothing` reports `ids cited but not defined … AC9`; `a fenced matrix table raises no orphan label` reports an orphan label for the example row inside the fence; `fenced task criteria are not counted` reports the fenced example criterion as having no matrix row, and `the printed task-criteria count omits fenced labels` reads `task criteria 2` where the criterion requires 1. The last two — `a fenced citation past end of file fails` and `a fenced undefined id still fails` — PASS already: they are the regression guards for the extractors that must stay fence-blind, and they go red only if the fix over-reaches.
 
 - [ ] **Step 3: Wire the mask in**
 
@@ -706,7 +745,7 @@ git commit -m "fix(writing-plans): extratores estruturais leem markdown pela mas
 - Produces: nothing consumed by a later task.
 
 **Acceptance criteria:**
-- T4.1: A document with an unclosed fence exits 1 and the message contains the opener's line number — test: `tests/hooks/test-check-cross-references.sh > an unterminated fence fails naming its line`
+- T4.1: A document with an unclosed fence exits 1 and the message contains the opener's line number — test: `tests/hooks/test-check-cross-references.sh > the unterminated-fence message names the opening line`. **Not the `run_case` beside it**, which reads only the exit code and stays green when the number is stripped from the message: this criterion has two halves and the message case covers both, going red when the failure is disabled as well as when the number is wrong.
 - T4.2: The script works when invoked by absolute path from a directory that is not the repository — test: `tests/hooks/test-check-cross-references.sh > runs from an unrelated working directory`
 
 - [ ] **Step 1: Write the failing tests**
@@ -723,6 +762,27 @@ run_case "an unterminated fence fails naming its line" 1 "${CLEAN_SPEC}
 \`\`\`markdown
 ## Acceptance Criteria
 "
+
+# AC11 has TWO conjuncts — exits 1, AND the message names the opening line —
+# and run_case reads only the exit code. The expected number is COMPUTED from
+# the fixture, never written down: a constant would go stale the first time a
+# line is added above the fence, and would then assert the wrong thing while
+# still passing.
+unclosed_dir="$TEST_ROOT/unterminated_names_its_line"
+make_repo "$unclosed_dir"
+printf '%s\n' "${CLEAN_SPEC}
+
+\`\`\`markdown
+## Acceptance Criteria
+" >"$unclosed_dir/docs/doc.md"
+opener_line="$(grep -n '^```markdown$' "$unclosed_dir/docs/doc.md" | head -1 | cut -d: -f1)"
+unclosed_out="$("$SCRIPT_UNDER_TEST" "$unclosed_dir/docs/doc.md" "$unclosed_dir" 2>&1 || true)"
+if printf '%s' "$unclosed_out" | grep -q "opens at line ${opener_line} "; then
+    pass "the unterminated-fence message names the opening line (line $opener_line)"
+else
+    fail "the unterminated-fence message names the opening line — expected line $opener_line"
+    { printf '%s' "$unclosed_out" | sed 's/^/        /'; } || true
+fi
 
 # The script is packaged with the plugin and run against arbitrary repositories,
 # so it must find its module beside itself and never relative to the caller's

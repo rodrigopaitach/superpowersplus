@@ -196,7 +196,8 @@ References below name them so a claim here can be traced there.
   change what any carrier reports, only what each one reads. No new counts
   field, no new output shape" — the second sentence permits this and the first
   forbids it, so recording it as compliance would be reading half the bullet.
-  The carrier reports one field fewer and the output shape changed. Deviation,
+  The
+  carrier reports one field fewer and the output shape changed. Deviation,
   accepted, written down.
 - **The matrix check cannot see a plan that quotes a test it never ships, and
   this release is the demonstration.** `check-cross-references` builds the set
@@ -230,6 +231,32 @@ References below name them so a claim here can be traced there.
   number; the plan now names it, and carries it in the step that creates it.
   Found by the conformance audit, which opens the suite — not by the matrix
   gate, which cannot.
+- **Two more criteria were cited to a case that could not fail for them, and
+  both are the same shape as the one above.** `AC8` — "a test created inside a
+  fenced block is still discovered" — cited a single passing document, and a
+  single document cannot settle it: the name a coverage-matrix row cites is
+  extracted *from that row*, and rows are prose, so blinding the test finder to
+  fenced content leaves the name findable in the row that named it. Measured:
+  under that blinding the cited document still exits 0. It is now a pair, whose
+  second half names a test written only in prose and requires it to fail —
+  red under the blinding, while the first half stays red under a finder that
+  sees nothing. `AC11` — "an unterminated fence exits 1 **and** the message
+  names the opening line" — cited a case reading only the exit code; measured,
+  stripping the line number from that message left every case in every suite
+  green. The new case computes the expected line number from its own fixture
+  and greps the message for it, and goes red both when the number is wrong and
+  when the failure is disabled entirely.
+- **A test's perturbation could stop perturbing anything, silently.** The
+  `--help` case above builds a copy of the carrier with the header's final
+  sentence reworded — and keyed that rewording on the sentence's current text.
+  Reword it in the carrier, which is exactly what the case exists to prove
+  nothing depends on, and the substitution matches nothing, the copy becomes
+  identical to the original, and the runaway direction stops being tested while
+  still reporting a pass. Measured: in that state the case passed over the
+  precise defect it was written for. It now compares each perturbed copy against
+  the original and fails if they are the same, the guard
+  [`tests/hooks/test-check-evidence-line.sh`](tests/hooks/test-check-evidence-line.sh)
+  already uses for the same reason.
 
 ### Known leftovers
 

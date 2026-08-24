@@ -231,13 +231,34 @@ run_case "a fenced citation past end of file fails" 1 "${CLEAN_SPEC}
 # must keep reading them. This case is the guard that the fence work above did
 # not reach into it.
 #
-# The test name appears ONLY inside the fenced block and in the matrix row —
-# never on the criterion line. That placement is the whole case: writing-plans
-# requires a real criterion line to name its covering test, so a fixture that
-# followed the convention would carry the name in prose too, and the case would
-# pass even with the test finder blinded to fences. Measured: with the name on
-# the criterion line, blinding the finder leaves this case green.
-run_case "a fenced step still creates its test" 0 '# Plan
+# A PAIR, and it has to be one: a single document cannot discriminate here.
+#
+# The name a matrix row cites is extracted FROM that row, and matrix rows are
+# prose — so the cited name is in the prose of every document by construction.
+# Blind the finder to `prose_text` and the name is still found, in the row that
+# named it: the positive document below passes under the blinding it exists to
+# forbid. An earlier version of this case claimed the name being absent from the
+# criterion line was "the whole case"; it is not, and the mutation that seemed
+# to prove it was one this fixture predicted rather than one a future edit would
+# make.
+#
+# The second document is what discriminates. Its matrix names a test that
+# appears in prose and in NO code block: correct code reports it missing and
+# exits 1, and any finder that accepts prose as creation exits 0 instead.
+fence_pair_failed=0
+fence_case() {
+    local label="$1" expected="$2" doc="$3" dir actual=0
+    dir="$TEST_ROOT/fence_pair_$label"
+    make_repo "$dir"
+    printf '%s\n' "$doc" >"$dir/docs/doc.md"
+    "$SCRIPT_UNDER_TEST" "$dir/docs/doc.md" "$dir" >/dev/null 2>&1 || actual=$?
+    if [ "$actual" != "$expected" ]; then
+        echo "        $label: expected exit $expected, got $actual"
+        fence_pair_failed=$((fence_pair_failed + 1))
+    fi
+}
+
+fence_case defined_in_fence 0 '# Plan
 
 ## Task 1: Build it
 
@@ -256,6 +277,27 @@ it("only inside the fence", () => {})
 |---|---|
 | T1.1 | > only inside the fence |'
 
+fence_case named_only_in_prose 1 '# Plan
+
+## Task 1: Build it
+
+Acceptance criteria:
+- T1.1 rejects the bad input
+
+Step 1: the test is described here and written nowhere — it rejects the bad input.
+
+## Test Coverage Matrix
+
+| Criterion | Test |
+|---|---|
+| T1.1 | > rejects the bad input |'
+
+if [ "$fence_pair_failed" -eq 0 ]; then
+    pass "a fenced step creates its test and prose does not"
+else
+    fail "a fenced step creates its test and prose does not — $fence_pair_failed wrong"
+fi
+
 run_case "a fenced undefined id still fails" 1 "${CLEAN_SPEC}
 
 \`\`\`markdown
@@ -272,6 +314,32 @@ run_case "an unterminated fence fails naming its line" 1 "${CLEAN_SPEC}
 \`\`\`markdown
 ## Acceptance Criteria
 "
+
+# AC11 has TWO conjuncts — "exits 1, AND the message names the line the fence
+# opened on" — and the run_case above covers the first. run_case reads only the
+# exit code. Measured by the conformance audit: stripping the line number out of
+# that message left every case in every suite green, so the second conjunct had
+# no red state at all. Same defect the T3.5 count case exists for, one criterion
+# over.
+#
+# The expected number is COMPUTED from the fixture, never written down: a
+# constant here would go stale the first time a line is added above the fence
+# and would then be asserting the wrong thing while still passing.
+unclosed_dir="$TEST_ROOT/unterminated_names_its_line"
+make_repo "$unclosed_dir"
+printf '%s\n' "${CLEAN_SPEC}
+
+\`\`\`markdown
+## Acceptance Criteria
+" >"$unclosed_dir/docs/doc.md"
+opener_line="$(grep -n '^```markdown$' "$unclosed_dir/docs/doc.md" | head -1 | cut -d: -f1)"
+unclosed_out="$("$SCRIPT_UNDER_TEST" "$unclosed_dir/docs/doc.md" "$unclosed_dir" 2>&1 || true)"
+if printf '%s' "$unclosed_out" | grep -q "opens at line ${opener_line} "; then
+    pass "the unterminated-fence message names the opening line (line $opener_line)"
+else
+    fail "the unterminated-fence message names the opening line — expected line $opener_line"
+    { printf '%s' "$unclosed_out" | sed 's/^/        /'; } || true
+fi
 
 # The script is packaged with the plugin and run against arbitrary repositories,
 # so it must find its module beside itself and never relative to the caller's
@@ -485,6 +553,22 @@ awk 'NR == 3 { print "" } { print }' "$SCRIPT_UNDER_TEST" >"$help_dir/blank-line
 sed 's/^# Exit 1 when anything does not resolve\./# Returns non-zero when anything fails to resolve./' \
     "$SCRIPT_UNDER_TEST" >"$help_dir/reworded"
 chmod +x "$help_dir/as-shipped" "$help_dir/blank-line" "$help_dir/reworded"
+
+# The two perturbations above are keyed on the carrier's current text: one on
+# its line 3, one on the wording of its final header sentence. Reword that
+# sentence — which is precisely what this case exists to prove nothing depends
+# on — and the sed matches nothing, the copy becomes identical to the original,
+# and the runaway direction stops being tested while still reporting PASS.
+# Measured by review: with that sentence reworded and a sed-range usage()
+# reinstalled, this case passed over the exact defect it was written for.
+# tests/hooks/test-check-evidence-line.sh:49 guards the same way, for the same
+# reason.
+for perturbed in blank-line reworded; do
+    if cmp -s "$help_dir/as-shipped" "$help_dir/$perturbed"; then
+        echo "        $perturbed: the perturbation changed nothing — this copy tests nothing"
+        help_failed=$((help_failed + 1))
+    fi
+done
 
 check_help "as shipped" "$help_dir/as-shipped"
 check_help "blank line in the header" "$help_dir/blank-line"
