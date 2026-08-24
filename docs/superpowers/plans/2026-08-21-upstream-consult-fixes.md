@@ -27,7 +27,7 @@
 - **No YAML manifest support** (`IR4`). All seven manifests in `.version-bump.json` are JSON and stay so.
 - **Every commit staging `skills/`, `scripts/`, `githooks/`, `.github/` or `hooks/` carries its `CHANGELOG.md` entry in the same commit** (`IR6`), enforced by `scripts/check-changelog.sh:49`.
 - **These gates stay green** (`IR5`): `check-links.sh`, `check-changelog.sh`, `check-docs-sync.sh`, `check-skill-size.sh`, `check-escalation-shape.sh`, `check-evidence-line.sh`, `check-frozen-history.sh`, `check-skill-behavior-records.sh`.
-- **`CHANGELOG.md:4645` and `RELEASE-NOTES.md:860` are never edited** (`AC2`). They are historical record.
+- **[`CHANGELOG.md`](../../../CHANGELOG.md), section "[1.0.0] - 2026-08-02" and `RELEASE-NOTES.md:860` are never edited** (`AC2`). They are historical record.
 
 ## Test Coverage Matrix
 
@@ -38,7 +38,7 @@
 | Criterion | Spec criterion | Test type | Layer | Test |
 |-----------|----------------|-----------|-------|------|
 | T1.1 The script and its documentation are gone | AC1 | grep | — | Step 5 of Task 1: `grep -rn 'render-graphs' --exclude-dir=.git .` returns only the two historical lines and this plan |
-| T1.2 The historical record is untouched | AC2 | gate | `scripts/` | Step 6 of Task 1: `git diff --cached --name-only` contains neither `CHANGELOG.md:4645`'s file as a content edit to that line nor `RELEASE-NOTES.md` |
+| T1.2 The historical record is untouched | AC2 | gate | `scripts/` | Step 6 of Task 1: `git diff --cached --name-only` contains neither [`CHANGELOG.md`](../../../CHANGELOG.md), section "[1.0.0] - 2026-08-02"'s file as a content edit to that line nor `RELEASE-NOTES.md` |
 | T1.3 The style guide and every `dot` block survive | AC3 | grep | — | Step 5 of Task 1: `grep -rc '```dot' skills/` totals 10, and `graphviz-conventions.dot` exists |
 | T1.4 No automated check requires Graphviz | IR7, IR1 | grep | — | Step 5 of Task 1: `grep -rn 'dot -T\|graphviz' scripts/ tests/ .github/ hooks/ githooks/` returns nothing |
 | T2.1 The listing command includes `--ignored` | AC4 | none — prose | `skills/` | No test. Declared in the spec's Coverage Map, row "Testing" |
@@ -82,7 +82,7 @@
 
 **Acceptance criteria:**
 - T1.1: `skills/writing-skills/render-graphs.js` does not exist, and the "Visualizing for your human partner" paragraph is gone from `skills/writing-skills/SKILL.md` — test: Step 5's grep
-- T1.2: `CHANGELOG.md:4645` and `RELEASE-NOTES.md:860` are unedited — test: Step 6's staged-file check
+- T1.2: [`CHANGELOG.md`](../../../CHANGELOG.md), section "[1.0.0] - 2026-08-02" and `RELEASE-NOTES.md:860` are unedited — test: Step 6's staged-file check
 - T1.3: `graphviz-conventions.dot` exists and `skills/` still holds ten ` ```dot ` blocks — test: Step 5's counts
 - T1.4: No script, test, workflow or hook references Graphviz — test: Step 5's grep
 

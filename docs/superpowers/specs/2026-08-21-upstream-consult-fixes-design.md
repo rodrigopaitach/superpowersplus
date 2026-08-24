@@ -125,7 +125,7 @@ another one — stated where it can be read.
   [`writing-skills/SKILL.md`](../../../skills/writing-skills/SKILL.md), section
   "Flowchart Usage" — is gone with it.
 - **AC2** — No file outside the historical record references the script. The
-  two changelog lines that do (`CHANGELOG.md:4645`, `RELEASE-NOTES.md:860`) are
+  two changelog lines that do ([`CHANGELOG.md`](../../../CHANGELOG.md), section "[1.0.0] - 2026-08-02", `RELEASE-NOTES.md:860`) are
   a record of past decisions and are not edited.
 - **AC3** — `graphviz-conventions.dot`, the ten ` ```dot ` blocks, and the
   **rest of "Flowchart Usage"** — the when-to-use-a-flowchart rules and the
@@ -276,7 +276,7 @@ unless it is marked as a third party's measurement.
 3. **Nothing invokes it.** `grep -rn 'render-graphs' --exclude-dir=.git .`
    returns the script's own usage text, its documentation at
    `skills/writing-skills/SKILL.md:331-334`, two historical changelog lines
-   (`CHANGELOG.md:4645`, `RELEASE-NOTES.md:860`), and this specification. A
+   ([`CHANGELOG.md`](../../../CHANGELOG.md), section "[1.0.0] - 2026-08-02", `RELEASE-NOTES.md:860`), and this specification. A
    search restricted to `tests/`, `scripts/`, `.github/`, `hooks/` and
    `githooks/` returns nothing.
 

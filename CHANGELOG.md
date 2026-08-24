@@ -321,16 +321,30 @@ References below name them so a claim here can be traced there.
   Measured: replacing a case's document with `# nothing` keeps the name, guts
   the assertion and leaves the guard green. It now compares each case's body
   against the commit the branch was cut from.
-- **Eighteen `file:line` citations in six live documents were broken by this
-  release and repaired.** Two edits caused it: removing six table-of-contents
+- **Thirteen `file:line` citations in six live documents were broken by this
+  release and repaired, and five more that were already stale before it were
+  repaired alongside.** Two edits caused it: removing six table-of-contents
   lines from [`skills/writing-skills/anthropic-best-practices.md`](skills/writing-skills/anthropic-best-practices.md), and adding comment lines to
   [`scripts/check-skill-size.sh`](scripts/check-skill-size.sh), which pushed
   `MAX=500` from `:26` to `:34` — a line five other documents cite. Two sweeps were
   needed: the first found twelve and declared the class closed, and a review then
   found six more — including a `ci.yml` range inside a document the class itself
-  names. A class is not exhaustive because the sentence saying so was written. The release's
-  own file-scope criterion had named two of the seven, because two was what had
-  been noticed; the class was always "every citation this branch's edits
+  names. A class is not exhaustive because the sentence saying so was written.
+  **A third sweep then found that five of the eighteen were never this release's
+  to repair**: those five `CHANGELOG.md` citations were already pointing at the
+  wrong line at the branch point — correct when their document was written,
+  stale by the time this branch started — and the first repair moved them by a
+  wrong offset (365, where the diff shows 377) from a baseline that was itself
+  wrong, landing on unrelated prose. **Repairing a citation without opening what
+  it lands on is the same defect as writing it that way.** Repairing the number
+  a second time would have been the same mistake a third: the line moved again
+  while this entry was being written, because writing it added lines above.
+  Those five now use the form [`CLAUDE.md`](CLAUDE.md) already prescribes for a
+  file this project edits every release — a markdown link plus a section title,
+  naming the released section that holds the line. That form is read by
+  `check-links.sh`'s section pass, which line numbers never were: the count of
+  gated section references went from 80 to 85. The release's own file-scope
+  criterion had named two of the six, because two was what had been noticed; the class was always "every citation this branch's edits
   invalidated" and now says so. **No gate finds these**: the cross-reference
   check verifies only that a cited file opens and is long enough, and it charges
   no citation whose path carries no dotted extension — one of this release's own
