@@ -28,6 +28,23 @@ Every one of these is stack-agnostic: D1 needs only a plan carrying tests and an
 implementation, D2 only a spec with a numbered criteria list, D3 only git, D4
 only a reviewed state change, D5 only a review performed by an agent.
 
+**None of the five was ever recorded here — not caught, and not written down
+either.** Searched on 2026-08-23 across the 15 plans in
+`docs/superpowers/plans/`, the 20 specs in `docs/superpowers/specs/`, the whole
+of [`CHANGELOG.md`](../../../CHANGELOG.md), and every one of the 41 items in its
+`## Open gaps` section, read by title. Two grep hits in old plans were opened and
+are false positives — one is a fix-loop test scenario, the other a browser
+confused-deputy note. So these are not gaps this project weighed and deferred;
+they never reached it.
+
+**One open gap is adjacent to D1 and is not the same defect.**
+[`CHANGELOG.md`](../../../CHANGELOG.md), section "Open gaps", item "No mutation
+sensor", records that nothing kills a test passing by accident — an assertion
+that never reaches the behavior. D1 is narrower and needs no mutation to find:
+the test's expected value and the formula the *same plan* specifies disagree,
+which is settled by reading the two side by side. Closing D1 does not close that
+gap, and that gap would not have caught D1.
+
 ## Codebase Findings
 
 Every claim below was located in this checkout on 2026-08-23.
@@ -89,6 +106,15 @@ grounds.
    runs", does not list it among the four faces whose scopes must not be
    harmonized. Confirmed by reading that table; **not** confirmed against any
    test — a grep found none asserting that boundary for any face.
+4. **That each rule's wording fits the space its carrier has.** Four of the five
+   land in reviewer prompt files, which carry no ceiling; AC3 lands in
+   `skills/writing-plans/SKILL.md`, which has six lines before it fails
+   `scripts/check-skill-size.sh`. Whether AC3's rule can be stated in four lines
+   without becoming a pointer nobody follows is not settled here — the
+   surrounding text has to be in front of the author. Measured: the file is 494
+   lines today. **If it cannot, the fix is progressive disclosure into
+   `references/`, never compression** — the rule this repository states in
+   [`CLAUDE.md`](../../../CLAUDE.md), section "Where the obvious move is wrong".
 
 ## Acceptance Criteria
 
@@ -138,16 +164,16 @@ grounds.
 
 | Category | State | Where it landed |
 |---|---|---|
-| Functional scope and behavior | Resolved | AC1–AC5, one per lesson |
+| Functional scope and behavior | Resolved | AC1–AC5, one per defect class |
 | Domain and data model | Clear | No data. The artifacts are markdown files already in the repository |
 | Interaction flow | Clear | No user-facing flow; the readers are a subagent reviewer and the agent writing a plan |
 | Non-functional attributes | Resolved | AC7 and IR5 — the ceiling gate and the link gate are the only runtime constraints this change can break |
 | Integrations and external dependencies | Clear | None. Zero-dependency plugin, `CLAUDE.md` section "What does not belong here" |
 | Edge cases and failures | Resolved | IR2 (no advisory rules), IR4 (single carrier). The failure mode is a rule too vague to act on, which IR2 refuses |
 | Constraints and tradeoffs | Resolved | AC7 (500-line ceiling, 6 lines of headroom), IR3 (four faces untouched) |
-| Terminology | Resolved | "Carrier" means the file a rule lives in, the sense `docs/review-scopes.md` already uses |
+| Terminology | Resolved | "Carrier" means the file a rule lives in, the sense [`docs/review-scopes.md`](../../review-scopes.md) already uses |
 | Completion signals | Resolved | Every AC is settled by opening the named file and reading the rule, or by running the named gate |
-| Placeholders and vague adjectives | Deferred | The exact wording of each rule belongs to the plan, where the surrounding text is in front of the author. `## Assumptions to Confirm` item 2 |
+| Placeholders and vague adjectives | Deferred | The exact wording of each rule belongs to the plan, where the surrounding text is in front of the author and the line budget is visible. `## Assumptions to Confirm` item 4 |
 
 ### Decision record
 
