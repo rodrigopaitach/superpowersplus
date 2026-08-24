@@ -79,7 +79,10 @@ grounds.
    a change serving one workflow is refused, and a capture pipeline is one
    person's workflow by construction. **This is the same finding the security
    lens took** — measured, justified, and belonging one level down, in the
-   `CLAUDE.md` of the projects rather than here.
+   `CLAUDE.md` of the projects rather than here. It is recorded in
+   [`CHANGELOG.md`](../../../CHANGELOG.md), section "Open gaps", which states it
+   as "the finding is that it belongs one level down". Cited by link and section
+   rather than by line because that list is live and edited every release.
 3. **That `receiving-code-review` is the right home for D5.** It is the skill
    that handles findings, and
    [`docs/review-scopes.md`](../../review-scopes.md), section "What each face
@@ -120,9 +123,9 @@ grounds.
 - **IR2** — No rule is added as a non-blocking advisory in a reviewer's table. A
   rule that cannot be stated precisely enough to block is not added at all.
 - **IR3** — The four review faces named in
-  [`docs/review-scopes.md`](../../review-scopes.md) are not touched. AC1, AC2
-  and AC4 land on the spec and plan *document* reviewers, which that document
-  does not govern.
+  [`docs/review-scopes.md`](../../review-scopes.md) are not touched. AC1 and AC2
+  land on the plan *document* reviewer, AC4 on both document reviewers — neither
+  of which that file governs.
 - **IR4** — Each rule lands in exactly one carrier. A rule that would have to be
   repeated across carriers to work is out of scope here, because this repository
   charges copied shapes with a gate and none exists for these.
