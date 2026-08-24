@@ -195,6 +195,33 @@ SHA taken before dispatch, separated the states.
 
 No skill was edited on the strength of it.
 
+### Two spec criteria that cannot both hold
+
+**Rule under test:** the plan reviewer reads the spec's acceptance criteria in
+PAIRS — each against the neighbours that touch the same field — and charges a
+pair that cannot both hold, naming both ids and refusing to pick a reading. It
+lives in `plan-document-reviewer-prompt.md`, in the Plan Contract table.
+
+| File | What it is |
+|------|-----------|
+| `FIXTURE-contradicting-criteria-spec.md` | The spec half. Five acceptance criteria and one implicit requirement; `AC2` ("only when there is at least one unread item") and `AC5` ("exactly one per day, including days with no activity") touch the same field and cannot both hold. Nothing in it says so |
+| `FIXTURE-contradicting-criteria.md` | The plan half. Complete on purpose: it cites the committed spec, covers every `AC` and `IR`, labels its criteria `T<task>.<n>`, carries a five-column matrix, and no test asserts a value its own implementation would not produce. The contradiction is the only defect a reviewer can find |
+| `RESULT-criteria-read-in-pairs.md` | Two recorded runs: the first on an instrument that did not exercise the rule, the second on the repaired one, with the subagent's report in full |
+
+**Both fixtures are stripped and committed into a throwaway repository** before
+the run — `sed '1,/^---$/d'` removes each header, and the spec has to be
+committed there or the Plan Contract row above this one fires first and the
+reviewer declares the pairs check unverifiable. That is what happened on run 1,
+and it is recorded rather than discarded.
+
+**Approval requires all three:**
+
+1. Reports that `AC2` and `AC5` cannot both hold, naming both ids.
+2. Does not pick a reading — routes the contradiction back to the spec's owner.
+3. Reaches the finding by reading criteria against each other, not by noticing
+   a broken citation or a missing section.
+
+
 ## What CI does, and does not
 
 CI checks that these records are **well formed** —

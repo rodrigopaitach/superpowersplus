@@ -332,27 +332,28 @@ git commit -m "feat(receiving-code-review): reproduce a measurable finding befor
 **Why this rule and not the other four:** its "before" state is already measured. During the review of the source spec, a Coverage Map row pointed at the wrong neighbouring item and **two rounds of adversarial spec review passed it** — the generic consistency rule was present and did not catch it. That is half of a two-state comparison, collected at no cost. The other four rules have no such "before", so a record of them would measure only the after.
 
 **Files:**
+- Create: `tests/skill-behavior/FIXTURE-contradicting-criteria-spec.md`
 - Create: `tests/skill-behavior/FIXTURE-contradicting-criteria.md`
 - Create: `tests/skill-behavior/RESULT-criteria-read-in-pairs.md`
 - Modify: `tests/skill-behavior/README.md`
 - Modify: `CHANGELOG.md`
 
-**Known miscount, and do not "fix" it.** The fixture below contains
-`## Task 1:` and `## Task 2:` inside a fenced code block, so
-`check-cross-references` reports **8 tasks** for this plan, which has 6. That
-script counts task headings without excluding fenced blocks — the same defect
-recorded against `docs/superpowers/plans/2026-07-06-sdd-plan-scoped-workspace.md`,
-where it reports 17 for a plan with 5. It does not fail here because this plan
-states no task count in prose. **Do not reword the fixture to dodge the count:**
-the fixture has to look like a real plan or it stops being a temptation, and
-that is the whole instrument. The extractor is a separate piece of work.
+**The fixture is two files, and the reason is a measurement.** The first
+version was a single 37-line plan citing a spec path that did not exist. The
+reviewer stopped at the Plan Contract row above the rule under test — "The
+header cites a source spec path that exists and is committed" — and reported the
+pairs check as *unverifiable rather than checked-and-passed*. Seven blocking
+findings, none of them the contradiction: the instrument tripped a neighbouring
+row and never exercised the mechanism. Both runs are recorded in
+[`RESULT-criteria-read-in-pairs.md`](../../../tests/skill-behavior/RESULT-criteria-read-in-pairs.md);
+the failed one is a finding about the rule's reach, not about the rule.
 
 **Interfaces:**
 - Consumes: the `AC2` row from Task 2, verbatim — the record's criterion quotes it.
 - Produces: nothing.
 
 **Acceptance criteria:**
-- T5.1: The fixture carries two criteria that cannot both hold, and its `FIXTURE` header sits above a `---` separator so the neutral copy can strip it — test: Step 3's grep
+- T5.1: The fixture carries two criteria that cannot both hold, and each fixture file's header sits above a `---` separator so the neutral copy can strip it — test: Step 3's greps
 - T5.2: The record carries date, model, and a verdict per criterion — test: `scripts/check-skill-behavior-records.sh` at Step 7
 - T5.3: The record states whether the reviewer caught the contradiction — test: the record itself, criterion 1
 
@@ -361,78 +362,59 @@ that is the whole instrument. The extractor is a separate piece of work.
 Run: `sed -n '231,236p' tests/skill-behavior/README.md`
 Expected: the "Adding a test" section — one directory entry per rule: a fixture, the input that carries it, and a `RESULT-*.md` with date, model, criteria and the full agent report.
 
-- [ ] **Step 2: Write the fixture**
+- [ ] **Step 2: Write the two fixture files**
 
-Create `tests/skill-behavior/FIXTURE-contradicting-criteria.md`:
+Each opens with a `# Test fixture — …` header explaining itself, then a `---`
+separator, then the artifact. The header is what `sed '1,/^---$/d'` strips, so
+the subagent never learns it is being measured.
 
-```markdown
-# Test fixture — a plan whose spec carries two criteria that cannot both hold
+`tests/skill-behavior/FIXTURE-contradicting-criteria-spec.md` carries the spec:
+five acceptance criteria and one implicit requirement, where **`AC2` — "A digest
+is sent only when there is at least one unread item" — and `AC5` — "Every
+subscribed user receives exactly one digest per day, including days with no
+activity" — touch one field and cannot both hold.** Nothing in it says so. The
+other four criteria are neighbours that do not conflict.
 
-This is a test fixture. The header above the separator is stripped before the
-run, so the subagent never learns it is being measured.
+`tests/skill-behavior/FIXTURE-contradicting-criteria.md` carries the plan, and
+it is **complete on purpose**: it cites the committed spec, covers every `AC`
+and `IR`, labels its own criteria `T<task>.<n>`, carries a five-column Test
+Coverage Matrix whose every row names a test its steps actually write, and
+carries **no** test asserting a value its own implementation would not produce.
+Planting that second defect would make the verdict ambiguous — two defects, one
+report, and no way to say which rule fired. The contradiction is the only defect
+a reviewer can find.
 
----
+- [ ] **Step 3: Confirm both fixtures are strippable and self-labelled**
 
-# Notification digest Implementation Plan
+Run: `for f in tests/skill-behavior/FIXTURE-contradicting-criteria*.md; do grep -n -m1 '^---$' "$f"; done`
+Expected: a line number below 12 for each — the header block sits above it.
 
-**Source spec:** `docs/superpowers/specs/2026-08-24-digest-design.md`
+Run: `grep -lc 'test fixture' tests/skill-behavior/FIXTURE-contradicting-criteria*.md | wc -l`
+Expected: `2`
 
-**Goal:** Send one daily digest per user.
+- [ ] **Step 4: Build the throwaway repository outside this one**
 
-## Task 1: Digest assembly
-
-**Spec criterion:** AC2 A digest is sent only when there is at least one unread item.
-
-**Files:**
-- Create: `src/digest/assemble.ts`
-
-- [ ] **Step 1: Write the failing test**
-
-```typescript
-test('sends nothing when there are no unread items', () => {
-  expect(assemble([])).toBeNull();
-});
-```
-
-## Task 2: Delivery cadence
-
-**Spec criterion:** AC5 Every user receives exactly one digest per day, including days with no activity.
-
-**Files:**
-- Create: `src/digest/schedule.ts`
-
-- [ ] **Step 1: Write the failing test**
-
-```typescript
-test('sends one digest per user per day', () => {
-  expect(scheduleFor(user, quietDay)).toHaveLength(1);
-});
-```
-```
-
-`AC2` and `AC5` touch the same field — whether a digest is sent on a day with no unread items — and cannot both hold. Nothing in the fixture says so.
-
-- [ ] **Step 3: Confirm the fixture is strippable and self-labelled**
-
-Run: `grep -n -m1 '^---$' tests/skill-behavior/FIXTURE-contradicting-criteria.md`
-Expected: a line number below 8 — the header block sits above it.
-
-Run: `grep -c 'test fixture' tests/skill-behavior/FIXTURE-contradicting-criteria.md`
-Expected: `1` or more.
-
-- [ ] **Step 4: Build the neutral copy outside the repository**
+The spec has to be **committed** where the reviewer will look for it, or the
+Plan Contract row above the rule fires first and the measurement is lost. That
+is what run 1 proved.
 
 ```bash
-mkdir -p /tmp/skill-behavior-run
+rm -rf /tmp/skill-behavior-run
+mkdir -p /tmp/skill-behavior-run/docs/superpowers/{specs,plans}
+sed '1,/^---$/d' tests/skill-behavior/FIXTURE-contradicting-criteria-spec.md \
+  > /tmp/skill-behavior-run/docs/superpowers/specs/2026-08-24-digest-design.md
 sed '1,/^---$/d' tests/skill-behavior/FIXTURE-contradicting-criteria.md \
-  > /tmp/skill-behavior-run/plan.md
-sed -n '1,4p' /tmp/skill-behavior-run/plan.md
+  > /tmp/skill-behavior-run/docs/superpowers/plans/2026-08-24-digest.md
+git -C /tmp/skill-behavior-run init -q .
+git -C /tmp/skill-behavior-run add -A
+git -C /tmp/skill-behavior-run commit -q -m "spec and plan"
+git -C /tmp/skill-behavior-run log -1 --format=%h -- docs/superpowers/specs/2026-08-24-digest-design.md
 ```
-Expected: a blank line, then the plan's own title — no fixture header. `sed '1,/^---$/d'` deletes through the separator and the fixture keeps a blank line after it, so the title is the second line, not the first.
+Expected: a commit hash on the last line. An empty line means the spec is not committed and the run will measure the wrong thing.
 
 - [ ] **Step 5: Run the measurement**
 
-Dispatch one subagent with the contents of `skills/writing-plans/plan-document-reviewer-prompt.md`, `[PLAN_FILE_PATH]` set to `/tmp/skill-behavior-run/plan.md`, `[ROUND]` set to `1`, and no other framing. Record the model used.
+Dispatch one subagent with the contents of `skills/writing-plans/plan-document-reviewer-prompt.md`, `[PLAN_FILE_PATH]` set to `/tmp/skill-behavior-run/docs/superpowers/plans/2026-08-24-digest.md`, `[ROUND]` set to `1`, and **one operational line naming `/tmp/skill-behavior-run` as the repository root** — run 1 resolved relative paths against the wrong repository, and that ambiguity is not what is under test. No other framing. Record the model used, and record that line in the result so the dispatch can be reproduced.
 
 - [ ] **Step 6: Write the record**
 

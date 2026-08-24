@@ -21,6 +21,8 @@ References below name them so a claim here can be traced there.
 
 - **`receiving-code-review` now says a finding about a measurable fact is reproduced before it is acted on.** Measured: a reviewer reading an artifact under a stale version convention reported three type errors with file, line and error code, and running it again showed zero. Separately, two reviewers asserted opposite facts about the same code — the cost of settling that is one file read.
 
+- **The pairs rule is measured, not just written.** [`tests/skill-behavior/RESULT-criteria-read-in-pairs.md`](tests/skill-behavior/RESULT-criteria-read-in-pairs.md) records two runs against a planted contradiction. The second passed all three criteria — the reviewer named both ids, refused to pick a reading, and routed the conflict back to the spec's owner — and the contradiction was the only blocking finding in its report. The first run is recorded too, and it did **not** measure the rule: the fixture cited a spec path that did not exist, so the reviewer stopped at the Plan Contract row above and reported the pairs check as *unverifiable rather than checked-and-passed*. That is a finding about the rule's reach — when the spec cannot be opened, the rule does not fall back to the criteria the plan itself quotes on each task's `**Spec criterion:**` line — and it cost nothing to collect.
+
 ## [1.19.1] - 2026-08-22
 
 ### Fixed
