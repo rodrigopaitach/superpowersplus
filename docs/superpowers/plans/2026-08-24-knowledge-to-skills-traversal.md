@@ -509,7 +509,7 @@ Expected: empty. **A regression guard, not a discriminator** — it is empty whe
 
 - [ ] **Step 5: Run the content gates whose input this branch changed**
 
-There is no aggregate runner here — `.github/workflows/ci.yml:138-188` invokes each script as its own step. Two gates in that range are deliberately outside the loop: `scripts/lint-shell.sh`, covered by the separate `Run:` at the end of this step, and `scripts/check-changelog.sh`, which reads `git diff --cached` and so has nothing to say in a task that stages nothing — the pre-commit hook already charged it on each of Tasks 1 to 5. `tests/hooks/test-check-*.sh` are absent for a different reason: they test the gate scripts, and `IR1` forbids touching those.
+There is no aggregate runner here — `.github/workflows/ci.yml:144-194` invokes each script as its own step. Two gates in that range are deliberately outside the loop: `scripts/lint-shell.sh`, covered by the separate `Run:` at the end of this step, and `scripts/check-changelog.sh`, which reads `git diff --cached` and so has nothing to say in a task that stages nothing — the pre-commit hook already charged it on each of Tasks 1 to 5. `tests/hooks/test-check-*.sh` are absent for a different reason: they test the gate scripts, and `IR1` forbids touching those.
 
 **All eight are regression guards.** Every one exits 0 at the branch point too; they prove the change broke nothing, never that it did something. What this plan built is measured by the phrase greps in Step 4 and by Task 5's record.
 

@@ -312,11 +312,14 @@ References below name them so a claim here can be traced there.
   Measured: replacing a case's document with `# nothing` keeps the name, guts
   the assertion and leaves the guard green. It now compares each case's body
   against the commit the branch was cut from.
-- **Twelve `file:line` citations in seven live documents were broken by this
+- **Eighteen `file:line` citations in six live documents were broken by this
   release and repaired.** Two edits caused it: removing six table-of-contents
-  lines from `anthropic-best-practices.md`, and adding comment lines to
+  lines from [`skills/writing-skills/anthropic-best-practices.md`](skills/writing-skills/anthropic-best-practices.md), and adding comment lines to
   [`scripts/check-skill-size.sh`](scripts/check-skill-size.sh), which pushed
-  `MAX=500` from `:26` to `:34` — a line six other documents cite. The release's
+  `MAX=500` from `:26` to `:34` — a line five other documents cite. Two sweeps were
+  needed: the first found twelve and declared the class closed, and a review then
+  found six more — including a `ci.yml` range inside a document the class itself
+  names. A class is not exhaustive because the sentence saying so was written. The release's
   own file-scope criterion had named two of the seven, because two was what had
   been noticed; the class was always "every citation this branch's edits
   invalidated" and now says so. **No gate finds these**: the cross-reference
