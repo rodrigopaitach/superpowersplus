@@ -53,7 +53,7 @@
 | T5.5 No committed document under `docs/` changes verdict except as AC4 requires | IR6 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the committed corpus keeps its verdicts` |
 | T6.1 A heading inside a fenced code block produces no anchor | AC13 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > a nested-fence heading produces no anchor` |
 | T6.2 A link written inside a nested fenced block is still ignored | AC14 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > a link inside a nested fenced block is ignored` |
-| T6.3 The link gate exits 0 over this repository | AC17 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > every table-of-contents anchor in anthropic-best-practices resolves` |
+| T6.3 The link gate exits 0 over this repository | AC17 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > the gate passes over this repository itself` |
 | T6.4 Neither python carrier contains fence-scanning logic of its own | AC18 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > carriers hold no fence logic of their own` |
 | T7.1 `task-brief` does not treat a fenced `## Task N` as a task | AC15 | script | `tests/hooks/` | `tests/hooks/test-task-brief.sh > a fenced task heading is not extracted` |
 | T7.2 The branch changes only the files the spec allows | IR8 | script | `tests/hooks/` | `tests/hooks/test-task-brief.sh > the branch touches only its declared files` |
@@ -292,9 +292,13 @@ In `.github/workflows/ci.yml`, immediately after the `Tests (cross-reference che
 
 - [ ] **Step 6: Write the changelog entry**
 
-Under `## [Unreleased]`, in an `### Added` subsection, add:
+**`CHANGELOG.md` has no `## [Unreleased]` section at this point — the file opens on `## [1.20.0] - 2026-08-24`, because the last release closed it.** This step creates it. Insert immediately above that heading, with one blank line on each side:
 
 ```markdown
+## [Unreleased]
+
+### Added
+
 - **One CommonMark fenced-block scanner, shared by the markdown gates.**
   [`skills/writing-plans/scripts/mdfence.py`](skills/writing-plans/scripts/mdfence.py)
   returns a per-line fenced/not mask and the line of any unclosed fence. It sits
@@ -435,9 +439,11 @@ Expected: PASS — every case, including `every table-of-contents anchor in anth
 
 - [ ] **Step 5: Write the changelog entry**
 
-Under `## [Unreleased]`, in a `### Fixed` subsection, add:
+**`### Fixed` does not exist yet — Task 1 created `## [Unreleased]` with only `### Added`.** This step creates it, after the `### Added` block:
 
 ```markdown
+### Fixed
+
 - **Six table-of-contents entries pointed at headings that do not exist.** In
   [`skills/writing-skills/anthropic-best-practices.md`](skills/writing-skills/anthropic-best-practices.md),
   the entries labelled `Executive summary`, `Key findings` and `Recommendations`
@@ -632,7 +638,7 @@ Expected: PASS — all sixteen cases, the nine pre-existing ones unchanged.
 
 - [ ] **Step 5: Write the changelog entry**
 
-Under `## [Unreleased]`, in the `### Fixed` subsection, add:
+Under `## [Unreleased]`, at the end of the `### Fixed` subsection Task 2 created, add:
 
 ```markdown
 - **`check-cross-references` read the whole document as flat text.** Every
@@ -741,7 +747,7 @@ Expected: PASS — all eighteen cases.
 
 - [ ] **Step 5: Write the changelog entry**
 
-Under `## [Unreleased]`, in the `### Fixed` subsection, extend the entry Task 3 added with a final sentence, or add beneath it:
+Under `## [Unreleased]`, at the end of the `### Fixed` subsection, add:
 
 ```markdown
 - **An unterminated fence now fails the document instead of silencing the
@@ -801,7 +807,8 @@ Append to `tests/hooks/test-check-cross-references.sh`, before its final summary
 # section() started on `## <title>` and returned at the next heading of ANY
 # depth, so a section organising its criteria under `###` ended at its own first
 # subsection. Measured 2026-08-24 on a committed spec: the section returned zero
-# ids where it defines 21, and fourteen were reported as cited-but-undefined.
+# ids where it holds 21 — nineteen AC it defines plus two IR cited inside it —
+# and fourteen were reported as cited-but-undefined.
 run_case "a section survives its own subsections" 0 '# Spec
 
 ## Acceptance Criteria
@@ -949,7 +956,7 @@ Expected: the summary line reads `AC/IR defined 26`, and the `ids cited but not 
 
 - [ ] **Step 6: Write the changelog entry**
 
-Under `## [Unreleased]`, in the `### Fixed` subsection, add:
+Under `## [Unreleased]`, at the end of the `### Fixed` subsection Task 2 created, add:
 
 ```markdown
 - **A section was terminated by its own subsection, and a criterion label with a
@@ -989,7 +996,7 @@ git commit -m "fix(writing-plans): nivel de secao, sufixo de letra no id e dois 
 **Spec criterion:** `AC13 A heading inside a fenced code block produces no anchor`, `AC14 links inside fenced code blocks are still ignored`, `AC17 the link gate exits 0 over this repository`, `AC18 neither python carrier contains fence-scanning logic of its own`.
 
 **Files:**
-- Modify: `scripts/check-links.sh:74,226-238`
+- Modify: `scripts/check-links.sh:74,226-239`
 - Modify: `tests/hooks/test-check-links.sh`
 - Modify: `tests/hooks/test-mdfence.sh`
 - Modify: `CHANGELOG.md`
@@ -1001,7 +1008,7 @@ git commit -m "fix(writing-plans): nivel de secao, sufixo de letra no id e dois 
 **Acceptance criteria:**
 - T6.1: A document whose only `## Heading` sits inside a four-backtick block containing a three-backtick block, linked as `#heading`, exits 1 — test: `tests/hooks/test-check-links.sh > a nested-fence heading produces no anchor`
 - T6.2: A link written inside a three-backtick block nested in a four-backtick block is not checked — test: `tests/hooks/test-check-links.sh > a link inside a nested fenced block is ignored`
-- T6.3: The gate exits 0 over this repository — test: `tests/hooks/test-check-links.sh > every table-of-contents anchor in anthropic-best-practices resolves`
+- T6.3: The gate exits 0 when run over this repository itself, not a fixture tree — test: `tests/hooks/test-check-links.sh > the gate passes over this repository itself`
 - T6.4: Neither `check-links.sh` nor `check-cross-references` defines a fence pattern or a fence toggle of its own — test: `tests/hooks/test-mdfence.sh > carriers hold no fence logic of their own`
 
 - [ ] **Step 1: Write the failing tests**
@@ -1025,6 +1032,19 @@ T="$(new_tree)"
 printf '# Doc\n\n````markdown\n# Template\n\n```bash\ncat [not](a/link.md)\n```\n````\n' \
     > "$T/README.md"
 assert_run 0 "a link inside a nested fenced block is ignored" "$T"
+
+# AC17: every other case here runs the gate over a throwaway tree. This one runs
+# it over the repository, which is the only thing that answers whether the two
+# halves of this branch — the corrected mask and the corrected table of contents
+# — actually agree in place.
+repo_exit=0
+"$REPO_ROOT/scripts/check-links.sh" >/dev/null 2>&1 || repo_exit=$?
+if [ "$repo_exit" -eq 0 ]; then
+    pass "the gate passes over this repository itself"
+else
+    fail "the gate passes over this repository itself — exit $repo_exit"
+    "$REPO_ROOT/scripts/check-links.sh" 2>&1 | sed 's/^/        /'
+fi
 ```
 
 And append to `tests/hooks/test-mdfence.sh`, before its final summary block:
@@ -1090,7 +1110,7 @@ Expected: exit 0, and the summary line names the local links, the URLs on the di
 
 - [ ] **Step 5: Write the changelog entry**
 
-Under `## [Unreleased]`, in the `### Fixed` subsection, add:
+Under `## [Unreleased]`, at the end of the `### Fixed` subsection Task 2 created, add:
 
 ```markdown
 - **`scripts/check-links.sh` approved links whose anchors did not exist.** Its
@@ -1237,7 +1257,7 @@ Expected: FAIL on `a fenced task heading is not extracted` — the brief file is
 
 - [ ] **Step 3: Give the awk the closing rule**
 
-In `skills/subagent-driven-development/scripts/task-brief`, replace the awk program's fence rule. `{n,m}` repetition is not portable across awk implementations, so the opener is matched with an explicit alternation and the run length is measured with `length()`:
+In `skills/subagent-driven-development/scripts/task-brief`, replace the awk program's fence rule. `{n,m}` repetition is not portable across awk implementations, so each of the three optional leading spaces is grouped **individually** — `^( ?)( ?)( ?)` — and the fence run is measured with `length()` after the spaces are stripped. Writing them as `^ ?  ?  ?` instead makes each pair's first space mandatory: measured, that pattern matches no unindented fence at all, which is every fence in the fixture below and nearly every fence in this repository.
 
 ```awk
 awk -v n="$n" '
@@ -1245,15 +1265,17 @@ awk -v n="$n" '
   # or equal to the opener, with no info string. The old rule flipped on any
   # three-backtick line, so a nested block closed the outer one and its
   # headings read as real tasks.
-  match($0, /^ ?  ?  ?(```+|~~~+)/) {
+  match($0, /^( ?)( ?)( ?)(`+|~+)/) {
     tok = substr($0, RSTART, RLENGTH)
     sub(/^ +/, "", tok)
-    rest = substr($0, RSTART + RLENGTH)
-    gsub(/[ \t]/, "", rest)
-    if (opener == "") { opener = tok }
-    else if (substr(tok, 1, 1) == substr(opener, 1, 1) && length(tok) >= length(opener) && rest == "") { opener = "" }
-    if (intask) print
-    next
+    if (length(tok) >= 3) {
+      rest = substr($0, RSTART + RLENGTH)
+      gsub(/[ \t]/, "", rest)
+      if (opener == "") { opener = tok }
+      else if (substr(tok, 1, 1) == substr(opener, 1, 1) && length(tok) >= length(opener) && rest == "") { opener = "" }
+      if (intask) print
+      next
+    }
   }
   opener == "" && /^#+[ \t]+Task[ \t]+[0-9]+/ {
     intask = ($0 ~ ("^#+[ \t]+Task[ \t]+" n "([^0-9]|$)"))
@@ -1291,7 +1313,7 @@ In `.github/workflows/ci.yml`, immediately after the `Tests (fence scanner)` ste
 
 - [ ] **Step 7: Write the changelog entry**
 
-Under `## [Unreleased]`, in the `### Fixed` subsection, add:
+Under `## [Unreleased]`, at the end of the `### Fixed` subsection Task 2 created, add:
 
 ```markdown
 - **`task-brief` carried the same naive fence toggle, and now carries the
@@ -1387,17 +1409,7 @@ Expected: FAIL on `a bash case named in the matrix is created` — `expected exi
 
 - [ ] **Step 3: Replace the pattern with the question**
 
-In `skills/writing-plans/scripts/check-cross-references`, delete the `TEST_DEF` regex and the `created` set built from it, and record the matrix rows by index so their own lines can be excluded. Where `matrix_rows` is built, use:
-
-```python
-matrix_row_idx = {
-    i for i, ln in enumerate(prose_lines)
-    if ln.lstrip().startswith("|") and TASK_CRIT.search(ln)
-}
-matrix_rows = [prose_lines[i] for i in sorted(matrix_row_idx)]
-```
-
-Then replace the test-existence pass with:
+In `skills/writing-plans/scripts/check-cross-references`, delete the `TEST_DEF` regex and the `created` set built from it. `matrix_rows` is unchanged — the matrix lines are prose, so the code-block search below never sees them and no index bookkeeping is needed. Replace the test-existence pass with:
 
 ```python
 # Every test named in the matrix is created by some step of some task.
@@ -1446,7 +1458,7 @@ Expected: exit 0. This is the measurement the task exists for: the same command 
 
 - [ ] **Step 6: Write the changelog entry**
 
-Under `## [Unreleased]`, in the `### Fixed` subsection, add:
+Under `## [Unreleased]`, at the end of the `### Fixed` subsection Task 2 created, add:
 
 ```markdown
 - **The test-name comparison knew five test vocabularies and not this

@@ -40,7 +40,7 @@ Every extractor scans `lines` or `text` with no idea that a fenced code block is
 
 `section()` uses one pattern for both ends: it starts on `^#{2,3}\s+<title>$` and returns at the next `^#{2,3}\s` of any depth. A `## Acceptance Criteria` organising its criteria under `###` subsections therefore ends at its own first subsection.
 
-**Measured.** In [`docs/superpowers/specs/2026-08-21-upstream-consult-fixes-design.md:118`](2026-08-21-upstream-consult-fixes-design.md), `## Acceptance Criteria` is terminated by `### Problem 1 — deletion` at `:120`. The section returns a body of zero lines and zero ids where it defines 21, and the script reports fourteen ids as *"cited but not defined"* — a fabricated failure on a committed document.
+**Measured.** In [`docs/superpowers/specs/2026-08-21-upstream-consult-fixes-design.md:118`](2026-08-21-upstream-consult-fixes-design.md), `## Acceptance Criteria` is terminated by `### Problem 1 — deletion` at `:120`. The section returns a body of zero lines and zero ids where it holds 21 — nineteen `AC` ids it defines, plus `IR2` and `IR5` cited inside it, which is the set the script's own pattern extracts. It then reports fourteen ids as *"cited but not defined"*: a fabricated failure on a committed document.
 
 ### D — dead code in the lines the others touch
 
