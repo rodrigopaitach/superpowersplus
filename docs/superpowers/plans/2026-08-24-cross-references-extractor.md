@@ -1662,7 +1662,7 @@ for suite, name in matrix_suites:
     suite_path, _ = resolve(suite)
     if suite_path is None:
         continue          # a plan is written before its tests — AC20 still covers it
-    body = suite_path.read_text(encoding="utf-8", errors="replace")
+    body = suite_path.read_text(encoding="utf-8", errors="replace")  # in a try — an OSError is reported, never skipped
     checked_against_suite += 1
     if name not in body:
         absent_from_suite.append(f"`{name}` in `{suite}`")

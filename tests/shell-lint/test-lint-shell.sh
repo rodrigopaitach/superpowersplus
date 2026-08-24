@@ -211,6 +211,15 @@ assert_contains "$output" "refusing to lint an empty file list" \
 help_failed=0
 help_dir="$TEST_ROOT/usage"
 mkdir -p "$help_dir"
+# Both perturbations below key on line 10 being the header's LAST line. Let the
+# header grow and they still perturb — in the middle — while the anchors go on
+# measuring a line that is no longer the end of it. The perturbation decays
+# without changing, which the `cmp -s` guard below cannot see, so the assumption
+# is asserted rather than assumed.
+if ! sed -n '11p' "$SCRIPT_UNDER_TEST" | grep -q '^set -euo pipefail'; then
+    echo "        the header no longer ends at line 10 — the copies below perturb the wrong line"
+    help_failed=$((help_failed + 1))
+fi
 cp "$SCRIPT_UNDER_TEST" "$help_dir/as-shipped"
 # A paragraph break inside the header. A blank line is not a line of code.
 awk 'NR == 3 { print "" } { print }' "$SCRIPT_UNDER_TEST" >"$help_dir/blank-line"

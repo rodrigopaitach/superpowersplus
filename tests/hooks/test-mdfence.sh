@@ -251,12 +251,26 @@ fi
 # It runs against the COPY built above, never the developer's checkout: a suite
 # that deletes directories out of the tree it is testing is one typo away from
 # deleting something else, and the copy answers the same question.
+#
+# The absence of a .pyc is the assertion, so the case MUST distinguish "nothing
+# was written" from "nothing ran" — measured 2026-08-24: pointed at a copy that
+# was never built, it reported PASS and the whole suite passed with it. The
+# carrier's own summary line is the receipt that it ran, and a missing copy
+# fails rather than passes, the same way `module imports only re` above refuses
+# to approve an absent module.
 copy_module_dir="$real_root/skills/writing-plans/scripts"
 rm -rf "$copy_module_dir/__pycache__"
 ( cd "$real_root" && ./scripts/check-links.sh >/dev/null 2>&1 ) || true
-( cd "$real_root" && ./skills/writing-plans/scripts/check-cross-references \
-    docs/superpowers/specs/2026-08-24-cross-references-extractor-design.md . >/dev/null 2>&1 ) || true
-if [ -d "$copy_module_dir/__pycache__" ]; then
+carrier_ran="$( cd "$real_root" && ./skills/writing-plans/scripts/check-cross-references \
+    docs/superpowers/specs/2026-08-24-cross-references-extractor-design.md . 2>&1 )" || true
+if [ ! -f "$copy_module_dir/mdfence.py" ]; then
+    fail "running a carrier leaves no bytecode beside the module"
+    echo "        the copy this case reads was never built: $copy_module_dir"
+elif ! printf '%s' "$carrier_ran" | grep -q '^check-cross-references:'; then
+    fail "running a carrier leaves no bytecode beside the module"
+    echo "        the carrier never ran, so no .pyc proves nothing:"
+    printf '%s\n' "$carrier_ran" | sed 's/^/        /'
+elif [ -d "$copy_module_dir/__pycache__" ]; then
     fail "running a carrier leaves no bytecode beside the module"
     { ls "$copy_module_dir/__pycache__" | sed 's/^/        /'; } || true
 else

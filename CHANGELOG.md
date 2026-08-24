@@ -465,6 +465,24 @@ References below name them so a claim here can be traced there.
   suite list was deliberately not written down. The list now carries the command
   that answers it, so it is a condition rather than a tally.
 
+- **Three defects in this release's own last round, found by re-reading it
+  rather than by any gate.** Two were introduced by the round that closed the
+  review's Minor findings, and both produce green. Moving the bytecode case in
+  [`tests/hooks/test-mdfence.sh`](tests/hooks/test-mdfence.sh) off the
+  developer's checkout and onto a copy built by the neighbouring case made an
+  absent copy indistinguishable from a clean one: measured, pointed at a copy
+  that was never built it reported PASS and the whole suite passed with it. The
+  case now refuses a missing copy and requires the carrier's own summary line as
+  the receipt that it ran — the absence of a `.pyc` proves nothing if nothing
+  ran. In [`tests/shell-lint/test-lint-shell.sh`](tests/shell-lint/test-lint-shell.sh)
+  both perturbed copies key on line 10 being the header's last line; let the
+  header grow and they still perturb, in the middle, while the anchors measure a
+  line that is no longer the end. The perturbation decays without changing,
+  which the `cmp -s` guard cannot see, so the assumption is now asserted: line 11
+  must be the first line of code. The third: the new matrix-against-suite check
+  dropped a suite it could resolve but not open, in silence, where the citation
+  pass three blocks below reports exactly that as a break. It reports it now too.
+
 ## [1.20.0] - 2026-08-24
 
 ### Added

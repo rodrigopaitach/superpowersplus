@@ -355,7 +355,11 @@ for suite, name in matrix_suites:
         continue
     try:
         body = suite_path.read_text(encoding="utf-8", errors="replace")
-    except OSError:
+    except OSError as exc:
+        # A suite that resolves and will not open is a break to report, not a
+        # check to drop in silence — the citation pass below says the same of
+        # a file it cannot read.
+        absent_from_suite.append(f"`{suite}` — cannot read: {exc}")
         continue
     checked_against_suite += 1
     if name not in body:
