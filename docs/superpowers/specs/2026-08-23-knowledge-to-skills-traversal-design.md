@@ -208,7 +208,7 @@ Answer: accepted. → IR2
 
 **Q: Does touching the spec and plan document reviewers violate the prohibition on harmonizing the four review faces?**
 Recommended: no.
-Source: `docs/review-scopes.md`, section "What each face runs" — the four are
-the task reviewer, the code reviewer, the re-review and the final branch audit.
-The document reviewers are not listed.
+Source: [`docs/review-scopes.md`](../../review-scopes.md), section "What each
+face runs" — the four are the task reviewer, the code reviewer, the re-review
+and the final branch audit. The document reviewers are not listed.
 Answer: accepted. → IR3
