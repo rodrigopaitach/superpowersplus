@@ -23,6 +23,14 @@ SCRIPT_UNDER_TEST="$REPO_ROOT/skills/writing-plans/scripts/check-cross-reference
 # vacuous or, if the extracted copy cannot import its module, red for a reason
 # that has nothing to do with the corpus. Pinned, it keeps asserting the one
 # thing it exists for: this change moved no committed document's verdict.
+#
+# The pin narrows as the corpus grows: the loop below skips any document the
+# baseline commit does not carry, so a document added after this pin is never
+# compared. That is correct — there is no "before" verdict for it — but it means
+# coverage falls with every release while the case goes on reading as green.
+# It stops earning its place when the fence rewrite is no longer the newest
+# reason a verdict could move; at that point delete it rather than repin, since
+# a pin moved forward compares two versions of the same scanner.
 BASE_REF="${BASE_REF:-0aa28b760dad693a544b39f5e7dbe9929d519071}"
 
 FAILURES=0
@@ -151,7 +159,15 @@ run_case "fenced task headings are not counted" 0 "$FENCED_TASKS
 
 This plan has 1 task."
 
-run_case "announced count matches when the extras are fenced" 0 "$FENCED_TASKS
+# AC2 needs a fenced ANNOUNCEMENT, not just a fenced heading. With the fixture
+# above, this case was byte-identical to the one before it and went red only
+# through AC1's mechanism: mutating the announced-count scan at
+# `check-cross-references:220` from `prose_text` back to `text` left the whole
+# suite green. The sentence below sits inside the example, where a fence-blind
+# scan reads it as this document's own claim.
+FENCED_ANNOUNCE="$(printf '%s\n' "$CLEAN_PLAN" '' '````markdown' '## Task 7: an example' '' 'This example plan has 4 tasks.' '' '```js' 'it("nothing", () => {})' '```' '````')"
+
+run_case "announced count matches when the extras are fenced" 0 "$FENCED_ANNOUNCE
 
 This plan has 1 task."
 

@@ -14,7 +14,8 @@ the Codex build on any archived path beginning `scripts/`, while `:241` stages
 other, and the import would fail at runtime for Codex users.
 
 Known deviations from CommonMark, each measured against the 131 versioned `.md`
-files of this repository and latent at zero occurrences:
+files of this repository. Two are latent at zero occurrences; the third is not,
+and reads as prose in six real places:
 
 * A backtick opener whose info string itself contains a backtick is accepted
   here; CommonMark makes it a paragraph. 0 occurrences.
@@ -22,7 +23,11 @@ files of this repository and latent at zero occurrences:
   scanner answers "is this line inside a FENCED block", which is the question
   the three carriers ask.
 * A fence inside a block quote (`> ```) is not modelled: the `>` prefix means
-  the opener does not match, so the block reads as prose. 0 occurrences.
+  the opener does not match, so the block reads as prose. 6 occurrences —
+  README.md:75,77, docs/README.en.md:54,56 and docs/README.pt-BR.md:54,56 —
+  each a single command line carrying no heading, no table row and no link, so
+  nothing any carrier extracts sits inside one. A block-quoted fence that ever
+  carries structure would be read as structure, and that is the exposure.
 """
 
 import re

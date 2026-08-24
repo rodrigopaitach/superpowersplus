@@ -46,11 +46,16 @@
 set -euo pipefail
 
 usage() {
-  # Sliced by CONTENT, not by line number. It used to read `2,34p`, and any
-  # edit to the header above silently truncated --help mid-sentence with
-  # nothing to notice it — which is exactly what happened when this file's
-  # "WHAT IT DOES NOT COVER" list grew.
-  sed -n '2,/^# Exit 1 when anything does not resolve\./p' "$0" | sed 's/^# \{0,1\}//'
+  # Sliced by SHAPE, not by line number and not by a sentence. It used to read
+  # `2,34p`, and any edit to the header above silently truncated --help
+  # mid-sentence with nothing to notice it — which is exactly what happened when
+  # this file's "WHAT IT DOES NOT COVER" list grew. A `sed` range ending on the
+  # header's last sentence fixed the truncation and replaced it with the
+  # opposite failure: reword that sentence and the range runs to end of file,
+  # printing the whole script, python heredoc included. The header is every
+  # comment line before the first line of code, which is a property no wording
+  # can break.
+  awk 'NR == 1 { next } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "$0"
 }
 
 if [[ $# -lt 1 || "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then

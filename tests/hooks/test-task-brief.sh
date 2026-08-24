@@ -83,9 +83,12 @@ fi
 # one rule.
 #
 # It is differential rather than a list of cases because the terms that can
-# drift are the awk's alone — closer character, closer length, closer info
-# string — and each of them was measured to have no red state before this
-# existed.
+# drift are the awk's alone: closer character, closer length, closer info
+# string, and the two OPENER terms — minimum length three, and at most three
+# spaces of indent. Each of the five was measured to have no red state before
+# the case covering it existed; the opener pair was added after a review found
+# that widening the length test to one, or the indent to five spaces, left both
+# suites green.
 MODULE_DIR="$REPO_ROOT/skills/writing-plans/scripts"
 diff_plan="$TEST_ROOT/differential.md"
 cat >"$diff_plan" <<'PLAN'
@@ -121,6 +124,15 @@ x
 ```
 ## Task 6: not a task
 `````
+
+`mdfence` is a module name, and this line STARTS with a backtick without
+opening a fence. Under a minimum length of one it opens a block that swallows
+every heading below it, and the four-space line further down cannot close it.
+
+    ```
+
+The line above is an indented code block, not a fence, and it has no partner:
+under an indent wider than three spaces it opens a block nothing closes.
 
 ## Task 5: an indented opener
 

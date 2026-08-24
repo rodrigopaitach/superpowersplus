@@ -166,7 +166,34 @@ References below name them so a claim here can be traced there.
   exist, all of them already inside an outer fence, so none is exposed), and
   fences inside block quotes (example 128; **6 occurrences**, each a single
   command line carrying no heading, no table row and no link — the docstring had
-  said zero, which was wrong).
+  said zero, which was wrong). The module's own docstring now carries that six
+  and the three files it sits in, so the two records no longer disagree.
+- **Two of this release's own criteria had no red state for the mechanism they
+  name.** The covering test for "the announced task count is read from prose"
+  was byte-identical to the one for "fenced task headings are not counted": its
+  fixture carried a fenced *heading* and no fenced *count sentence*, so it went
+  red against the pre-fix code through the neighbouring mechanism and never
+  through its own. Measured: reverting the announced-count scan in
+  [`skills/writing-plans/scripts/check-cross-references`](skills/writing-plans/scripts/check-cross-references)
+  to raw text left the whole suite green. Separately, the differential gate on
+  the awk copy in
+  [`skills/subagent-driven-development/scripts/task-brief`](skills/subagent-driven-development/scripts/task-brief)
+  covered only the three *closing* terms; the two *opening* terms — minimum
+  length three, at most three spaces of indent — were equally the copy's alone
+  and equally uncovered, and widening either left both suites green. Each of the
+  five terms now has a mutation that turns its suite red, and the fixtures
+  carry the discriminating input rather than a neighbour's.
+- **`usage()` traded a truncation for a runaway.** Slicing the header by its
+  last sentence fixed `--help` cutting off mid-block, and introduced the
+  opposite failure: reword that sentence and the range runs to end of file,
+  printing the python heredoc with it. It now slices by the header's *shape* —
+  every comment line before the first line of code — which no wording can
+  break.
+- **The gate's summary line quietly lost a field.** `tests created by a step`
+  no longer appears in `check-cross-references` output; the language-blind
+  comparison that replaced it has no separate count to report. The design note
+  said "no new counts field", and removing one is within that letter, but the
+  line every user of this gate reads did change.
 
 ## [1.20.0] - 2026-08-24
 
