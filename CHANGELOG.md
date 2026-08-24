@@ -55,6 +55,15 @@ References below name them so a claim here can be traced there.
   script, so every failure after the first was invisible and the
   `N test(s) failed` line was unreachable. Found while running five new cases
   red at once and seeing one.
+- **An unterminated fence now fails the document instead of silencing the
+  checks.** Everything after an unclosed opener reads as fenced, so the task
+  count falls to zero and the criteria list empties — a green verdict on a
+  document the gate stopped reading half-way. It now exits 1 naming the line the
+  fence opened on, following
+  [`scripts/check-no-dispatch.sh:120`](scripts/check-no-dispatch.sh), which
+  fails when it cannot read what it was asked to check. Measured 2026-08-24
+  across the 131 versioned `.md` files of this repository: none has an unclosed
+  fence, so the rule changes no current verdict.
 
 ## [1.20.0] - 2026-08-24
 

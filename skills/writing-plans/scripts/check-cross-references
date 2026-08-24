@@ -72,16 +72,24 @@ lines = text.splitlines()
 # import from leaving a __pycache__ inside an installed plugin.
 sys.dont_write_bytecode = True
 sys.path.insert(0, sys.argv[3])
-from mdfence import prose
+from mdfence import fence_mask, prose
 
 # Structural extractors read `prose_lines`/`prose_text`; content extractors
 # (the test finder, the citation pass, the id-citation pass) keep reading the
 # raw text, each for a measured reason recorded in the design.
+_, unclosed_at = fence_mask(lines)
 prose_lines = prose(lines)
 prose_text = "\n".join(prose_lines)
 
 failures = []
 counts = {}
+
+if unclosed_at is not None:
+    failures.append(
+        f"a fenced block opens at line {unclosed_at} and never closes — "
+        "every heading after it reads as fenced, which turns the checks off "
+        "rather than failing them"
+    )
 
 
 def section(title_re):

@@ -213,6 +213,33 @@ run_case "a fenced undefined id still fails" 1 "${CLEAN_SPEC}
 The design also satisfies AC9, which no list defines.
 \`\`\`"
 
+# --- unreadable input, and where the module comes from ---------------------
+# An unclosed fence swallows every heading after it, which turns the checks off
+# rather than failing them — a green verdict on a document the script stopped
+# reading. scripts/check-no-dispatch.sh:120 is this project's precedent for
+# failing when a gate cannot read its input.
+run_case "an unterminated fence fails naming its line" 1 "${CLEAN_SPEC}
+
+\`\`\`markdown
+## Acceptance Criteria
+"
+
+# The script is packaged with the plugin and run against arbitrary repositories,
+# so it must find its module beside itself and never relative to the caller's
+# working directory.
+elsewhere="$(mktemp -d "$TEST_ROOT/elsewhere.XXXXXX")"
+away_repo="$TEST_ROOT/away"
+make_repo "$away_repo"
+printf '%s\n' "$CLEAN_SPEC" >"$away_repo/docs/doc.md"
+away_exit=0
+(cd "$elsewhere" && "$SCRIPT_UNDER_TEST" "$away_repo/docs/doc.md" "$away_repo" >/dev/null 2>&1) || away_exit=$?
+if [ "$away_exit" -eq 0 ]; then
+    pass "runs from an unrelated working directory"
+else
+    fail "runs from an unrelated working directory — exit $away_exit"
+    { (cd "$elsewhere" && "$SCRIPT_UNDER_TEST" "$away_repo/docs/doc.md" "$away_repo" 2>&1) | sed 's/^/        /'; } || true
+fi
+
 echo
 if [[ "$FAILURES" -eq 0 ]]; then
     echo "All check-cross-references tests passed"
