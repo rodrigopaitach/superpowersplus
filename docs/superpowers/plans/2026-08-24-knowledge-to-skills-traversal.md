@@ -10,7 +10,7 @@
 
 **Tech Stack:** None added. Bash and the existing gate scripts, already in this repo — `scripts/check-skill-size.sh:26`, `scripts/check-links.sh`, `scripts/check-skill-behavior-records.sh`.
 
-**Execution:** [blank until chosen]
+**Execution:** `inline` — chosen 2026-08-24, run in the session that wrote this plan. Progress: session todos (not persisted). If that session ended mid-plan, where things stood is rebuilt from `git log` on this branch and the unchecked steps below; the checkboxes here are not updated as it runs.
 
 **Escalation shape** (detail and a worked example: `../../../skills/using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
