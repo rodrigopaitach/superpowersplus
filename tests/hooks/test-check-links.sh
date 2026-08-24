@@ -461,6 +461,63 @@ printf '# Note\n\nSee https://example.invalid/page for context.\n' > "$T/docs/wi
 assert_run 1 "an off-diet host in a docs/ subdirectory that is not a work record is caught" "$T" \
     'example.invalid'
 
+# The six entries this checks for were this project's own addition (46cf5c4) and
+# pointed at headings that exist only inside fenced example blocks. The link gate
+# passed them for ten weeks because its own fence mask had the same blind spot.
+# This case reads the real file rather than a fixture: the defect was in shipped
+# content, and a fixture would prove nothing about it.
+#
+# It deliberately does NOT import skills/writing-plans/scripts/mdfence.py. The
+# finding this whole change rests on is that a generator and a gate sharing one
+# blind spot agree with each other and prove nothing; a check on shipped content
+# that ran the same scanner as the gate would rebuild exactly that echo. Keep
+# this scanner separate — do not "fix" it into an import.
+toc_doc="$REPO_ROOT/skills/writing-skills/anthropic-best-practices.md"
+toc_report="$(python3 -B - "$toc_doc" <<'PY'
+import re
+import sys
+
+lines = open(sys.argv[1], encoding="utf-8").read().splitlines()
+FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})[ \t]*(.*)$")
+
+
+def slug(text):
+    text = re.sub(r"`([^`]*)`", r"\1", text).strip().lower()
+    text = re.sub(r"[^\w\s-]", "", text)
+    return re.sub(r"\s+", "-", text)
+
+
+opener, sections, entries = None, [], []
+for line in lines:
+    match = FENCE.match(line)
+    if match:
+        token, info = match.group(1), match.group(2).strip()
+        if opener is None:
+            opener = token
+        elif token[0] == opener[0] and len(token) >= len(opener) and not info:
+            opener = None
+        continue
+    if opener is not None:
+        continue
+    heading = re.match(r"^##\s+(.*?)\s*$", line)
+    if heading and heading.group(1) != "Contents":
+        sections.append(slug(heading.group(1)))
+    entry = re.match(r"^- \[.*?\]\(#([^)]+)\)\s*$", line)
+    if entry:
+        entries.append(entry.group(1))
+
+orphan = [e for e in entries if e not in sections]
+missing = [s for s in sections if s not in entries]
+print(f"orphan={','.join(orphan) or 'none'} missing={','.join(missing) or 'none'}")
+PY
+)"
+if [ "$toc_report" = "orphan=none missing=none" ]; then
+    pass "every table-of-contents anchor in anthropic-best-practices resolves"
+else
+    fail "every table-of-contents anchor in anthropic-best-practices resolves"
+    echo "        $toc_report"
+fi
+
 echo
 if [ "$FAILURES" -eq 0 ]; then
     echo "All check-links tests passed"
