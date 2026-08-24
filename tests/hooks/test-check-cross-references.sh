@@ -162,7 +162,7 @@ This plan has 1 task."
 # AC2 needs a fenced ANNOUNCEMENT, not just a fenced heading. With the fixture
 # above, this case was byte-identical to the one before it and went red only
 # through AC1's mechanism: mutating the announced-count scan at
-# `check-cross-references:220` from `prose_text` back to `text` left the whole
+# `check-cross-references:244` from `prose_text` back to `text` left the whole
 # suite green. The sentence below sits inside the example, where a fence-blind
 # scan reads it as this document's own claim.
 FENCED_ANNOUNCE="$(printf '%s\n' "$CLEAN_PLAN" '' '````markdown' '## Task 7: an example' '' 'This example plan has 4 tasks.' '' '```js' 'it("nothing", () => {})' '```' '````')"
@@ -421,10 +421,43 @@ for original in \
         missing_original=$((missing_original + 1))
     fi
 done
-if [ "$missing_original" -eq 0 ]; then
-    pass "the nine original cases are still here"
+
+# Names alone are not enough, and that was measured: replacing
+# `run_case "clean spec passes" 0 "$CLEAN_SPEC"` with `run_case "clean spec
+# passes" 0 "# nothing"` keeps the name, guts the assertion, and leaves this
+# guard green. IR5 says the nine still pass UNMODIFIED, so compare the bodies
+# against the commit the branch was cut from — the same pinned baseline the
+# corpus case uses, and for the same reason.
+if git -C "$REPO_ROOT" cat-file -e "$BASE_REF:tests/hooks/test-check-cross-references.sh" 2>/dev/null; then
+    git -C "$REPO_ROOT" show "$BASE_REF:tests/hooks/test-check-cross-references.sh" \
+        >"$TEST_ROOT/suite-before.sh"
+    for original in \
+        "clean spec passes" \
+        "spec citing an undefined id fails" \
+        "spec citing past the end of a file fails" \
+        "spec citing a file that does not exist fails" \
+        "clean plan passes" \
+        "matrix label with no criterion in a task body fails" \
+        "task criterion with no matrix row fails" \
+        "matrix naming a test no step creates fails" \
+        "announced task count that disagrees fails"; do
+        # The call plus everything up to the blank line that ends it.
+        before="$(awk -v n="run_case \"$original\"" 'index($0, n) { on = 1 } on { print; if ($0 == "") exit }' "$TEST_ROOT/suite-before.sh")"
+        now="$(awk -v n="run_case \"$original\"" 'index($0, n) { on = 1 } on { print; if ($0 == "") exit }' "$0")"
+        if [ "$before" != "$now" ]; then
+            echo "        modified: $original"
+            missing_original=$((missing_original + 1))
+        fi
+    done
 else
-    fail "the nine original cases are still here — $missing_original dropped"
+    echo "        baseline $BASE_REF not in this repository — cannot compare bodies"
+    missing_original=$((missing_original + 1))
+fi
+
+if [ "$missing_original" -eq 0 ]; then
+    pass "the nine original cases are still here, unmodified"
+else
+    fail "the nine original cases are still here, unmodified — $missing_original problem(s)"
 fi
 
 if grep -q 'body_only\|matrix_only' "$SCRIPT_UNDER_TEST"; then
@@ -588,6 +621,44 @@ if [[ "$help_failed" -eq 0 ]]; then
     pass "--help prints the whole header and stops there, through header edits"
 else
     fail "--help prints the whole header and stops there, through header edits — $help_failed problem(s)"
+fi
+
+# --- the two criteria that name a real document and a real number ----------
+# AC1 and AC4 do not state a pass/fail: each names a COMMITTED document and a
+# NUMBER the summary must read, and AC4 adds the absence of a specific failure.
+# `run_case` reads only an exit code, and both documents keep the exit code they
+# had regardless — `2026-08-21-upstream-consult-fixes-design.md` exits 1 for a
+# pre-existing citation that does not open, so a section-boundary defect moves
+# nothing an exit code can see.
+#
+# Measured: truncating `section()` after twenty lines — a direct violation of
+# the mechanism AC4's own sentence names — left all three suites green while
+# that document reported six ids "cited but not defined" and `AC/IR defined 20`.
+# Read the numbers the criteria name, from the documents they name.
+named_failed=0
+named_doc() {
+    local label="$1" doc="$2" expect="$3" forbid="$4" out
+    out="$("$SCRIPT_UNDER_TEST" "$REPO_ROOT/$doc" "$REPO_ROOT" 2>&1 || true)"
+    if ! printf '%s' "$out" | grep -qF "$expect"; then
+        echo "        $label: expected \`$expect\` in the summary"
+        { printf '%s' "$out" | grep -o 'AC/IR defined [0-9]*\|tasks present [0-9]*' | sed 's/^/          got: /'; } || true
+        named_failed=$((named_failed + 1))
+    fi
+    if [[ -n "$forbid" ]] && printf '%s' "$out" | grep -qF "$forbid"; then
+        echo "        $label: reported \`$forbid\`, which the criterion forbids"
+        named_failed=$((named_failed + 1))
+    fi
+}
+
+named_doc "AC1" "docs/superpowers/plans/2026-07-06-sdd-plan-scoped-workspace.md" \
+    "tasks present 5" ""
+named_doc "AC4" "docs/superpowers/specs/2026-08-21-upstream-consult-fixes-design.md" \
+    "AC/IR defined 26" "cited but not defined"
+
+if [[ "$named_failed" -eq 0 ]]; then
+    pass "the documents AC1 and AC4 name read the numbers they state"
+else
+    fail "the documents AC1 and AC4 name read the numbers they state — $named_failed problem(s)"
 fi
 
 echo

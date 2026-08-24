@@ -288,6 +288,30 @@ References below name them so a claim here can be traced there.
   the committed-only form reported a pass on a tree whose uncommitted change
   touched a file no class named — the check could not see the violation it
   exists to catch.
+- **A test that names a property is not the same as a test that measures it —
+  three instruments deep.** `AC18` says each markdown gate *obtains* its mask
+  from the shared module. A blacklist of source spellings was beaten by writing
+  a correct duplicate under new names. A grep for `from mdfence import` was
+  beaten by that same duplicate plus **one comment line quoting the string** —
+  and by a live-but-unused import. Both measured, both leaving every suite and
+  every gate green. The case now removes the module from a copy of the tree and
+  runs each carrier there: one that depends on it says so and stops, one
+  carrying its own copy runs on. No spelling, comment or dead import survives
+  that.
+- **Two criteria named a document and a number, and nothing read either.**
+  `AC4` states that a named committed spec reports `AC/IR defined 26` with no
+  "cited but not defined" failure; `AC1` states another reads `tasks present 5`.
+  Both were covered by cases reading an exit code on a synthetic fixture, and
+  the named documents keep their exit codes regardless — one of them already
+  exits 1 for an unrelated citation. Measured: truncating `section()` after
+  twenty lines left all three suites green while that document reported six
+  dangling ids and `AC/IR defined 20`. The suite now reads the numbers out of
+  the summaries of the documents the criteria name.
+- **The nine pre-existing cases were guarded by name only.** `IR5` requires them
+  to still pass *unmodified*; the guard grepped for `run_case "<name>"`.
+  Measured: replacing a case's document with `# nothing` keeps the name, guts
+  the assertion and leaves the guard green. It now compares each case's body
+  against the commit the branch was cut from.
 - **Twelve `file:line` citations in seven live documents were broken by this
   release and repaired.** Two edits caused it: removing six table-of-contents
   lines from `anthropic-best-practices.md`, and adding comment lines to

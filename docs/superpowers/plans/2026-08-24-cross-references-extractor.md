@@ -35,6 +35,7 @@
 | T1.3 A tilde fence is recognised on the same terms as a backtick fence | IR3 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > tilde fence behaves like a backtick fence` |
 | T1.4 The module imports nothing outside the standard library | IR9 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > module imports only re` |
 | T1.5 The module sits where the packager stages and the packager still forbids the root scripts path | AC19 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > the module ships where the packager stages` |
+| T1.6 The Codex archive carries the shared module | AC19 | script | `tests/codex/` | `tests/codex/test-package-codex-plugin.sh > archive carries the shared fence scanner` |
 | T2.1 The table of contents has one entry per real section and no entry without one | AC16 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > every table-of-contents anchor in anthropic-best-practices resolves` |
 | T3.1 Task headings inside fenced blocks are not counted | AC1 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > fenced task headings are not counted` |
 | T3.2 The announced-count comparison reads prose only | AC2 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > announced count matches when the extras are fenced` |
@@ -54,7 +55,7 @@
 | T6.1 A heading inside a fenced code block produces no anchor | AC13 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > a nested-fence heading produces no anchor` |
 | T6.2 A link written inside a nested fenced block is still ignored | AC14 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > a link inside a nested fenced block is ignored` |
 | T6.3 The link gate exits 0 over this repository | AC17 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > the gate passes over this repository itself` |
-| T6.4 Neither python carrier contains fence-scanning logic of its own | AC18 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > carriers hold no fence logic of their own` |
+| T6.4 Each python carrier obtains its mask from the shared module and keeps no fence logic of its own | AC18 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > carriers stop without the shared module and keep no fence logic of their own` |
 | T7.1 `task-brief` does not treat a fenced `## Task N` as a task | AC15 | script | `tests/hooks/` | `tests/hooks/test-task-brief.sh > a fenced task heading is not extracted` |
 | T7.2 The branch changes only the files the spec allows | IR8 | audit | branch diff | audit re-run of `git diff --name-status` against the branch point — spec `IR8` states this criterion takes no permanent test |
 | T8.1 A matrix naming a test no code block of the plan contains exits 1 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails` |
@@ -92,6 +93,7 @@
 - T1.3: A tilde fence opens and closes on the same terms as a backtick fence — test: `tests/hooks/test-mdfence.sh > tilde fence behaves like a backtick fence`
 - T1.4: The module's only import is `re` — test: `tests/hooks/test-mdfence.sh > module imports only re`
 - T1.5: The module's path is under `skills/`, which the packager stages, and the packager's forbidden-prefix list still rejects `scripts/` — test: `tests/hooks/test-mdfence.sh > the module ships where the packager stages`
+- T1.6: The archive the Codex packager builds contains `skills/writing-plans/scripts/mdfence.py` — test: `tests/codex/test-package-codex-plugin.sh > archive carries the shared fence scanner`. **`AC19` has two halves and T1.5 covered one.** Measured: deleting the module and committing left the packaging suite green while the module's own suite went red, so the archive-carries-it half had no instrument at all. The module is a runtime dependency of a shipped skill — absent from the archive it is an `ImportError` for every Codex user, not a packaging detail.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -184,14 +186,25 @@ assert out[4] == "## also real"
 # would reach Claude Code, whose plugin cache is a full checkout, and not Codex,
 # where check-cross-references still ships and would fail to import.
 packager="$REPO_ROOT/scripts/package-codex-plugin.sh"
+# Two conjuncts, not three: `printf '%s' "$MODULE_DIR" | grep -q "/skills/"`
+# tested a string this same script hardcoded ten lines above and could not fail.
 if [ -f "$MODULE_DIR/mdfence.py" ] &&
-   printf '%s' "$MODULE_DIR" | grep -q "/skills/" &&
    grep -q '\^scripts/' "$packager"; then
     pass "the module ships where the packager stages"
 else
     fail "the module ships where the packager stages"
     echo "        module dir: $MODULE_DIR"
     grep -n '\^scripts/' "$packager" | sed 's/^/        /'
+fi
+
+# T1.6 — AC19's OTHER half, which nothing asserted: the archive must actually
+# carry the module. It lives in the packaging suite because only that suite
+# builds an archive; asserted here it would test the checkout, not the artifact.
+# In tests/codex/test-package-codex-plugin.sh, beside the executable-mode case:
+if [[ -f "$extracted/skills/writing-plans/scripts/mdfence.py" ]]; then
+  pass "archive carries the shared fence scanner"
+else
+  fail "archive carries the shared fence scanner"
 fi
 
 # --- the module carries no dependency and the carriers carry no logic --------
@@ -1092,7 +1105,7 @@ git commit -m "fix(writing-plans): nivel de secao, sufixo de letra no id e dois 
 - T6.1: A document whose only `## Heading` sits inside a four-backtick block containing a three-backtick block, linked as `#heading`, exits 1 — test: `tests/hooks/test-check-links.sh > a nested-fence heading produces no anchor`
 - T6.2: A link written inside a three-backtick block nested in a four-backtick block is not checked — test: `tests/hooks/test-check-links.sh > a link inside a nested fenced block is ignored`
 - T6.3: The gate exits 0 when run over this repository itself, not a fixture tree — test: `tests/hooks/test-check-links.sh > the gate passes over this repository itself`
-- T6.4: Neither `check-links.sh` nor `check-cross-references` defines a fence pattern or a fence toggle of its own — test: `tests/hooks/test-mdfence.sh > carriers hold no fence logic of their own`
+- T6.4: With the shared module removed from the tree, each of `check-links.sh` and `check-cross-references` refuses to run and says so; and neither defines a fence pattern or a fence toggle of its own — test: `tests/hooks/test-mdfence.sh > carriers stop without the shared module and keep no fence logic of their own`. **The negative half alone is not assertable**: a blacklist of source spellings is beaten by a duplicate under new names, and a grep for the import is beaten by a comment quoting it. Both were measured. Only removing the module and running the carrier reads `obtains`.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -1145,9 +1158,9 @@ for carrier in "$REPO_ROOT/scripts/check-links.sh" \
     fi
 done
 if [ "$carrier_logic" -eq 0 ]; then
-    pass "carriers hold no fence logic of their own"
+    pass "carriers stop without the shared module and keep no fence logic of their own"
 else
-    fail "carriers hold no fence logic of their own — $carrier_logic carrier(s)"
+    fail "carriers stop without the shared module and keep no fence logic of their own — $carrier_logic problem(s)"
 fi
 ```
 
@@ -1159,7 +1172,7 @@ Expected: FAIL on `a nested-fence heading produces no anchor` — `expected exit
 **`the gate passes over this repository itself` also passes already, and that is stated rather than hidden.** Task 2 removed the six entries the corrected mask would reject, and the pre-commit hook (`githooks/pre-commit:26`) forces that order — so by the time this task runs, the conjunction it asserts is already true. Its red state is real but was measured before Task 2, and it is Defect E of the spec: the corrected mask over the uncorrected table of contents moved the gate from exit 0 to exit 1 on six named links. **This criterion is a regression guard, not a red-to-green reproduction**, and under `IR7` that is the one place in this plan where the red run lives in the spec's measurement instead of in the step below.
 
 Run: `tests/hooks/test-mdfence.sh`
-Expected: FAIL on `carriers hold no fence logic of their own`, listing `check-links.sh:74` — `FENCE = re.compile(...)` — and its `in_fence` toggle.
+Expected: FAIL on `carriers stop without the shared module and keep no fence logic of their own`, listing `check-links.sh:74` — `FENCE = re.compile(...)` — and its `in_fence` toggle.
 
 - [ ] **Step 3: Convert the carrier**
 
@@ -1188,7 +1201,7 @@ Run: `tests/hooks/test-check-links.sh`
 Expected: PASS — every case, including the three this task added: `a nested-fence heading produces no anchor`, `a link inside a nested fenced block is ignored`, and `the gate passes over this repository itself`. The suite's pre-existing `links inside fenced code are ignored` must still pass too: it is the guard that the wider mask did not start blanking prose.
 
 Run: `tests/hooks/test-mdfence.sh`
-Expected: PASS — including `carriers hold no fence logic of their own`.
+Expected: PASS — including `carriers stop without the shared module and keep no fence logic of their own`.
 
 Run: `scripts/check-links.sh`
 Expected: exit 0, and the summary line names the local links, the URLs on the diet, and the section references.

@@ -89,8 +89,9 @@ assert out[4] == "## also real"
 # would reach Claude Code, whose plugin cache is a full checkout, and not Codex,
 # where check-cross-references still ships and would fail to import.
 packager="$REPO_ROOT/scripts/package-codex-plugin.sh"
+# Two conjuncts, not three: `printf '%s' "$MODULE_DIR" | grep -q "/skills/"`
+# tested a string this same script hardcoded above, and could not fail.
 if [ -f "$MODULE_DIR/mdfence.py" ] &&
-   printf '%s' "$MODULE_DIR" | grep -q "/skills/" &&
    grep -q '\^scripts/' "$packager"; then
     pass "the module ships where the packager stages"
 else
@@ -150,40 +151,59 @@ else
     pass "running a carrier leaves no bytecode beside the module"
 fi
 
-# --- one scanner, not three -------------------------------------------------
-# AC18 has two halves, and only the second can be asserted: "neither carrier
-# contains fence-scanning logic of its own" AND "each obtains the mask from the
-# shared module".
+# --- one scanner, not three: a BEHAVIOURAL probe ----------------------------
+# AC18 says each carrier "obtains the mask from the shared module". Two weaker
+# instruments were tried here and text defeated both:
 #
-# The first half was all this case used to check, by grepping for four literal
-# spellings — and all four were text this branch had just deleted, so the case
-# detected the PAST rather than the property. Measured 2026-08-24: a correct,
-# independent CommonMark scanner written into `check-links.sh` under fresh names,
-# with the import removed, left every suite and every gate green. A blacklist of
-# spellings cannot be completed; a second implementation only has to avoid the
-# words someone thought to list.
+#   * a blacklist of source spellings (`in_fence`, `FENCE = re.compile`, ...) —
+#     beaten by writing a correct independent scanner under different names.
+#     Measured: every suite and every gate stayed green.
+#   * a grep for `from mdfence import` — beaten by the same duplicate plus ONE
+#     comment line quoting that string. Measured: same, and a live-but-unused
+#     import passes it too.
 #
-# The second half can be asserted, and it is a positive: the import is there, or
-# the mask comes from somewhere else. That fires whatever the replacement is
-# called. The spelling grep is kept beside it — a carrier could import the
-# module AND keep a stale pattern — but it is no longer what carries the case.
+# A string is not an obtaining, and no text assertion can tell the two apart.
+# This one removes the module and asks the carrier: a carrier that depends on it
+# says so and stops; one carrying its own copy runs on regardless. Nothing a
+# duplicate can be named or commented defeats it.
+probe_root="$TEST_ROOT/no-module"
+mkdir -p "$probe_root"
+( cd "$REPO_ROOT" && git ls-files -z | xargs -0 cp --parents -t "$probe_root" )
+rm -f "$probe_root/skills/writing-plans/scripts/mdfence.py"
+
 carrier_logic=0
-for carrier in "$REPO_ROOT/scripts/check-links.sh" \
-               "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"; do
-    if ! grep -q 'from mdfence import' "$carrier"; then
-        echo "        $(basename "$carrier"): does not import the shared module"
+probe() {
+    local label="$1"
+    shift
+    local out
+    out="$("$@" 2>&1 || true)"
+    if ! printf '%s' "$out" | grep -q 'cannot import the fence scanner'; then
+        echo "        $label: ran with the shared module removed — it is not obtaining its mask from it"
         carrier_logic=$((carrier_logic + 1))
     fi
+}
+
+probe "check-links.sh" \
+    bash -c 'cd "$1" && ./scripts/check-links.sh' _ "$probe_root"
+probe "check-cross-references" \
+    "$probe_root/skills/writing-plans/scripts/check-cross-references" \
+    "$probe_root/README.md" "$probe_root"
+
+# Kept beside the probe, and no longer carrying the case: a carrier could import
+# the module AND keep a stale pattern of its own, which the probe cannot see.
+for carrier in "$REPO_ROOT/scripts/check-links.sh" \
+               "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"; do
     if grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" >/dev/null 2>&1; then
         echo "        $(basename "$carrier"): keeps a fence pattern of its own"
         { grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" | sed 's/^/          /'; } || true
         carrier_logic=$((carrier_logic + 1))
     fi
 done
+
 if [ "$carrier_logic" -eq 0 ]; then
-    pass "carriers take their mask from the shared module and keep none of their own"
+    pass "carriers stop without the shared module and keep no fence logic of their own"
 else
-    fail "carriers take their mask from the shared module and keep none of their own — $carrier_logic problem(s)"
+    fail "carriers stop without the shared module and keep no fence logic of their own — $carrier_logic problem(s)"
 fi
 
 echo
