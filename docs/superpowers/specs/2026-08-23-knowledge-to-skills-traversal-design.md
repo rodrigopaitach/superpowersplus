@@ -112,9 +112,9 @@ grounds.
    `scripts/check-skill-size.sh`. Whether AC3's rule can be stated in four lines
    without becoming a pointer nobody follows is not settled here — the
    surrounding text has to be in front of the author. Measured: the file is 494
-   lines today. **If it cannot, the fix is progressive disclosure into
-   `references/`, never compression** — the rule this repository states in
-   [`CLAUDE.md`](../../../CLAUDE.md), section "Where the obvious move is wrong".
+   lines today. **What to do if it does not fit is not left to this section:
+   it is IR7**, which the plan traces and the audit charges. This item records
+   only that the question is open; IR7 records the answer.
 
 ## Acceptance Criteria
 
@@ -159,6 +159,15 @@ grounds.
   `check-links.sh` stays green.
 - **IR6** — `CHANGELOG.md` is staged with the change, per the pre-commit gate
   `scripts/check-changelog.sh`.
+- **IR7** — If AC3's rule does not fit the headroom AC7 leaves, the overflow
+  moves into `skills/writing-plans/references/` behind a trigger that sends the
+  reader there, and **no existing line of that `SKILL.md` is shortened to make
+  room**. Settled by reading the diff: text that moved appears unchanged at its
+  new path, and the surviving `SKILL.md` lines are the ones that were there
+  before. This is the repository's own rule, in
+  [`CLAUDE.md`](../../../CLAUDE.md), section "Where the obvious move is wrong" —
+  stated here because AC7 says only that the ceiling holds, and the cheapest way
+  to hold a ceiling is the one that rule forbids.
 
 ## Coverage Map
 
@@ -170,7 +179,7 @@ grounds.
 | Non-functional attributes | Resolved | AC7 and IR5 — the ceiling gate and the link gate are the only runtime constraints this change can break |
 | Integrations and external dependencies | Clear | None. Zero-dependency plugin, `CLAUDE.md` section "What does not belong here" |
 | Edge cases and failures | Resolved | IR2 (no advisory rules), IR4 (single carrier). The failure mode is a rule too vague to act on, which IR2 refuses |
-| Constraints and tradeoffs | Resolved | AC7 (500-line ceiling, 6 lines of headroom), IR3 (four faces untouched) |
+| Constraints and tradeoffs | Resolved | AC7 (500-line ceiling, 6 lines of headroom), IR7 (what to do if it does not fit), IR3 (four faces untouched) |
 | Terminology | Resolved | "Carrier" means the file a rule lives in, the sense [`docs/review-scopes.md`](../../review-scopes.md) already uses |
 | Completion signals | Resolved | Every AC is settled by opening the named file and reading the rule, or by running the named gate |
 | Placeholders and vague adjectives | Deferred | The exact wording of each rule belongs to the plan, where the surrounding text is in front of the author and the line budget is visible. `## Assumptions to Confirm` item 4 |
