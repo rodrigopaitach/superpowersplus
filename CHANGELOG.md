@@ -64,6 +64,18 @@ References below name them so a claim here can be traced there.
   fails when it cannot read what it was asked to check. Measured 2026-08-24
   across the 131 versioned `.md` files of this repository: none has an unclosed
   fence, so the rule changes no current verdict.
+- **A section was terminated by its own subsection, and a criterion label with a
+  letter suffix matched nothing.** `section()` in
+  [`skills/writing-plans/scripts/check-cross-references`](skills/writing-plans/scripts/check-cross-references)
+  used one pattern for both ends, so a `## Acceptance Criteria` organising its
+  items under `###` ended at its first subsection — measured on a committed
+  spec, it returned zero ids where the section defines 21, and fourteen ids were
+  reported as cited-but-undefined. Separately, `TASK_CRIT` carried no optional
+  letter suffix while the pattern on the line above it did, so a label written
+  `T1.1a` matched nothing at all and its coverage-matrix row stopped being read
+  as a row: measured, the same plan exits 1 with `T1.1` and 0 with `T1.1a`, a
+  false pass one character wide. Two names assigned and never read were removed
+  with them.
 
 ## [1.20.0] - 2026-08-24
 

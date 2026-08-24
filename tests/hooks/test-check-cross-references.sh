@@ -16,6 +16,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 SCRIPT_UNDER_TEST="$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"
+BASE_REF="${BASE_REF:-$(git -C "$REPO_ROOT" merge-base main HEAD 2>/dev/null || echo main)}"
 
 FAILURES=0
 TEST_ROOT="$(mktemp -d)"
@@ -238,6 +239,96 @@ if [ "$away_exit" -eq 0 ]; then
 else
     fail "runs from an unrelated working directory — exit $away_exit"
     { (cd "$elsewhere" && "$SCRIPT_UNDER_TEST" "$away_repo/docs/doc.md" "$away_repo" 2>&1) | sed 's/^/        /'; } || true
+fi
+
+# --- section levels, the letter suffix, the dead names ---------------------
+# section() started on `## <title>` and returned at the next heading of ANY
+# depth, so a section organising its criteria under `###` ended at its own first
+# subsection. Measured 2026-08-24 on a committed spec: the section returned zero
+# ids where it holds 21 — nineteen AC it defines plus two IR cited inside it —
+# and fourteen were reported as cited-but-undefined.
+run_case "a section survives its own subsections" 0 '# Spec
+
+## Acceptance Criteria
+
+### First group
+
+- AC1 The thing happens
+
+### Second group
+
+- AC2 The other thing happens
+
+## Implicit Requirements
+
+- IR1 It logs the failure
+
+## Codebase Findings
+
+Both are grounded in the module under test.'
+
+# TASK_CRIT carried no optional letter suffix while AC_IR on the line above did.
+# Anchored with \b, `T1.1a` matched nothing at all, so the matrix row stopped
+# being a matrix row and the three checks that depend on it stopped running.
+run_case "a suffixed criterion label is still checked" 1 "$(printf '%s' "$CLEAN_PLAN" |
+    sed 's/T1\.1/T1.1a/g; s/| > rejects the bad input |/| > a test nobody wrote |/')"
+
+# IR5: the nine cases this suite carried before the branch are named here, so
+# a later edit that quietly drops one is a failure rather than a smaller suite.
+#
+# The grep is anchored on `run_case "` and not on the name alone: the loop's own
+# list below holds all nine strings, so a bare name search matches this block
+# and passes whatever the suite actually contains.
+missing_original=0
+for original in \
+    "clean spec passes" \
+    "spec citing an undefined id fails" \
+    "spec citing past the end of a file fails" \
+    "spec citing a file that does not exist fails" \
+    "clean plan passes" \
+    "matrix label with no criterion in a task body fails" \
+    "task criterion with no matrix row fails" \
+    "matrix naming a test no step creates fails" \
+    "announced task count that disagrees fails"; do
+    if ! grep -Fq "run_case \"$original\"" "$0"; then
+        echo "        missing: $original"
+        missing_original=$((missing_original + 1))
+    fi
+done
+if [ "$missing_original" -eq 0 ]; then
+    pass "the nine original cases are still here"
+else
+    fail "the nine original cases are still here — $missing_original dropped"
+fi
+
+if grep -q 'body_only\|matrix_only' "$SCRIPT_UNDER_TEST"; then
+    fail "no dead names survive"
+    grep -n 'body_only\|matrix_only' "$SCRIPT_UNDER_TEST" | sed 's/^/        /'
+else
+    pass "no dead names survive"
+fi
+
+# IR6: the committed corpus keeps its verdicts. The one document that changes is
+# the one AC4 exists for, and it changes by LOSING a fabricated failure while
+# keeping the real one, so its exit code does not move.
+corpus_moved=0
+git -C "$REPO_ROOT" show "$BASE_REF:skills/writing-plans/scripts/check-cross-references" \
+    >"$TEST_ROOT/ccr-before" 2>/dev/null && chmod +x "$TEST_ROOT/ccr-before"
+for doc in "$REPO_ROOT"/docs/superpowers/specs/*.md "$REPO_ROOT"/docs/superpowers/plans/*.md; do
+    [ -s "$TEST_ROOT/ccr-before" ] || continue
+    before=0
+    "$TEST_ROOT/ccr-before" "$doc" "$REPO_ROOT" >/dev/null 2>&1 || before=$?
+    after=0
+    "$SCRIPT_UNDER_TEST" "$doc" "$REPO_ROOT" >/dev/null 2>&1 || after=$?
+    if [ "$before" != "$after" ]; then
+        echo "        $(basename "$doc"): $before -> $after"
+        corpus_moved=$((corpus_moved + 1))
+    fi
+done
+if [ "$corpus_moved" -eq 0 ]; then
+    pass "the committed corpus keeps its verdicts"
+else
+    fail "the committed corpus keeps its verdicts — $corpus_moved document(s) moved"
 fi
 
 echo

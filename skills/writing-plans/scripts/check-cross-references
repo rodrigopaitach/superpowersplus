@@ -92,22 +92,31 @@ if unclosed_at is not None:
     )
 
 
+HEADING = re.compile(r"^(#{1,6})\s")
+
+
 def section(title_re):
-    """Body of the first `## <title>` section matching, or None."""
+    """Body of the first `## <title>` section, to the next same-or-shallower heading."""
     start = None
+    level = None
     for i, line in enumerate(prose_lines):
-        if re.match(r"^#{2,3}\s", line):
-            if start is not None:
+        match = HEADING.match(line)
+        if not match:
+            continue
+        if start is not None:
+            if len(match.group(1)) <= level:
                 return "\n".join(lines[start:i])
-            if re.match(rf"^#{{2,3}}\s+{title_re}\s*$", line, re.I):
-                start = i + 1
+            continue
+        if re.match(rf"^#{{2,3}}\s+{title_re}\s*$", line, re.I):
+            start = i + 1
+            level = len(match.group(1))
     return "\n".join(lines[start:]) if start is not None else None
 
 
 # ---------------------------------------------------------------- ids
 # Defined where the list that owns them lives; cited anywhere else.
 AC_IR = re.compile(r"\b((?:AC|IR)\d+[a-z]?)\b")
-TASK_CRIT = re.compile(r"\b(T\d+\.\d+)\b")
+TASK_CRIT = re.compile(r"\b(T\d+\.\d+[a-z]?)\b")
 
 defining = []
 for title in (r"Acceptance Criteria", r"Implicit Requirements"):
@@ -145,8 +154,6 @@ matrix_labels = set()
 for ln in matrix_rows:
     matrix_labels |= set(TASK_CRIT.findall(ln))
 
-body_only = all_task_crit - matrix_labels
-matrix_only = matrix_labels - (all_task_crit - matrix_labels) - set()
 # A label that appears ONLY inside matrix rows is defined nowhere else.
 outside_matrix = set()
 for ln in prose_lines:
