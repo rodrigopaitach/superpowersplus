@@ -64,7 +64,7 @@ markdown link and stop repeating it.
 
 It goes to a reference rather than into `skills/writing-plans/SKILL.md` because
 that file is at 486 lines against a 500-line ceiling
-(`skills/writing-skills/anthropic-best-practices.md:1119`), and this
+(`skills/writing-skills/anthropic-best-practices.md:1113`), and this
 repository's [`CLAUDE.md`](../../../CLAUDE.md), section "Where the obvious
 move is wrong", requires progressive disclosure rather than compression for a
 body over the line.
@@ -260,7 +260,7 @@ prompt changes.
    > "sequences. Conversation memory does not survive compaction. The ledger and"
 
    The only "Token budgets" heading in the repository,
-   `skills/writing-skills/anthropic-best-practices.md:1117-1119`, is about the
+   `skills/writing-skills/anthropic-best-practices.md:1111-1113`, is about the
    500-line `SKILL.md` ceiling:
    > "Keep SKILL.md body under 500 lines for optimal performance."
 

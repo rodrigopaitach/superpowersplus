@@ -93,8 +93,9 @@ References below name them so a claim here can be traced there.
   CommonMark rule in awk.** It keeps its own implementation rather than
   importing the shared scanner: reaching a module in another skill's directory
   would make one shipped skill depend on another's internals. **It was recorded
-  as latent and it is not.** Measured 2026-08-24 over all 204 task extractions
-  of every plan under `docs/` — 17 plans, task numbers 1 through 12 — 202 are
+  as latent and it is not.** Measured 2026-08-24 over all 252 task extractions
+  of every plan under `docs/` — 21 plans (4 in `docs/plans/`, 17 in
+  `docs/superpowers/plans/`), task numbers 1 through 12 — 250 are
   byte-identical under both rules and 2 diverge, both in the plan that
   introduced nested fences to this repository. Task 2 came out at 286 lines
   instead of 141, running past its own end because the next task's heading read
@@ -118,6 +119,54 @@ References below name them so a claim here can be traced there.
   test, and the check passes on the one desync it exists for. That difference is
   a case of its own in the suite, and the rejected form fails exactly it and
   nothing else.
+- **Two branch-lifetime assertions had been welded into permanent CI suites.**
+  The IR6 corpus comparison in
+  [`tests/hooks/test-check-cross-references.sh`](tests/hooks/test-check-cross-references.sh)
+  derived its baseline from `merge-base main HEAD`, which becomes HEAD itself
+  once the branch merges — on the next push to `main` the extracted "before"
+  script would have been the current one, failing to import a module the test
+  does not extract, and reporting all 33 documents as moved. It is now pinned to
+  the commit the branch was cut from, and extracts the module beside the script
+  when the baseline carries one. The IR8 file-list assertion in
+  `tests/hooks/test-task-brief.sh` was removed outright: it encoded this
+  branch's own file list and failed on every branch cut afterwards. A gate that
+  can only be vacuous or wrong is the defect this release exists to name.
+- **The awk copy of the closing rule owed a gate and did not pay it.** Three of
+  its discriminating terms — closer character, closer length, closer info string
+  — had no red state under any mutation. `tests/hooks/test-task-brief.sh` now
+  carries a differential case asserting that
+  [`skills/subagent-driven-development/scripts/task-brief`](skills/subagent-driven-development/scripts/task-brief)
+  and `mdfence.fence_mask` extract identically from a fixture exercising each
+  term, plus the pair that proves either is right. Measured: each of the three
+  terms now has a mutation that turns the differential red.
+- **Two citations in `scripts/check-skill-size.sh` never pointed at what they
+  claimed, and nothing could have caught them.** The script cited
+  `anthropic-best-practices.md:241` for "Keep SKILL.md body under 500 lines" and
+  `:1109` for its checklist repeat; measured against the pre-branch file, `:241`
+  read "Avoid vague descriptions like these:" and `:1109` was a bare fence
+  marker. The claim lives under the section "Token budgets". Removing six
+  table-of-contents entries in this same release shifted every line below them
+  by six, which is how the rot surfaced. Both citations are now anchored by
+  section title, per [`CLAUDE.md`](CLAUDE.md)'s own rule for a file this project
+  edits — and the reason no gate saw it is worth writing down:
+  `scripts/check-links.sh` reads `README`-family, `docs/**/*.md` and
+  `skills/**/*.md`, so **a citation in a shell comment is read by nothing**.
+- **`skills/writing-plans/scripts/check-cross-references` truncated its own
+  `--help`.** `usage()` sliced the header by line number (`sed -n '2,34p'`), so
+  growing the header above it cut the Usage block off the output with nothing to
+  notice. It now slices by content. Swept: `scripts/lint-shell.sh:14` has the
+  same shape and is left alone — its header is stable and the fix is its own
+  commit.
+- **`mdfence.py` records its measured deviations from CommonMark.** Checked
+  against the specification's own conformance suite, restricted to the 29
+  normative "Fenced code blocks" examples: **25 agree**. The four that do not are
+  the three documented limits — a backtick opener whose info string contains a
+  backtick (examples 138 and 145; 0 occurrences in this repository), indented
+  code blocks (example 134; 6 fence-shaped lines indented four or more spaces
+  exist, all of them already inside an outer fence, so none is exposed), and
+  fences inside block quotes (example 128; **6 occurrences**, each a single
+  command line carrying no heading, no table row and no link — the docstring had
+  said zero, which was wrong).
 
 ## [1.20.0] - 2026-08-24
 

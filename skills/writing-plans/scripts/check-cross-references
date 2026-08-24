@@ -21,7 +21,14 @@
 #     skill's prose step.
 #   * Whether an id that resolves is the RIGHT id. `F4` naming a real AC that
 #     means something else reads as clean.
-#   * Whether a test named in the matrix asserts anything. Existence only.
+#   * Whether a test named in the matrix asserts anything. Existence only —
+#     and "exists" now means the name occurs as a SUBSTRING inside one of the
+#     document's fenced code blocks. That is deliberately language-blind and it
+#     is looser than the pattern it replaced: a name mentioned in a `grep`
+#     argument, in a comment inside a code block, or as the prefix of a longer
+#     test name all read as created. The pattern it replaced was tighter and
+#     did not know this repository's own bash suites, reporting 26 real tests
+#     as absent; the looseness is the price of knowing no languages.
 #   * Counts stated in prose ("PASS on the six"). It compares structure it can
 #     extract — matrix labels against matrix rows, tasks announced against
 #     tasks present — not arbitrary sentences.
@@ -39,7 +46,11 @@
 set -euo pipefail
 
 usage() {
-  sed -n '2,34p' "$0" | sed 's/^# \{0,1\}//'
+  # Sliced by CONTENT, not by line number. It used to read `2,34p`, and any
+  # edit to the header above silently truncated --help mid-sentence with
+  # nothing to notice it — which is exactly what happened when this file's
+  # "WHAT IT DOES NOT COVER" list grew.
+  sed -n '2,/^# Exit 1 when anything does not resolve\./p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 if [[ $# -lt 1 || "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
@@ -72,7 +83,16 @@ lines = text.splitlines()
 # import from leaving a __pycache__ inside an installed plugin.
 sys.dont_write_bytecode = True
 sys.path.insert(0, sys.argv[3])
-from mdfence import fence_mask, prose
+try:
+    from mdfence import fence_mask, prose
+except ImportError:
+    # This script ships inside a plugin and runs against arbitrary
+    # repositories. A traceback here reads as a bug in the document.
+    sys.exit(
+        "check-cross-references: cannot import the fence scanner, expected at "
+        f"{sys.argv[3]}/mdfence.py — it is a sibling of this script and ships "
+        "with it"
+    )
 
 # Structural extractors read `prose_lines`/`prose_text`; content extractors
 # (the test finder, the citation pass, the id-citation pass) keep reading the
@@ -96,7 +116,16 @@ HEADING = re.compile(r"^(#{1,6})\s")
 
 
 def section(title_re):
-    """Body of the first `## <title>` section, to the next same-or-shallower heading."""
+    """Body of the first `## <title>` section, to the next same-or-shallower heading.
+
+    Boundaries are found over `prose_lines` — a fenced `## Acceptance Criteria`
+    starts nothing — but the body returned is the RAW `lines`, so an id written
+    inside a fenced example within a real criteria section still counts as
+    defined. That is deliberate and it is what keeps the verdict honest: the
+    citation side, `cited_ac`, also reads raw, and a section that dropped its
+    fenced ids while citations kept them would report an id as cited-but-
+    undefined for sitting in an example. Both sides raw, one verdict.
+    """
     start = None
     level = None
     for i, line in enumerate(prose_lines):

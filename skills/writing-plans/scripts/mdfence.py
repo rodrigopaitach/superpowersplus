@@ -12,6 +12,17 @@ repository's root `scripts/` because `scripts/package-codex-plugin.sh:336` fails
 the Codex build on any archived path beginning `scripts/`, while `:241` stages
 `skills` wholesale — a module at the root would ship to one harness and not the
 other, and the import would fail at runtime for Codex users.
+
+Known deviations from CommonMark, each measured against the 131 versioned `.md`
+files of this repository and latent at zero occurrences:
+
+* A backtick opener whose info string itself contains a backtick is accepted
+  here; CommonMark makes it a paragraph. 0 occurrences.
+* Indented code blocks (four spaces, no fence) are not modelled at all — this
+  scanner answers "is this line inside a FENCED block", which is the question
+  the three carriers ask.
+* A fence inside a block quote (`> ```) is not modelled: the `>` prefix means
+  the opener does not match, so the block reads as prose. 0 occurrences.
 """
 
 import re

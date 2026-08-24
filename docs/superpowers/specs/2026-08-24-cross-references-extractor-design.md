@@ -14,7 +14,7 @@ This repository detects fenced code blocks in two places, and both are wrong. A 
 |---|---|---|
 | `check-cross-references` | **Firing, both directions** | A correct plan is failed; a defective plan is passed. Defects A and B below |
 | [`scripts/check-links.sh`](../../../scripts/check-links.sh) | **Firing** | Six links pass today whose anchors exist only inside fenced examples. Defect E |
-| [`skills/subagent-driven-development/scripts/task-brief`](../../../skills/subagent-driven-development/scripts/task-brief) | **Latent** | Measured two ways, zero divergence. Defect F |
+| [`skills/subagent-driven-development/scripts/task-brief`](../../../skills/subagent-driven-development/scripts/task-brief) | **Firing** (recorded as latent; falsified during execution) | 2 of 252 task extractions diverge. Defect F |
 
 `check-links.sh` runs in CI at [`.github/workflows/ci.yml:156`](../../../.github/workflows/ci.yml). `task-brief`'s only assertion is at [`tests/claude-code/test-sdd-workspace.sh:123`](../../../tests/claude-code/test-sdd-workspace.sh), it checks where the brief file lands rather than what it contains, and that suite is not in CI.
 
@@ -52,11 +52,13 @@ Every extractor scans `lines` or `text` with no idea that a fenced code block is
 
 **Measured.** Replacing the mask with the CommonMark rule and running the gate unchanged otherwise moves it from `exit 0` to `exit 1` naming six links — the durable fact is that difference, not the corpus total, which every commit adding a link changes: [`skills/writing-skills/anthropic-best-practices.md:16`](../../../skills/writing-skills/anthropic-best-practices.md) through `:21`. Their targets are at `:634`–`:664`, and every one of the six is inside a fenced block — lines of a report template shown as an example. A fenced block produces no heading, so it produces no anchor.
 
-### F — `task-brief` carries the same naive toggle, and it has not fired
+### F — `task-brief` carries the same naive toggle, and it HAS fired
 
 [`task-brief:28`](../../../skills/subagent-driven-development/scripts/task-brief) opens an awk program whose fence rule is `/^```/ { infence = !infence }`.
 
-**Measured two ways, both zero.** Extraction is byte-identical between the naive toggle and the CommonMark rule for every task of every plan under `docs/`; and no plan contains a "ghost" task number — one the naive toggle exposes as a heading and the CommonMark rule does not. It is corrected because the cause is shared, not because a defect was found.
+**This section said "measured two ways, both zero" and it was wrong. Corrected 2026-08-24, during execution.** The original measurement ran before this branch's own plan existed, and that plan is the first document in this repository to carry a three-backtick block nested inside a four-backtick one — the shape the naive toggle gets wrong. Re-measured over all 252 task extractions of every plan under `docs/` (21 plans, task numbers 1 through 12): 250 are byte-identical under both rules and **2 diverge**, both in [`docs/superpowers/plans/2026-08-24-cross-references-extractor.md`](../plans/2026-08-24-cross-references-extractor.md). Task 2 came out at 286 lines instead of 141 — it ran past its own end, because the next task's heading read as fenced. Task 7 came out at 59 instead of 204 — it stopped at the first four-backtick opener. The same defect in both directions, in the document that describes it.
+
+The correction does not change what this spec asks for. It changes why: `AC15` was justified as "the cause is shared, not because a defect was found", and a defect was found.
 
 ### G — the table of contents the broken gate approved
 
@@ -173,6 +175,8 @@ A fence closes only on the same fence character, at a length greater than or equ
 ## External Dependencies
 
 None. The carriers use `python3`'s standard library, `awk`, and `git`, all already required by the files under change. No lockfile exists in this repository and none is added.
+
+**Every `skills/writing-skills/anthropic-best-practices.md:NN` citation in this document is a PRE-FIX line number**, and they are left that way on purpose: this spec records the state the defect was found in. `AC16` removes six lines from the top of that file, so every line below them shifted up by six and `:16`–`:21` no longer exist at all. That shift is the reason [`scripts/check-skill-size.sh`](../../../scripts/check-skill-size.sh) now anchors that file by section title instead of by line — the rule [`CLAUDE.md`](../../../CLAUDE.md) already states for a file this project edits, and one nothing enforces: `check-links.sh` reads no `.sh` file and no line number.
 
 ## Assumptions to Confirm
 

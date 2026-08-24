@@ -59,7 +59,7 @@ if [ ! -s "$brief" ]; then
     pass "a fenced task heading is not extracted"
 else
     fail "a fenced task heading is not extracted"
-    sed 's/^/        /' "$brief"
+    sed 's/^/        /' "$brief" || true
 fi
 
 # The pair: the REAL task must still come out whole, fenced example included.
@@ -71,22 +71,119 @@ if [ -s "$brief1" ] && grep -q 'Body of the real task' "$brief1" &&
     pass "the real task is extracted whole, fenced example included"
 else
     fail "the real task is extracted whole, fenced example included"
-    sed 's/^/        /' "$brief1"
+    sed 's/^/        /' "$brief1" || true
 fi
 
-# --- the branch touches only its declared files ---------------------------
-ALLOWED='^(skills/writing-plans/scripts/(mdfence\.py|check-cross-references)|skills/writing-skills/anthropic-best-practices\.md|skills/subagent-driven-development/scripts/task-brief|scripts/check-links\.sh|tests/hooks/test-(mdfence|check-cross-references|check-links|task-brief)\.sh|\.github/workflows/ci\.yml|CHANGELOG\.md|docs/superpowers/(specs|plans)/2026-08-24-cross-references-extractor.*\.md)$'
-base="$(git -C "$REPO_ROOT" merge-base main HEAD 2>/dev/null || echo "")"
-if [ -z "$base" ]; then
-    pass "the branch touches only its declared files (no base to compare)"
-else
-    stray="$(git -C "$REPO_ROOT" diff --name-only "$base"..HEAD | grep -Ev "$ALLOWED" || true)"
-    if [ -z "$stray" ]; then
-        pass "the branch touches only its declared files"
-    else
-        fail "the branch touches only its declared files"
-        printf '%s\n' "$stray" | sed 's/^/        /'
+# --- the awk copy and the shared scanner agree ----------------------------
+# This carrier deliberately keeps a SECOND hand-written copy of the closing
+# rule, because reaching skills/writing-plans/scripts/mdfence.py from another
+# skill's directory would make one shipped skill depend on another's internals.
+# A copied form owes a gate, or "unified in place" is just "copied" — this is
+# that gate. It states the invariant the design rests on: two implementations,
+# one rule.
+#
+# It is differential rather than a list of cases because the terms that can
+# drift are the awk's alone — closer character, closer length, closer info
+# string — and each of them was measured to have no red state before this
+# existed.
+MODULE_DIR="$REPO_ROOT/skills/writing-plans/scripts"
+diff_plan="$TEST_ROOT/differential.md"
+cat >"$diff_plan" <<'PLAN'
+# Plan
+
+## Task 1: backticks nested in backticks
+
+````markdown
+```js
+## Task 9: not a task
+```
+````
+
+## Task 2: a tilde block a backtick cannot close
+
+~~~text
+## Task 8: not a task either
+```
+still inside the tilde block
+~~~
+
+## Task 3: a closer carrying an info string
+
+````
+x
+````js
+## Task 7: not a task
+````
+
+## Task 4: a closer shorter than its opener
+
+`````
+```
+## Task 6: not a task
+`````
+
+## Task 5: an indented opener
+
+   ```md
+## Task 5: this heading is fenced
+   ```
+
+end of plan
+PLAN
+
+differential_failed=0
+for n in 1 2 3 4 5 6 7 8 9; do
+    "$TASK_BRIEF" "$diff_plan" "$n" "$TEST_ROOT/awk-$n.md" >/dev/null 2>&1 || :
+    [ -f "$TEST_ROOT/awk-$n.md" ] || : >"$TEST_ROOT/awk-$n.md"
+    python3 -B - "$diff_plan" "$n" "$MODULE_DIR" >"$TEST_ROOT/py-$n.md" <<'PY'
+import re
+import sys
+
+sys.path.insert(0, sys.argv[3])
+from mdfence import fence_mask
+
+lines = open(sys.argv[1], encoding="utf-8").read().splitlines()
+n = sys.argv[2]
+mask, _ = fence_mask(lines)
+intask = False
+out = []
+for index, line in enumerate(lines):
+    if mask[index]:
+        if intask:
+            out.append(line)
+        continue
+    if re.match(r"^#+[ \t]+Task[ \t]+[0-9]+", line):
+        intask = bool(re.match(r"^#+[ \t]+Task[ \t]+%s([^0-9]|$)" % n, line))
+    if intask:
+        out.append(line)
+sys.stdout.write("".join(l + "\n" for l in out))
+PY
+    if ! cmp -s "$TEST_ROOT/awk-$n.md" "$TEST_ROOT/py-$n.md"; then
+        echo "        task $n differs:"
+        { diff "$TEST_ROOT/py-$n.md" "$TEST_ROOT/awk-$n.md" | head -8 | sed 's/^/          /'; } || true
+        differential_failed=$((differential_failed + 1))
     fi
+done
+if [ "$differential_failed" -eq 0 ]; then
+    pass "the awk copy and mdfence extract identically"
+else
+    fail "the awk copy and mdfence extract identically — $differential_failed task(s) differ"
+fi
+
+# The differential proves the two AGREE; it cannot prove either is right. This
+# pair does: tasks 1 to 5 are real and each must come out non-empty, and the
+# five numbers that appear only inside fenced examples must come out empty.
+shape_failed=0
+for n in 1 2 3 4 5; do
+    [ -s "$TEST_ROOT/awk-$n.md" ] || { echo "        real task $n came out empty"; shape_failed=$((shape_failed + 1)); }
+done
+for n in 6 7 8 9; do
+    [ -s "$TEST_ROOT/awk-$n.md" ] && { echo "        fenced task $n was extracted"; shape_failed=$((shape_failed + 1)); }
+done
+if [ "$shape_failed" -eq 0 ]; then
+    pass "five real tasks extract, four fenced ones do not"
+else
+    fail "five real tasks extract, four fenced ones do not — $shape_failed wrong"
 fi
 
 echo

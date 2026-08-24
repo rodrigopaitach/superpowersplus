@@ -96,7 +96,7 @@ if [ -f "$MODULE_DIR/mdfence.py" ] &&
 else
     fail "the module ships where the packager stages"
     echo "        module dir: $MODULE_DIR"
-    grep -n '\^scripts/' "$packager" | sed 's/^/        /'
+    { grep -n '\^scripts/' "$packager" | sed 's/^/        /'; } || true
 fi
 
 # --- the module carries no dependency ---------------------------------------
@@ -107,9 +107,47 @@ if [ ! -f "$MODULE_DIR/mdfence.py" ]; then
     echo "        module not found: $MODULE_DIR/mdfence.py"
 elif grep -nE "^(import|from) " "$MODULE_DIR/mdfence.py" | grep -qvE "^[0-9]+:import re$"; then
     fail "module imports only re"
-    grep -nE "^(import|from) " "$MODULE_DIR/mdfence.py" | sed 's/^/        /'
+    { grep -nE "^(import|from) " "$MODULE_DIR/mdfence.py" | sed 's/^/        /'; } || true
 else
     pass "module imports only re"
+fi
+
+run_py "a closing candidate carrying an info string does not close" '
+lines = ["````", "x", "````js", "## still fenced", "````", "## real"]
+mask, unclosed = fence_mask(lines)
+assert unclosed is None, unclosed
+assert mask[3] is True, "a closer may carry no info string"
+assert mask[5] is False, "the real closer has none"
+'
+
+run_py "a four-space opener is an indented code block, not a fence" '
+lines = ["```", "## fenced", "```", "    ```", "## still prose"]
+mask, unclosed = fence_mask(lines)
+assert unclosed is None, unclosed
+assert mask[4] is False, "four spaces exceeds the three-space bound"
+'
+
+run_py "a closer shorter than its opener does not close" '
+lines = ["`````", "x", "```", "## still fenced", "`````", "## real"]
+mask, _ = fence_mask(lines)
+assert mask[3] is True, "three backticks cannot close five"
+assert mask[5] is False, "five can"
+'
+
+# --- the import leaves no bytecode beside the module ------------------------
+# Both carriers set sys.dont_write_bytecode. They run from a pre-commit hook,
+# inside an installed plugin directory, and .gitignore has no __pycache__ rule:
+# without the guard each run drops a .pyc that is untracked and committable.
+rm -rf "$MODULE_DIR/__pycache__"
+( cd "$REPO_ROOT" && ./scripts/check-links.sh >/dev/null 2>&1 ) || true
+( cd "$REPO_ROOT" && ./skills/writing-plans/scripts/check-cross-references \
+    docs/superpowers/specs/2026-08-24-cross-references-extractor-design.md . >/dev/null 2>&1 ) || true
+if [ -d "$MODULE_DIR/__pycache__" ]; then
+    fail "running a carrier leaves no bytecode beside the module"
+    { ls "$MODULE_DIR/__pycache__" | sed 's/^/        /'; } || true
+    rm -rf "$MODULE_DIR/__pycache__"
+else
+    pass "running a carrier leaves no bytecode beside the module"
 fi
 
 # --- one scanner, not three -------------------------------------------------
@@ -120,7 +158,7 @@ for carrier in "$REPO_ROOT/scripts/check-links.sh" \
                "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"; do
     if grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" >/dev/null 2>&1; then
         echo "        $(basename "$carrier"):"
-        grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" | sed 's/^/          /'
+        { grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" | sed 's/^/          /'; } || true
         carrier_logic=$((carrier_logic + 1))
     fi
 done

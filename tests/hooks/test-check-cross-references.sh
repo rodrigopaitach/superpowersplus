@@ -16,7 +16,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 SCRIPT_UNDER_TEST="$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"
-BASE_REF="${BASE_REF:-$(git -C "$REPO_ROOT" merge-base main HEAD 2>/dev/null || echo main)}"
+# The IR6 baseline is PINNED to the commit this branch was cut from, not
+# derived from `merge-base main HEAD`. Derived, it becomes HEAD itself once the
+# branch merges — on a push to main, actions/checkout creates refs/heads/main,
+# so the "before" script becomes the "after" script and the case is either
+# vacuous or, if the extracted copy cannot import its module, red for a reason
+# that has nothing to do with the corpus. Pinned, it keeps asserting the one
+# thing it exists for: this change moved no committed document's verdict.
+BASE_REF="${BASE_REF:-0aa28b760dad693a544b39f5e7dbe9929d519071}"
 
 FAILURES=0
 TEST_ROOT="$(mktemp -d)"
@@ -179,6 +186,25 @@ run_case "fenced task criteria are not counted" 0 "${CLEAN_PLAN}
 - T4.4 an example criterion
 \`\`\`"
 
+# T3.5 asserts a COUNT, and run_case reads only the exit code. Reverting the
+# extractor to the raw text leaves this document exiting 0 and moves the
+# summary from `task criteria 1` to `task criteria 2` — green, with the number
+# wrong. The criterion is the number, so the number is what gets read.
+count_dir="$TEST_ROOT/printed_task_criteria"
+make_repo "$count_dir"
+printf '%s\n' "${CLEAN_PLAN}
+
+\`\`\`markdown
+- T4.4 an example criterion
+\`\`\`" >"$count_dir/docs/doc.md"
+count_out="$("$SCRIPT_UNDER_TEST" "$count_dir/docs/doc.md" "$count_dir" 2>&1 || true)"
+if printf '%s' "$count_out" | grep -q 'task criteria 1,'; then
+    pass "the printed task-criteria count omits fenced labels"
+else
+    fail "the printed task-criteria count omits fenced labels"
+    { printf '%s' "$count_out" | grep -o 'task criteria [0-9]*' | sed 's/^/        /'; } || true
+fi
+
 run_case "a fenced citation past end of file fails" 1 "${CLEAN_SPEC}
 
 \`\`\`bash
@@ -187,8 +213,14 @@ run_case "a fenced citation past end of file fails" 1 "${CLEAN_SPEC}
 
 # AC8: a plan creates its tests inside fenced code blocks, so the test finder
 # must keep reading them. This case is the guard that the fence work above did
-# not reach into it — the plan's only test lives inside a fenced block, and the
-# matrix names it.
+# not reach into it.
+#
+# The test name appears ONLY inside the fenced block and in the matrix row —
+# never on the criterion line. That placement is the whole case: writing-plans
+# requires a real criterion line to name its covering test, so a fixture that
+# followed the convention would carry the name in prose too, and the case would
+# pass even with the test finder blinded to fences. Measured: with the name on
+# the criterion line, blinding the finder leaves this case green.
 run_case "a fenced step still creates its test" 0 '# Plan
 
 ## Task 1: Build it
@@ -199,14 +231,14 @@ Acceptance criteria:
 Step 1: write the test.
 
 ```js
-it("rejects the bad input", () => {})
+it("only inside the fence", () => {})
 ```
 
 ## Test Coverage Matrix
 
 | Criterion | Test |
 |---|---|
-| T1.1 | > rejects the bad input |'
+| T1.1 | > only inside the fence |'
 
 run_case "a fenced undefined id still fails" 1 "${CLEAN_SPEC}
 
@@ -303,7 +335,7 @@ fi
 
 if grep -q 'body_only\|matrix_only' "$SCRIPT_UNDER_TEST"; then
     fail "no dead names survive"
-    grep -n 'body_only\|matrix_only' "$SCRIPT_UNDER_TEST" | sed 's/^/        /'
+    { grep -n 'body_only\|matrix_only' "$SCRIPT_UNDER_TEST" | sed 's/^/        /'; } || true
 else
     pass "no dead names survive"
 fi
@@ -312,9 +344,23 @@ fi
 # the one AC4 exists for, and it changes by LOSING a fabricated failure while
 # keeping the real one, so its exit code does not move.
 corpus_moved=0
-git -C "$REPO_ROOT" show "$BASE_REF:skills/writing-plans/scripts/check-cross-references" \
-    >"$TEST_ROOT/ccr-before" 2>/dev/null && chmod +x "$TEST_ROOT/ccr-before"
+corpus_skipped=""
+if ! git -C "$REPO_ROOT" cat-file -e "$BASE_REF^{commit}" 2>/dev/null; then
+    corpus_skipped="baseline commit $BASE_REF is not in this repository"
+else
+    git -C "$REPO_ROOT" show "$BASE_REF:skills/writing-plans/scripts/check-cross-references" \
+        >"$TEST_ROOT/ccr-before" 2>/dev/null && chmod +x "$TEST_ROOT/ccr-before"
+    # The baseline script may import the shared scanner. Extract it beside the
+    # script when the baseline carries one: the carrier resolves its module
+    # from its own directory, so a copy without it raises ModuleNotFoundError
+    # for every document and the case reports the whole corpus as moved.
+    if git -C "$REPO_ROOT" cat-file -e "$BASE_REF:skills/writing-plans/scripts/mdfence.py" 2>/dev/null; then
+        git -C "$REPO_ROOT" show "$BASE_REF:skills/writing-plans/scripts/mdfence.py" \
+            >"$TEST_ROOT/mdfence.py"
+    fi
+fi
 for doc in "$REPO_ROOT"/docs/superpowers/specs/*.md "$REPO_ROOT"/docs/superpowers/plans/*.md; do
+    [ -n "$corpus_skipped" ] && break
     [ -s "$TEST_ROOT/ccr-before" ] || continue
     # IR6 is scoped to the documents that PREDATE this branch. This branch's own
     # spec and plan are excluded because they are the corpus the branch was
@@ -332,7 +378,9 @@ for doc in "$REPO_ROOT"/docs/superpowers/specs/*.md "$REPO_ROOT"/docs/superpower
         corpus_moved=$((corpus_moved + 1))
     fi
 done
-if [ "$corpus_moved" -eq 0 ]; then
+if [ -n "$corpus_skipped" ]; then
+    fail "the committed corpus keeps its verdicts — could not run: $corpus_skipped"
+elif [ "$corpus_moved" -eq 0 ]; then
     pass "the committed corpus keeps its verdicts"
 else
     fail "the committed corpus keeps its verdicts — $corpus_moved document(s) moved"

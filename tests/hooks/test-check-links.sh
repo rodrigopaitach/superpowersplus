@@ -487,6 +487,11 @@ FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})[ \t]*(.*)$")
 
 
 def slug(text):
+    # A third copy of the gate's own slug rule, and unlike the fence scanner
+    # above it has no independence argument: it is here because this check runs
+    # in a heredoc with no import path, and GitHub's anchor rule is stable. If
+    # that rule ever moves, this copy and scripts/check-links.sh disagree in
+    # silence — the cheapest place to notice is this comment.
     text = re.sub(r"`([^`]*)`", r"\1", text).strip().lower()
     text = re.sub(r"[^\w\s-]", "", text)
     return re.sub(r"\s+", "-", text)

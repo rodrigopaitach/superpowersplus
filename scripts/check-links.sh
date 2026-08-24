@@ -224,7 +224,13 @@ DIET_EXEMPT |= {str(p) for p in pathlib.Path("docs/superpowers").rglob("*.md")}
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, "skills/writing-plans/scripts")
-from mdfence import prose
+try:
+    from mdfence import prose
+except ImportError:
+    sys.exit(
+        "check-links: cannot import the fence scanner, expected at "
+        "skills/writing-plans/scripts/mdfence.py relative to the repository root"
+    )
 
 
 def strip_fences(text):
@@ -236,9 +242,10 @@ def strip_fences(text):
     check-cross-references — this repository had two implementations of it and
     both were wrong the same way.
 
-    The relative path resolves because line 42 of this script cd's to the
-    directory the script itself sits under, so "relative to the working
-    directory" and "relative to this script" are the same thing here.
+    The relative path resolves because line 42 of this script cd's to
+    REPO_ROOT, which is `$(dirname "$0")/..` — the repository root, the parent
+    of scripts/. So "relative to the working directory" and "relative to this
+    script's repository" are the same thing here.
     """
     return prose(text.splitlines())
 

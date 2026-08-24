@@ -4,9 +4,17 @@
 #
 # The number is not this project's invention. "Keep SKILL.md body under 500
 # lines for optimal performance" is Anthropic's own guidance, vendored in this
-# repository at skills/writing-skills/anthropic-best-practices.md:241 and
-# repeated there as a checklist item at :1109 — a checkbox with nothing behind
-# it. What this script adds is the running of it.
+# repository at skills/writing-skills/anthropic-best-practices.md, section
+# "Token budgets", and repeated there under "Before sharing a Skill, verify"
+# as a checklist item — a checkbox with nothing behind it. What this script
+# adds is the running of it.
+#
+# Anchored by SECTION, never by line. That file is vendored and this project
+# edits it: removing six table-of-contents entries shifted every line below
+# them by six, and the two line citations that used to stand here pointed at
+# "Avoid vague descriptions like these:" and at a bare fence marker. Neither
+# had ever named the limit. Nothing caught it because check-links.sh reads
+# README-family, docs/**/*.md and skills/**/*.md — never a .sh comment.
 #
 # It counts the whole file, frontmatter included, which is roughly five lines
 # stricter than the rule as written. A file that fails by five lines is not the
@@ -65,7 +73,8 @@ ${over}
 A SKILL.md is loaded whole, every time the skill fires. Past this length the
 instructions at the bottom stop being followed reliably — which is why
 Anthropic's own guidance, vendored here at
-skills/writing-skills/anthropic-best-practices.md:241, puts the limit at ${MAX}.
+skills/writing-skills/anthropic-best-practices.md, section "Token budgets",
+puts the limit at ${MAX}.
 
 The fix is progressive disclosure, not compression: move what a run does not
 need until it needs it into references/, and leave the trigger that sends the
