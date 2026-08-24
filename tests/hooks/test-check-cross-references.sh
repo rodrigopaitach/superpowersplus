@@ -425,7 +425,11 @@ done
 # Names alone are not enough, and that was measured: replacing
 # `run_case "clean spec passes" 0 "$CLEAN_SPEC"` with `run_case "clean spec
 # passes" 0 "# nothing"` keeps the name, guts the assertion, and leaves this
-# guard green. IR5 says the nine still pass UNMODIFIED, so compare the bodies
+# guard green. Its reach ends at the call: it compares each `run_case` line up
+# to the next blank line, so a mutation to a FIXTURE the call references —
+# redefining `$CLEAN_SPEC` above it — is invisible here. Sibling cases catch
+# that; this guard does not, and over-trusting it is the failure to avoid.
+# IR5 says the nine still pass UNMODIFIED, so compare the bodies
 # against the commit the branch was cut from — the same pinned baseline the
 # corpus case uses, and for the same reason.
 if git -C "$REPO_ROOT" cat-file -e "$BASE_REF:tests/hooks/test-check-cross-references.sh" 2>/dev/null; then
@@ -512,6 +516,12 @@ for doc in "$REPO_ROOT"/docs/superpowers/specs/*.md "$REPO_ROOT"/docs/superpower
 done
 if [ -n "$corpus_skipped" ]; then
     fail "the committed corpus keeps its verdicts — could not run: $corpus_skipped"
+elif [ "$corpus_compared" -eq 0 ]; then
+    # Measured: with BASE_REF pointing at a commit that does not carry the
+    # script, `[ -s ccr-before ] || continue` skips every document and this
+    # case reported `[PASS] (0 of 38 documents compared)` — a green verdict over
+    # an empty comparison. The count was printed and nothing read it.
+    fail "the committed corpus keeps its verdicts — 0 of $corpus_total documents compared, so nothing was measured"
 elif [ "$corpus_moved" -eq 0 ]; then
     # The count is printed because the comment on BASE_REF above says this case
     # narrows as the corpus grows, and a claim about decay that no command

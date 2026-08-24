@@ -151,46 +151,74 @@ else
     pass "running a carrier leaves no bytecode beside the module"
 fi
 
-# --- one scanner, not three: a BEHAVIOURAL probe ----------------------------
-# AC18 says each carrier "obtains the mask from the shared module". Two weaker
-# instruments were tried here and text defeated both:
+# --- one scanner, not three: the carrier's ANSWER must depend on the module ---
+# AC18 says each carrier "obtains the mask from the shared module". Four
+# instruments were tried here and text defeated the first three:
 #
-#   * a blacklist of source spellings (`in_fence`, `FENCE = re.compile`, ...) —
-#     beaten by writing a correct independent scanner under different names.
-#     Measured: every suite and every gate stayed green.
-#   * a grep for `from mdfence import` — beaten by the same duplicate plus ONE
-#     comment line quoting that string. Measured: same, and a live-but-unused
-#     import passes it too.
+#   1. a blacklist of source spellings — beaten by a duplicate under new names;
+#   2. a grep for `from mdfence import` — beaten by that duplicate plus one
+#      comment line quoting the string, and by a live-but-unused import;
+#   3. deleting the module and requiring the carrier to refuse — beaten by
+#      KEEPING the real try/except block (which still prints the refusal) and
+#      shadowing the imported names with a duplicate defined after it.
 #
-# A string is not an obtaining, and no text assertion can tell the two apart.
-# This one removes the module and asks the carrier: a carrier that depends on it
-# says so and stops; one carrying its own copy runs on regardless. Nothing a
-# duplicate can be named or commented defeats it.
-probe_root="$TEST_ROOT/no-module"
+# Each was measured, and each left every suite and every gate green. The third
+# is the instructive one: "does it stop without the module" asks about the
+# module's PRESENCE, and a carrier can depend on the presence while ignoring the
+# contents.
+#
+# This one asks about the module's BEHAVIOUR. It replaces the module with a stub
+# whose `prose` blanks nothing, and requires each carrier's verdict to MOVE. A
+# carrier that runs its own scanner is unaffected by the stub and is caught, and
+# there is nothing it can be named, commented or shadowed into that changes
+# that: using the module is the only way to be moved by it.
+carrier_logic=0
+probe_root="$TEST_ROOT/stub-module"
 mkdir -p "$probe_root"
 ( cd "$REPO_ROOT" && git ls-files -z | xargs -0 cp --parents -t "$probe_root" )
-rm -f "$probe_root/skills/writing-plans/scripts/mdfence.py"
 
-carrier_logic=0
-probe() {
-    local label="$1"
-    shift
-    local out
-    out="$("$@" 2>&1 || true)"
-    if ! printf '%s' "$out" | grep -q 'cannot import the fence scanner'; then
-        echo "        $label: ran with the shared module removed — it is not obtaining its mask from it"
+# The stub: same names, same signatures, no masking at all.
+cat >"$probe_root/skills/writing-plans/scripts/mdfence.py" <<'STUB'
+"""Stub: every line is prose. A carrier that uses this cannot see a fence."""
+
+
+def fence_mask(lines):
+    return [False] * len(lines), None
+
+
+def prose(lines):
+    return list(lines)
+STUB
+
+# A document whose verdict turns on the mask: one real task, one inside a fence.
+mkdir -p "$probe_root/docs/probe"
+printf '%s\n' '# Plan' '' '## Task 1: real' '' '````markdown' '## Task 2: only an example' '````' '' 'This plan has 1 task.' \
+    >"$probe_root/docs/probe/doc.md"
+# And one whose link only resolves while fences are masked.
+printf '%s\n' '# Probe' '' '```markdown' '[gone](no-such-file.md)' '```' \
+    >"$probe_root/docs/probe/link.md"
+
+moved() {  # a carrier passes only if the stub CHANGES its verdict
+    local label="$1" real="$2" stub="$3"
+    if [ "$real" = "$stub" ]; then
+        echo "        $label: verdict $real with the real module and $stub with a stub that masks nothing"
+        echo "          — its answer does not depend on the module, so it is not obtaining its mask from it"
         carrier_logic=$((carrier_logic + 1))
     fi
 }
 
-probe "check-links.sh" \
-    bash -c 'cd "$1" && ./scripts/check-links.sh' _ "$probe_root"
-probe "check-cross-references" \
-    "$probe_root/skills/writing-plans/scripts/check-cross-references" \
-    "$probe_root/README.md" "$probe_root"
+ccr="$probe_root/skills/writing-plans/scripts/check-cross-references"
+real_ccr=0; "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references" \
+    "$probe_root/docs/probe/doc.md" "$probe_root" >/dev/null 2>&1 || real_ccr=$?
+stub_ccr=0; "$ccr" "$probe_root/docs/probe/doc.md" "$probe_root" >/dev/null 2>&1 || stub_ccr=$?
+moved "check-cross-references" "$real_ccr" "$stub_ccr"
 
-# Kept beside the probe, and no longer carrying the case: a carrier could import
-# the module AND keep a stale pattern of its own, which the probe cannot see.
+real_links=0; ( cd "$REPO_ROOT" && ./scripts/check-links.sh ) >/dev/null 2>&1 || real_links=$?
+stub_links=0; ( cd "$probe_root" && ./scripts/check-links.sh ) >/dev/null 2>&1 || stub_links=$?
+moved "check-links.sh" "$real_links" "$stub_links"
+
+# Kept beside the probe, and not carrying the case: a carrier could use the
+# module AND keep a stale pattern of its own, which no behavioural probe sees.
 for carrier in "$REPO_ROOT/scripts/check-links.sh" \
                "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"; do
     if grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" >/dev/null 2>&1; then
@@ -201,9 +229,9 @@ for carrier in "$REPO_ROOT/scripts/check-links.sh" \
 done
 
 if [ "$carrier_logic" -eq 0 ]; then
-    pass "carriers stop without the shared module and keep no fence logic of their own"
+    pass "each carrier's verdict moves when the shared module's behaviour changes"
 else
-    fail "carriers stop without the shared module and keep no fence logic of their own — $carrier_logic problem(s)"
+    fail "each carrier's verdict moves when the shared module's behaviour changes — $carrier_logic problem(s)"
 fi
 
 echo

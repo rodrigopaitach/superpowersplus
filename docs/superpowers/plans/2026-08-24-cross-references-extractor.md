@@ -10,7 +10,7 @@
 
 **Tech Stack:** `python3` standard library (`re` only) and `awk`, both already required by the files under change — spec `## External Dependencies`, which reads "None". No lockfile exists in this repository and none is added.
 
-**Execution:** **`inline`, and all eight tasks have run.** superpowersplus:executing-plans, chosen by the human partner on 2026-08-24; executed the same day, one commit per task. **Progress was recorded in this session's todo list, which is not persisted — the durable record is `git log`**, where each task's commit names what it touched: Task 1 `84cc400`, Task 2 `24d6cdd`, Task 3 `5bcecb1`, Task 4 `5c45b81`, Task 5 `00e77f8`, Task 6 `174c121`, Task 7 `6fb9f1f`, Task 8 `c6b1269`. All 21 CI test steps pass — the count is `grep -cE '^\s+- name: Tests' .github/workflows/ci.yml`, and it read 20 here until the audit measured it: the multi-line `Tests (brainstorm-server, node + shell)` step was missed by a narrower pattern. **Both end-of-branch gates have since run**, dispatched by the human partner: superpowersplus:final-branch-audit and the whole-branch code review, round 1 over `2929bc2` and round 2 over the tip. Their open rows are fixed in counted rounds, capped at three.
+**Execution:** **`inline`, and all nine tasks have run.** superpowersplus:executing-plans, chosen by the human partner on 2026-08-24; executed the same day, one commit per task. **Progress was recorded in this session's todo list, which is not persisted — the durable record is `git log`**, where each task's commit names what it touched: Task 1 `84cc400`, Task 2 `24d6cdd`, Task 3 `5bcecb1`, Task 4 `5c45b81`, Task 5 `00e77f8`, Task 6 `174c121`, Task 7 `6fb9f1f`, Task 8 `c6b1269`, Task 9 `71b43d9` — written into the plan afterwards as `AC21`, and saying so. All 21 CI test steps pass — the count is `grep -cE '^\s+- name: Tests' .github/workflows/ci.yml`, and it read 20 here until the audit measured it: the multi-line `Tests (brainstorm-server, node + shell)` step was missed by a narrower pattern. **Both end-of-branch gates have since run**, dispatched by the human partner: superpowersplus:final-branch-audit and the whole-branch code review, round 1 over `2929bc2` and round 2 over the tip. Their open rows are fixed in counted rounds, capped at three.
 
 **Escalation shape** (detail and a worked example: `../../../skills/using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
@@ -37,7 +37,7 @@
 | T1.5 The module sits where the packager stages and the packager still forbids the root scripts path | AC19 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > the module ships where the packager stages` |
 | T1.6 The Codex archive carries the shared module | AC19 | script | `tests/codex/` | `tests/codex/test-package-codex-plugin.sh > archive carries the shared fence scanner` |
 | T2.1 The table of contents has one entry per real section and no entry without one | AC16 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > every table-of-contents anchor in anthropic-best-practices resolves` |
-| T3.1 Task headings inside fenced blocks are not counted | AC1 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > fenced task headings are not counted` |
+| T3.1 Task headings inside fenced blocks are not counted | AC1 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the documents AC1 and AC4 name read the numbers they state` |
 | T3.2 The announced-count comparison reads prose only | AC2 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > announced count matches when the extras are fenced` |
 | T3.3 A section heading inside a fence does not start a section | AC3 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced acceptance-criteria heading defines nothing` |
 | T3.4 Coverage-matrix rows are read from prose only | AC5 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced matrix table raises no orphan label` |
@@ -47,15 +47,15 @@
 | T3.8 An id cited inside a fenced code block still counts as cited | AC10 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a fenced undefined id still fails` |
 | T4.1 An unterminated fence fails, naming the opening line | AC11 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the unterminated-fence message names the opening line` |
 | T4.2 The module is resolved from the script's own path, not the working directory | IR4 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > runs from an unrelated working directory` |
-| T5.1 A section ends only at a heading of the same or shallower level | AC4 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a section survives its own subsections` |
+| T5.1 A section ends only at a heading of the same or shallower level | AC4 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the documents AC1 and AC4 name read the numbers they state` |
 | T5.2 A criterion label carrying a letter suffix is matched | AC7 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a suffixed criterion label is still checked` |
 | T5.3 `body_only` and `matrix_only` no longer exist in the file | AC12 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > no dead names survive` |
-| T5.4 The nine pre-existing cases still pass unmodified | IR5 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the nine original cases are still here` |
+| T5.4 The nine pre-existing cases still pass unmodified | IR5 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the nine original cases are still here, unmodified` |
 | T5.5 No committed document under `docs/` changes verdict except as AC4 requires | IR6 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > the committed corpus keeps its verdicts` |
 | T6.1 A heading inside a fenced code block produces no anchor | AC13 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > a nested-fence heading produces no anchor` |
 | T6.2 A link written inside a nested fenced block is still ignored | AC14 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > a link inside a nested fenced block is ignored` |
 | T6.3 The link gate exits 0 over this repository | AC17 | script | `tests/hooks/` | `tests/hooks/test-check-links.sh > the gate passes over this repository itself` |
-| T6.4 Each python carrier obtains its mask from the shared module and keeps no fence logic of its own | AC18 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > carriers stop without the shared module and keep no fence logic of their own` |
+| T6.4 Each python carrier obtains its mask from the shared module and keeps no fence logic of its own | AC18 | script | `tests/hooks/` | `tests/hooks/test-mdfence.sh > each carrier's verdict moves when the shared module's behaviour changes` |
 | T7.1 `task-brief` does not treat a fenced `## Task N` as a task | AC15 | script | `tests/hooks/` | `tests/hooks/test-task-brief.sh > a fenced task heading is not extracted` |
 | T7.2 The branch changes only the files the spec allows | IR8 | audit | branch diff | audit re-run of `git diff --name-status` against the branch point — spec `IR8` states this criterion takes no permanent test |
 | T8.1 A matrix naming a test no code block of the plan contains exits 1 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails` |
@@ -552,6 +552,35 @@ An example of the shape:
 | T9.9 | > a test nobody wrote |
 \`\`\`"
 
+# AC1 and AC4 do not state a pass/fail: each names a COMMITTED document and a
+# NUMBER the summary must read, and AC4 adds the absence of a specific failure.
+# `run_case` reads only an exit code, and both documents keep the exit code they
+# had regardless. Read the numbers, from the documents the criteria name.
+named_failed=0
+named_doc() {
+    local label="$1" doc="$2" expect="$3" forbid="$4" out
+    out="$("$SCRIPT_UNDER_TEST" "$REPO_ROOT/$doc" "$REPO_ROOT" 2>&1 || true)"
+    if ! printf '%s' "$out" | grep -qF "$expect"; then
+        echo "        $label: expected \`$expect\` in the summary"
+        named_failed=$((named_failed + 1))
+    fi
+    if [[ -n "$forbid" ]] && printf '%s' "$out" | grep -qF "$forbid"; then
+        echo "        $label: reported \`$forbid\`, which the criterion forbids"
+        named_failed=$((named_failed + 1))
+    fi
+}
+
+named_doc "AC1" "docs/superpowers/plans/2026-07-06-sdd-plan-scoped-workspace.md" \
+    "tasks present 5" ""
+named_doc "AC4" "docs/superpowers/specs/2026-08-21-upstream-consult-fixes-design.md" \
+    "AC/IR defined 26" "cited but not defined"
+
+if [[ "$named_failed" -eq 0 ]]; then
+    pass "the documents AC1 and AC4 name read the numbers they state"
+else
+    fail "the documents AC1 and AC4 name read the numbers they state — $named_failed problem(s)"
+fi
+
 run_case "fenced task criteria are not counted" 0 "${CLEAN_PLAN}
 
 \`\`\`markdown
@@ -892,7 +921,7 @@ git commit -m "fix(writing-plans): cerca nao fechada reprova o documento em vez 
 - T5.1: A spec whose `## Acceptance Criteria` organises criteria under `###` subsections defines all of them — test: `tests/hooks/test-check-cross-references.sh > a section survives its own subsections`
 - T5.2: A plan whose criterion label carries a trailing letter, and whose matrix row names a test no step creates, exits 1 — test: `tests/hooks/test-check-cross-references.sh > a suffixed criterion label is still checked`
 - T5.3: The strings `body_only` and `matrix_only` do not appear in the script — test: `tests/hooks/test-check-cross-references.sh > no dead names survive`
-- T5.4: The nine case names the suite carried before this branch are all still present — test: `tests/hooks/test-check-cross-references.sh > the nine original cases are still here`
+- T5.4: The nine cases the suite carried before this branch are all still present **and their bodies are unchanged**, compared against the pinned branch point — test: `tests/hooks/test-check-cross-references.sh > the nine original cases are still here, unmodified`. Name-presence alone is not enough: replacing a case's document with `# nothing` keeps the name and leaves a name-only guard green, measured.
 - T5.5: Every committed document under `docs/` holds the exit code it held before the branch, except `2026-08-21-upstream-consult-fixes-design.md`, whose fourteen fabricated dangling-id failures disappear — test: `tests/hooks/test-check-cross-references.sh > the committed corpus keeps its verdicts`
 
 - [ ] **Step 1: Write the failing tests**
@@ -950,9 +979,9 @@ for original in \
     fi
 done
 if [ "$missing_original" -eq 0 ]; then
-    pass "the nine original cases are still here"
+    pass "the nine original cases are still here, unmodified"
 else
-    fail "the nine original cases are still here — $missing_original dropped"
+    fail "the nine original cases are still here, unmodified — $missing_original problem(s)"
 fi
 
 if grep -q 'body_only\|matrix_only' "$SCRIPT_UNDER_TEST"; then
@@ -1105,7 +1134,7 @@ git commit -m "fix(writing-plans): nivel de secao, sufixo de letra no id e dois 
 - T6.1: A document whose only `## Heading` sits inside a four-backtick block containing a three-backtick block, linked as `#heading`, exits 1 — test: `tests/hooks/test-check-links.sh > a nested-fence heading produces no anchor`
 - T6.2: A link written inside a three-backtick block nested in a four-backtick block is not checked — test: `tests/hooks/test-check-links.sh > a link inside a nested fenced block is ignored`
 - T6.3: The gate exits 0 when run over this repository itself, not a fixture tree — test: `tests/hooks/test-check-links.sh > the gate passes over this repository itself`
-- T6.4: With the shared module removed from the tree, each of `check-links.sh` and `check-cross-references` refuses to run and says so; and neither defines a fence pattern or a fence toggle of its own — test: `tests/hooks/test-mdfence.sh > carriers stop without the shared module and keep no fence logic of their own`. **The negative half alone is not assertable**: a blacklist of source spellings is beaten by a duplicate under new names, and a grep for the import is beaten by a comment quoting it. Both were measured. Only removing the module and running the carrier reads `obtains`.
+- T6.4: With `mdfence.py` replaced by a stub that masks nothing, each of `check-links.sh` and `check-cross-references` returns a DIFFERENT verdict on a document whose answer turns on the mask; and neither defines a fence pattern or a fence toggle of its own — test: `tests/hooks/test-mdfence.sh > each carrier's verdict moves when the shared module's behaviour changes`. **Four instruments were measured and text defeated the first three**: a blacklist of source spellings loses to a duplicate under new names; a grep for the import loses to a comment quoting it, and to a live-but-unused import; and removing the module and requiring a refusal loses to keeping the real `try/except` — which still prints the refusal — while shadowing the imported names. Presence is not use. Only a verdict that MOVES with the module's behaviour reads `obtains`.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -1146,8 +1175,12 @@ fi
 And append to `tests/hooks/test-mdfence.sh`, before its final summary block:
 
 ```bash
-# AC18: one scanner, not three. A carrier that keeps its own pattern is a copy
-# that will drift, which is the defect this module exists to end.
+# AC18: one scanner, not three. The grep below is NOT the instrument — it is
+# kept only for a carrier that uses the module and also leaves a stale pattern
+# behind. What carries the case is the stub substitution: replace mdfence.py
+# with a version that masks nothing and require each carrier's verdict to move.
+# A blacklist of spellings, a grep for the import, and deleting the module were
+# each measured and each defeated; see the criterion above.
 carrier_logic=0
 for carrier in "$REPO_ROOT/scripts/check-links.sh" \
                "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"; do
@@ -1158,9 +1191,9 @@ for carrier in "$REPO_ROOT/scripts/check-links.sh" \
     fi
 done
 if [ "$carrier_logic" -eq 0 ]; then
-    pass "carriers stop without the shared module and keep no fence logic of their own"
+    pass "each carrier's verdict moves when the shared module's behaviour changes"
 else
-    fail "carriers stop without the shared module and keep no fence logic of their own — $carrier_logic problem(s)"
+    fail "each carrier's verdict moves when the shared module's behaviour changes — $carrier_logic problem(s)"
 fi
 ```
 

@@ -266,10 +266,17 @@ References below name them so a claim here can be traced there.
   [`scripts/check-links.sh`](scripts/check-links.sh) under fresh names, with the
   import removed, left every suite and every gate green. A blacklist of
   spellings cannot be completed; a second implementation only has to avoid the
-  words someone thought to list. The case now asserts the positive half — the
-  import is present — which fires whatever the replacement is called, and keeps
-  the spelling grep beside it because a carrier could import the module and
-  still keep a stale pattern.
+  words someone thought to list. **Three further instruments were tried before
+  one held, and each was measured with the whole battery green.** Asserting the
+  import is present is still a text search: a comment quoting the string beats
+  it, and so does a live-but-unused import. Deleting the module and requiring a
+  refusal asks about the module's *presence*, and a carrier can depend on the
+  presence while ignoring the contents — keep the real `try/except`, which still
+  prints the refusal, and shadow the imported names with a duplicate defined
+  after it. What holds asks about *behaviour*: the module is replaced by a stub
+  that masks nothing, and each carrier's verdict must MOVE. A carrier running
+  its own scanner is not moved by a module it does not use, and no naming,
+  commenting or shadowing changes that.
 - **`AC19`'s named evidence was empty for half of what `AC19` asserts.** It
   claims the Codex archive carries the shared module *and* holds no `scripts/`
   path, and named a suite that only ever checked the second. Measured: deleting
@@ -303,10 +310,12 @@ References below name them so a claim here can be traced there.
   "cited but not defined" failure; `AC1` states another reads `tasks present 5`.
   Both were covered by cases reading an exit code on a synthetic fixture, and
   the named documents keep their exit codes regardless — one of them already
-  exits 1 for an unrelated citation. Measured: truncating `section()` after
-  twenty lines left all three suites green while that document reported six
-  dangling ids and `AC/IR defined 20`. The suite now reads the numbers out of
-  the summaries of the documents the criteria name.
+  exits 1 for an unrelated citation. Measured: truncating `section()` at its
+  end-of-file return left all three suites green while the document `AC4` names
+  lost its section boundaries. Truncating the mid-loop return as well reports
+  `AC/IR defined 11` and reddens the corpus case too — an earlier note here said
+  `20`, which no command reproduces. The suite now reads the numbers out of the
+  summaries of the documents the criteria name.
 - **The nine pre-existing cases were guarded by name only.** `IR5` requires them
   to still pass *unmodified*; the guard grepped for `run_case "<name>"`.
   Measured: replacing a case's document with `# nothing` keeps the name, guts
