@@ -17,6 +17,8 @@ References below name them so a claim here can be traced there.
 
 - **The plan reviewer charges two defects it could not see before.** A step whose test asserts a value the implementation the same plan specifies would not produce — two independent statements about one behaviour, each correct alone, which a cheap implementer settles by changing the implementation. And two spec criteria that cannot both hold: the reviewer now reads criteria in pairs, each against the neighbours touching the same field. Measured: such a pair survived two rounds of adversarial spec review and surfaced only while writing the plan.
 
+- **Both document reviewers now ask whether a state change can be applied, not only whether its target is right.** Measuring the target state and establishing that whoever applies the change can reach it are two claims, and only the first was ever checked. Measured: four independent review lenses and 68 catalogue measurements passed a defect of this shape; the gap was one line.
+
 ## [1.19.1] - 2026-08-22
 
 ### Fixed
