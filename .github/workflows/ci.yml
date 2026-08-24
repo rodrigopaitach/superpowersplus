@@ -80,6 +80,9 @@ jobs:
       - name: Tests (cross-reference check)
         run: tests/hooks/test-check-cross-references.sh
 
+      - name: Tests (fence scanner)
+        run: tests/hooks/test-mdfence.sh
+
       - name: Tests (codex plugin sync)
         run: tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 

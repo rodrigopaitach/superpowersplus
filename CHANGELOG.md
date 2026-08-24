@@ -9,6 +9,19 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **One CommonMark fenced-block scanner, shared by the markdown gates.**
+  [`skills/writing-plans/scripts/mdfence.py`](skills/writing-plans/scripts/mdfence.py)
+  returns a per-line fenced/not mask and the line of any unclosed fence. It sits
+  beside `check-cross-references` rather than under `scripts/` because
+  [`scripts/package-codex-plugin.sh:336`](scripts/package-codex-plugin.sh) fails
+  the Codex build on any archived `scripts/` path while `:241` stages `skills`
+  wholesale — a module at the root would reach one harness and not the other.
+  Tests: [`tests/hooks/test-mdfence.sh`](tests/hooks/test-mdfence.sh).
+
 ## [1.20.0] - 2026-08-24
 
 ### Added
