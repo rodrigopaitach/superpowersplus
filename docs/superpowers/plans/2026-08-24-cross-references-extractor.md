@@ -1071,7 +1071,9 @@ fi
 - [ ] **Step 2: Run the tests to verify they fail**
 
 Run: `tests/hooks/test-check-links.sh`
-Expected: FAIL on `a nested-fence heading produces no anchor` — `expected exit 1, got 0`, because the naive mask leaves the fence at the inner opener and `## Inner heading` becomes a real anchor.
+Expected: FAIL on `a nested-fence heading produces no anchor` — `expected exit 1, got 0`, because the naive mask leaves the fence at the inner opener and `## Inner heading` becomes a real anchor. `a link inside a nested fenced block is ignored` PASSES already: it is the guard that this task's wider mask does not start blanking prose, and it goes red only if the fix over-reaches.
+
+**`the gate passes over this repository itself` also passes already, and that is stated rather than hidden.** Task 2 removed the six entries the corrected mask would reject, and the pre-commit hook (`githooks/pre-commit:26`) forces that order — so by the time this task runs, the conjunction it asserts is already true. Its red state is real but was measured before Task 2, and it is Defect E of the spec: the corrected mask over the uncorrected table of contents moved the gate from exit 0 to exit 1 on six named links. **This criterion is a regression guard, not a red-to-green reproduction**, and under `IR7` that is the one place in this plan where the red run lives in the spec's measurement instead of in the step below.
 
 Run: `tests/hooks/test-mdfence.sh`
 Expected: FAIL on `carriers hold no fence logic of their own`, listing `check-links.sh:74` — `FENCE = re.compile(...)` — and its `in_fence` toggle.
@@ -1100,7 +1102,7 @@ def strip_fences(text):
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `tests/hooks/test-check-links.sh`
-Expected: PASS — every case, including `a nested-fence heading produces no anchor`, `links inside fenced code are ignored`, and `every table-of-contents anchor in anthropic-best-practices resolves`.
+Expected: PASS — every case, including the three this task added: `a nested-fence heading produces no anchor`, `a link inside a nested fenced block is ignored`, and `the gate passes over this repository itself`. The suite's pre-existing `links inside fenced code are ignored` must still pass too: it is the guard that the wider mask did not start blanking prose.
 
 Run: `tests/hooks/test-mdfence.sh`
 Expected: PASS — including `carriers hold no fence logic of their own`.
