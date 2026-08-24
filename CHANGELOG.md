@@ -211,7 +211,15 @@ References below name them so a claim here can be traced there.
   `tests named in matrix 29`. The conformance audit caught it by opening the
   suite. Reading the shipped test files instead of the plan's code blocks is a
   different instrument, not a tightening of this one; the limit is recorded
-  rather than closed.
+  rather than closed. **Closed on 2026-08-24**, after the whole-branch review
+  measured it: where a matrix cell already names the suite file as well as the
+  case, that file is read and the case must appear in it. The fenced-block
+  search stays for plans whose tests do not exist yet — an unresolvable suite
+  path falls back to it rather than failing, so the new check adds reach and
+  removes none. Measured on this branch's own plan: 34 cells resolved to a
+  suite, 0 absent. Its test is the pair only this instrument can tell apart —
+  both documents carry the name inside a fenced block, so the code-block search
+  passes on both.
 - **`usage()` traded the runaway back for a truncation, and neither form ever
   had a red state.** Slicing the header at "the first non-comment line" cut
   `--help` at the first blank line: measured, one paragraph break inside the

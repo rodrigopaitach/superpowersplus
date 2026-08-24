@@ -267,12 +267,18 @@ in_code = "\n".join(ln for i, ln in enumerate(lines) if fenced[i])
 
 # Matrix cells name a test as `> name`, `file.py::name`, or `file:line > name`.
 named_in_matrix = set()
+# Cells that name the suite file as well as the case: charged against that file
+# further down, once `resolve` exists.
+matrix_suites = []
 for ln in matrix_rows:
     for cell in ln.split("|"):
         cell = cell.strip().strip("`")
         m = re.search(r">\s*(.+?)\s*$", cell)
         if m:
             named_in_matrix.add(m.group(1).strip().strip("`"))
+            suite = cell[: m.start()].strip().strip("`")
+            if suite:
+                matrix_suites.append((suite, m.group(1).strip().strip("`")))
         m = re.search(r"::(\w+)\s*$", cell)
         if m:
             named_in_matrix.add(m.group(1))
@@ -321,6 +327,40 @@ def resolve(rel):
         return None, f"no tracked file matches under {root}"
     return None, "ambiguous short form — " + ", ".join(sorted(hits)[:4])
 
+
+# ------------------------------- matrix tests, against the suite the cell names
+# The check above searches the PLAN's fenced blocks, which is what makes it
+# language-blind — and blind to a plan that QUOTES a test it never ships: the
+# name sits in a code block either way. Measured on this repository's own plan,
+# which named a deleted assertion and exited 0; a human opening the suite is
+# what caught it.
+#
+# Where the cell names the suite file too and that file resolves, the suite is
+# the stronger source: it says whether the case is really there. A suite that
+# does not exist yet is not a defect — a plan is written before its tests — so
+# an unresolvable path falls back to the code-block search above rather than
+# failing. This check ADDS reach; it removes none.
+checked_against_suite = 0
+absent_from_suite = []
+for suite, name in matrix_suites:
+    suite_path, _ = resolve(suite)
+    if suite_path is None:
+        continue
+    try:
+        body = suite_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        continue
+    checked_against_suite += 1
+    if name not in body:
+        absent_from_suite.append(f"`{name}` in `{suite}`")
+
+if checked_against_suite:
+    counts["matrix tests checked against their suite"] = checked_against_suite
+if absent_from_suite:
+    failures.append(
+        "tests named in the coverage matrix that their own suite does not "
+        "contain: " + "; ".join(absent_from_suite)
+    )
 
 CITATION = re.compile(r"`([^`\s]+\.[A-Za-z0-9_]+):(\d+)(?:-(\d+))?`")
 seen_citations = set()

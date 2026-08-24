@@ -571,6 +571,80 @@ run_case "a matrix naming a test no code block holds fails" 1 "$(printf '%s' "$B
 run_case "a renamed test is caught even though the criterion still names it" 1 "$(printf '%s' "$BASH_PLAN" |
     sed 's/run_case "rejects the bad input"/run_case "rejects bad input"/')"
 
+# --- the matrix charged against the suite the cell names -------------------
+# The check above searches the PLAN's own fenced blocks, which is what makes it
+# language-blind — and blind to a plan that QUOTES a test it never ships: the
+# name sits in a code block either way. Measured on this branch's own plan,
+# which named `tests/hooks/test-task-brief.sh > the branch touches only its
+# declared files` after that assertion had been deleted, and exited 0. Only a
+# human opening the suite caught it.
+#
+# When the cell names the suite file too and that file exists, the suite is the
+# stronger source. The pair below is what separates the two instruments: BOTH
+# documents carry the name inside a fenced block, so the code-block search
+# passes on both, and only reading the named suite tells them apart.
+SUITE_PLAN='# Plan
+
+## Task 1: Build it
+
+Acceptance criteria:
+- T1.1 rejects the bad input
+
+Step 1: write the test.
+
+```bash
+run_case "rejects the bad input" 0 "$FIXTURE"
+```
+
+## Test Coverage Matrix
+
+| Criterion | Test |
+|---|---|
+| T1.1 | `tests/suite.sh > rejects the bad input` |'
+
+suite_failed=0
+for variant in present absent; do
+    dir="$TEST_ROOT/matrix-suite-$variant"
+    make_repo "$dir"
+    mkdir -p "$dir/tests"
+    if [[ "$variant" == present ]]; then
+        printf 'run_case "rejects the bad input" 0 "$FIXTURE"\n' >"$dir/tests/suite.sh"
+        expected=0
+    else
+        printf 'run_case "some other case entirely" 0 "$FIXTURE"\n' >"$dir/tests/suite.sh"
+        expected=1
+    fi
+    printf '%s\n' "$SUITE_PLAN" >"$dir/docs/doc.md"
+    actual=0
+    out="$("$SCRIPT_UNDER_TEST" "$dir/docs/doc.md" "$dir" 2>&1)" || actual=$?
+    if [[ "$actual" != "$expected" ]]; then
+        echo "        $variant: expected exit $expected, got $actual"
+        printf '%s\n' "$out" | sed 's/^/          /'
+        suite_failed=$((suite_failed + 1))
+        continue
+    fi
+    # Exit code alone cannot say the verdict came from the suite rather than
+    # from any other reference in the document.
+    if [[ "$variant" == absent ]] &&
+        ! printf '%s' "$out" | grep -q 'their own suite does not contain'; then
+        echo "        absent: exit 1, but not for the case the suite lacks"
+        suite_failed=$((suite_failed + 1))
+    fi
+    # The reach is printed, so a check that silently resolved nothing cannot
+    # read as coverage.
+    if [[ "$variant" == present ]] &&
+        ! printf '%s' "$out" | grep -q 'matrix tests checked against their suite 1'; then
+        echo "        present: exit 0, but the check resolved no suite at all"
+        suite_failed=$((suite_failed + 1))
+    fi
+done
+
+if [[ "$suite_failed" -eq 0 ]]; then
+    pass "a matrix naming a case its own suite lacks fails, and the same plan passes when the suite has it"
+else
+    fail "the matrix is not charged against the suite it names — $suite_failed problem(s)"
+fi
+
 # --- --help survives an edit to the header it prints ----------------------
 # `usage()` slices this script's own header, and both slicing rules it has
 # carried failed silently on a plausible edit: `sed -n '2,34p'` truncated when

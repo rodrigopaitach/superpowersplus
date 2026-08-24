@@ -60,6 +60,7 @@
 | T7.2 The branch changes only the files the spec allows | IR8 | audit | branch diff | audit re-run of `git diff --name-status` against the branch point — spec `IR8` states this criterion takes no permanent test |
 | T8.1 A matrix naming a test no code block of the plan contains exits 1 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails` |
 | T8.2 A matrix naming a bash case the steps create exits 0 | AC20 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a bash case named in the matrix is created` |
+| T8.3 A matrix naming a case its own suite lacks exits 1, and the same plan passes when the suite has it | AC22 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > a matrix naming a case its own suite lacks fails, and the same plan passes when the suite has it` |
 | T9.1 `check-cross-references --help` prints its whole header and stops at the first line of code | AC21 | script | `tests/hooks/` | `tests/hooks/test-check-cross-references.sh > --help prints the whole header and stops there, through header edits` |
 | T9.2 `lint-shell.sh --help` prints its whole header and stops at the first line of code | AC21 | script | `tests/shell-lint/` | `tests/shell-lint/test-lint-shell.sh > --help prints the whole header and stops there, through header edits` |
 | T9.3 `sync-to-codex-plugin.sh --help` prints its Usage block to the end of the header | AC21 | script | `tests/codex-plugin-sync/` | `tests/codex-plugin-sync/test-sync-to-codex-plugin.sh > Help prints the whole header and stops there, through header edits` |
@@ -1487,6 +1488,7 @@ git commit -m "fix(sdd): task-brief fecha cerca pela regra CommonMark, nao por a
 **Acceptance criteria:**
 - T8.1: A plan whose matrix names a test string that appears in no code block exits 1 — test: `tests/hooks/test-check-cross-references.sh > a matrix naming a test no code block holds fails`
 - T8.2: A plan whose matrix names a bash case its steps create exits 0 — test: `tests/hooks/test-check-cross-references.sh > a bash case named in the matrix is created`
+- T8.3: A plan whose matrix names a case its own suite does not contain exits 1, and the same plan passes when the suite has it — test: `tests/hooks/test-check-cross-references.sh > a matrix naming a case its own suite lacks fails, and the same plan passes when the suite has it`. **Added on 2026-08-24, after the whole-branch review**, which measured the limit the CHANGELOG had recorded as open: both documents of the pair carry the name inside a fenced block, so only reading the suite the cell names tells them apart.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -1613,6 +1615,63 @@ Expected: three paths, and the grep reports no matches.
 git add skills/writing-plans/scripts/check-cross-references tests/hooks/test-check-cross-references.sh CHANGELOG.md
 git commit -m "fix(writing-plans): a comparacao de testes para de conhecer linguagens"
 ```
+
+**Step 9, added 2026-08-24 after the whole-branch review — `T8.3`.** The two
+steps above make the comparison language-blind by searching the plan's own
+fenced blocks, and the CHANGELOG recorded what that cannot see: a plan which
+*quotes* a test it never ships passes, because the name is in a code block
+either way. The review measured it and the human partner chose to close it.
+Where the cell already names the suite file, that file is the stronger source.
+
+Append the pair to `tests/hooks/test-check-cross-references.sh`. Both documents
+carry the name inside a fenced block, so the code-block search passes on both
+and only the suite tells them apart:
+
+````bash
+for variant in present absent; do
+    dir="$TEST_ROOT/matrix-suite-$variant"
+    make_repo "$dir"
+    mkdir -p "$dir/tests"
+    if [[ "$variant" == present ]]; then
+        printf 'run_case "rejects the bad input" 0 "$FIXTURE"\n' >"$dir/tests/suite.sh"
+        expected=0
+    else
+        printf 'run_case "some other case entirely" 0 "$FIXTURE"\n' >"$dir/tests/suite.sh"
+        expected=1
+    fi
+    # ... run the script, then check the MESSAGE on the absent half and the
+    # printed reach on the present half — an exit code cannot say which
+    # reference produced the verdict, and a check that resolved nothing at all
+    # would read as coverage.
+done
+
+if [[ "$suite_failed" -eq 0 ]]; then
+    pass "a matrix naming a case its own suite lacks fails, and the same plan passes when the suite has it"
+else
+    fail "the matrix is not charged against the suite it names — $suite_failed problem(s)"
+fi
+````
+
+Then collect the suite path beside the case name in the matrix loop, and charge
+it once `resolve` exists:
+
+```python
+checked_against_suite = 0
+absent_from_suite = []
+for suite, name in matrix_suites:
+    suite_path, _ = resolve(suite)
+    if suite_path is None:
+        continue          # a plan is written before its tests — AC20 still covers it
+    body = suite_path.read_text(encoding="utf-8", errors="replace")
+    checked_against_suite += 1
+    if name not in body:
+        absent_from_suite.append(f"`{name}` in `{suite}`")
+```
+
+Expected: FAIL on the new case before the block above exists — the `absent`
+half exits 0 and the `present` half prints no reach. Measured after: the plan
+for this branch reports `matrix tests checked against their suite 34`, and the
+gate still exits 0 over both of this branch's documents.
 
 ---
 
