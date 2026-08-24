@@ -155,8 +155,9 @@ References below name them so a claim here can be traced there.
   `--help`.** `usage()` sliced the header by line number (`sed -n '2,34p'`), so
   growing the header above it cut the Usage block off the output with nothing to
   notice. It now slices by content. Swept: `scripts/lint-shell.sh:14` has the
-  same shape and is left alone — its header is stable and the fix is its own
-  commit.
+  same shape. It was left alone at the time, and the sweep is what found it:
+  Task 9 closed it later in this same release, along with a third carrier — see
+  the `--help` entry below.
 - **`mdfence.py` records its measured deviations from CommonMark.** Checked
   against the specification's own conformance suite, restricted to the 29
   normative "Fenced code blocks" examples: **25 agree**. The four that do not are
@@ -275,8 +276,14 @@ References below name them so a claim here can be traced there.
   prints the refusal, and shadow the imported names with a duplicate defined
   after it. What holds asks about *behaviour*: the module is replaced by a stub
   that masks nothing, and each carrier's verdict must MOVE. A carrier running
-  its own scanner is not moved by a module it does not use, and no naming,
-  commenting or shadowing changes that.
+  its own scanner is not moved by a module it does not use. **Measured, with the
+  residual named rather than denied:** no rename, comment, dead import, shadowed
+  name or independent duplicate defeats this — a deliberate canary does, a
+  statement whose only function is to read the module so the exit code moves.
+  That is not what a careless refactor produces, which is the class this gate is
+  for. The two copies differ only in the module, and the pair asserted is
+  specific (0 then 1) rather than merely different, so a carrier that crashes
+  under the stub is not read as one that moved.
 - **`AC19`'s named evidence was empty for half of what `AC19` asserts.** It
   claims the Codex archive carries the shared module *and* holds no `scripts/`
   path, and named a suite that only ever checked the second. Measured: deleting
@@ -301,10 +308,10 @@ References below name them so a claim here can be traced there.
   a correct duplicate under new names. A grep for `from mdfence import` was
   beaten by that same duplicate plus **one comment line quoting the string** —
   and by a live-but-unused import. Both measured, both leaving every suite and
-  every gate green. The case now removes the module from a copy of the tree and
-  runs each carrier there: one that depends on it says so and stops, one
-  carrying its own copy runs on. No spelling, comment or dead import survives
-  that.
+  every gate green. **That sentence described an instrument this same release
+  then measured as beaten** — keeping the real `try/except`, which still prints
+  the refusal, and shadowing the imported names passes it. What shipped
+  substitutes a stub and requires the verdict to move.
 - **Two criteria named a document and a number, and nothing read either.**
   `AC4` states that a named committed spec reports `AC/IR defined 26` with no
   "cited but not defined" failure; `AC1` states another reads `tasks present 5`.

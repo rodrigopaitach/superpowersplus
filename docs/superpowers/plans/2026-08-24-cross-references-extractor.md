@@ -506,7 +506,7 @@ git commit -m "fix(writing-skills): seis entradas de sumario apontando para head
 - Produces: nothing consumed by a later task.
 
 **Acceptance criteria:**
-- T3.1: A plan whose only extra `## Task` headings are fenced reports the prose count — test: `tests/hooks/test-check-cross-references.sh > fenced task headings are not counted`
+- T3.1: A plan whose only extra `## Task` headings are fenced reports the prose count — test: `tests/hooks/test-check-cross-references.sh > the documents AC1 and AC4 name read the numbers they state`. **Not `fenced task headings are not counted`**, which reads only an exit code: `AC1` states a NUMBER, and under a compound mutation that case rides on `AC2`'s mechanism rather than its own.
 - T3.2: The same plan announcing that prose count exits 0 — test: `tests/hooks/test-check-cross-references.sh > announced count matches when the extras are fenced`
 - T3.3: A document whose only `## Acceptance Criteria` heading is fenced defines no ids — test: `tests/hooks/test-check-cross-references.sh > a fenced acceptance-criteria heading defines nothing`
 - T3.4: A fenced example matrix table raises no orphan-label failure — test: `tests/hooks/test-check-cross-references.sh > a fenced matrix table raises no orphan label`
@@ -918,7 +918,7 @@ git commit -m "fix(writing-plans): cerca nao fechada reprova o documento em vez 
 - Produces: nothing consumed by a later task.
 
 **Acceptance criteria:**
-- T5.1: A spec whose `## Acceptance Criteria` organises criteria under `###` subsections defines all of them — test: `tests/hooks/test-check-cross-references.sh > a section survives its own subsections`
+- T5.1: A spec whose `## Acceptance Criteria` organises criteria under `###` subsections defines all of them — test: `tests/hooks/test-check-cross-references.sh > the documents AC1 and AC4 name read the numbers they state`. **Not `a section survives its own subsections`**, which reads only an exit code on a synthetic fixture: `AC4` states a number and the absence of a message, against a committed document that keeps its exit code either way.
 - T5.2: A plan whose criterion label carries a trailing letter, and whose matrix row names a test no step creates, exits 1 — test: `tests/hooks/test-check-cross-references.sh > a suffixed criterion label is still checked`
 - T5.3: The strings `body_only` and `matrix_only` do not appear in the script — test: `tests/hooks/test-check-cross-references.sh > no dead names survive`
 - T5.4: The nine cases the suite carried before this branch are all still present **and their bodies are unchanged**, compared against the pinned branch point — test: `tests/hooks/test-check-cross-references.sh > the nine original cases are still here, unmodified`. Name-presence alone is not enough: replacing a case's document with `# nothing` keeps the name and leaves a name-only guard green, measured.

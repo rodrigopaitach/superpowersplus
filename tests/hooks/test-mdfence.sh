@@ -152,33 +152,51 @@ else
 fi
 
 # --- one scanner, not three: the carrier's ANSWER must depend on the module ---
-# AC18 says each carrier "obtains the mask from the shared module". Four
-# instruments were tried here and text defeated the first three:
+# AC18 says each carrier "obtains the mask from the shared module". Five
+# instruments were tried here; four were defeated by text, and the fifth has a
+# residual that is named rather than denied:
 #
 #   1. a blacklist of source spellings — beaten by a duplicate under new names;
-#   2. a grep for `from mdfence import` — beaten by that duplicate plus one
-#      comment line quoting the string, and by a live-but-unused import;
-#   3. deleting the module and requiring the carrier to refuse — beaten by
-#      KEEPING the real try/except block (which still prints the refusal) and
-#      shadowing the imported names with a duplicate defined after it.
+#   2. a grep for `from mdfence import` — beaten by a comment quoting the
+#      string, and by a live-but-unused import;
+#   3. deleting the module and requiring a refusal — this asks about the
+#      module's PRESENCE, and a carrier can depend on the presence while
+#      ignoring the contents: keep the real try/except, which still prints the
+#      refusal, and shadow the imported names with a duplicate defined after it;
+#   4. this one: replace the module with a stub that masks nothing and require
+#      each carrier's verdict to MOVE.
 #
-# Each was measured, and each left every suite and every gate green. The third
-# is the instructive one: "does it stop without the module" asks about the
-# module's PRESENCE, and a carrier can depend on the presence while ignoring the
-# contents.
+# Each of 1–3 was measured with the whole battery green. **The residual, also
+# measured:** a carrier can keep its own scanner for the real work and read the
+# module purely so its exit code moves — a canary. No rename, comment, dead
+# import or shadowed name defeats this case; a deliberate canary does, and that
+# is what is left. It is not what a careless refactor produces, which is the
+# class this gate exists for.
 #
-# This one asks about the module's BEHAVIOUR. It replaces the module with a stub
-# whose `prose` blanks nothing, and requires each carrier's verdict to MOVE. A
-# carrier that runs its own scanner is unaffected by the stub and is caught, and
-# there is nothing it can be named, commented or shadowed into that changes
-# that: using the module is the only way to be moved by it.
+# TWO copies, differing ONLY in the module. Comparing the real repository
+# against a copy would move three variables at once — the module, the added
+# fixtures, and any untracked file — and attribute all of it to the module.
+# And the pair asserted is SPECIFIC (0 then 1), never "different": a carrier
+# that crashes under the stub also produces a different code, and a crash read
+# as success is the hole this replaces.
 carrier_logic=0
-probe_root="$TEST_ROOT/stub-module"
-mkdir -p "$probe_root"
-( cd "$REPO_ROOT" && git ls-files -z | xargs -0 cp --parents -t "$probe_root" )
+real_root="$TEST_ROOT/with-module"
+stub_root="$TEST_ROOT/with-stub"
+for root in "$real_root" "$stub_root"; do
+    mkdir -p "$root"
+    ( cd "$REPO_ROOT" && git ls-files -z | xargs -0 cp --parents -t "$root" )
+    mkdir -p "$root/docs/probe"
+    # One real task and one inside a fence, announcing one: masked → 0, unmasked → 1.
+    printf '%s\n' '# Plan' '' '## Task 1: real' '' '````markdown' '## Task 2: only an example' '````' '' 'This plan has 1 task.' \
+        >"$root/docs/probe/doc.md"
+    # A link that only resolves while fences are masked. The copied corpus holds
+    # others, so this file is not the only thing moving check-links.sh — it is
+    # here so the case still moves if the corpus ever stops holding one.
+    printf '%s\n' '# Probe' '' '```markdown' '[gone](no-such-file.md)' '```' \
+        >"$root/docs/probe/link.md"
+done
 
-# The stub: same names, same signatures, no masking at all.
-cat >"$probe_root/skills/writing-plans/scripts/mdfence.py" <<'STUB'
+cat >"$stub_root/skills/writing-plans/scripts/mdfence.py" <<'STUB'
 """Stub: every line is prose. A carrier that uses this cannot see a fence."""
 
 
@@ -190,32 +208,29 @@ def prose(lines):
     return list(lines)
 STUB
 
-# A document whose verdict turns on the mask: one real task, one inside a fence.
-mkdir -p "$probe_root/docs/probe"
-printf '%s\n' '# Plan' '' '## Task 1: real' '' '````markdown' '## Task 2: only an example' '````' '' 'This plan has 1 task.' \
-    >"$probe_root/docs/probe/doc.md"
-# And one whose link only resolves while fences are masked.
-printf '%s\n' '# Probe' '' '```markdown' '[gone](no-such-file.md)' '```' \
-    >"$probe_root/docs/probe/link.md"
-
-moved() {  # a carrier passes only if the stub CHANGES its verdict
+check_pair() {  # real must be 0 AND stub must be 1 — not merely different
     local label="$1" real="$2" stub="$3"
-    if [ "$real" = "$stub" ]; then
-        echo "        $label: verdict $real with the real module and $stub with a stub that masks nothing"
-        echo "          — its answer does not depend on the module, so it is not obtaining its mask from it"
+    if [ "$real" != "0" ]; then
+        echo "        $label: exit $real with the REAL module, where the fixture is built to pass"
+        carrier_logic=$((carrier_logic + 1))
+    fi
+    if [ "$stub" != "1" ]; then
+        echo "        $label: exit $stub with a stub that masks nothing, expected 1"
+        [ "$stub" = "0" ] && echo "          — its answer does not depend on the module's behaviour"
+        [ "$stub" != "0" ] && echo "          — a code other than 1 is a crash, not a moved verdict"
         carrier_logic=$((carrier_logic + 1))
     fi
 }
 
-ccr="$probe_root/skills/writing-plans/scripts/check-cross-references"
-real_ccr=0; "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references" \
-    "$probe_root/docs/probe/doc.md" "$probe_root" >/dev/null 2>&1 || real_ccr=$?
-stub_ccr=0; "$ccr" "$probe_root/docs/probe/doc.md" "$probe_root" >/dev/null 2>&1 || stub_ccr=$?
-moved "check-cross-references" "$real_ccr" "$stub_ccr"
+r=0; "$real_root/skills/writing-plans/scripts/check-cross-references" \
+    "$real_root/docs/probe/doc.md" "$real_root" >/dev/null 2>&1 || r=$?
+s=0; "$stub_root/skills/writing-plans/scripts/check-cross-references" \
+    "$stub_root/docs/probe/doc.md" "$stub_root" >/dev/null 2>&1 || s=$?
+check_pair "check-cross-references" "$r" "$s"
 
-real_links=0; ( cd "$REPO_ROOT" && ./scripts/check-links.sh ) >/dev/null 2>&1 || real_links=$?
-stub_links=0; ( cd "$probe_root" && ./scripts/check-links.sh ) >/dev/null 2>&1 || stub_links=$?
-moved "check-links.sh" "$real_links" "$stub_links"
+r=0; ( cd "$real_root" && ./scripts/check-links.sh ) >/dev/null 2>&1 || r=$?
+s=0; ( cd "$stub_root" && ./scripts/check-links.sh ) >/dev/null 2>&1 || s=$?
+check_pair "check-links.sh" "$r" "$s"
 
 # Kept beside the probe, and not carrying the case: a carrier could use the
 # module AND keep a stale pattern of its own, which no behavioural probe sees.
