@@ -112,6 +112,24 @@ else
     pass "module imports only re"
 fi
 
+# --- one scanner, not three -------------------------------------------------
+# AC18: a carrier that keeps its own pattern is a copy that will drift, which is
+# the defect this module exists to end.
+carrier_logic=0
+for carrier in "$REPO_ROOT/scripts/check-links.sh" \
+               "$REPO_ROOT/skills/writing-plans/scripts/check-cross-references"; do
+    if grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" >/dev/null 2>&1; then
+        echo "        $(basename "$carrier"):"
+        grep -nE 'in_fence|infence|FENCE = re\.compile|`\{3,\}' "$carrier" | sed 's/^/          /'
+        carrier_logic=$((carrier_logic + 1))
+    fi
+done
+if [ "$carrier_logic" -eq 0 ]; then
+    pass "carriers hold no fence logic of their own"
+else
+    fail "carriers hold no fence logic of their own — $carrier_logic carrier(s)"
+fi
+
 echo
 if [ "$FAILURES" -eq 0 ]; then
     echo "All mdfence tests passed"

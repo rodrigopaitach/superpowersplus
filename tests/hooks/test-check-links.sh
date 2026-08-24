@@ -35,8 +35,13 @@ fail() {
 new_tree() {
     local tree
     tree="$(mktemp -d "$TEST_ROOT/tree.XXXXXX")"
-    mkdir -p "$tree/scripts" "$tree/docs"
+    mkdir -p "$tree/scripts" "$tree/docs" "$tree/skills/writing-plans/scripts"
     cp "$SCRIPT_UNDER_TEST" "$tree/scripts/check-links.sh"
+    # The gate imports the shared fence scanner by a path relative to its own
+    # root, so a fixture tree that carries the script without the module is a
+    # tree the real gate could never run in.
+    cp "$REPO_ROOT/skills/writing-plans/scripts/mdfence.py" \
+        "$tree/skills/writing-plans/scripts/mdfence.py"
     local target
     for target in README.md CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md CHANGELOG.md CLAUDE.md; do
         : > "$tree/$target"
@@ -516,6 +521,37 @@ if [ "$toc_report" = "orphan=none missing=none" ]; then
 else
     fail "every table-of-contents anchor in anthropic-best-practices resolves"
     echo "        $toc_report"
+fi
+
+# --- the CommonMark closing rule ------------------------------------------
+# The naive toggle flipped on any three-backtick line, so a three-backtick block
+# nested inside a four-backtick one closed the outer block and its headings
+# became real anchors. Measured 2026-08-24: six links in a shipped skill file
+# resolved against headings that exist only inside an example.
+T="$(new_tree)"
+printf '# Doc\n\n[to the example](#inner-heading)\n\n````markdown\n# Template\n\n```md\n## Inner heading\n```\n````\n' \
+    > "$T/README.md"
+assert_run 1 "a nested-fence heading produces no anchor" "$T" "inner-heading"
+
+# AC14: the other half of the same change. Blanking MORE than before would break
+# the pass that ignores links inside code; the nested shape is where a wider
+# mask would reach first.
+T="$(new_tree)"
+printf '# Doc\n\n````markdown\n# Template\n\n```bash\ncat [not](a/link.md)\n```\n````\n' \
+    > "$T/README.md"
+assert_run 0 "a link inside a nested fenced block is ignored" "$T"
+
+# AC17: every other case here runs the gate over a throwaway tree. This one runs
+# it over the repository, which is the only thing that answers whether the two
+# halves of this branch — the corrected mask and the corrected table of contents
+# — actually agree in place.
+repo_exit=0
+"$REPO_ROOT/scripts/check-links.sh" >/dev/null 2>&1 || repo_exit=$?
+if [ "$repo_exit" -eq 0 ]; then
+    pass "the gate passes over this repository itself"
+else
+    fail "the gate passes over this repository itself — exit $repo_exit"
+    { "$REPO_ROOT/scripts/check-links.sh" 2>&1 | sed 's/^/        /'; } || true
 fi
 
 echo

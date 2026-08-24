@@ -71,7 +71,6 @@ TARGETS = ["README.md", "CONTRIBUTING.md", "SECURITY.md",
 TARGETS += sorted(str(p) for p in pathlib.Path("docs").rglob("*.md"))
 TARGETS += sorted(str(p) for p in pathlib.Path("skills").rglob("*.md"))
 
-FENCE = re.compile(r"^\s*(```|~~~)")
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 
 # The stable-anchor form: `path/file.md`, section "Exact Heading". A heading
@@ -223,20 +222,25 @@ DIET_EXEMPT |= {str(p) for p in pathlib.Path("docs/plans").rglob("*.md")}
 DIET_EXEMPT |= {str(p) for p in pathlib.Path("docs/superpowers").rglob("*.md")}
 
 
+sys.dont_write_bytecode = True
+sys.path.insert(0, "skills/writing-plans/scripts")
+from mdfence import prose
+
+
 def strip_fences(text):
     """Blank out fenced code blocks, keeping line numbers intact.
 
-    A bash comment inside a ```block``` looks exactly like a heading, and a
-    sample command containing brackets looks exactly like a link.
+    A bash comment inside a fenced block looks exactly like a heading, and a
+    sample command containing brackets looks exactly like a link. The rule
+    itself lives in skills/writing-plans/scripts/mdfence.py, shared with
+    check-cross-references — this repository had two implementations of it and
+    both were wrong the same way.
+
+    The relative path resolves because line 42 of this script cd's to the
+    directory the script itself sits under, so "relative to the working
+    directory" and "relative to this script" are the same thing here.
     """
-    out, in_fence = [], False
-    for line in text.splitlines():
-        if FENCE.match(line):
-            in_fence = not in_fence
-            out.append("")
-            continue
-        out.append("" if in_fence else line)
-    return out
+    return prose(text.splitlines())
 
 
 def slug(text):

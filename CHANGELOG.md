@@ -76,6 +76,19 @@ References below name them so a claim here can be traced there.
   as a row: measured, the same plan exits 1 with `T1.1` and 0 with `T1.1a`, a
   false pass one character wide. Two names assigned and never read were removed
   with them.
+- **`scripts/check-links.sh` approved links whose anchors did not exist.** Its
+  fence mask flipped on any three-backtick line, so a three-backtick block
+  nested inside a four-backtick one closed the outer block and the headings
+  inside the example became real anchors. Measured 2026-08-24: replacing the
+  mask with the CommonMark rule and changing nothing else moved the gate from
+  exit 0 to exit 1, naming six links in
+  [`skills/writing-skills/anthropic-best-practices.md`](skills/writing-skills/anthropic-best-practices.md)
+  whose targets are all inside fenced blocks. The same blind spot ran the other
+  way in the link pass, which is the half that was not measured when the defect
+  was recorded: a link written inside a nested fenced block was checked as
+  prose, because the inner opener had already closed the outer block. It now
+  shares the scanner with `check-cross-references`, and a test asserts that
+  neither carrier keeps fence logic of its own.
 
 ## [1.20.0] - 2026-08-24
 
