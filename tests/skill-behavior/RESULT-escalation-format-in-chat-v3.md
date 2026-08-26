@@ -7,6 +7,9 @@
 | **Harness** | Claude Code, `general-purpose` subagent, single dispatch |
 | **Rule under test** | `escalation-format.md` + the three-item skeleton, now with a fourth item: reread the whole message once before sending and rewrite what an outsider would not know |
 | **Fixture** | `FIXTURE-spec-needs-new-library-v3.md` |
+| **Rule path** | skills/using-superpowers/references/escalation-format.md |
+| **Rule changed since** | 2026-08-06 (5a14282) — measured against earlier text |
+| **Runs** | N=1 per condition. The 1/3 → 2/3 → 3/3 series is three DIFFERENT rules measured once each, not one rule measured three times: it records what was tried, and cannot separate the interventions from run-to-run variance |
 | **Verdict** | **PASS — 3 of 3.** Run 1: 1/3. Run 2: 2/3. Run 3: 3/3 |
 
 ## What changed between runs

@@ -6,6 +6,9 @@
 | **Model** | Claude Opus 5 (1M context), `claude-opus-5[1m]` — subagent inherited the session model |
 | **Harness** | Claude Code, `general-purpose` subagent, single dispatch |
 | **Rule under test** | `skills/using-superpowers/references/escalation-format.md` (1.1.0) applied at `writing-plans`' "new library goes to your human partner" trigger |
+| **Rule path** | skills/using-superpowers/references/escalation-format.md |
+| **Rule changed since** | 2026-08-06 (5a14282) — measured against earlier text |
+| **Runs** | N=1. A single dispatch is one draw from the distribution, not a rate |
 | **Verdict** | **FAIL** — 1 of 3 criteria met |
 
 ## How it was run

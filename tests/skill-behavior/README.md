@@ -228,10 +228,11 @@ that passes it. The record says so where it counts it.
 ## What CI does, and does not
 
 CI checks that these records are **well formed** —
-`scripts/check-skill-behavior-records.sh` verifies every `FIXTURE-*` says it is
-a fixture and every `RESULT-*` carries its date, its model, and per-criterion
-verdicts. A record missing those cannot be compared against a later run, which
-is the only thing it exists for.
+[`check-skill-behavior-records.sh`](../../scripts/check-skill-behavior-records.sh)
+verifies every `FIXTURE-*` says it is a fixture and every `RESULT-*` carries its
+date, its model, its per-criterion verdicts, its **Rule path** and its **Runs**.
+A record missing those cannot be compared against a later run, which is the only
+thing it exists for.
 
 **CI never re-runs the tests.** They dispatch a live agent: tokens, minutes, and
 a non-deterministic result. Re-running one is a human decision, taken when the
@@ -239,13 +240,50 @@ rule under test changes — not something that happens on every push.
 
 ## When the rule under test changes
 
-Re-running is a human decision — but declining it must leave a mark. An edit
-to a rule a `RESULT-*` measures either re-runs the fixture or adds a dated
-note at the top of the record naming the commit that changed the rule, so the
-record reads as *measured against earlier text* rather than as current. A
-record that keeps counting for words it never saw is the exact pair this
-directory exists to separate: an unverified claim wearing a verified one's
-face. This rule is reasoned, not measured.
+Re-running is a human decision — but declining it stopped being free. Every
+`RESULT-*` names the file it measured in a **Rule path** row, and the gate
+compares that file's newest commit date against the record's own **Date**. If
+the measured text moved after the measurement, the record must carry a **Rule
+changed since** row naming the day, and the record then reads as *measured
+against earlier text* rather than as current. The mark carries its own date, so
+a second edit re-opens the finding instead of being covered by the first mark.
+
+**The gate never asks for a re-run**, and could not: re-measuring dispatches a
+live agent, and what comes back is a draw, not a number. Noticing that the
+measured text has moved costs one `git log` and is exact. So the expensive half
+stays a human decision and the cheap half stops depending on anyone remembering.
+
+A rule that is not a file — a changelog entry, a convention with no single
+carrier — puts a dash and its reason in **Rule path**. A bare dash fails: it
+reads exactly like a path nobody filled in.
+
+Reasoned, not measured. Prompted by reading this repository against Anthropic's
+AI-native SDLC playbook (2026-08-21), whose continuous-evals stage gates
+configuration changes on re-measurement. This repository does not adopt that
+stage — see "What N buys" below for why — and takes from it only the part that
+survives here: the trigger, without the re-measurement it triggers.
+
+## What N buys
+
+Every `RESULT-*` carries a **Runs** row, and it is not bookkeeping. A live agent
+run is a draw from a distribution, and the distribution is wider than it looks:
+across 60,000 trajectories, single-run pass@1 estimates vary by 2.2 to 6.0
+percentage points, and that variance **persists at temperature 0** — trajectories
+diverge within the first 1% of tokens and the difference cascades (Bjarnason,
+Silva & Monperrus, *On Randomness in Agentic Evals*, arXiv:2602.07150, 2026).
+Detecting a 2-point difference at 80% power takes about **9 runs**; a 1-point
+difference takes **36**.
+
+Nothing in this directory has 9 runs of anything. The largest is six, and the
+records that read like a progression — 1/3, then 2/3, then 3/3 — are **one run
+of each of three different rules**, not three runs of one. That is why the
+**Runs** row states N and says plainly when the runs are not replicates: the
+verdict alone invites a reader to treat one draw as a rate.
+
+So these are **dated case studies, not a regression suite**. They are strong
+evidence that a defect can occur and weak evidence about how often. A record may
+be cited for the first and must not be cited for the second, and the **Runs**
+row is what lets a reader tell which citation they are looking at.
 
 ## Re-running
 

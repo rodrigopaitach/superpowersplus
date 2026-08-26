@@ -7,6 +7,9 @@
 | **Harness** | Claude Code, `general-purpose` subagent, single dispatch |
 | **Rule under test** | `subagent-driven-development/references/resuming.md` (79 lines), reached from that skill's Setup |
 | **Fixture** | `FIXTURE-interrupted-run.md`, repo `toy-a` |
+| **Rule path** | skills/subagent-driven-development/references/resuming.md |
+| **Rule changed since** | 2026-08-05 (1de3138) — measured against earlier text |
+| **Runs** | N=1, first run |
 | **Verdict** | **PASS — 3 of 3, first run** |
 
 ## Criteria

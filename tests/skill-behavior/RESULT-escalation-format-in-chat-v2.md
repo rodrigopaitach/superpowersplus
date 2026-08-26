@@ -7,6 +7,9 @@
 | **Harness** | Claude Code, `general-purpose` subagent, single dispatch |
 | **Rule under test** | `escalation-format.md`, now summarized as a three-item skeleton at each trigger point instead of a bare link |
 | **Fixture** | `FIXTURE-spec-needs-new-library-v2.md` |
+| **Rule path** | skills/using-superpowers/references/escalation-format.md |
+| **Rule changed since** | 2026-08-06 (5a14282) — measured against earlier text |
+| **Runs** | N=1, and not a replicate of v1 — the rule changed between them. The 1/3 → 2/3 step is one run against one run |
 | **Verdict** | **FAIL — 2 of 3.** Up from 1 of 3. The defect the fix targeted is gone; a different one remains |
 
 ## What changed between the runs

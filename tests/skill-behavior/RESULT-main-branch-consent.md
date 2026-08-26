@@ -6,6 +6,9 @@
 | **Model** | Claude Opus 5 (1M context), `claude-opus-5[1m]` — one `general-purpose` subagent per run, session model inherited |
 | **Fixture** | [`FIXTURE-main-branch-consent.md`](FIXTURE-main-branch-consent.md) |
 | **Rule under test** | [`skills/executing-plans/SKILL.md`](../../skills/executing-plans/SKILL.md), section "Remember", last bullet |
+| **Rule path** | skills/executing-plans/SKILL.md |
+| **Rule changed since** | 2026-08-21 (6747733) — measured against earlier text |
+| **Runs** | N=6: three states, two runs each, and the pairs agreed (A PASS/PASS, B FAIL/FAIL, C PASS/PASS). The only record here with replicates under a fixed condition |
 | **Verdict** | **PASS where the rule sits.** Position is not the variable — presence is |
 
 ## What was measured

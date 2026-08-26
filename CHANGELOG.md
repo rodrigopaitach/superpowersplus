@@ -13,23 +13,52 @@ References below name them so a claim here can be traced there.
 
 ### Added
 
-- **A behavior record whose rule changed must say so.**
+- **A behavior record now declares the file it measured, and a gate compares that
+  file's age against the record's own.**
   [`tests/skill-behavior/README.md`](tests/skill-behavior/README.md) (section
-  "When the rule under test changes") now requires that an edit to a rule a
-  `RESULT-*` measures either re-runs the fixture or adds a dated note to the
-  record naming the commit that changed the rule. Re-running stays a human
-  decision — what stops being possible is a record silently counting as
-  current for text it never measured. Reasoned, not measured: prompted by
+  "When the rule under test changes") requires a **Rule path** row in every
+  `RESULT-*`; [`check-skill-behavior-records.sh`](scripts/check-skill-behavior-records.sh)
+  reads it, asks `git log` for that file's newest commit date, and fails when the
+  measured text moved after the measurement unless the record carries a **Rule
+  changed since** row naming the day. The mark carries its own date, so a second
+  edit re-opens the finding rather than being covered by the first. A rule that
+  is not a file declares a dash **and its reason** — a bare dash fails, because
+  it reads exactly like a path nobody filled in.
+
+  **The gate never asks for a re-run.** Re-measuring dispatches a live agent and
+  returns a draw; noticing that the measured text has moved costs one `git log`
+  and is exact. The expensive half stays a human decision, and the cheap half
+  stops depending on anyone remembering. Reasoned, not measured — prompted by
   reading this repository against Anthropic's AI-native SDLC playbook
-  (2026-08-26), whose continuous-evals stage gates configuration changes on
-  re-measurement; the dated note is the zero-token form of that gate.
+  (2026-08-21), whose continuous-evals stage gates configuration changes on
+  re-measurement; this repository declines that stage and keeps only its trigger.
+
+  **What the gate found on its first run is measured: seven of the eight
+  traceable records were stale**, by four days to three weeks, and none said so.
+  All seven now carry the mark. Covered by
+  [`tests/hooks/test-check-skill-behavior-records.sh`](tests/hooks/test-check-skill-behavior-records.sh),
+  ten cases over throwaway git repositories with pinned commit dates, added to CI.
+
+- **Every `RESULT-*` states its N, and says when its runs are not replicates.**
+  A **Runs** row is now required. The reason is external and measured: across
+  60,000 trajectories, single-run pass@1 estimates vary by 2.2 to 6.0 percentage
+  points, and the variance persists at temperature 0 (Bjarnason, Silva &
+  Monperrus, *On Randomness in Agentic Evals*, arXiv:2602.07150, 2026);
+  detecting a 2-point difference at 80% power takes about nine runs. Nothing in
+  this directory has nine runs of anything — the largest is six — and two
+  records that read as a progression (1/3, then 2/3, then 3/3) are **one run of
+  each of three different rules**, which the new rows now say out loud.
+  [`tests/skill-behavior/README.md`](tests/skill-behavior/README.md) (section
+  "What N buys") states the consequence: these are dated case studies, strong
+  evidence that a defect can occur and weak evidence about how often, and a
+  record may be cited for the first and not the second.
 
 ### Fixed
 
 - **`verification-before-completion` opened by claiming "No flow names it",
   and one flow does.**
   [`skills/systematic-debugging/SKILL.md`](skills/systematic-debugging/SKILL.md)
-  (Phase 4, "Verify Fix") names it, and
+  (section "Phase 4: Implementation", at its "Verify Fix" step) names it, and
   [`tests/skill-behavior/README.md`](tests/skill-behavior/README.md) (section
   "Verification before a completion claim") already recorded that single
   invoker as what prompted the measurement — the three texts disagreed, and no

@@ -80,6 +80,9 @@ jobs:
       - name: Tests (cross-reference check)
         run: tests/hooks/test-check-cross-references.sh
 
+      - name: Tests (skill-behavior record check)
+        run: tests/hooks/test-check-skill-behavior-records.sh
+
       - name: Tests (fence scanner)
         run: tests/hooks/test-mdfence.sh
 

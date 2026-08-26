@@ -6,6 +6,8 @@
 | **Model** | Claude Sonnet 5, dispatched as `model: sonnet` — one `general-purpose` subagent per run. **This is the only record in this directory that did not run on the Opus baseline the other eight state.** The divergence was not chosen for a reason; it was noticed at the branch review and is written here because a record silent about its tier invites the reader to assume the baseline |
 | **Fixture** | [`FIXTURE-contradicting-criteria.md`](FIXTURE-contradicting-criteria.md) (the plan) and [`FIXTURE-contradicting-criteria-spec.md`](FIXTURE-contradicting-criteria-spec.md) (the spec it cites) |
 | **Rule under test** | [`skills/writing-plans/plan-document-reviewer-prompt.md`](../../skills/writing-plans/plan-document-reviewer-prompt.md), the Plan Contract row beginning "No two spec criteria this plan implements contradict each other" |
+| **Rule path** | skills/writing-plans/plan-document-reviewer-prompt.md |
+| **Runs** | N=3, and they are not replicates: runs 1–2 carry the rule, run 3 is the control with the rule's row deleted. Under the rule the two runs differed — run 1 never exercised it. Two draws do not settle a rate |
 | **Verdict** | **PASS, 3 of 3 criteria, against a control that approved the same fixture.** Run 3 is that control: the identical fixture and model, the same prompt with the rule's row deleted and nothing else changed. It read every criterion, listed the pair by id among the ones it had checked, and approved. The first run did not exercise the rule at all, and why it did not is a finding in its own right |
 
 ## What was measured
