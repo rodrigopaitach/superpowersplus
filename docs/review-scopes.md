@@ -29,8 +29,9 @@ diff is judged, and they take no suffix.
 | [code-reviewer.md](../skills/requesting-code-review/code-reviewer.md), section "Test Run" | none — it has no prior count |
 
 **The reader changes at the last carrier, and that is the one that was missing.**
-Every other carrier is read by a subagent. `finishing-a-development-branch`,
-section "Step 1: Verify Tests" is read by a person, immediately before merge
+Every other carrier is read by a subagent.
+[`finishing-a-development-branch/SKILL.md`](../skills/finishing-a-development-branch/SKILL.md), section "Step 1: Verify Tests"
+is read by a person, immediately before merge
 options are on the table — so the shape was enforced everywhere an agent reports
 to an agent and nowhere an agent reports to its human partner. Added in `1.14.0`.
 

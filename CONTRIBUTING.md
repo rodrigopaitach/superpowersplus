@@ -105,9 +105,10 @@ written down is that it was broken once and the failure was invisible: a
 `CHANGELOG.md` edit failed on a wrong anchor, the commit and the push ran
 anyway.
 
-**Five gates run locally** — `check-docs-sync.sh`, `check-frozen-history.sh`,
-`check-changelog.sh`, `check-links.sh` and `check-skill-size.sh`, all wired
-into `githooks/pre-commit`. **CI runs those five plus
+**Eight gates run locally** — `check-docs-sync.sh`, `check-frozen-history.sh`,
+`check-changelog.sh`, `check-links.sh`, `check-skill-size.sh`,
+`check-evidence-line.sh`, `check-escalation-shape.sh` and `check-no-dispatch.sh`,
+all wired into `githooks/pre-commit`. **CI runs those eight plus
 `check-skill-behavior-records.sh` and `lint-shell.sh`** over the pushed range.
 The records check has no local counterpart, and since it gained its staleness
 pass that is a deliberate cost rather than a free one: it now fails on any edit

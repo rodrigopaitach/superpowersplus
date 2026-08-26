@@ -38,6 +38,13 @@ note() {
 }
 
 # cell <file> <row label> — the contents of a one-row table cell, or empty.
+#
+# Callers guard with `|| true`. Under `pipefail` the `head -1` can close the pipe
+# on `sed` and take the whole script down with exit 141 and no diagnostic — total
+# silence being the one failure mode worse than a wrong message. It needs a row
+# repeated past the pipe buffer to reach, so no test pins it: belt and braces,
+# and said here rather than left to look verified. The cost is a real `cell`
+# failure reporting as "no such row", which is still fail-closed.
 cell() {
   sed -n "s/^| \*\*$2\*\* | *\(.*[^ ]\) *|\$/\1/p" "$1" | head -1
 }

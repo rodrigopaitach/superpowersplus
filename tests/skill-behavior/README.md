@@ -242,7 +242,8 @@ rule under test changes — not something that happens on every push.
 
 Re-running is a human decision — but declining it stopped being free. Every
 `RESULT-*` names the file it measured in a **Rule path** row, and the gate
-compares that file's newest commit date against the record's own **Date**. If
+compares the newest date over every commit touching that file — not the newest
+commit's date, for the reason given below — against the record's own **Date**. If
 the measured text moved after the measurement, the record must carry a **Rule
 changed since** row naming the day, and the record then reads as *measured
 against earlier text* rather than as current. The mark carries its own date, so
@@ -266,7 +267,11 @@ day nothing happened is the one way to satisfy this gate without being true.
 Two limits remain, and both are deliberate: the comparison is by **day**, so an
 edit made after a measurement on the same day is invisible; and only the **first**
 file named in **Rule path** is compared, so a rule split across two carriers
-needs two records or a note. Neither has a case today.
+needs two records or a note. The second has no case today. **The first has one, and
+it is unresolvable from the record:** `RESULT-criteria-read-in-pairs.md` measured on
+2026-08-24, and the rule it names was committed four times that same day — whether any
+landed after the measurement cannot be recovered. A record measured on the day its rule
+moves should say the hour, or be re-measured on a quiet day.
 
 Reasoned, not measured. Prompted by reading this repository against Anthropic's
 AI-native SDLC playbook (2026-08-21), whose continuous-evals stage gates

@@ -18,7 +18,8 @@ References below name them so a claim here can be traced there.
   [`tests/skill-behavior/README.md`](tests/skill-behavior/README.md) (section
   "When the rule under test changes") requires a **Rule path** row in every
   `RESULT-*`; [`check-skill-behavior-records.sh`](scripts/check-skill-behavior-records.sh)
-  reads it, asks `git log` for that file's newest commit date, and fails when the
+  reads it, asks `git log` for the newest date over every commit touching that file
+  (not the newest commit's date — see below), and fails when the
   measured text moved after the measurement unless the record carries a **Rule
   changed since** row naming the day. The mark carries its own date, so a second
   edit re-opens the finding rather than being covered by the first. A rule that
@@ -53,7 +54,7 @@ References below name them so a claim here can be traced there.
   traceable records were stale**, by one day to three weeks, and none said so.
   All seven now carry the mark. Covered by
   [`tests/hooks/test-check-skill-behavior-records.sh`](tests/hooks/test-check-skill-behavior-records.sh),
-  ten cases over throwaway git repositories with pinned commit dates, added to CI.
+  twelve cases over throwaway git repositories with pinned commit dates, added to CI.
 
 - **Every `RESULT-*` states its N, and says when its runs are not replicates.**
   A **Runs** row is now required — its presence by the gate, its content by

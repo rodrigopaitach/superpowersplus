@@ -2,14 +2,15 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowersplus:subagent-driven-development or superpowersplus:executing-plans to implement this plan task-by-task — the `**Execution:**` field below names which of the two this plan was handed to, and that is the one to follow. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-> **Executed, and one instruction inside has since aged.** Step 7 of Task 5 says
-> `scripts/check-skill-behavior-records.sh:36-38` "requires exactly three rows"; those
-> lines are now that script's `note()` function, and the gate requires six rows plus a
-> staleness mark (`1d1ae91`, `fc50e69`, 2026-08-26). **Marked, not rewritten** — this is
-> a record of work already done, and the live contract lives in
-> [`tests/skill-behavior/README.md`](../../../tests/skill-behavior/README.md), section
-> "When the rule under test changes". A `file:line` anchor into a script this project
-> edits was the wrong form for it from the start; see `CLAUDE.md`, "Writing a reference".
+**Executed, and one instruction inside has since aged.** Step 6 of Task 5 says
+`scripts/check-skill-behavior-records.sh:36-38` "requires exactly three rows"; those
+lines are now that script's `note()` function, and the gate now requires five rows —
+`Date`, `Model`, `Verdict`, `Rule path`, `Runs` — plus a per-criterion verdict and a
+staleness mark (`1d1ae91`, `fc50e69`, 2026-08-25). **Marked, not rewritten**: this is a
+record of work already done. The live contract is in
+[`tests/skill-behavior/README.md`](../../../tests/skill-behavior/README.md), section "When the rule under test changes",
+and the reference rule that makes a `file:line` anchor into an edited script the wrong
+form from the start is in [`CLAUDE.md`](../../../CLAUDE.md), section "Writing a reference".
 
 **Source spec:** `docs/superpowers/specs/2026-08-23-knowledge-to-skills-traversal-design.md`
 
