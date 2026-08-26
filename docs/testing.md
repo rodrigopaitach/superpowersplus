@@ -47,11 +47,16 @@ and is non-deterministic, so re-running one is a human decision:
   integrity of the records** — `check-skill-behavior-records.sh` verifies that
   every `FIXTURE-*` says in its own text that it is a test fixture, so nobody
   mistakes one for a real document, and that every `RESULT-*` carries a
-  **Date** row, a **Model** row, a **Verdict** row and at least one
-  per-criterion `PASS`/`FAIL`/`PARTIAL`. A record missing those cannot be
-  compared against a later run, which is the only thing it exists for.
+  **Date** row, a **Model** row, a **Verdict** row, at least one per-criterion
+  `PASS`/`FAIL`/`PARTIAL`, a **Rule path** row and a **Runs** row. A record
+  missing those cannot be compared against a later run, which is the only thing
+  it exists for.
   **Re-running one is a human decision**, taken when the rule under test
-  changes — not something that happens on a push.
+  changes — not something that happens on a push. **Declining it is no longer
+  silent:** the same script asks `git log` for the newest edit to each
+  **Rule path** and fails when the measured text moved after the measurement
+  unless the record carries a dated **Rule changed since** row. It never asks
+  for the re-run — noticing costs a `git log`, re-measuring costs an agent.
 
 A suite CI does not run blocks nothing. If you add a suite, add its CI step.
 

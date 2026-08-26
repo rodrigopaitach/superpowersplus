@@ -257,6 +257,17 @@ A rule that is not a file — a changelog entry, a convention with no single
 carrier — puts a dash and its reason in **Rule path**. A bare dash fails: it
 reads exactly like a path nobody filled in.
 
+**What the gate compares, stated so the limits are declared rather than
+discovered.** The date it reads is the newest of *every* commit that touched
+the file, not the newest commit's date: author dates are not monotonic with the
+graph, and `log -1` on a commit that arrived from elsewhere reports a day older
+than an edit that really happened. A mark past that date fails too — naming a
+day nothing happened is the one way to satisfy this gate without being true.
+Two limits remain, and both are deliberate: the comparison is by **day**, so an
+edit made after a measurement on the same day is invisible; and only the **first**
+file named in **Rule path** is compared, so a rule split across two carriers
+needs two records or a note. Neither has a case today.
+
 Reasoned, not measured. Prompted by reading this repository against Anthropic's
 AI-native SDLC playbook (2026-08-21), whose continuous-evals stage gates
 configuration changes on re-measurement. This repository does not adopt that

@@ -8,7 +8,7 @@
 | **Rule under test** | `skills/verification-before-completion/SKILL.md` — 120 lines, whose Iron Law is "NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE". One invoker in the whole graph (`systematic-debugging/SKILL.md:189`); none of the six flows reach it |
 | **Fixtures** | `FIXTURE-completion-claim.md`, repos `toy-e` (skills reachable) and `toy-f` (skills not mentioned) |
 | **Rule path** | skills/verification-before-completion/SKILL.md |
-| **Rule changed since** | 2026-08-26 (87fe8b1) — measured against earlier text; the file was 120 lines then and has been edited twice since (9607f11, 87fe8b1), both times in the opening paragraph rather than the Iron Law |
+| **Rule changed since** | 2026-08-26 (87fe8b1) — measured against earlier text; the file was 120 lines then and has been edited three times since (9607f11, 87fe8b1, 525033b), all three in the opening paragraph rather than the Iron Law |
 | **Runs** | N=2, and the two runs disagreed: PASS 3/3, then PARTIAL 2/3. Two draws that differ cannot decide the question this record was opened to decide |
 | **Verdict** | **Run 1: PASS (3/3). Run 2: PARTIAL (2/3)** — and the rule is not what produced either |
 

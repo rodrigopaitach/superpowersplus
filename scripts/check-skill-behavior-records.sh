@@ -60,7 +60,7 @@ for f in "$DIR"/RESULT-*.md; do
   grep -qE '^\| \*\*Runs\*\*' "$f" \
     || note "$base: no **Runs** row — a verdict without its N reads as settled when it may be one draw"
 
-  rule="$(cell "$f" 'Rule path')"
+  rule="$(cell "$f" 'Rule path' || true)"
   if [ -z "$rule" ]; then
     note "$base: no **Rule path** row — without it the staleness pass cannot see this record at all"
     continue
@@ -87,7 +87,11 @@ for f in "$DIR"/RESULT-*.md; do
     continue
   fi
 
-  ruledate="$(git -C "$REPO_ROOT" log -1 --format=%ad --date=short -- "$path" 2>/dev/null || true)"
+  # The NEWEST EDIT, not the newest commit. Author dates are not monotonic with
+  # the graph — a commit written on another machine or in another timezone lands
+  # on top carrying an earlier day — so `log -1` can report a date older than an
+  # edit that really happened, and the record would pass for text that moved.
+  ruledate="$(git -C "$REPO_ROOT" log --format=%ad --date=short -- "$path" 2>/dev/null | sort -r | head -1 || true)"
   if [ -z "$ruledate" ]; then
     note "$base: git holds no date for $path — the record cannot be compared against it"
     continue
@@ -105,7 +109,13 @@ for f in "$DIR"/RESULT-*.md; do
   baseline="$measured"
   [ -n "$marked" ] && [[ "$marked" > "$baseline" ]] && baseline="$marked"
 
-  if [[ "$ruledate" > "$baseline" ]]; then
+  # A mark past the newest edit is the one way to satisfy this gate without
+  # being true: it names a day nothing happened and the baseline sails past
+  # every real edit. Checked in both directions, or the mark is just a number
+  # the author chose.
+  if [ -n "$marked" ] && [[ "$marked" > "$ruledate" ]]; then
+    note "$base: **Rule changed since** names $marked, but no commit touched $path after $ruledate"
+  elif [[ "$ruledate" > "$baseline" ]]; then
     note "$base: measured $measured, but $path was edited $ruledate — add or update a **Rule changed since** row naming that day"
   fi
 done

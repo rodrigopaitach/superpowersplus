@@ -119,6 +119,20 @@ jobs:
       - name: Tests (pi extension)
         run: node tests/pi/test-pi-extension.mjs
 
+      # Integrity of the adversarial records only. The tests themselves are
+      # never re-run here: they dispatch a live agent, cost tokens, and are
+      # non-deterministic. Re-running one is a human decision.
+      #
+      # **Runs BEFORE the index rewind below, and the order is load-bearing.**
+      # Its staleness pass asks `git log` for the newest edit to each measured
+      # rule, and `git log` walks from HEAD. After `git reset --soft` HEAD is the
+      # base commit, so the edit this push introduced is unreachable and the pass
+      # reads the PREVIOUS edit date — green on exactly the commit it exists to
+      # catch. It is the only gate here that mixes a working-tree read with a
+      # history read, which is why it is the only one on this side of the line.
+      - name: Adversarial records are well formed
+        run: scripts/check-skill-behavior-records.sh
+
       # The checks below reuse the repo's own scripts unchanged. All read the
       # git INDEX, because that is what the pre-commit hook reads. A fresh
       # CI checkout has an empty index, so they would inspect nothing.
@@ -190,8 +204,3 @@ jobs:
       - name: The no-dispatch clause is in every review seat
         run: scripts/check-no-dispatch.sh
 
-      # Integrity of the adversarial records only. The tests themselves are
-      # never re-run here: they dispatch a live agent, cost tokens, and are
-      # non-deterministic. Re-running one is a human decision.
-      - name: Adversarial records are well formed
-        run: scripts/check-skill-behavior-records.sh

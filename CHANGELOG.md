@@ -33,14 +33,31 @@ References below name them so a claim here can be traced there.
   (2026-08-21), whose continuous-evals stage gates configuration changes on
   re-measurement; this repository declines that stage and keeps only its trigger.
 
+  **Two properties the gate needs and did not have at first**, both found by
+  the branch review and both now carrying a red test: the date compared is the
+  newest of every commit touching the file rather than the newest commit's date
+  — author dates are not monotonic with the graph, and a commit arriving from
+  another machine landed on top carrying an *earlier* day, which would have let
+  a moved rule read as unmoved; and a **Rule changed since** past that date now
+  fails, because naming a day no commit touched the file was the one way to
+  satisfy this gate without being true.
+
+  **The CI step runs before `git reset --soft`, and the order is load-bearing.**
+  `git log` walks from HEAD; after the rewind HEAD is the base commit, so the
+  edit the push introduced is unreachable and the pass reads the previous edit
+  date — green on exactly the commit it exists to catch. It is the only gate in
+  that workflow mixing a working-tree read with a history read, which is why it
+  is the only one moved above the line.
+
   **What the gate found on its first run is measured: seven of the eight
-  traceable records were stale**, by four days to three weeks, and none said so.
+  traceable records were stale**, by one day to three weeks, and none said so.
   All seven now carry the mark. Covered by
   [`tests/hooks/test-check-skill-behavior-records.sh`](tests/hooks/test-check-skill-behavior-records.sh),
   ten cases over throwaway git repositories with pinned commit dates, added to CI.
 
 - **Every `RESULT-*` states its N, and says when its runs are not replicates.**
-  A **Runs** row is now required. The reason is external and measured: across
+  A **Runs** row is now required — its presence by the gate, its content by
+  whoever writes it; the gate cannot read a sentence. The reason is external and measured: across
   60,000 trajectories, single-run pass@1 estimates vary by 2.2 to 6.0 percentage
   points, and the variance persists at temperature 0 (Bjarnason, Silva &
   Monperrus, *On Randomness in Agentic Evals*, arXiv:2602.07150, 2026);

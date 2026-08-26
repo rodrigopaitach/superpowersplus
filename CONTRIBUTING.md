@@ -109,9 +109,11 @@ anyway.
 `check-changelog.sh`, `check-links.sh` and `check-skill-size.sh`, all wired
 into `githooks/pre-commit`. **CI runs those five plus
 `check-skill-behavior-records.sh` and `lint-shell.sh`** over the pushed range.
-The records check has no local counterpart because it never fails on a normal
-edit — it guards the shape of `tests/skill-behavior/`, which most commits do
-not touch.
+The records check has no local counterpart, and since it gained its staleness
+pass that is a deliberate cost rather than a free one: it now fails on any edit
+to a rule under `skills/` that a `RESULT-*` measures, which is the point of it.
+It stays out of the hook because it reads git history, and the hook runs before
+the commit that history would have to contain.
 
 What superpowersplus adds is recorded in [`CHANGELOG.md`](CHANGELOG.md).
 Documentation in [Portuguese](docs/README.pt-BR.md) and

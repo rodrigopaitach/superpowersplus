@@ -156,6 +156,29 @@ add_record "$tree" rule-newer-than-mark \
     '| **Runs** | N=1 |'
 assert_run 1 "a mark older than the newest edit fails again" "$tree" "2026-08-24"
 
+tree="$(new_tree)"
+commit_rule "$tree" skills/demo/SKILL.md 2026-08-01
+commit_rule "$tree" skills/demo/SKILL.md 2026-08-20
+add_record "$tree" mark-in-the-future \
+    '| **Rule path** | skills/demo/SKILL.md |' \
+    '| **Rule changed since** | 2099-01-01 — measured against earlier text |' \
+    '| **Runs** | N=1 |'
+assert_run 1 "a mark dated past the newest edit fails — it buys a pass the gate never computed" "$tree" "2099-01-01"
+
+# Author dates are NOT monotonic with the graph: a commit written on another
+# machine, or in another timezone, lands on top carrying an EARLIER day. Asking
+# `git log -1` for the newest commit's date then reports a day older than an
+# edit that really happened, and the record passes for text that moved.
+tree="$(new_tree)"
+commit_rule "$tree" skills/demo/SKILL.md 2026-08-01
+commit_rule "$tree" skills/demo/SKILL.md 2026-08-20
+commit_rule "$tree" skills/demo/SKILL.md 2026-08-10
+add_record "$tree" non-monotonic-dates \
+    '| **Rule path** | skills/demo/SKILL.md |' \
+    '| **Rule changed since** | 2026-08-10 — measured against earlier text |' \
+    '| **Runs** | N=1 |'
+assert_run 1 "the newest EDIT wins, not the newest commit — a mark below it still fails" "$tree" "2026-08-20"
+
 echo "check-skill-behavior-records: nothing to compare against"
 
 tree="$(new_tree)"
