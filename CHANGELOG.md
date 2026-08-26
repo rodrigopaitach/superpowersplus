@@ -9,6 +9,26 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **`verification-before-completion` opened by claiming "No flow names it",
+  and one flow does.**
+  [`skills/systematic-debugging/SKILL.md`](skills/systematic-debugging/SKILL.md)
+  (Phase 4, "Verify Fix") names it, and
+  [`tests/skill-behavior/README.md`](tests/skill-behavior/README.md) (section
+  "Verification before a completion claim") already recorded that single
+  invoker as what prompted the measurement — the three texts disagreed, and no
+  gate could see it, because
+  [`scripts/check-links.sh`](scripts/check-links.sh) resolves markdown links,
+  not `superpowersplus:` namespace references. The skill's opening, the
+  matching `CLAUDE.md` trap row, and the record's README now state the same
+  measured position: one invoker, description-firing everywhere else. The
+  invoker stays — the record measured that wiring adds nothing, not that the
+  existing edge harms, and removing it would be a behavior change no
+  measurement asked for.
+
 ## [1.21.0] - 2026-08-24
 
 ### Added

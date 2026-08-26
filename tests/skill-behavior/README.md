@@ -132,7 +132,7 @@ evidence. It has one invoker in the whole graph
 ([systematic-debugging/SKILL.md](../../skills/systematic-debugging/SKILL.md),
 section "Phase 4: Implementation"), which is what prompted measuring it
 before either wiring it into the flows or cutting it. The skill now declares
-that orphaning at the top of its own file.
+that position at the top of its own file.
 
 | File | What it is |
 |------|-----------|
