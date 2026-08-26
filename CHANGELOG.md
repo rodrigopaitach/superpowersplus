@@ -42,6 +42,13 @@ References below name them so a claim here can be traced there.
   existing edge harms, and removing it would be a behavior change no
   measurement asked for.
 
+- **The anchor written for that fix was one no gate could read either.** It named
+  `Phase 4, "Verify Fix"` — a numbered item, not a heading, in a form
+  `SECTION_REF` does not match. Both citations now use the canonical
+  `link, section "..."` form, which took the repository from 87 resolved section
+  references to 89: the anchor that documents the fix is now covered by the same
+  pass that would have caught the original defect.
+
 ## [1.21.0] - 2026-08-24
 
 ### Added
