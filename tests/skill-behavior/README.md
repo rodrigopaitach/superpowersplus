@@ -237,6 +237,16 @@ is the only thing it exists for.
 a non-deterministic result. Re-running one is a human decision, taken when the
 rule under test changes — not something that happens on every push.
 
+## When the rule under test changes
+
+Re-running is a human decision — but declining it must leave a mark. An edit
+to a rule a `RESULT-*` measures either re-runs the fixture or adds a dated
+note at the top of the record naming the commit that changed the rule, so the
+record reads as *measured against earlier text* rather than as current. A
+record that keeps counting for words it never saw is the exact pair this
+directory exists to separate: an unverified claim wearing a verified one's
+face. This rule is reasoned, not measured.
+
 ## Re-running
 
 The versioned fixtures are labeled as fixtures, on purpose: nobody should ever

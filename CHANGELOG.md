@@ -11,6 +11,19 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **A behavior record whose rule changed must say so.**
+  [`tests/skill-behavior/README.md`](tests/skill-behavior/README.md) (section
+  "When the rule under test changes") now requires that an edit to a rule a
+  `RESULT-*` measures either re-runs the fixture or adds a dated note to the
+  record naming the commit that changed the rule. Re-running stays a human
+  decision — what stops being possible is a record silently counting as
+  current for text it never measured. Reasoned, not measured: prompted by
+  reading this repository against Anthropic's AI-native SDLC playbook
+  (2026-08-26), whose continuous-evals stage gates configuration changes on
+  re-measurement; the dated note is the zero-token form of that gate.
+
 ### Fixed
 
 - **`verification-before-completion` opened by claiming "No flow names it",
