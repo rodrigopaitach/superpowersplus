@@ -5190,6 +5190,13 @@ section where the next one would be written.
   Nothing verifies those.
   **Measured, 2026-08-06:** 10 such anchors exist across the documents this
   project edits. All 10 were opened against their targets and all 10 check out.
+  **2026-08-26:** one of this class was found rotted — an executed plan citing
+  `scripts/check-skill-behavior-records.sh:36-38` for a contract those lines no
+  longer carry — and was marked rather than fixed (`f4a3444`), because a record
+  of work already done is not converted. It does not contradict the count above:
+  executed plans were outside that scan. **Whether they belong inside it is the
+  half of this item that is actually open** — the anchor rotted precisely because
+  nothing reads them.
   **The design that would close it, if it needed closing:** the citation carries
   a literal fragment of the line beside the number, and a gate checks the
   fragment is still there. It needs no named exception — the rule becomes
@@ -5424,7 +5431,11 @@ section where the next one would be written.
 - **`verification-before-completion` is measured but not settled.** Two runs
   found the verification happening without it, including with no rule
   reachable; its contribution was the shape of the evidence, and that was
-  extracted to the two claim points (`1.9.0`). The 120 lines stay. **The scope
+  extracted to the two claim points (`1.9.0`). The file stays — **120 lines when
+  measured, 137 today**, and the growth is entirely the opening paragraph, twice
+  rewritten to state where the skill sits in the wiring. From `## Overview` on it
+  is byte-identical to the text that was measured, 113 lines of it, so the
+  measurement still describes the rule it was taken against. **The scope
   that was measured is narrow and says so:** one model, two runs, a 122 ms
   suite, and none of the conditions the skill's own Red Flags name — a long
   session, an expensive or slow suite, wanting the work over. Cutting on this
