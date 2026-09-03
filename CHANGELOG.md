@@ -79,6 +79,22 @@ References below name them so a claim here can be traced there.
   [`docs/review-scopes.md`](docs/review-scopes.md) — and a shared sentence would
   name a bucket three of them do not have.
 
+- **A spec carries the problem it solves, as a required section.**
+  [`brainstorming`](skills/brainstorming/SKILL.md), section "After the Design"
+  requires `## Problem` as the first row of its required-sections table, above
+  `## Acceptance Criteria`: what is wrong today, who it affects, and what is out
+  of scope. A criterion is an answer; this is the question, and it was the one
+  thing the spec never had to state. Measured across the corpus on 03/09/2026 —
+  201 specs in 11 projects — 56 carried a problem section under 7 distinct
+  headings, and of the 20 carrying both, all 20 put it above the criteria. The
+  requirement follows what the corpus already did; what it adds is one name and
+  a gate that can find it.
+
+  **Specs written before the requirement get a transition, not a charge.** They
+  are written from what the spec already says, without reopening the design: a
+  spec that never had the chance to comply is not an author who skipped it, and
+  the two must not be treated alike.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added

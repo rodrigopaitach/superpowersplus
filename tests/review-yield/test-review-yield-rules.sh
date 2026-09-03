@@ -144,6 +144,32 @@ nit_cap_per_face() {
     done
 }
 
+problem_required_first() {
+    local f="skills/brainstorming/SKILL.md"
+    local problem acceptance
+    problem="$(grep -n '^| `## Problem`' "$REPO_ROOT/$f" | head -1 | cut -d: -f1 || true)"
+    acceptance="$(grep -n '^| `## Acceptance Criteria`' "$REPO_ROOT/$f" | head -1 | cut -d: -f1 || true)"
+    if [ -z "$problem" ]; then
+        printf 'FAIL problem_required_first — %s has no `## Problem` row\n' "$f"
+        FAILURES=$((FAILURES + 1))
+    elif [ -z "$acceptance" ]; then
+        printf 'FAIL problem_required_first — %s has no `## Acceptance Criteria` row\n' "$f"
+        FAILURES=$((FAILURES + 1))
+    elif [ "$problem" -lt "$acceptance" ]; then
+        printf 'ok   problem_required_first\n'
+    else
+        printf 'FAIL problem_required_first — `## Problem` (line %s) is not above `## Acceptance Criteria` (line %s)\n' \
+            "$problem" "$acceptance"
+        FAILURES=$((FAILURES + 1))
+    fi
+}
+
+problem_transition() {
+    assert_contains "skills/brainstorming/SKILL.md" \
+        'written before .*`## Problem`|`## Problem` .*became required' \
+        'problem_transition'
+}
+
 ledger_columns
 ci_step_present
 write_points
@@ -153,6 +179,8 @@ previous_findings_line
 round_one_in_words
 nit_cap_present
 nit_cap_per_face
+problem_required_first
+problem_transition
 
 if [ "$FAILURES" -gt 0 ]; then
     printf '\n%s assertion(s) failed.\n' "$FAILURES"

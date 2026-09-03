@@ -231,12 +231,19 @@ an assumption. Say so in `## Assumptions to Confirm`, with what you tried.
 
 | Section | Rule |
 |---------|------|
+| `## Problem` | What is wrong today, who it affects, and what is out of scope — stated before any criterion, because a criterion is an answer and this is the question. Every `AC` and `IR` below it exists to serve what this section states; one that serves something else is scope that arrived without being asked for, and this skill's spec reviewer charges it. Written in English, like every heading in this table; its content follows the language of the conversation. |
 | `## Acceptance Criteria` | Numbered and addressable (`AC1`, `AC2`, …), one observable behavior each, stated so a `file:line` citation could settle it. This is the list superpowersplus:writing-plans traces task by task and superpowersplus:final-branch-audit charges row by row — a requirement that lives only in prose is a requirement no one can trace, and it goes missing without leaving a mark. |
 | `## Implicit Requirements` | What the dialogue surfaced that nobody asked for as a feature: concurrency, error handling, observability, edge cases, limits, failure modes. Numbered `IR1`, `IR2`, …, written exactly like an acceptance criterion — one observable behavior, settled by a `file:line` citation. Downstream they share one id space with `AC`: superpowersplus:writing-plans refines each one into task criteria that carry its id in the Test Coverage Matrix, and superpowersplus:final-branch-audit traces an `IR` exactly like an `AC`. Raised in conversation and left off this list is how they die. None surfaced? Write "None". |
 | `## Codebase Findings` | Every claim about the existing system carries a `path/file.ext:line` citation plus the quoted snippet. No located citation, the claim does not go in the spec. |
 | `## External Dependencies` | Every claim about a library, external API, or third-party service, each carrying one of the two citation forms from "Where a Claim Comes From": the lockfile-pinned version plus the line you read inside the dependency, or the official doc URL for that version. Example: "The idempotency key is a request option, never a param — `stripe@19.1.0`, `https://docs.stripe.com/api/idempotent_requests`." No source, the claim does not go in the spec. If the design touches none, write "None". |
 | `## Assumptions to Confirm` | Everything you could NOT verify in the code. Never mix an assumption into verified facts. Each item records the search you ran (command/pattern + paths inspected) and why it could not be confirmed. Anything the code CAN answer is not an assumption — go verify it and cite it. If there are none, write "None". |
 | `## Coverage Map` | The compact table from [coverage-map.md](references/coverage-map.md) — one row per category: `Category \| State \| Where it landed`. Every category appears, with one of `Clear`/`Resolved`/`Deferred`/`Outstanding` and the reason for that state; a state with no reason is invalid, because "not checked" and "not applicable" render identically. Where it landed is the `AC`/`IR` id, the `## Assumptions to Confirm` item, or what already settled it. Below the table, the decision record: each question asked, the answer, the recommendation you gave, and its declared source — this is what makes an approval auditable after the conversation is gone. Asked no questions? The table still appears, and every row says why none were needed. |
+
+**Resuming a spec written before `## Problem` became required?** Write the
+section from what the spec already says — the request it opens with, the
+findings that motivated it — and do not reopen the design. A spec that never
+had the chance to comply is not an author who skipped it, and the two must not
+be treated alike.
 
 **Spec Review:**
 **Run the mechanical check before you dispatch, not only after a fix** —
