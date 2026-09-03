@@ -55,11 +55,11 @@ zero of the 36 such references in the corpus are broken.
 
 **AC2.** [`skills/writing-plans/plan-document-reviewer-prompt.md`](../../../skills/writing-plans/plan-document-reviewer-prompt.md), section "Output Format", carries the same line.
 
-**AC3.** `docs/review-yield.md` exists and defines its own columns in its header: date, branch, face, round, blocking findings raised, findings still open from the previous round.
+**AC3.** The ledger is an artifact of the project being worked on, at `docs/superpowers/review-yield.md` — the location `docs/superpowers/specs/` and `docs/superpowers/plans/` already occupy — and its columns are date, branch, face, round, blocking findings raised, findings still open from the previous round. **Amended 2026-09-03**, from a path in this repository's own `docs/`. A skill instruction is read from an installed plugin, where `../../docs/` resolves inside the plugin directory and the Codex archive omits `docs/` entirely; and a ledger only this repository writes measures a handful of branches, against the eleven projects the corpus measurement swept.
 
 **AC4.** Four skills instruct the controller to append one row per review dispatch: [`brainstorming/SKILL.md`](../../../skills/brainstorming/SKILL.md) section "Spec Review", [`writing-plans/SKILL.md`](../../../skills/writing-plans/SKILL.md) section "Plan Review", [`subagent-driven-development/SKILL.md`](../../../skills/subagent-driven-development/SKILL.md) sections "3. Review the task" and "4. The fix loop", and [`requesting-code-review/SKILL.md`](../../../skills/requesting-code-review/SKILL.md) section "3. Act on feedback".
 
-**AC5.** Each of the five reviewer prompts caps its advisory bucket at five items and reports the remainder as a count.
+**AC5.** A reviewer prompt caps its advisory bucket at five items and reports the remainder as a count **when that bucket ends with the report** — `code-reviewer.md`, and the `Recommendations` bucket of both document reviewers. The two whose bucket the controller is required to carry onward are not capped: `task-reviewer-prompt.md`'s `Minor` and `re-review-prompt.md`'s `Out-of-Scope`, both of which `skills/subagent-driven-development/SKILL.md` transcribes item by item into the progress ledger. **Amended 2026-09-03**, from a uniform cap on all five. The cap protects the attention of whoever reads the report; where the reader is a controller under orders to forward every item, capping deletes data in transit — which that skill calls, in those words, a silent discard.
 
 **AC6.** [`skills/brainstorming/SKILL.md`](../../../skills/brainstorming/SKILL.md), section "After the Design", the required-sections table, requires `## Problem` as its first row, above `## Acceptance Criteria`.
 
@@ -75,7 +75,7 @@ zero of the 36 such references in the corpus are broken.
 
 **IR1.** A round-1 report writes the absence of previous findings in words ("none — round 1"), never a blank or an omitted line.
 
-**IR2.** The ledger's column definitions live only in `docs/review-yield.md`; each of the write points names the file and never restates the columns.
+**IR2.** The ledger's column definitions live in exactly one place, a reference that ships with the plugin; each of the write points links that reference, names the ledger's path, and never restates the columns. **Amended 2026-09-03**: the definitions cannot live in the ledger itself once the ledger is a file in the partner's project, because a project that has never run a review has no such file to read.
 
 **IR3.** No reviewer writes the ledger. The controller appends the row, because three of the five prompts declare the review read-only on the checkout.
 
@@ -83,7 +83,7 @@ zero of the 36 such references in the corpus are broken.
 
 **IR5.** `## Problem` is written in English, like the six sections already required. The section's content carries no language constraint.
 
-**IR6.** `docs/review-yield.md` passes `scripts/check-links.sh`, which walks `docs/` recursively.
+**IR6.** Every write point's link to the definitions reference resolves under `scripts/check-links.sh`, and the ledger path itself is written in backticks, never as a markdown link — `CLAUDE.md`, section "Writing a reference" reserves backticks for artifact paths inside the partner's own project, and reserves links for files of this repository.
 
 **IR7.** The change stages a `CHANGELOG.md` entry with it, as `scripts/check-changelog.sh` requires of any staged change under `skills/`.
 

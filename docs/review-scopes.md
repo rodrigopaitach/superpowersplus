@@ -68,9 +68,12 @@ that weight:
   in the skill's own prose around it.
 
 - [tests/review-yield/test-review-yield-rules.sh](../tests/review-yield/test-review-yield-rules.sh)
-  — the five-item cap on the advisory bucket, carried by all five reviewer
-  prompts. **Two things about it diverge from the three above, and both are
-  weaknesses rather than design.** It is not in
+  — the five-item cap on the advisory bucket, carried by three of the five
+  reviewer prompts. **The other two are uncapped on purpose**: the controller
+  transcribes their bucket item by item into the progress ledger, so a cap
+  there deletes findings in transit rather than saving anyone's attention. The
+  suite charges both halves. **Two things about the gate diverge from the three
+  above, and both are weaknesses rather than design.** It is not in
   [githooks/pre-commit](../githooks/pre-commit), so a local commit dropping the
   cap from one carrier is caught only on push. And it does not compare the
   carriers against each other the way the three above do — it asserts a per-face

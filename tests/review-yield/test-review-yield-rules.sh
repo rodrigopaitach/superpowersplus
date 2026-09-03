@@ -77,25 +77,19 @@ assert_count() {
 }
 
 ledger_columns() {
-    local f="docs/review-yield.md" c
-    if [ ! -f "$REPO_ROOT/$f" ]; then
-        printf 'FAIL ledger_columns — %s does not exist\n' "$f"
-        FAILURES=$((FAILURES + 1))
-        return
-    fi
-    # AC3 says the ledger DEFINES its columns. The names also appear in the
-    # empty data table's header row, so a file-scoped grep stayed green with
-    # the whole definition table deleted. Charge the definition table itself.
+    # The definitions live in the shipped reference, not in the ledger: the
+    # ledger is a file in the PARTNER's project, and a project that has never
+    # run a review has no such file to read a format from.
+    local ref="skills/requesting-code-review/references/review-yield.md" c
     for c in 'Date' 'Branch' 'Face' 'Round' 'Blocking findings' \
              'Still open from the previous round'; do
-        assert_in_slice "$f" '^\| Column \| What goes in it \|' '^$' \
+        assert_in_slice "$ref" '^\| Column \| What goes in it \|' '^$' \
             "^\\| $c \\|" "ledger_columns: $c is defined"
     done
-    # And the table a row is appended to. Deleting it leaves a ledger that can
-    # receive nothing, which the definition table alone cannot notice.
-    assert_contains "$f" \
+    # And the header a partner project is told to create the file with.
+    assert_in_slice "$ref" '^```markdown' '^```$' \
         '^\| Date \| Branch \| Face \| Round \| Blocking findings \| Still open from the previous round \|' \
-        'ledger_columns: the data table can receive a row'
+        'ledger_columns: the header to create the file with'
 }
 
 ci_step_present() {
@@ -114,12 +108,12 @@ WRITE_POINTS=(
 write_points() {
     local f
     for f in "${WRITE_POINTS[@]}"; do
-        assert_contains "$f" 'docs/review-yield\.md' "write_points: $f"
+        assert_contains "$f" 'docs/superpowers/review-yield\.md' "write_points: $f"
     done
     # AC4 names two sections of this one file — "3. Review the task" and
     # "4. The fix loop". One grep per file cannot see the second one deleted.
     assert_count "skills/subagent-driven-development/SKILL.md" \
-        'docs/review-yield\.md' 2 'write_points: both sites in subagent-driven-development'
+        'docs/superpowers/review-yield\.md' 2 'write_points: both sites in subagent-driven-development'
 }
 
 # columns_not_restated catches a copy of the ledger's header, which is the
@@ -153,7 +147,7 @@ REVIEWER_PROMPTS=(
 reviewers_do_not_write() {
     local f
     for f in "${REVIEWER_PROMPTS[@]}"; do
-        if grep -qE 'docs/review-yield\.md' "$REPO_ROOT/$f"; then
+        if grep -qE 'docs/superpowers/review-yield\.md' "$REPO_ROOT/$f"; then
             printf 'FAIL reviewers_do_not_write — %s tells a reviewer to write the ledger; three of these five declare the review read-only on the checkout, so the row is the controller\x27s to append\n' "$f"
             FAILURES=$((FAILURES + 1))
         else
@@ -183,44 +177,40 @@ round_one_in_words() {
     done
 }
 
-nit_cap_present() {
+# AC5 caps a bucket that ENDS with the report. The two buckets the controller
+# is required to carry onward are not capped, and capped_faces / uncapped_faces
+# are the two halves of that one rule — the second exists so nobody restores a
+# cap that deletes findings on their way to the ledger.
+capped_faces() {
     local f
     for f in "${DOC_REVIEWERS[@]}"; do
         assert_in_slice "$f" '\*\*Recommendations \(advisory' '^```' \
-            'at most five' "nit_cap_present: $f"
+            'at most five Recommendations' "capped_faces: $f names Recommendations"
         assert_in_slice "$f" '\*\*Recommendations \(advisory' '^```' \
-            'remainder as a count' "nit_cap_count: $f"
+            'remainder as a count' "capped_faces: $f reports the remainder"
     done
-    for f in "skills/requesting-code-review/code-reviewer.md" \
-             "skills/subagent-driven-development/task-reviewer-prompt.md"; do
-        assert_in_slice "$f" '#### Minor \(Nice to Have\)' '^ *###' \
-            'at most five' "nit_cap_present: $f"
-        assert_in_slice "$f" '#### Minor \(Nice to Have\)' '^ *###' \
-            'remainder as a count' "nit_cap_count: $f"
-    done
-    assert_in_slice "skills/subagent-driven-development/re-review-prompt.md" \
-        '### Out-of-Scope Observations' '^ *###' \
-        'at most five' 'nit_cap_present: re-review-prompt.md'
-    assert_in_slice "skills/subagent-driven-development/re-review-prompt.md" \
-        '### Out-of-Scope Observations' '^ *###' \
-        'remainder as a count' 'nit_cap_count: re-review-prompt.md'
+    local c="skills/requesting-code-review/code-reviewer.md"
+    assert_in_slice "$c" '#### Minor \(Nice to Have\)' '^ *###' \
+        'at most five Minor' 'capped_faces: code-reviewer names Minor'
+    assert_in_slice "$c" '#### Minor \(Nice to Have\)' '^ *###' \
+        'remainder as a count' 'capped_faces: code-reviewer reports the remainder'
 }
 
-nit_cap_per_face() {
+uncapped_faces() {
     local f
-    for f in "skills/requesting-code-review/code-reviewer.md" \
-             "skills/subagent-driven-development/task-reviewer-prompt.md"; do
-        assert_in_slice "$f" '#### Minor \(Nice to Have\)' '^ *###' \
-            'at most five Minor' "nit_cap_per_face: $f names Minor"
-    done
-    assert_in_slice "skills/subagent-driven-development/re-review-prompt.md" \
-        '### Out-of-Scope Observations' '^ *###' \
-        'at most five Out-of-Scope' 'nit_cap_per_face: re-review names Out-of-Scope'
-    for f in "${DOC_REVIEWERS[@]}"; do
-        assert_in_slice "$f" '\*\*Recommendations \(advisory' '^```' \
-            'at most five Recommendations' "nit_cap_per_face: $f names Recommendations"
+    for f in "skills/subagent-driven-development/task-reviewer-prompt.md" \
+             "skills/subagent-driven-development/re-review-prompt.md"; do
+        if grep -qE 'at most five' "$REPO_ROOT/$f"; then
+            printf 'FAIL uncapped_faces — %s caps a bucket the controller must transcribe to the ledger; the cap would delete findings in transit\n' "$f"
+            FAILURES=$((FAILURES + 1))
+        else
+            printf 'ok   uncapped_faces: %s\n' "$f"
+        fi
+        assert_contains "$f" 'not capped, and that is deliberate' \
+            "uncapped_faces: $f says why"
     done
 }
+
 
 problem_required_first() {
     local f="skills/brainstorming/SKILL.md"
@@ -273,8 +263,8 @@ columns_not_restated
 reviewers_do_not_write
 previous_findings_line
 round_one_in_words
-nit_cap_present
-nit_cap_per_face
+capped_faces
+uncapped_faces
 problem_required_first
 problem_transition
 problem_blocking

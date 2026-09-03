@@ -112,8 +112,10 @@ Subagent (general-purpose):
     Issues you noticed entirely outside the fix diff. Non-blocking; the
     controller ledgers these for the final review. "None" if none.
 
-    Report at most five Out-of-Scope items, and the remainder as a count.
-    These are ledgered for the final review, not acted on here.
+    **This bucket is not capped, and that is deliberate.** These go to the
+    ledger as deferred minors and are the only channel by which a re-review
+    scoped to one fix diff hands a broad finding to the final review. A cap
+    would delete them in transit. Report them all.
 
     ### Verdict
 

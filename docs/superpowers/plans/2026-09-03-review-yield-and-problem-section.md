@@ -18,6 +18,20 @@
 3. **A recommendation naming which source backs it** — a project pattern at `file:line`, the dependency's official docs, or general practice declared as such.
 4. **Before sending, reread the whole message once**, looking for terms someone outside this project would not know. Rewrite each in plain language, or define it in the sentence that uses it. A gate verdict name appears only in parentheses, never carrying the explanation.
 
+## Amended after execution — 2026-09-03
+
+**Every task below ran as written. Four spec criteria were then amended, and
+the tasks are marked rather than rewritten**: a record of what was done is not
+converted to a new format, because the conversion would make the steps describe
+a run that never happened. Only what is still to execute gets rewritten; the
+rest gets marked, which is what this table is.
+
+| What the tasks say | What now holds | Why |
+|---|---|---|
+| The ledger is `docs/review-yield.md`, linked in markdown | It is the partner project's `docs/superpowers/review-yield.md`, named in backticks (`AC3`, `IR6`) | From an installed plugin the markdown link resolved inside the plugin directory, and the Codex archive ships no `docs/` |
+| The ledger's own header defines the columns (`IR2`) | [`review-yield.md`](../../../skills/requesting-code-review/references/review-yield.md) defines them, and ships | A project that has never run a review has no ledger to read a format from |
+| All five prompts cap the advisory bucket (`AC5`) | Three cap it; `task-reviewer-prompt.md`'s `Minor` and `re-review-prompt.md`'s `Out-of-Scope` do not | The controller transcribes those two into the progress ledger item by item, so a cap deletes findings in transit |
+
 ## Global Constraints
 
 Every task's requirements implicitly include these, copied from the spec's `## Implicit Requirements`:

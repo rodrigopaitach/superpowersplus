@@ -14,7 +14,7 @@ References below name them so a claim here can be traced there.
 ### Added
 
 - **A ledger of what each review dispatch returned.**
-  [`docs/review-yield.md`](docs/review-yield.md) takes one row per dispatch —
+  [`docs/superpowers/review-yield.md`](docs/superpowers/review-yield.md) takes one row per dispatch —
   date, branch, face, round, blocking findings, and how many of the previous
   round's are still open. The cost of a review was already on record here (a
   median of 7.3 minutes across 29 document reviews, section `[1.16.0] - 2026-08-08`
@@ -183,6 +183,50 @@ References below name them so a claim here can be traced there.
   instead of comparing carriers against each other, because the cap is worded
   per face on purpose. Neither divergence is defended — both are recorded as
   what happened.
+
+- **The ledger is an artifact of the project being worked on, not of this
+  repository.** It moved to `docs/superpowers/review-yield.md`, beside the
+  `specs/` and `plans/` these skills already write there, and the four write
+  points name it in backticks — the form
+  [`CLAUDE.md`](CLAUDE.md), section "Writing a reference" reserves for a path
+  inside the partner's own project. The markdown link they carried before meant
+  the opposite: from an installed plugin `../../docs/` resolves inside the
+  plugin directory, and
+  [`package-codex-plugin.sh`](scripts/package-codex-plugin.sh) does not ship
+  `docs/` at all, so the target did not exist. Scoping the instruction to this
+  repository instead would have measured a handful of branches against the
+  eleven projects the corpus sweep covers.
+
+  The column definitions moved with it, to
+  [`review-yield.md`](skills/requesting-code-review/references/review-yield.md),
+  which ships — a project that has never run a review has no ledger to read a
+  format from. One reference, four callers, the arrangement
+  [`execution-path.md`](skills/writing-plans/references/execution-path.md)
+  already has with its three.
+
+- **Two of the five advisory buckets are no longer capped, because their reader
+  is not a person.** `Minor` in
+  [`task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md)
+  and `Out-of-Scope` in
+  [`re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md)
+  are transcribed item by item into the progress ledger by the controller, for
+  the final review to triage. The cap exists to stop a long advisory list from
+  burying the blocking findings above it — an attention argument about whoever
+  reads the report. Where the reader is a controller under orders to forward
+  every item, the cap deletes findings in transit, which
+  [`subagent-driven-development`](skills/subagent-driven-development/SKILL.md)
+  calls, in those words, a silent discard. Both prompts now say they are
+  uncapped and why, and the suite charges both halves.
+
+- **`skills/writing-plans/SKILL.md` came off the ceiling by progressive
+  disclosure.** The write point above took it to 501 of 500. `## Code That Calls
+  a Dependency` moved to
+  [`dependency-calls.md`](skills/writing-plans/references/dependency-calls.md) —
+  a plan needs it only when one of its steps calls a library, which is the
+  literal test the rule states — leaving a trigger tied to that condition. 471
+  lines, 29 of headroom. The open gap recorded earlier in this cycle is closed
+  by this entry; compressing the new paragraph to fit would have been the
+  workaround the rule names.
 
 ## [1.22.0] - 2026-08-25
 
@@ -5844,18 +5888,6 @@ section where the next one would be written.
   Both are left open because the fix is a change to the extractor with its own
   tests, and neither affects the script's green verdict — only the counts it
   prints. Opened 2026-08-24.
-
-- **`skills/writing-plans/SKILL.md` sits one line under the `SKILL.md` ceiling**
-  — 499 of the 500 that [`check-skill-size.sh`](scripts/check-skill-size.sh)
-  enforces, measured 2026-09-03 while adding the review-yield write point to it.
-  The prescribed fix is progressive disclosure, and the obvious candidate does
-  not qualify: [`writing-plans`](skills/writing-plans/SKILL.md), section
-  "Execution Handoff" is the terminal step every run of that skill performs, not
-  content a run needs only once it needs it — moving it would leave a pointer
-  where a mandatory step was. What that file should actually disclose
-  progressively is a design decision nobody has made, and it is not this
-  branch's to make. The next edit to the file hits the pre-commit gate, loudly,
-  with the fix in the message. Opened 2026-09-03.
 
 Most rules in this project are reasoned rather than measured. Four have been
 measured, over eleven adversarial runs: the external-content rule, which held on
