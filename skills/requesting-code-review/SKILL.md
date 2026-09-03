@@ -50,6 +50,10 @@ Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md
 - `{HEAD_SHA}` - Ending commit
 
 **3. Act on feedback:**
+
+**First, append one row to [`docs/review-yield.md`](../../docs/review-yield.md)**,
+face `branch`. That file's header defines every column and who writes the row.
+
 - Fix Critical issues immediately
 - Fix Important issues before proceeding
 - Note Minor issues for later

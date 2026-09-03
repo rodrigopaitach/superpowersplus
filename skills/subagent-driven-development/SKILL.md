@@ -308,6 +308,9 @@ review — it enters the fix loop with the other findings.
 
 Template: [task-reviewer-prompt.md](task-reviewer-prompt.md)
 
+**Append one row to [`docs/review-yield.md`](../../docs/review-yield.md)**,
+face `task <N>`. That file's header defines every column and who writes the row.
+
 ### 4. The fix loop
 
 The loop triggers when the review reports spec ❌, any Critical or Important
@@ -411,6 +414,10 @@ the cross-task context the reviewer lacks:
 Adjudicate only at the cap. Adjudicating earlier to end a loop is
 pre-judging with a different name. Every adjudication is a ledger entry —
 a silent discard is forbidden.
+
+**Append one row to [`docs/review-yield.md`](../../docs/review-yield.md)** per
+re-review, face `re-review <N>`. That file's header defines every column and who
+writes the row.
 
 ### 5. Complete the task
 

@@ -34,6 +34,24 @@ References below name them so a claim here can be traced there.
   executes it, so nothing notices when an edit removes it. The suite runs in CI
   from this entry onward.
 
+- **The four review faces record what their dispatch returned.**
+  [`skills/brainstorming/SKILL.md`](skills/brainstorming/SKILL.md) (section
+  "Spec Review"), [`skills/writing-plans/SKILL.md`](skills/writing-plans/SKILL.md)
+  (section "Plan Review"),
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md)
+  (sections "3. Review the task" and "4. The fix loop") and
+  [`skills/requesting-code-review/SKILL.md`](skills/requesting-code-review/SKILL.md)
+  (section "How to Request") each tell the controller to append one row.
+
+  **All four carry the same sentence, and it names only what the ledger cannot
+  know: which face this dispatch is.** An earlier draft enumerated the six
+  columns in each skill and, in the next sentence, told the reader not to
+  restate them. What counts as a blocking finding for a given face is itself a
+  column definition, so it went to the ledger too. Measured while making the
+  correction: `skills/writing-plans/SKILL.md` stood at 496 lines against the
+  500-line ceiling [`check-skill-size.sh`](scripts/check-skill-size.sh) enforces — the discarded
+  version took it to 502, this one to 499.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added
@@ -5694,6 +5712,18 @@ section where the next one would be written.
   Both are left open because the fix is a change to the extractor with its own
   tests, and neither affects the script's green verdict — only the counts it
   prints. Opened 2026-08-24.
+
+- **`skills/writing-plans/SKILL.md` sits one line under the `SKILL.md` ceiling**
+  — 499 of the 500 that [`check-skill-size.sh`](scripts/check-skill-size.sh)
+  enforces, measured 2026-09-03 while adding the review-yield write point to it.
+  The prescribed fix is progressive disclosure, and the obvious candidate does
+  not qualify: [`writing-plans`](skills/writing-plans/SKILL.md), section
+  "Execution Handoff" is the terminal step every run of that skill performs, not
+  content a run needs only once it needs it — moving it would leave a pointer
+  where a mandatory step was. What that file should actually disclose
+  progressively is a design decision nobody has made, and it is not this
+  branch's to make. The next edit to the file hits the pre-commit gate, loudly,
+  with the fix in the message. Opened 2026-09-03.
 
 Most rules in this project are reasoned rather than measured. Four have been
 measured, over eleven adversarial runs: the external-content rule, which held on

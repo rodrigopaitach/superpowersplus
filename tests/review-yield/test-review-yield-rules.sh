@@ -48,8 +48,63 @@ ci_step_present() {
         'ci_step_present'
 }
 
+WRITE_POINTS=(
+    "skills/brainstorming/SKILL.md"
+    "skills/writing-plans/SKILL.md"
+    "skills/subagent-driven-development/SKILL.md"
+    "skills/requesting-code-review/SKILL.md"
+)
+
+write_points() {
+    local f
+    for f in "${WRITE_POINTS[@]}"; do
+        assert_contains "$f" 'docs/review-yield\.md' "write_points: $f"
+    done
+}
+
+# columns_not_restated catches a copy of the ledger's header, which is the
+# mutation it is written against. It does NOT catch IR2's other half — the same
+# six columns rewritten as prose ("date, branch, the round, how many blocking
+# findings came back") reads nothing like the header and passes here. That class
+# is declared rather than gated, for the reason AC10 declares its own: a grep
+# cannot tell a paraphrase from a sentence that merely mentions a date.
+columns_not_restated() {
+    local f
+    for f in "${WRITE_POINTS[@]}"; do
+        if grep -qE 'Still open from the previous round' "$REPO_ROOT/$f"; then
+            printf 'FAIL columns_not_restated — %s restates a ledger column; IR2 keeps the definitions in docs/review-yield.md alone\n' "$f"
+            FAILURES=$((FAILURES + 1))
+        else
+            printf 'ok   columns_not_restated: %s\n' "$f"
+        fi
+    done
+}
+
+REVIEWER_PROMPTS=(
+    "skills/brainstorming/spec-document-reviewer-prompt.md"
+    "skills/writing-plans/plan-document-reviewer-prompt.md"
+    "skills/requesting-code-review/code-reviewer.md"
+    "skills/subagent-driven-development/task-reviewer-prompt.md"
+    "skills/subagent-driven-development/re-review-prompt.md"
+)
+
+reviewers_do_not_write() {
+    local f
+    for f in "${REVIEWER_PROMPTS[@]}"; do
+        if grep -qE 'docs/review-yield\.md' "$REPO_ROOT/$f"; then
+            printf 'FAIL reviewers_do_not_write — %s tells a reviewer to write the ledger; three of these five declare the review read-only on the checkout, so the row is the controller\x27s to append\n' "$f"
+            FAILURES=$((FAILURES + 1))
+        else
+            printf 'ok   reviewers_do_not_write: %s\n' "$f"
+        fi
+    done
+}
+
 ledger_columns
 ci_step_present
+write_points
+columns_not_restated
+reviewers_do_not_write
 
 if [ "$FAILURES" -gt 0 ]; then
     printf '\n%s assertion(s) failed.\n' "$FAILURES"
