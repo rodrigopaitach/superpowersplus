@@ -81,7 +81,7 @@ Entre cada etapa há um portão. Nenhum deles é o próprio agente se auto-avali
 
 | Portão | O que bloqueia | Onde vive |
 |--------|----------------|-----------|
-| Revisor da spec | Citação `arquivo:linha` que não confere ao ser aberta; afirmação sobre dependência sem a versão travada no lockfile ou a doc oficial; critério que junta vários comportamentos; requisito que só existe na prosa; seção obrigatória ausente | `skills/brainstorming/spec-document-reviewer-prompt.md` |
+| Revisor da spec | Citação `arquivo:linha` que não confere ao ser aberta; afirmação sobre dependência sem a versão travada no lockfile ou a doc oficial; critério que junta vários comportamentos; requisito que só existe na prosa; seção obrigatória ausente; critério de aceite que não serve o problema declarado pela spec | `skills/brainstorming/spec-document-reviewer-prompt.md` |
 | Revisor do plano | Tarefa sem o critério de spec que a motivou; critério de spec que nenhuma tarefa cobre; matriz de cobertura sem as cinco colunas; linha da matriz apontando para um teste que nenhum passo cria | `skills/writing-plans/plan-document-reviewer-prompt.md` |
 | Revisor da tarefa | **Reexecuta a suíte da tarefa e reporta a saída literal** — não aceita o relatório de quem implementou | `skills/subagent-driven-development/task-reviewer-prompt.md` |
 | Auditoria final da branch | Critério que nenhuma tarefa entregou (*lost in translation*); tarefa que nenhum critério motivou (*invented scope*); critério sem citação (*not delivered*) | `skills/final-branch-audit/SKILL.md` |
@@ -93,6 +93,7 @@ Entre cada etapa há um portão. Nenhum deles é o próprio agente se auto-avali
 | Especificação | `docs/superpowers/specs/AAAA-MM-DD-<tópico>-design.md` |
 | Plano de implementação | `docs/superpowers/plans/AAAA-MM-DD-<funcionalidade>.md` |
 | Mapa de cobertura | Seção `## Coverage Map` dentro da própria spec — uma linha por categoria, com estado e destino, e abaixo o registro de decisão: cada pergunta, a resposta, a recomendação dada e a fonte dela |
+| Rendimento das revisões | `docs/superpowers/review-yield.md` — uma linha por despacho de revisão: data, branch, qual revisão, qual rodada, quantos achados bloqueantes ela devolveu e quantos da rodada anterior seguem abertos. É o que responde se as rodadas de revisão estão se pagando |
 
 Tudo é arquivo versionado em git, legível sem ferramenta nenhuma. O registro de decisão é o que permite auditar depois **no que** você concordou e **com base em quê** — inclusive quando a conversa já não existe mais.
 

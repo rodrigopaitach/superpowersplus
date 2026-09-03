@@ -260,6 +260,17 @@ References below name them so a claim here can be traced there.
   both `not_covered_section_refs` assertions now fail naming the unclosed slice,
   where before the run stayed green.
 
+- **The three README-shaped files record the new generated artifact and the new
+  blocking class.** [`README.md`](README.md),
+  [`docs/README.pt-BR.md`](docs/README.pt-BR.md) and
+  [`docs/README.en.md`](docs/README.en.md) each carry a table of what a run
+  generates; the ledger is now one of them. The two reference documents also
+  list what each gate blocks, and the spec reviewer's row gained the criterion
+  that does not serve the stated problem — a missing `## Problem` needed no
+  entry, because "a missing required section" already covers it once the
+  section is required. Found by reading those tables against the branch rather
+  than by a gate: a table claiming to enumerate has no check that it still does.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added
