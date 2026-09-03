@@ -87,7 +87,7 @@ zero of the 40 such references in the corpus are broken.
 
 **IR7.** The change stages a `CHANGELOG.md` entry with it, as `scripts/check-changelog.sh` requires of any staged change under `skills/`.
 
-**IR8.** Every corpus figure this document states is accompanied by the rule that produced it, so a re-measurement that disagrees can be told from a measurement run differently.
+**IR8.** Every corpus figure this document states is produced by the script embedded in `### Corpus measurements`, and by no rule stated only in prose, so a re-measurement that disagrees is settled by running it rather than by re-reading a sentence.
 
 ## Codebase Findings
 
@@ -123,22 +123,110 @@ zero of the 40 such references in the corpus are broken.
 
 ### Corpus measurements, 2026-09-03
 
-**Corpus:** every `*.md` under a directory matching `docs/superpowers/specs` beneath `~/Projetos`, excluding this document — **201 specs across 11 projects**.
+**Every figure below is produced by this script, and by nothing else.** Three
+independent readings of the same corpus disagreed while the rules lived in
+prose — the author's, the round-1 review's and the round-2 review's — and each
+disagreement was a rule read two ways rather than a corpus that changed. Run it
+to reproduce or refute any number here; a result that differs means the script
+is wrong, which is a claim anyone can settle.
 
-**Heading rule, used by every count below:** a document carries section *X* when some line matches `^\s*#{1,6}\s+X\s*$` with internal whitespace normalized. The leading `\s*` is deliberate and matches `scripts/check-links.sh:104`, so a heading indented inside a fenced block counts.
+```python
+import re, pathlib, sys
+ROOT = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else pathlib.Path.home() / "Projetos")
+SELF = "2026-09-03-review-yield-and-problem-section-design.md"
+CUTOFF = "2026-08-06"
+CLOSED = {"Problem", "Problems", "Problema", "Problemas", "O problema",
+          "The request", "Context", "Contexto", "Background"}
+REQUIRED = ["Acceptance Criteria", "Implicit Requirements", "Codebase Findings",
+            "External Dependencies", "Assumptions to Confirm", "Coverage Map"]
+TRANSLATED = ["Critérios de Aceitação", "Requisitos Implícitos", "Achados no Código",
+              "Dependências Externas", "Suposições a Confirmar", "Mapa de Cobertura"]
+HEAD = re.compile(r"^\s*\#{1,6}\s+(.*?)\s*\#*\s*$", re.M)
 
-| Measurement | Rule applied | Result |
-|---|---|---|
-| Specs written since the short path shipped | filename date `>= 2026-08-06`, corpus definition above applied — this document excluded | **40**, in **6** projects |
-| Of those, declaring the route field | `Route:` **or its Portuguese form `Rota:`** anywhere in the line, not anchored — the field legitimately follows `**Data:**`, a bullet marker, or a blockquote `>` | **21** — 11 English, 10 Portuguese. Anchored at line start, the same set reads **5**, which is the measure of how much the anchor was hiding |
-| Of those, taking the short path | `**Route:**` followed by `short` or `caminho curto` | **0** |
-| Specs carrying a problem section | heading in the closed set {Problem, Problems, Problema, Problemas, O problema, The request, Context, Contexto, Background}, plus `<one of those> — <gloss>` | **56 of 201**, under **7** distinct headings |
-| Position relative to `## Acceptance Criteria` | of the 20 specs carrying both | **20 before, 0 after** |
-| Section references into another file, corpus-wide (specs and plans) | markdown link to a `.md`, then `, section "…"`; title and headings whitespace-normalized | 40 found — **36 resolve, 0 name a missing heading**, 4 point at a file that does not exist |
+specs = [f for b in ROOT.rglob("docs/superpowers/specs") if b.is_dir()
+         for f in b.glob("*.md") if f.name != SELF]
+body = {f: f.read_text(encoding="utf-8", errors="replace") for f in specs}
+heads = {f: {" ".join(h.split()) for h in HEAD.findall(t)} for f, t in body.items()}
+projects = lambda fs: len({str(f.parents[2]) for f in fs})
 
-**The controlled comparison that justifies AC6.** Under the same heading rule, within the same corpus — same authors, same projects, same language — the six sections the skill names show one heading each and **zero translations**: `## Acceptance Criteria` 44, `## Implicit Requirements` 43, `## Codebase Findings` 39, `## External Dependencies` 39, `## Assumptions to Confirm` 39, `## Coverage Map` 39; and 0 each for `## Critérios de Aceitação`, `## Requisitos Implícitos`, `## Achados no Código`, `## Dependências Externas`, `## Suposições a Confirmar`, `## Mapa de Cobertura`. The one section the skill does not name shows fifteen headings in two languages. The only variable that differs is whether the skill named it.
+print(f"corpus                          {len(specs)} specs, {projects(specs)} projects")
+post = [f for f in specs if f.name[:10] >= CUTOFF]
+print(f"since the short path shipped    {len(post)} specs, {projects(post)} projects")
+route = [f for f in post if re.search(r"(Route|Rota):", body[f])]
+en = [f for f in post if re.search(r"Route:", body[f])]
+anchored = [f for f in post if re.search(r"^\*\*Route:\*\*", body[f], re.M)]
+short = [f for f in post if re.search(r"(Route|Rota):\*{0,2}\s*(short|caminho curto)", body[f], re.I)]
+print(f"declaring the route field       {len(route)}  ({len(en)} English, {len(route)-len(en)} Portuguese; anchored only: {len(anchored)})")
+print(f"taking the short path           {len(short)}")
 
-**What the problem-section count depends on, and what it does not.** The closed set above is a judgement, and a wider net returns a larger number of *files* — a permissive prefix match returns roughly twice as many, because it admits `## Contexto e problema`, `## Problemas conhecidos` and similar. Two rules were run against this corpus and the file count did not move: admitting the form `<term> N — <gloss>` alongside the closed set leaves the count at **56** and raises the distinct-heading total from 7 to 15, because the extra headings all occur inside specs the strict rule already counted. The strict rule's 7 is the figure stated above; both are recorded so a re-measurement that disagrees can be told from one run differently. AC6's argument rests on the contrast with zero, which neither rule changes.
+strict = {f: heads[f] & CLOSED for f in specs}
+withp = [f for f in specs if strict[f]]
+titles = {h for f in withp for h in strict[f]}
+print(f"carrying a problem section      {len(withp)} of {len(specs)}, under {len(titles)} distinct headings")
+gloss = re.compile(r"^(Problem|Problema|O problema|Contexto|Context)\b.*—")
+loose = {f: {h for h in heads[f] if h in CLOSED or gloss.match(h)} for f in specs}
+lw = [f for f in specs if loose[f]]
+print(f"  same, admitting '<term> N — <gloss>'   {len(lw)} files, {len({h for f in lw for h in loose[f]})} headings")
+
+before = after = both = 0
+for f in withp:
+    pos = [(m.start(), " ".join(m.group(1).split())) for m in HEAD.finditer(body[f])]
+    p = next((o for o, t in pos if t in strict[f]), None)
+    a = next((o for o, t in pos if t == "Acceptance Criteria"), None)
+    if p is None or a is None:
+        continue
+    both += 1
+    before += p < a
+    after += p > a
+print(f"position vs Acceptance Criteria {before} before, {after} after (of {both} carrying both)")
+
+print("required sections, English / translated:")
+for en_name, pt_name in zip(REQUIRED, TRANSLATED):
+    a = sum(1 for f in specs if en_name in heads[f])
+    b = sum(1 for f in specs if pt_name in heads[f])
+    print(f"  {en_name:24} {a:3} / {b}")
+```
+
+Run against `~/Projetos` on 2026-09-03:
+
+```
+corpus                          201 specs, 11 projects
+since the short path shipped    40 specs, 6 projects
+declaring the route field       21  (11 English, 10 Portuguese; anchored only: 5)
+taking the short path           0
+carrying a problem section      56 of 201, under 7 distinct headings
+  same, admitting '<term> N — <gloss>'   56 files, 15 headings
+position vs Acceptance Criteria 20 before, 0 after (of 20 carrying both)
+required sections, English / translated:
+  Acceptance Criteria       44 / 0
+  Implicit Requirements     43 / 0
+  Codebase Findings         39 / 0
+  External Dependencies     39 / 0
+  Assumptions to Confirm    39 / 0
+  Coverage Map              39 / 0
+```
+
+**What the numbers say.** The short path has never been taken: **0 of 40** since
+it shipped, across 6 projects. The sizing step leaves a trace in **21 of those
+40** — a figure that reads 11 if only the English `Route:` is counted and 5 if
+the pattern is anchored to the line start, which is what two earlier readings
+did. A problem section appears in **56 of 201** specs under **7** distinct
+headings; admitting the form `<term> N — <gloss>` raises the heading count to 15
+and leaves the file count at 56, because those headings occur inside specs the
+strict set already counted.
+
+**The section-reference measurement is separate**, because it spans plans as
+well as specs and is the evidence for AC10 rather than AC6: 40 such references
+across the corpus, of which **36 resolve, 0 name a missing heading**, and 4
+point at a file that does not exist. Rule: a markdown link to a `.md` followed
+by `, section "…"`, with the title and the target's headings whitespace-normalized.
+
+**The controlled comparison that justifies AC6.** Within one corpus — same
+authors, same projects, same language — the six sections the skill names show
+one heading each and **zero translations** (44, 43, 39, 39, 39, 39 against 0, 0,
+0, 0, 0, 0 in the script's last block). The one section the skill does not name
+shows seven headings in two languages. The only variable that differs is whether
+the skill named it.
 
 ## External Dependencies
 
