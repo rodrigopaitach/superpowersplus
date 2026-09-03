@@ -50,6 +50,11 @@ Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md
 - `{HEAD_SHA}` - Ending commit
 
 **3. Act on feedback:**
+
+**First, append one row to the project's `docs/superpowers/review-yield.md`**,
+face `branch` — columns and the header to create it with are in
+[review-yield.md](references/review-yield.md).
+
 - Fix Critical issues immediately
 - Fix Important issues before proceeding
 - Note Minor issues for later

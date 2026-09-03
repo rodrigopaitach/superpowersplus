@@ -118,6 +118,9 @@ Subagent (general-purpose):
     #### Minor (Nice to Have)
     [Code style, optimization opportunities, documentation polish]
 
+    Report at most five Minor items, and the remainder as a count. A long
+    Minor list buries the Critical one above it.
+
     All three buckets appear, every time. A bucket with nothing in it says
     "None" — a dropped heading and a bucket you never considered read the
     same to whoever gets this report.

@@ -9,6 +9,268 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **A ledger of what each review dispatch returned.**
+  [`docs/superpowers/review-yield.md`](docs/superpowers/review-yield.md) takes one row per dispatch —
+  date, branch, face, round, blocking findings, and how many of the previous
+  round's are still open. The cost of a review was already on record here (a
+  median of 7.3 minutes across 29 document reviews, section `[1.16.0] - 2026-08-08`
+  below); the yield was on record nowhere, which left "are the review passes
+  paying for themselves" arguable and unanswerable. The round is the column the
+  question turns on: rounds 2 and 3 returning zero blocking findings is the
+  shape that says the extra rounds buy nothing.
+
+  **The controller appends the row, never the reviewer** — three of the five
+  reviewer prompts declare their review read-only on the checkout, so the write
+  cannot belong to them.
+
+  Guarded by a new deterministic suite,
+  [`tests/review-yield/test-review-yield-rules.sh`](tests/review-yield/test-review-yield-rules.sh),
+  which asserts each rule is present in the file that must carry it. Every rule
+  in this change is text in a skill, a prompt, or a script comment: nothing
+  executes it, so nothing notices when an edit removes it. The suite runs in CI
+  from this entry onward.
+
+- **The four review faces record what their dispatch returned.**
+  [`skills/brainstorming/SKILL.md`](skills/brainstorming/SKILL.md) (section
+  "Spec Review"), [`skills/writing-plans/SKILL.md`](skills/writing-plans/SKILL.md)
+  (section "Plan Review"),
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md)
+  (sections "3. Review the task" and "4. The fix loop") and
+  [`skills/requesting-code-review/SKILL.md`](skills/requesting-code-review/SKILL.md)
+  (section "How to Request", sub-step "3. Act on feedback") each tell the
+  controller to append one row.
+
+  **Every write point names only what the ledger cannot know: which face this
+  dispatch is.** The five texts — four skills, with `subagent-driven-development`
+  holding two — are otherwise one sentence, varying in the connective that
+  places each in its own step. An earlier draft enumerated the six
+  columns in each skill and, in the next sentence, told the reader not to
+  restate them. What counts as a blocking finding for a given face is itself a
+  column definition, so it went to the ledger too. Measured while making the
+  correction: `skills/writing-plans/SKILL.md` stood at 496 lines against the
+  500-line ceiling [`check-skill-size.sh`](scripts/check-skill-size.sh) enforces — the discarded
+  version took it to 502, this one to 499.
+
+- **The two document reviewers report what the previous round left open.**
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)
+  and [`plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md)
+  each carry a **Previous findings** line in their Output Format: how many the
+  previous round raised, and how many this round still finds open. Without it a
+  round's yield could only be counted by re-reading its report, and whether a
+  finding survived a fix pass was recorded nowhere at all.
+
+  **Round 1 writes the absence in words — `none — round 1`, never a blank or an
+  omitted line.** A round that carried no previous findings and a round whose
+  verdicts the reviewer skipped otherwise render identically.
+
+- **All five reviewer faces cap their advisory bucket at five items and report
+  the remainder as a count.** The three that read a diff cap `Minor` —
+  [`code-reviewer.md`](skills/requesting-code-review/code-reviewer.md),
+  [`task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md)
+  — and `Out-of-Scope` —
+  [`re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md);
+  the two that read a document cap `Recommendations`. Advisory findings do not
+  block, so a long list spends the attention the blocking findings above it need.
+
+  **The cap is worded per face, against that face's own bucket name, never as
+  one sentence shared across all five.** The four review faces are deliberately
+  not one rule written four times — see
+  [`docs/review-scopes.md`](docs/review-scopes.md) — and a shared sentence would
+  name a bucket three of them do not have.
+
+- **A spec carries the problem it solves, as a required section.**
+  [`brainstorming`](skills/brainstorming/SKILL.md), section "After the Design"
+  requires `## Problem` as the first row of its required-sections table, above
+  `## Acceptance Criteria`: what is wrong today, who it affects, and what is out
+  of scope. A criterion is an answer; this is the question, and it was the one
+  thing the spec never had to state. Measured across the corpus on 2026-09-03 —
+  201 specs in 11 projects — 56 carried a problem section under 7 distinct
+  headings, and of the 20 carrying both, all 20 put it above the criteria. The
+  requirement follows what the corpus already did; what it adds is one name and
+  a gate that can find it.
+
+  **Specs written before the requirement get a transition, not a charge.** They
+  are written from what the spec already says, without reopening the design: a
+  spec that never had the chance to comply is not an author who skipped it, and
+  the two must not be treated alike.
+
+- **The spec reviewer charges the criteria against the stated problem.**
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)
+  gains two blocking rows in its Traceability table: a missing `## Problem`, and
+  an acceptance criterion that does not serve the problem the spec states.
+
+  **The second row is the only place in the chain where that question is ever
+  asked.** Everything downstream traces criteria to tasks and tasks to evidence
+  — the plan, the task reviewer, the final audit all verify that what was
+  specified got built. None of them verifies that what was specified addressed
+  the problem. A criterion serving something else is invented scope that entered
+  before the first task existed, where every later gate reads it as a
+  requirement and passes it through.
+
+### Fixed
+
+- **A green `check-cross-references` no longer reads as coverage of section
+  references.** The script's `WHAT IT DOES NOT COVER` block now names the class
+  it never resolved: a markdown link to another document followed by a quoted
+  section title. It resolves headings only inside the document under check, to
+  find that document's own `AC`/`IR` lists, so a reference naming a heading that
+  does not exist in the target passed green. In this repository
+  [`check-links.sh`](scripts/check-links.sh) catches that class from the
+  pre-commit hook; in a project that installs the plugin without it, nothing
+  does — and the block now says so.
+
+  **Declared rather than implemented, on a measurement.** Across the corpus on
+  2026-09-03 — 201 specs in 11 projects — 36 section references were found in
+  specs and plans: 32 resolve, 0 named a missing heading, and 4 pointed at a
+  missing file, which the existing path check already reports. Nothing of this
+  shape was found broken, so the script gains a declared blind spot instead of a
+  second heading parser. The count is here, with its date, because a number in a
+  script comment ages in silence.
+
+  This happened to this branch's own spec: a reference to bold text that was not
+  a heading passed `check-cross-references` and was then rejected by
+  `check-links.sh` at the commit. The gate that ran first said nothing, and
+  nothing about its silence looked like a gap.
+
+- **Five of the suite's assertions survived the mutation that deleted what they
+  guard.** Found by the branch review, which applied each mutation in a scratch
+  worktree rather than reading the assertions. One root cause: every criterion
+  charged here is a **position** — a rule inside a named bucket, inside a
+  section, inside a table, sometimes at more than one site in one file — and
+  every assertion was a substring over the whole file. Deleting the ledger's
+  column-definition table, deleting the data table a row is appended to, deleting
+  one of the two write points in `subagent-driven-development`, moving a cap out
+  of the bucket it names, moving the `**Previous findings:**` block out of
+  `## Output Format`, and restating five of the six column names in a write
+  point all left the suite green.
+
+  Two helpers in
+  [`test-review-yield-rules.sh`](tests/review-yield/test-review-yield-rules.sh)
+  answer it: `assert_in_slice`, which charges a pattern between two delimiters,
+  and `assert_count`, for a criterion naming more than one site. All six
+  mutations above now fail, with the unmutated tree clean — re-measured
+  2026-09-03.
+
+  **The slice helper passes its patterns through the environment, never through
+  `awk -v`.** `-v` runs escape processing on the value first, so
+  `\*\*Recommendations \(advisory` reaches `awk` as `**Recommendations (advisory`
+  and dies as an invalid expression rather than as a wrong answer.
+
+- **A blocking row told the reviewer to state something false.**
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)'s
+  new `## Problem` row mandated the report text "spec predates the requirement"
+  unconditionally, including for a spec written after it. The `## Coverage Map`
+  row it was modelled on closes this — "the finding has to say which one it is
+  or the author is left with a block and no way out" — and that half was not
+  copied. It is now.
+
+- **Two of the four ledger write points could not fire on a clean round 1.**
+  In [`brainstorming`](skills/brainstorming/SKILL.md) and
+  [`writing-plans`](skills/writing-plans/SKILL.md) the instruction sat after the
+  mechanical check's run report, which lives inside the "before re-dispatching"
+  block a round-1 approval never enters. A ledger that records only rounds which
+  had findings cannot answer the question it exists for — whether rounds 2 and 3
+  come back empty. Both now fire when the review returns, clean or not.
+
+- **[`docs/review-scopes.md`](docs/review-scopes.md) now lists the nit cap as a
+  fourth form copied across carriers**, with the two ways its gate diverges from
+  the three already there: it runs from CI rather than
+  [`githooks/pre-commit`](githooks/pre-commit), so a local commit dropping the
+  cap from one carrier is caught only on push; and it asserts a per-face string
+  instead of comparing carriers against each other, because the cap is worded
+  per face on purpose. Neither divergence is defended — both are recorded as
+  what happened.
+
+- **The ledger is an artifact of the project being worked on, not of this
+  repository.** It moved to `docs/superpowers/review-yield.md`, beside the
+  `specs/` and `plans/` these skills already write there, and the four write
+  points name it in backticks — the form
+  [`CLAUDE.md`](CLAUDE.md), section "Writing a reference" reserves for a path
+  inside the partner's own project. The markdown link they carried before meant
+  the opposite: from an installed plugin `../../docs/` resolves inside the
+  plugin directory, and
+  [`package-codex-plugin.sh`](scripts/package-codex-plugin.sh) does not ship
+  `docs/` at all, so the target did not exist. Scoping the instruction to this
+  repository instead would have measured a handful of branches against the
+  eleven projects the corpus sweep covers.
+
+  The column definitions moved with it, to
+  [`review-yield.md`](skills/requesting-code-review/references/review-yield.md),
+  which ships — a project that has never run a review has no ledger to read a
+  format from. One reference, four callers, the arrangement
+  [`execution-path.md`](skills/writing-plans/references/execution-path.md)
+  already has with its three.
+
+- **Two of the five advisory buckets are no longer capped, because their reader
+  is not a person.** `Minor` in
+  [`task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md)
+  and `Out-of-Scope` in
+  [`re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md)
+  are transcribed item by item into the progress ledger by the controller, for
+  the final review to triage. The cap exists to stop a long advisory list from
+  burying the blocking findings above it — an attention argument about whoever
+  reads the report. Where the reader is a controller under orders to forward
+  every item, the cap deletes findings in transit, which
+  [`subagent-driven-development`](skills/subagent-driven-development/SKILL.md)
+  calls, in those words, a silent discard. Both prompts now say they are
+  uncapped and why, and the suite charges both halves.
+
+- **`skills/writing-plans/SKILL.md` came off the ceiling by progressive
+  disclosure.** The write point above took it to 501 of 500. `## Code That Calls
+  a Dependency` moved to
+  [`dependency-calls.md`](skills/writing-plans/references/dependency-calls.md) —
+  a plan needs it only when one of its steps calls a library, which is the
+  literal test the rule states — leaving a trigger tied to that condition. 471
+  lines, 29 of headroom. The open gap recorded earlier in this cycle is closed
+  by this entry; compressing the new paragraph to fit would have been the
+  workaround the rule names.
+
+- **Three more assertions survived a MOVE, and the transcript could print `ok`
+  and `FAIL` for the same file.** Both found by re-running the two gates after
+  the first fix pass. `write_points`, the two `## Problem` rows and
+  `not_covered_section_refs` were still file-scoped where their criterion names
+  a section, a table and a comment block; all three now use `assert_in_slice`,
+  and all three fail the move mutation. `columns_not_restated` printed its `ok`
+  unconditionally after an inner loop was added, so a failing file got both
+  lines — `FAILURES` still incremented, so no gate escaped, but a self-
+  contradicting transcript is what this suite was being rewritten to stop
+  producing. Its message also still named the file the ledger had moved out of.
+
+  **`| Finding | Verdict |` is not a usable anchor in
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)** —
+  it heads four different tables there, and `slice_between` takes the first
+  match. The slice is keyed on the section heading instead.
+
+- **A fix that stopped at the instance, and a slice that could reopen silently.**
+  The round-2 pass marked one of the two test functions this cycle renamed away;
+  its twin — belonging to `IR4`, the requirement that same pass amended — was
+  left, in four places no gate can reach, because the old names still occur in
+  the plan's own historical code block. Marked as a class now, not a case.
+
+  `slice_between` had no terminal check: with its END pattern gone the slice ran
+  to end of file, and every assertion inside it silently became the file-scoped
+  grep the helper exists to replace. It now exits 2 when the slice never opened
+  and 3 when it never closed, and `assert_in_slice` reports which. Measured by
+  renaming the single line `# Usage:` in
+  [`check-cross-references`](skills/writing-plans/scripts/check-cross-references):
+  both `not_covered_section_refs` assertions now fail naming the unclosed slice,
+  where before the run stayed green.
+
+- **The three README-shaped files record the new generated artifact and the new
+  blocking class.** [`README.md`](README.md),
+  [`docs/README.pt-BR.md`](docs/README.pt-BR.md) and
+  [`docs/README.en.md`](docs/README.en.md) each carry a table of what a run
+  generates; the ledger is now one of them. The two reference documents also
+  list what each gate blocks, and the spec reviewer's row gained the criterion
+  that does not serve the stated problem — a missing `## Problem` needed no
+  entry, because "a missing required section" already covers it once the
+  section is required. Found by reading those tables against the branch rather
+  than by a gate: a table claiming to enumerate has no check that it still does.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added
@@ -5669,6 +5931,24 @@ section where the next one would be written.
   Both are left open because the fix is a change to the extractor with its own
   tests, and neither affects the script's green verdict — only the counts it
   prints. Opened 2026-08-24.
+
+- **Six markdown links inside `skills/` point at repository paths the Codex
+  archive does not ship**, measured 2026-09-03: two to
+  [`docs/context-budget.md`](docs/context-budget.md), from
+  [`writing-plans`](skills/writing-plans/SKILL.md) and from its
+  [`execution-path.md`](skills/writing-plans/references/execution-path.md); two
+  to `scripts/`, from
+  [`escalation-format.md`](skills/using-superpowers/references/escalation-format.md)
+  and [`verification-before-completion`](skills/verification-before-completion/SKILL.md);
+  and two to `tests/`, from those same two files.
+  [`package-codex-plugin.sh`](scripts/package-codex-plugin.sh) ships `skills/`
+  and rejects `docs/`, `scripts/` and `tests/`, so in that package all six
+  resolve to nothing. **This is the class the ledger's write target was fixed
+  for in the same cycle, found by sweeping for its siblings** — but these six
+  are older than that change and none is an instruction to act on the target,
+  which is what made the write target's version urgent. Whether each becomes a
+  backticked path, stays a link for the repository reader, or moves its content
+  into `skills/` is a judgement per link, not a sweep. Opened 2026-09-03.
 
 Most rules in this project are reasoned rather than measured. Four have been
 measured, over eleven adversarial runs: the external-content rule, which held on

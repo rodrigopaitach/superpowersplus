@@ -112,6 +112,11 @@ Subagent (general-purpose):
     Issues you noticed entirely outside the fix diff. Non-blocking; the
     controller ledgers these for the final review. "None" if none.
 
+    **This bucket is not capped, and that is deliberate.** These go to the
+    ledger as deferred minors and are the only channel by which a re-review
+    scoped to one fix diff hands a broad finding to the final review. A cap
+    would delete them in transit. Report them all.
+
     ### Verdict
 
     **Fix round:** [All findings addressed, no new Critical/Important

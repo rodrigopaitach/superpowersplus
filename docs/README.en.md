@@ -81,7 +81,7 @@ There is a gate between each stage. None of them is the agent grading itself —
 
 | Gate | What it blocks | Where it lives |
 |------|----------------|----------------|
-| Spec reviewer | A `file:line` citation that does not hold up when opened; a dependency claim without the lockfile-pinned version or the official docs; a criterion bundling several behaviors; a requirement that exists only in prose; a missing required section | `skills/brainstorming/spec-document-reviewer-prompt.md` |
+| Spec reviewer | A `file:line` citation that does not hold up when opened; a dependency claim without the lockfile-pinned version or the official docs; a criterion bundling several behaviors; a requirement that exists only in prose; a missing required section; an acceptance criterion that does not serve the problem the spec states | `skills/brainstorming/spec-document-reviewer-prompt.md` |
 | Plan reviewer | A task with no spec criterion motivating it; a spec criterion no task covers; a coverage matrix missing any of its five columns; a matrix row pointing at a test no step creates | `skills/writing-plans/plan-document-reviewer-prompt.md` |
 | Task reviewer | **Re-runs the task's suite and reports the output verbatim** — it does not accept the implementer's report | `skills/subagent-driven-development/task-reviewer-prompt.md` |
 | Final branch audit | A criterion no task delivered (*lost in translation*); a task no criterion motivated (*invented scope*); a criterion with no citation (*not delivered*) | `skills/final-branch-audit/SKILL.md` |
@@ -93,6 +93,7 @@ There is a gate between each stage. None of them is the agent grading itself —
 | Spec | `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` |
 | Implementation plan | `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` |
 | Coverage map | A `## Coverage Map` section inside the spec itself — one row per category with its state and destination, and below it the decision record: each question, the answer, the recommendation given, and its source |
+| Review yield | `docs/superpowers/review-yield.md` — one row per review dispatch: date, branch, which review, which round, how many blocking findings it returned, and how many of the previous round's are still open. It is what answers whether the review rounds are paying for themselves |
 
 All of it is git-versioned files, readable without any tooling. The decision record is what lets you audit later **what** you agreed to and **on what basis** — including once the conversation is gone.
 

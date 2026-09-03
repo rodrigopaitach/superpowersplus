@@ -205,6 +205,12 @@ Subagent (general-purpose):
     #### Important (Should Fix)
     #### Minor (Nice to Have)
 
+    **This bucket is not capped, and that is deliberate.** The controller
+    transcribes every Minor finding into the progress ledger, one line each,
+    for the final whole-branch review to triage. A cap here would delete
+    findings in transit to a file — what this loop calls a silent discard.
+    Report them all.
+
     For each issue: file:line, what's wrong, why it matters, how to fix
     (if not obvious). A finding covering several members of one cause carries
     a file:line per member.

@@ -34,6 +34,16 @@
 #     tasks present — not arbitrary sentences.
 #   * A citation whose path is deliberately unresolvable — a placeholder, or a
 #     path inside a third-party package. Those are reported; judge them.
+#   * A section reference into another file — a markdown link to a document,
+#     followed by a comma and a quoted section title.
+#     This script resolves headings only inside the document under check, to
+#     find its own AC/IR lists. A reference naming a heading that does not
+#     exist in the target passes here. In THIS repository that class is caught
+#     by scripts/check-links.sh from the pre-commit hook; in a project that
+#     installs the plugin without it, nothing catches it. Declared rather than
+#     implemented because no reference of this shape was found broken when the
+#     class was measured; the count and its date are in the changelog entry for
+#     this change, where a number that ages stays legible as dated.
 #
 # Usage:
 #   check-cross-references DOCUMENT [REPO_ROOT]

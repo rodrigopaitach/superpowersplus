@@ -136,6 +136,8 @@ Subagent (general-purpose):
 
     | Finding | Verdict |
     |---------|---------|
+    | No `## Problem` section | BLOCKING — the same treatment the other required sections get. **Say which of the two it is, or the author is left with a block and no way out.** A spec written before the requirement: "spec predates the requirement — write the section from what the spec already says before proceeding." One written after it: the section was required and is missing. The section became required after most specs were written, and a spec that never had the chance to comply is not an author who skipped it |
+    | An acceptance criterion that does not serve the stated problem | BLOCKING — name the criterion and what it serves instead. Everything downstream traces criteria to tasks and tasks to evidence; nothing else in the chain ever asks whether the specification addressed the problem, so this is the only place it is charged |
     | No `## Acceptance Criteria` section | BLOCKING |
     | No `## Implicit Requirements` section — "None" is the way to say there are none | BLOCKING |
     | A criterion bundling several behaviors | BLOCKING — it cannot take one verdict; split it |
@@ -231,6 +233,12 @@ Subagent (general-purpose):
 
     **Status:** Approved | Issues Found
 
+    **Previous findings:** [N] received — [M] still open: [which, or "none"]
+
+    On round 1 write this line as `none — round 1`. Leaving it out makes a
+    round that carried no previous findings and a round whose verdicts you
+    skipped render identically.
+
     **Issues (if any):**
     - [Section X]: [specific issue] - [why it matters for planning]
 
@@ -239,6 +247,10 @@ Subagent (general-purpose):
 
     **Recommendations (advisory, do not block approval):**
     - [suggestions for improvement]
+
+    Report at most five Recommendations, and the remainder as a count. These
+    do not block approval, so a long list costs attention the blocking
+    findings need.
 ```
 
 **Placeholders:**
