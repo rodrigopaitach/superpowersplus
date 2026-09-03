@@ -1,7 +1,7 @@
 # Review yield, a nit cap, and the problem the spec never carried — design
 
 **Date:** 2026-09-03
-**Status:** draft, round 2 findings repaired
+**Status:** draft, round 3 findings repaired; round cap reached
 **Route:** full process — more than two production files change (ten files across four skills, plus a new document), so criterion three of the short path fails and no offer was made.
 
 ## Problem
@@ -47,7 +47,7 @@ measured — the instrument this design builds is what would measure it), and a
 sixth short-path criterion (the short path has fired zero times in 40
 opportunities, so the change would be unobservable). A third was measured and
 rejected: teaching `check-cross-references` to resolve section references, since
-zero of the 40 such references in the corpus are broken.
+zero of the 36 such references in the corpus are broken.
 
 ## Acceptance Criteria
 
@@ -180,6 +180,25 @@ for f in withp:
     after += p > a
 print(f"position vs Acceptance Criteria {before} before, {after} after (of {both} carrying both)")
 
+SECREF = re.compile(r"\[[^\]]*\]\(([^)\s]+\.md)\)[^.\n]{0,40}?,\s*section\s+\"([^\"]+)\"", re.S)
+docs = [f for kind in ("specs", "plans")
+        for b in ROOT.rglob(f"docs/superpowers/{kind}") if b.is_dir()
+        for f in b.glob("*.md") if f.name != SELF]
+found = resolved = no_heading = no_file = 0
+for f in docs:
+    for m in SECREF.finditer(f.read_text(encoding="utf-8", errors="replace")):
+        found += 1
+        target = (f.parent / m.group(1)).resolve()
+        if not target.exists():
+            no_file += 1
+            continue
+        titles = {" ".join(h.split()) for h in HEAD.findall(target.read_text(encoding="utf-8", errors="replace"))}
+        if " ".join(m.group(2).split()) in titles:
+            resolved += 1
+        else:
+            no_heading += 1
+print(f"section references (specs+plans) {found} found: {resolved} resolve, {no_heading} name a missing heading, {no_file} point at a missing file")
+
 print("required sections, English / translated:")
 for en_name, pt_name in zip(REQUIRED, TRANSLATED):
     a = sum(1 for f in specs if en_name in heads[f])
@@ -197,6 +216,7 @@ taking the short path           0
 carrying a problem section      56 of 201, under 7 distinct headings
   same, admitting '<term> N — <gloss>'   56 files, 15 headings
 position vs Acceptance Criteria 20 before, 0 after (of 20 carrying both)
+section references (specs+plans) 36 found: 32 resolve, 0 name a missing heading, 4 point at a missing file
 required sections, English / translated:
   Acceptance Criteria       44 / 0
   Implicit Requirements     43 / 0
@@ -215,11 +235,13 @@ headings; admitting the form `<term> N — <gloss>` raises the heading count to 
 and leaves the file count at 56, because those headings occur inside specs the
 strict set already counted.
 
-**The section-reference measurement is separate**, because it spans plans as
-well as specs and is the evidence for AC10 rather than AC6: 40 such references
-across the corpus, of which **36 resolve, 0 name a missing heading**, and 4
-point at a file that does not exist. Rule: a markdown link to a `.md` followed
-by `, section "…"`, with the title and the target's headings whitespace-normalized.
+**The section-reference measurement**, the evidence for AC10 rather than AC6,
+is the one figure that spans plans as well as specs — the script's last-but-one
+line: **36 references found, 32 resolve, 0 name a missing heading**, and 4 point
+at a file that does not exist. It began as a separate measurement stated in
+prose, and folding it into the script moved two of its numbers: 40 and 36 became
+36 and 32, because the corpus definition excludes this document and the prose
+version never applied that.
 
 **The controlled comparison that justifies AC6.** Within one corpus — same
 authors, same projects, same language — the six sections the skill names show
@@ -255,7 +277,7 @@ This is a documentation source consulted for a convention, not a runtime depende
 | Constraints and tradeoffs | Resolved | The prohibition on harmonizing the review faces (`CLAUDE.md`, and `docs/review-scopes.md`) shapes IR4; the read-only declaration shapes IR3 |
 | Terminology | Resolved | The five faces name findings differently — `Critical`/`Important`/`Minor` against `Issues`/`Recommendations`. IR4 keeps each face's own words rather than imposing one vocabulary |
 | Completion signals | Resolved | Every AC names a file and a section, settleable by opening it. The ledger's own usefulness is explicitly deferred to data — recorded under `## Assumptions to Confirm` |
-| Placeholders and vague adjectives | Resolved | "Nit cap" quantified at five, with its source declared. Every corpus figure carries the rule that produced it — IR8 |
+| Placeholders and vague adjectives | Resolved | "Nit cap" quantified at five, with its source declared. Every corpus figure is printed by the script embedded in `### Corpus measurements`, none by a rule in prose — IR8 |
 
 ### Decision record
 
@@ -272,4 +294,4 @@ Answer: it was folded in, then withdrawn in favour of `## Problem`. Recommendati
 Answer: no, wait for data. Recommendation given: the same. Source: measurement, or its absence — the exclusion is reasoned and was never measured, the 29 review reports are not stored so it cannot be measured retroactively, and (a) is the instrument that would measure it. Applying "measure before cutting" to Q3 and not to this would be inconsistent. The nit cap was kept, on the different ground that it controls volume rather than judgement and carries a declared external source.
 
 **Q5 — Does `check-cross-references` learn to resolve section references, or only declare that it does not?**
-Answer: only declare it — AC10. Recommendation given: the same. Source: measurement — 40 such references exist across the corpus's specs and plans and **zero** name a missing heading, so there is no defect to catch; and in this repository `scripts/check-links.sh:104` already covers the class from the pre-commit hook. Building the resolver would be the same unmeasured construction that Q3 and Q4 were withdrawn for. What survives is that a green run must not read as coverage of a class the script never inspects.
+Answer: only declare it — AC10. Recommendation given: the same. Source: measurement — 36 such references exist across the corpus's specs and plans and **zero** name a missing heading, so there is no defect to catch; and in this repository `scripts/check-links.sh:104` already covers the class from the pre-commit hook. Building the resolver would be the same unmeasured construction that Q3 and Q4 were withdrawn for. What survives is that a green run must not read as coverage of a class the script never inspects.
