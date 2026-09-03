@@ -9,7 +9,7 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
-## [Unreleased]
+## [1.23.0] - 2026-09-03
 
 ### Added
 
@@ -5980,6 +5980,7 @@ gate and never reached it, and which then held on the repaired instrument
 against a control run that approved the same fixture with the rule removed. Six
 remain queued in the gap listing the eight precaution rules above.
 
+[1.23.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.23.0
 [1.22.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.22.0
 [1.21.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.21.0
 [1.20.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.20.0
