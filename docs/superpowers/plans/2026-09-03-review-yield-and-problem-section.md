@@ -549,8 +549,8 @@ Add to `tests/review-yield/test-review-yield-rules.sh`:
 problem_required_first() {
     local f="skills/brainstorming/SKILL.md"
     local problem acceptance
-    problem="$(grep -n '^| `## Problem`' "$REPO_ROOT/$f" | head -1 | cut -d: -f1)"
-    acceptance="$(grep -n '^| `## Acceptance Criteria`' "$REPO_ROOT/$f" | head -1 | cut -d: -f1)"
+    problem="$(grep -n '^| `## Problem`' "$REPO_ROOT/$f" | head -1 | cut -d: -f1 || true)"
+    acceptance="$(grep -n '^| `## Acceptance Criteria`' "$REPO_ROOT/$f" | head -1 | cut -d: -f1 || true)"
     if [ -z "$problem" ]; then
         printf 'FAIL problem_required_first — %s has no `## Problem` row\n' "$f"
         FAILURES=$((FAILURES + 1))
@@ -579,6 +579,8 @@ Then add both to the invocation block.
 
 Run: `tests/review-yield/test-review-yield-rules.sh`
 Expected: FAIL — `problem_required_first — skills/brainstorming/SKILL.md has no \`## Problem\` row`, and `FAIL problem_transition`, exit 1
+
+**The `|| true` on both assignments is load-bearing, not defensive noise.** The suite runs under `set -euo pipefail`, and a bare assignment from a pipeline takes that pipeline's exit status: when `grep` matches nothing it exits 1, `pipefail` carries it to the assignment, and `set -e` kills the script *before* the function prints its own `FAIL` line and before any later assertion runs. Measured by difference on 2026-09-03: without `|| true` the run produced **no output at all** and exit 1; with it, the intended `FAIL` line and the rest of the suite. A harness that dies silently on the state it exists to report is the failure this suite is written to prevent, occurring inside the suite.
 
 - [ ] **Step 3: Add the row, above `## Acceptance Criteria`**
 
@@ -742,6 +744,8 @@ Run: `./skills/writing-plans/scripts/check-cross-references docs/superpowers/spe
 Expected: exit 0 — every reference resolves. A comment cannot change behavior, and this run is what proves the edit landed in a comment.
 
 - [ ] **Step 6: Add the changelog entry and commit**
+
+**The changelog entry for this task carries the measurement the comment defers to**, and is the only place it appears: how many section references were found across the corpus, how many named a missing heading, and the date of the run. The script comment states the condition; a measured number lives in `CHANGELOG.md` with its date, per `CLAUDE.md`, section "How you work here". Without this line the comment's forward reference points at content nobody was told to write.
 
 ```bash
 git add skills/writing-plans/scripts/check-cross-references tests/review-yield/test-review-yield-rules.sh CHANGELOG.md
