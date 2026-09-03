@@ -9,6 +9,31 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **A ledger of what each review dispatch returned.**
+  [`docs/review-yield.md`](docs/review-yield.md) takes one row per dispatch —
+  date, branch, face, round, blocking findings, and how many of the previous
+  round's are still open. The cost of a review was already on record here (a
+  median of 7.3 minutes across 29 document reviews, section `[1.16.0] - 2026-08-08`
+  below); the yield was on record nowhere, which left "are the review passes
+  paying for themselves" arguable and unanswerable. The round is the column the
+  question turns on: rounds 2 and 3 returning zero blocking findings is the
+  shape that says the extra rounds buy nothing.
+
+  **The controller appends the row, never the reviewer** — three of the five
+  reviewer prompts declare their review read-only on the checkout, so the write
+  cannot belong to them.
+
+  Guarded by a new deterministic suite,
+  [`tests/review-yield/test-review-yield-rules.sh`](tests/review-yield/test-review-yield-rules.sh),
+  which asserts each rule is present in the file that must carry it. Every rule
+  in this change is text in a skill, a prompt, or a script comment: nothing
+  executes it, so nothing notices when an edit removes it. The suite runs in CI
+  from this entry onward.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added
