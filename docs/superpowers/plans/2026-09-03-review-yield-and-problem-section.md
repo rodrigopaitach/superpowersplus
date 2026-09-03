@@ -28,8 +28,10 @@ Every task's requirements implicitly include these, copied from the spec's `## I
 - **IR4** — The nit cap is worded per face against that face's own bucket name — `#### Minor (Nice to Have)` for the three diff faces, `**Recommendations (advisory, do not block approval):**` for the two document faces — never one sentence shared across all five.
 - **IR5** — `## Problem` is written in English, like the six sections already required. The section's content carries no language constraint.
 - **IR6** — `docs/review-yield.md` passes `scripts/check-links.sh`, which walks `docs/` recursively.
-- **IR7** — Every commit staging a change under `skills/`, `scripts/`, `githooks/`, `.github/` or `hooks/` stages `CHANGELOG.md` with it. `scripts/check-changelog.sh:49` declares those five prefixes.
-- **IR8** — Every corpus figure the spec states is printed by the script embedded in its `### Corpus measurements` section. No task here restates a corpus figure.
+- **IR7** — The change stages a `CHANGELOG.md` entry with it, as `scripts/check-changelog.sh` requires of any staged change under `skills/`.
+- **IR8** — Every corpus figure this document states is produced by the script embedded in `### Corpus measurements`, and by no rule stated only in prose, so a re-measurement that disagrees is settled by running it rather than by re-reading a sentence.
+
+**Outside the block above, and not a constraint:** the gate IR7 names covers more than the one prefix the spec quotes — `scripts/check-changelog.sh:49` declares `skills/ scripts/ githooks/ .github/ hooks/`. Every task below stages `CHANGELOG.md` regardless, so the narrower wording costs nothing here; it is recorded because Task 1 touches `.github/` and Task 7 touches `scripts/` under a skill.
 
 ## Test Coverage Matrix
 
@@ -41,6 +43,7 @@ Every row's test lives in `tests/review-yield/test-review-yield-rules.sh`, the s
 | T1.2 The suite runs from CI | AC3 | static | `tests/` | `tests/review-yield/test-review-yield-rules.sh::ci_step_present` |
 | T2.1 Each of the four skills instructs the controller to append a row | AC4 | static | `tests/` | `tests/review-yield/test-review-yield-rules.sh::write_points` |
 | T2.2 No write point restates the ledger's columns | IR2 | static | `tests/` | `tests/review-yield/test-review-yield-rules.sh::columns_not_restated` |
+| T2.3 No reviewer prompt is told to write the ledger | IR3 | static | `tests/` | `tests/review-yield/test-review-yield-rules.sh::reviewers_do_not_write` |
 | T3.1 Both document reviewers report previous findings received and still open | AC1, AC2 | static | `tests/` | `tests/review-yield/test-review-yield-rules.sh::previous_findings_line` |
 | T3.2 Round 1 is told to write the absence in words | IR1 | static | `tests/` | `tests/review-yield/test-review-yield-rules.sh::round_one_in_words` |
 | T4.1 All five reviewer prompts cap the advisory bucket at five | AC5 | static | `tests/` | `tests/review-yield/test-review-yield-rules.sh::nit_cap_present` |
@@ -151,7 +154,7 @@ Create `docs/review-yield.md`:
 
 What each review dispatch returned, one row per dispatch. The cost of a review
 is already on record — a median of 7.3 minutes across 29 document reviews,
-`CHANGELOG.md` section `[1.16.0] - 2026-08-08`. What it returns was not on
+[`CHANGELOG.md`](../CHANGELOG.md), section `[1.16.0] - 2026-08-08`. What it returns was not on
 record anywhere, so "are the review passes paying for themselves" could be
 argued and never answered.
 
@@ -223,6 +226,7 @@ git commit -m "feat: a ledger for what each review dispatch returns"
 **Acceptance criteria:**
 - T2.1: each of the four skills carries an instruction naming `docs/review-yield.md` as the file to append a row to — test: `tests/review-yield/test-review-yield-rules.sh::write_points`
 - T2.2: no write point restates the ledger's column names — test: `tests/review-yield/test-review-yield-rules.sh::columns_not_restated`
+- T2.3: no reviewer prompt carries an instruction to append to the ledger — test: `tests/review-yield/test-review-yield-rules.sh::reviewers_do_not_write`
 
 - [ ] **Step 1: Write the failing test**
 
@@ -254,14 +258,36 @@ columns_not_restated() {
         fi
     done
 }
+
+REVIEWER_PROMPTS=(
+    "skills/brainstorming/spec-document-reviewer-prompt.md"
+    "skills/writing-plans/plan-document-reviewer-prompt.md"
+    "skills/requesting-code-review/code-reviewer.md"
+    "skills/subagent-driven-development/task-reviewer-prompt.md"
+    "skills/subagent-driven-development/re-review-prompt.md"
+)
+
+reviewers_do_not_write() {
+    local f
+    for f in "${REVIEWER_PROMPTS[@]}"; do
+        if grep -qE 'docs/review-yield\.md' "$REPO_ROOT/$f"; then
+            printf 'FAIL reviewers_do_not_write — %s tells a reviewer to write the ledger; three of these five declare the review read-only on the checkout, so the row is the controller\x27s to append\n' "$f"
+            FAILURES=$((FAILURES + 1))
+        else
+            printf 'ok   reviewers_do_not_write: %s\n' "$f"
+        fi
+    done
+}
 ```
 
-Then add `write_points` and `columns_not_restated` to the invocation block.
+Then add `write_points`, `columns_not_restated` and `reviewers_do_not_write` to the invocation block.
 
 - [ ] **Step 2: Run it to verify it fails**
 
 Run: `tests/review-yield/test-review-yield-rules.sh`
-Expected: FAIL — four `write_points` failures, `columns_not_restated` passing (nothing restates them yet), exit 1
+Expected: FAIL — four `write_points` failures; `columns_not_restated` and `reviewers_do_not_write` both passing, because nothing has been written yet. Exit 1.
+
+**The two passing functions are the point, not an accident.** They guard against the wrong fix: `columns_not_restated` fails if a write point copies the ledger's column names into a skill, and `reviewers_do_not_write` fails if the append instruction lands in a reviewer prompt instead of a controller. Both are green before the change and must stay green after — a state neither can reach by the change succeeding.
 
 - [ ] **Step 3: Add the instruction to the two document faces**
 
@@ -699,9 +725,10 @@ In `skills/writing-plans/scripts/check-cross-references`, as the last bullet of 
 #     find its own AC/IR lists. A reference naming a heading that does not
 #     exist in the target passes here. In THIS repository that class is caught
 #     by scripts/check-links.sh from the pre-commit hook; in a project that
-#     installs the plugin without it, nothing catches it. Measured 2026-09-03
-#     across 11 projects: 36 such references, 0 naming a missing heading —
-#     which is why this is declared rather than implemented.
+#     installs the plugin without it, nothing catches it. Declared rather than
+#     implemented because no reference of this shape was found broken when the
+#     class was measured; the count and its date are in the changelog entry for
+#     this change, where a number that ages stays legible as dated.
 ```
 
 - [ ] **Step 4: Run the test to verify it passes**
