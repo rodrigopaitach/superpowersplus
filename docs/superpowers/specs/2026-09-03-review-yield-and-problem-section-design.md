@@ -1,8 +1,8 @@
 # Review yield, a nit cap, and the problem the spec never carried — design
 
 **Date:** 2026-09-03
-**Status:** draft, round 1 findings repaired
-**Route:** full process — more than two production files change (ten files across five skills), so criterion three of the short path fails and no offer was made.
+**Status:** draft, round 2 findings repaired
+**Route:** full process — more than two production files change (ten files across four skills, plus a new document), so criterion three of the short path fails and no offer was made.
 
 ## Problem
 
@@ -29,7 +29,7 @@ what is wrong today. `superpowersplus:final-branch-audit` traces `AC` and `IR`
 row by row, which proves the thing was built as specified; nothing anywhere asks
 whether the specification addressed the problem. Authors have felt the gap and
 filled it by hand — 56 of 201 specs across eleven projects carry such a section,
-under fifteen different names in two languages, and no gate reads any of them.
+under seven different names in two languages, and no gate reads any of them.
 
 **A third, smaller one: a mechanical check reports limits it does not have.**
 `skills/writing-plans/scripts/check-cross-references` carries a
@@ -44,7 +44,7 @@ reviewer, nothing does — and the block that exists to say so stays silent.
 with their reasons recorded in the decision record below: telling reviewers not
 to report what the deterministic gates already enforce (reasoned, never
 measured — the instrument this design builds is what would measure it), and a
-sixth short-path criterion (the short path has fired zero times in 41
+sixth short-path criterion (the short path has fired zero times in 40
 opportunities, so the change would be unobservable). A third was measured and
 rejected: teaching `check-cross-references` to resolve section references, since
 zero of the 40 such references in the corpus are broken.
@@ -129,16 +129,16 @@ zero of the 40 such references in the corpus are broken.
 
 | Measurement | Rule applied | Result |
 |---|---|---|
-| Specs written since the short path shipped | filename date `>= 2026-08-06` | **41**, in **6** projects |
-| Of those, declaring `**Route:**` | `Route:` anywhere in the line, not anchored — the field legitimately follows `**Data:**`, a bullet marker, or a blockquote `>` | **12** |
+| Specs written since the short path shipped | filename date `>= 2026-08-06`, corpus definition above applied — this document excluded | **40**, in **6** projects |
+| Of those, declaring the route field | `Route:` **or its Portuguese form `Rota:`** anywhere in the line, not anchored — the field legitimately follows `**Data:**`, a bullet marker, or a blockquote `>` | **21** — 11 English, 10 Portuguese. Anchored at line start, the same set reads **5**, which is the measure of how much the anchor was hiding |
 | Of those, taking the short path | `**Route:**` followed by `short` or `caminho curto` | **0** |
-| Specs carrying a problem section | heading in the closed set {Problem, Problems, Problema, Problemas, O problema, The request, Context, Contexto, Background}, plus `<one of those> — <gloss>` | **56 of 201**, under **15** distinct headings |
+| Specs carrying a problem section | heading in the closed set {Problem, Problems, Problema, Problemas, O problema, The request, Context, Contexto, Background}, plus `<one of those> — <gloss>` | **56 of 201**, under **7** distinct headings |
 | Position relative to `## Acceptance Criteria` | of the 20 specs carrying both | **20 before, 0 after** |
 | Section references into another file, corpus-wide (specs and plans) | markdown link to a `.md`, then `, section "…"`; title and headings whitespace-normalized | 40 found — **36 resolve, 0 name a missing heading**, 4 point at a file that does not exist |
 
 **The controlled comparison that justifies AC6.** Under the same heading rule, within the same corpus — same authors, same projects, same language — the six sections the skill names show one heading each and **zero translations**: `## Acceptance Criteria` 44, `## Implicit Requirements` 43, `## Codebase Findings` 39, `## External Dependencies` 39, `## Assumptions to Confirm` 39, `## Coverage Map` 39; and 0 each for `## Critérios de Aceitação`, `## Requisitos Implícitos`, `## Achados no Código`, `## Dependências Externas`, `## Suposições a Confirmar`, `## Mapa de Cobertura`. The one section the skill does not name shows fifteen headings in two languages. The only variable that differs is whether the skill named it.
 
-**What the problem-section count depends on.** The closed set above is a judgement, and a wider net returns a larger number — a permissive prefix match returns roughly twice as many, because it admits `## Contexto e problema`, `## Problemas conhecidos` and similar. The closed set is stated so a re-measurement that disagrees can be told from one run differently. AC6's argument rests on the contrast with zero, which no reasonable set changes.
+**What the problem-section count depends on, and what it does not.** The closed set above is a judgement, and a wider net returns a larger number of *files* — a permissive prefix match returns roughly twice as many, because it admits `## Contexto e problema`, `## Problemas conhecidos` and similar. Two rules were run against this corpus and the file count did not move: admitting the form `<term> N — <gloss>` alongside the closed set leaves the count at **56** and raises the distinct-heading total from 7 to 15, because the extra headings all occur inside specs the strict rule already counted. The strict rule's 7 is the figure stated above; both are recorded so a re-measurement that disagrees can be told from one run differently. AC6's argument rests on the contrast with zero, which neither rule changes.
 
 ## External Dependencies
 
@@ -152,7 +152,7 @@ This is a documentation source consulted for a convention, not a runtime depende
 
 **Whether the 7.3-minute median still holds.** It was measured on 2026-08-08 and recorded in `CHANGELOG.md` section `[1.16.0]`. Nothing has re-measured it since. It is cited here as a dated figure, not a current one.
 
-**Why 29 of the 41 recent specs carry no `**Route:**` line is not established.** The rule at `skills/brainstorming/SKILL.md:99` makes the header the only downstream signal and treats its absence as the full process, so the specs are correctly routed either way. Whether the sizing step ran and went unrecorded, or did not run, cannot be told from the artifacts — searched by grepping the 41 for `Route:` under both an anchored and an unanchored pattern, which is what separates 12 from 6 and is itself recorded above. This is left for a separate branch rather than folded in here.
+**Why 19 of the 40 recent specs carry no route field is not established.** The rule at `skills/brainstorming/SKILL.md:99` makes the header the only downstream signal and treats its absence as the full process, so the specs are correctly routed either way. Whether the sizing step ran and went unrecorded, or did not run, cannot be told from the artifacts — searched by grepping the 40 for `Route:` and `Rota:` under both an anchored and an unanchored pattern, which is what separates 21 from 5 and is itself recorded above. This is left for a separate branch rather than folded in here.
 
 ## Coverage Map
 
@@ -178,7 +178,7 @@ Answer: a ledger file in the repository. Recommendation given: the same, on the 
 Answer: downgrade with a label. Recommendation given: the same, because `CLAUDE.md` sanctions `git commit --no-verify`, so a skipped gate is a real state rather than a hypothesis. Source: a project pattern, `CLAUDE.md`, section "Preparing a commit". **Superseded:** the exclusion itself was later held back (Q4), so this answer governs no criterion here and is recorded for the branch that takes it up.
 
 **Q3 — Does the sixth short-path criterion enter this branch?**
-Answer: it was folded in, then withdrawn in favour of `## Problem`. Recommendation given: withdraw. Source: measurement — the short path has fired 0 times in 41 opportunities across 6 projects, and its binding constraint is the two-file criterion, never intent; a criterion added to a conjunction that never passes changes nothing observable. Two defects in the proposed wording were found before it was withdrawn and are recorded for the branch that takes it up: the criterion read an artifact the checklist builds one step later, and the route it governed is the one that deletes that artifact.
+Answer: it was folded in, then withdrawn in favour of `## Problem`. Recommendation given: withdraw. Source: measurement — the short path has fired 0 times in 40 opportunities across 6 projects, and its binding constraint is the two-file criterion, never intent; a criterion added to a conjunction that never passes changes nothing observable. Two defects in the proposed wording were found before it was withdrawn and are recorded for the branch that takes it up: the criterion read an artifact the checklist builds one step later, and the route it governed is the one that deletes that artifact.
 
 **Q4 — Does the gate-coverage exclusion enter this branch?**
 Answer: no, wait for data. Recommendation given: the same. Source: measurement, or its absence — the exclusion is reasoned and was never measured, the 29 review reports are not stored so it cannot be measured retroactively, and (a) is the instrument that would measure it. Applying "measure before cutting" to Q3 and not to this would be inconsistent. The nit cap was kept, on the different ground that it controls volume rather than judgement and carries a declared external source.
