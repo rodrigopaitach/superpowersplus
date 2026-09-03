@@ -8,6 +8,7 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 03/09/2026 | review-yield-and-problem-section | plan | 1 | 3 | — |
 | 03/09/2026 | review-yield-and-problem-section | plan | 2 | 0 | 0 |
 | 03/09/2026 | review-yield-and-problem-section | branch | 1 | 6 | — |
+| 03/09/2026 | review-yield-and-problem-section | branch | 2 | 0 | 0 |
 
 **The `spec` face's three rounds on this branch carry no row, and the reason is
 the one this file exists to end.** They ran before the ledger did; round 1's
