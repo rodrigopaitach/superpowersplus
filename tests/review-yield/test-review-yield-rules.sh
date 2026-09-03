@@ -41,18 +41,31 @@ assert_contains() {
 # runs escape processing on the value first, so a regex like
 # `\*\*Recommendations \(advisory` reaches awk as `**Recommendations (advisory`
 # and dies as an invalid expression. Measured here on 2026-09-03.
+# Exits 2 when START never matched and 3 when START matched but END did not.
+# Both are failures, not empty slices: a slice that never closes runs to EOF,
+# which turns every assertion inside it back into the file-scoped grep this
+# helper exists to replace — and it does that silently, on the deletion of one
+# unrelated line.
 slice_between() {
     local file="$1"
     START_RE="$2" END_RE="$3" awk '
         !inside && $0 ~ ENVIRON["START_RE"] { inside = 1; next }
-        inside && $0 ~ ENVIRON["END_RE"] { exit }
+        inside && $0 ~ ENVIRON["END_RE"] { closed = 1; exit }
         inside { print }
+        END { if (!inside) exit 2; if (!closed) exit 3 }
     ' "$REPO_ROOT/$file"
 }
 
 assert_in_slice() {
-    local file="$1" start="$2" end="$3" pattern="$4" label="$5" slice
-    slice="$(slice_between "$file" "$start" "$end")"
+    local file="$1" start="$2" end="$3" pattern="$4" label="$5" slice rc
+    slice="$(slice_between "$file" "$start" "$end")" && rc=0 || rc=$?
+    if [ "$rc" -ne 0 ]; then
+        printf 'FAIL %s — %s: the slice /%s/../%s/ never %s (awk exit %s)\n' \
+            "$label" "$file" "$start" "$end" \
+            "$([ "$rc" = 2 ] && printf 'opened' || printf 'closed')" "$rc"
+        FAILURES=$((FAILURES + 1))
+        return
+    fi
     if grep -qE "$pattern" <<<"$slice"; then
         printf 'ok   %s\n' "$label"
     else
@@ -98,6 +111,10 @@ ci_step_present() {
         'ci_step_present'
 }
 
+# Feeds the NEGATIVE check only (columns_not_restated). The positive check,
+# write_points, names each site with its own section slice, because AC4 charges
+# a position and this array cannot carry one. Adding a file here gets it
+# guarded against restating columns and nothing else.
 WRITE_POINTS=(
     "skills/brainstorming/SKILL.md"
     "skills/writing-plans/SKILL.md"

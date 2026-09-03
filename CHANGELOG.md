@@ -44,10 +44,10 @@ References below name them so a claim here can be traced there.
   (section "How to Request", sub-step "3. Act on feedback") each tell the
   controller to append one row.
 
-  **All four name only what the ledger cannot know: which face this dispatch
-  is.** What differs between them is the connective that places each in its own
-  step — "When the review returns — clean or not —", "Append", "First, append"
-  — and nothing else. An earlier draft enumerated the six
+  **Every write point names only what the ledger cannot know: which face this
+  dispatch is.** The five texts — four skills, with `subagent-driven-development`
+  holding two — are otherwise one sentence, varying in the connective that
+  places each in its own step. An earlier draft enumerated the six
   columns in each skill and, in the next sentence, told the reader not to
   restate them. What counts as a blocking finding for a given face is itself a
   column definition, so it went to the ledger too. Measured while making the
@@ -244,6 +244,21 @@ References below name them so a claim here can be traced there.
   [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)** —
   it heads four different tables there, and `slice_between` takes the first
   match. The slice is keyed on the section heading instead.
+
+- **A fix that stopped at the instance, and a slice that could reopen silently.**
+  The round-2 pass marked one of the two test functions this cycle renamed away;
+  its twin — belonging to `IR4`, the requirement that same pass amended — was
+  left, in four places no gate can reach, because the old names still occur in
+  the plan's own historical code block. Marked as a class now, not a case.
+
+  `slice_between` had no terminal check: with its END pattern gone the slice ran
+  to end of file, and every assertion inside it silently became the file-scoped
+  grep the helper exists to replace. It now exits 2 when the slice never opened
+  and 3 when it never closed, and `assert_in_slice` reports which. Measured by
+  renaming the single line `# Usage:` in
+  [`check-cross-references`](skills/writing-plans/scripts/check-cross-references):
+  both `not_covered_section_refs` assertions now fail naming the unclosed slice,
+  where before the run stayed green.
 
 ## [1.22.0] - 2026-08-25
 

@@ -9,6 +9,14 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 03/09/2026 | review-yield-and-problem-section | plan | 2 | 0 | 0 |
 | 03/09/2026 | review-yield-and-problem-section | branch | 1 | 6 | — |
 | 03/09/2026 | review-yield-and-problem-section | branch | 2 | 0 | 0 |
+| 03/09/2026 | review-yield-and-problem-section | branch | 3 | 1 | 0 |
+
+**Round 3 was not empty, and that is the first thing this table says.** The
+tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and
+2 of both faces looked like on their own. Round 3 of the `branch` face then
+returned one blocking finding, and it was a defect **round 2's own fix pass had
+left behind**: a rename marked in one of the two places that carried it. Four
+rows are not a policy, and the shape they make is not the one that was expected.
 
 **The `spec` face's three rounds on this branch carry no row, and the reason is
 the one this file exists to end.** They ran before the ledger did; round 1's
