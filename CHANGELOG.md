@@ -41,10 +41,12 @@ References below name them so a claim here can be traced there.
   [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md)
   (sections "3. Review the task" and "4. The fix loop") and
   [`skills/requesting-code-review/SKILL.md`](skills/requesting-code-review/SKILL.md)
-  (section "How to Request") each tell the controller to append one row.
+  (section "How to Request", sub-step "3. Act on feedback") each tell the
+  controller to append one row.
 
-  **All four carry the same sentence, and it names only what the ledger cannot
-  know: which face this dispatch is.** An earlier draft enumerated the six
+  **All four name only what the ledger cannot know: which face this dispatch
+  is.** They differ in one word, the connective that places each in its own
+  step — "When the review returns", "Append", "First, append". An earlier draft enumerated the six
   columns in each skill and, in the next sentence, told the reader not to
   restate them. What counts as a blocking finding for a given face is itself a
   column definition, so it went to the ledger too. Measured while making the
@@ -84,7 +86,7 @@ References below name them so a claim here can be traced there.
   requires `## Problem` as the first row of its required-sections table, above
   `## Acceptance Criteria`: what is wrong today, who it affects, and what is out
   of scope. A criterion is an answer; this is the question, and it was the one
-  thing the spec never had to state. Measured across the corpus on 03/09/2026 —
+  thing the spec never had to state. Measured across the corpus on 2026-09-03 —
   201 specs in 11 projects — 56 carried a problem section under 7 distinct
   headings, and of the 20 carrying both, all 20 put it above the criteria. The
   requirement follows what the corpus already did; what it adds is one name and
@@ -121,7 +123,7 @@ References below name them so a claim here can be traced there.
   does — and the block now says so.
 
   **Declared rather than implemented, on a measurement.** Across the corpus on
-  03/09/2026 — 201 specs in 11 projects — 36 section references were found in
+  2026-09-03 — 201 specs in 11 projects — 36 section references were found in
   specs and plans: 32 resolve, 0 named a missing heading, and 4 pointed at a
   missing file, which the existing path check already reports. Nothing of this
   shape was found broken, so the script gains a declared blind spot instead of a
@@ -132,6 +134,55 @@ References below name them so a claim here can be traced there.
   a heading passed `check-cross-references` and was then rejected by
   `check-links.sh` at the commit. The gate that ran first said nothing, and
   nothing about its silence looked like a gap.
+
+- **Five of the suite's assertions survived the mutation that deleted what they
+  guard.** Found by the branch review, which applied each mutation in a scratch
+  worktree rather than reading the assertions. One root cause: every criterion
+  charged here is a **position** — a rule inside a named bucket, inside a
+  section, inside a table, sometimes at more than one site in one file — and
+  every assertion was a substring over the whole file. Deleting the ledger's
+  column-definition table, deleting the data table a row is appended to, deleting
+  one of the two write points in `subagent-driven-development`, moving a cap out
+  of the bucket it names, moving the `**Previous findings:**` block out of
+  `## Output Format`, and restating five of the six column names in a write
+  point all left the suite green.
+
+  Two helpers in
+  [`test-review-yield-rules.sh`](tests/review-yield/test-review-yield-rules.sh)
+  answer it: `assert_in_slice`, which charges a pattern between two delimiters,
+  and `assert_count`, for a criterion naming more than one site. All six
+  mutations above now fail, with the unmutated tree clean — re-measured
+  2026-09-03.
+
+  **The slice helper passes its patterns through the environment, never through
+  `awk -v`.** `-v` runs escape processing on the value first, so
+  `\*\*Recommendations \(advisory` reaches `awk` as `**Recommendations (advisory`
+  and dies as an invalid expression rather than as a wrong answer.
+
+- **A blocking row told the reviewer to state something false.**
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)'s
+  new `## Problem` row mandated the report text "spec predates the requirement"
+  unconditionally, including for a spec written after it. The `## Coverage Map`
+  row it was modelled on closes this — "the finding has to say which one it is
+  or the author is left with a block and no way out" — and that half was not
+  copied. It is now.
+
+- **Two of the four ledger write points could not fire on a clean round 1.**
+  In [`brainstorming`](skills/brainstorming/SKILL.md) and
+  [`writing-plans`](skills/writing-plans/SKILL.md) the instruction sat after the
+  mechanical check's run report, which lives inside the "before re-dispatching"
+  block a round-1 approval never enters. A ledger that records only rounds which
+  had findings cannot answer the question it exists for — whether rounds 2 and 3
+  come back empty. Both now fire when the review returns, clean or not.
+
+- **[`docs/review-scopes.md`](docs/review-scopes.md) now lists the nit cap as a
+  fourth form copied across carriers**, with the two ways its gate diverges from
+  the three already there: it runs from CI rather than
+  [`githooks/pre-commit`](githooks/pre-commit), so a local commit dropping the
+  cap from one carrier is caught only on push; and it asserts a per-face string
+  instead of comparing carriers against each other, because the cap is worded
+  per face on purpose. Neither divergence is defended — both are recorded as
+  what happened.
 
 ## [1.22.0] - 2026-08-25
 

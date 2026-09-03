@@ -386,6 +386,9 @@ a gap costs a paragraph instead of a re-plan.
 Hand it the plan file path and nothing else: the spec path comes from the
 plan's own header, and confirming it is part of what the reviewer checks.
 
+**When the review returns — clean or not — append one row to
+[`docs/review-yield.md`](../../docs/review-yield.md)**, face `plan`. Its header defines the columns.
+
 Fix every blocking issue the reviewer returns; recommendations are advisory.
 If it reports a spec requirement with no task, add the task — never resolve
 a gap by narrowing the plan's stated scope.
@@ -419,9 +422,6 @@ reporting that is a round not spent on the plan.
 Report the run to your human partner in the form every carrier uses:
 
 > **Command:** [verbatim] — **exit:** [code] — **counts:** [what resolved]
-
-**Then append one row to [`docs/review-yield.md`](../../docs/review-yield.md)**,
-face `plan`. That file's header defines every column and who writes the row.
 
 **Three review rounds maximum.** A round is one fix pass plus one re-dispatch.
 

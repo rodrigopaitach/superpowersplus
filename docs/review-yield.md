@@ -19,7 +19,7 @@ reviewer prompts declare the review read-only on the checkout —
 
 | Column | What goes in it |
 |---|---|
-| Date | The date of the dispatch, `DD/MM/AAAA` |
+| Date | The date of the dispatch, `DD/MM/YYYY` |
 | Branch | The branch the review ran against |
 | Face | `spec`, `plan`, `task <N>`, `re-review <N>`, or `branch` |
 | Round | `1` for the first dispatch of that face, then `2`, `3` |

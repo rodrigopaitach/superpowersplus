@@ -26,20 +26,76 @@ assert_contains() {
     fi
 }
 
+# Every criterion this suite charges is a POSITION, not a substring: a rule
+# inside a named bucket, inside a section, inside a table, and sometimes more
+# than once in one file. A file-scoped grep passes when the rule is MOVED out
+# of the place the criterion names, which is the mutation a branch review
+# applied and got green on five assertions. These two helpers are the answer.
+
+# Print the lines strictly between the first START match and the next END
+# match after it. Neither delimiter is printed. No pipeline: a `grep -q`
+# downstream exits on its first match and can SIGPIPE the producer, which
+# `pipefail` then reports as a failure of the whole pipeline — a match read as
+# a miss.
+# The patterns travel through the ENVIRONMENT, never through `awk -v`: -v
+# runs escape processing on the value first, so a regex like
+# `\*\*Recommendations \(advisory` reaches awk as `**Recommendations (advisory`
+# and dies as an invalid expression. Measured here on 2026-09-03.
+slice_between() {
+    local file="$1"
+    START_RE="$2" END_RE="$3" awk '
+        !inside && $0 ~ ENVIRON["START_RE"] { inside = 1; next }
+        inside && $0 ~ ENVIRON["END_RE"] { exit }
+        inside { print }
+    ' "$REPO_ROOT/$file"
+}
+
+assert_in_slice() {
+    local file="$1" start="$2" end="$3" pattern="$4" label="$5" slice
+    slice="$(slice_between "$file" "$start" "$end")"
+    if grep -qE "$pattern" <<<"$slice"; then
+        printf 'ok   %s\n' "$label"
+    else
+        printf 'FAIL %s — %s: not found between /%s/ and /%s/: %s\n' \
+            "$label" "$file" "$start" "$end" "$pattern"
+        FAILURES=$((FAILURES + 1))
+    fi
+}
+
+# A criterion naming more than one site needs the count, not the presence: one
+# grep over a file cannot see that the second of two write points was deleted.
+assert_count() {
+    local file="$1" pattern="$2" want="$3" label="$4" got
+    got="$(grep -cE "$pattern" "$REPO_ROOT/$file" || true)"
+    if [ "$got" = "$want" ]; then
+        printf 'ok   %s\n' "$label"
+    else
+        printf 'FAIL %s — %s carries %s occurrence(s) of %s, expected %s\n' \
+            "$label" "$file" "$got" "$pattern" "$want"
+        FAILURES=$((FAILURES + 1))
+    fi
+}
+
 ledger_columns() {
-    local f="docs/review-yield.md"
+    local f="docs/review-yield.md" c
     if [ ! -f "$REPO_ROOT/$f" ]; then
         printf 'FAIL ledger_columns — %s does not exist\n' "$f"
         FAILURES=$((FAILURES + 1))
         return
     fi
-    assert_contains "$f" '\| *Date *\|' 'ledger_columns: Date'
-    assert_contains "$f" '\| *Branch *\|' 'ledger_columns: Branch'
-    assert_contains "$f" '\| *Face *\|' 'ledger_columns: Face'
-    assert_contains "$f" '\| *Round *\|' 'ledger_columns: Round'
-    assert_contains "$f" '\| *Blocking findings *\|' 'ledger_columns: Blocking findings'
-    assert_contains "$f" '\| *Still open from the previous round *\|' \
-        'ledger_columns: Still open from the previous round'
+    # AC3 says the ledger DEFINES its columns. The names also appear in the
+    # empty data table's header row, so a file-scoped grep stayed green with
+    # the whole definition table deleted. Charge the definition table itself.
+    for c in 'Date' 'Branch' 'Face' 'Round' 'Blocking findings' \
+             'Still open from the previous round'; do
+        assert_in_slice "$f" '^\| Column \| What goes in it \|' '^$' \
+            "^\\| $c \\|" "ledger_columns: $c is defined"
+    done
+    # And the table a row is appended to. Deleting it leaves a ledger that can
+    # receive nothing, which the definition table alone cannot notice.
+    assert_contains "$f" \
+        '^\| Date \| Branch \| Face \| Round \| Blocking findings \| Still open from the previous round \|' \
+        'ledger_columns: the data table can receive a row'
 }
 
 ci_step_present() {
@@ -60,6 +116,10 @@ write_points() {
     for f in "${WRITE_POINTS[@]}"; do
         assert_contains "$f" 'docs/review-yield\.md' "write_points: $f"
     done
+    # AC4 names two sections of this one file — "3. Review the task" and
+    # "4. The fix loop". One grep per file cannot see the second one deleted.
+    assert_count "skills/subagent-driven-development/SKILL.md" \
+        'docs/review-yield\.md' 2 'write_points: both sites in subagent-driven-development'
 }
 
 # columns_not_restated catches a copy of the ledger's header, which is the
@@ -69,14 +129,16 @@ write_points() {
 # is declared rather than gated, for the reason AC10 declares its own: a grep
 # cannot tell a paraphrase from a sentence that merely mentions a date.
 columns_not_restated() {
-    local f
+    local f c
     for f in "${WRITE_POINTS[@]}"; do
-        if grep -qE 'Still open from the previous round' "$REPO_ROOT/$f"; then
-            printf 'FAIL columns_not_restated — %s restates a ledger column; IR2 keeps the definitions in docs/review-yield.md alone\n' "$f"
-            FAILURES=$((FAILURES + 1))
-        else
-            printf 'ok   columns_not_restated: %s\n' "$f"
-        fi
+        for c in 'Still open from the previous round' 'Blocking findings' \
+                 'blocking findings raised' 'What goes in it'; do
+            if grep -qF "$c" "$REPO_ROOT/$f"; then
+                printf 'FAIL columns_not_restated — %s restates a ledger column (%s); IR2 keeps the definitions in docs/review-yield.md alone\n' "$f" "$c"
+                FAILURES=$((FAILURES + 1))
+            fi
+        done
+        printf 'ok   columns_not_restated: %s\n' "$f"
     done
 }
 
@@ -108,39 +170,55 @@ DOC_REVIEWERS=(
 previous_findings_line() {
     local f
     for f in "${DOC_REVIEWERS[@]}"; do
-        assert_contains "$f" '\*\*Previous findings:\*\*' "previous_findings_line: $f"
+        assert_in_slice "$f" '## Output Format' '^```' \
+            '\*\*Previous findings:\*\*' "previous_findings_line: $f"
     done
 }
 
 round_one_in_words() {
     local f
     for f in "${DOC_REVIEWERS[@]}"; do
-        assert_contains "$f" 'none — round 1' "round_one_in_words: $f"
+        assert_in_slice "$f" '## Output Format' '^```' \
+            'none — round 1' "round_one_in_words: $f"
     done
 }
 
 nit_cap_present() {
     local f
-    for f in "${DOC_REVIEWERS[@]}" \
-             "skills/requesting-code-review/code-reviewer.md" \
-             "skills/subagent-driven-development/task-reviewer-prompt.md" \
-             "skills/subagent-driven-development/re-review-prompt.md"; do
-        assert_contains "$f" 'at most five' "nit_cap_present: $f"
-        assert_contains "$f" 'remainder as a count' "nit_cap_count: $f"
+    for f in "${DOC_REVIEWERS[@]}"; do
+        assert_in_slice "$f" '\*\*Recommendations \(advisory' '^```' \
+            'at most five' "nit_cap_present: $f"
+        assert_in_slice "$f" '\*\*Recommendations \(advisory' '^```' \
+            'remainder as a count' "nit_cap_count: $f"
     done
+    for f in "skills/requesting-code-review/code-reviewer.md" \
+             "skills/subagent-driven-development/task-reviewer-prompt.md"; do
+        assert_in_slice "$f" '#### Minor \(Nice to Have\)' '^ *###' \
+            'at most five' "nit_cap_present: $f"
+        assert_in_slice "$f" '#### Minor \(Nice to Have\)' '^ *###' \
+            'remainder as a count' "nit_cap_count: $f"
+    done
+    assert_in_slice "skills/subagent-driven-development/re-review-prompt.md" \
+        '### Out-of-Scope Observations' '^ *###' \
+        'at most five' 'nit_cap_present: re-review-prompt.md'
+    assert_in_slice "skills/subagent-driven-development/re-review-prompt.md" \
+        '### Out-of-Scope Observations' '^ *###' \
+        'remainder as a count' 'nit_cap_count: re-review-prompt.md'
 }
 
 nit_cap_per_face() {
-    assert_contains "skills/requesting-code-review/code-reviewer.md" \
-        'at most five Minor' 'nit_cap_per_face: code-reviewer names Minor'
-    assert_contains "skills/subagent-driven-development/task-reviewer-prompt.md" \
-        'at most five Minor' 'nit_cap_per_face: task-reviewer names Minor'
-    assert_contains "skills/subagent-driven-development/re-review-prompt.md" \
-        'at most five Out-of-Scope' 'nit_cap_per_face: re-review names Out-of-Scope'
     local f
+    for f in "skills/requesting-code-review/code-reviewer.md" \
+             "skills/subagent-driven-development/task-reviewer-prompt.md"; do
+        assert_in_slice "$f" '#### Minor \(Nice to Have\)' '^ *###' \
+            'at most five Minor' "nit_cap_per_face: $f names Minor"
+    done
+    assert_in_slice "skills/subagent-driven-development/re-review-prompt.md" \
+        '### Out-of-Scope Observations' '^ *###' \
+        'at most five Out-of-Scope' 'nit_cap_per_face: re-review names Out-of-Scope'
     for f in "${DOC_REVIEWERS[@]}"; do
-        assert_contains "$f" 'at most five Recommendations' \
-            "nit_cap_per_face: $f names Recommendations"
+        assert_in_slice "$f" '\*\*Recommendations \(advisory' '^```' \
+            'at most five Recommendations' "nit_cap_per_face: $f names Recommendations"
     done
 }
 

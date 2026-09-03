@@ -271,6 +271,9 @@ that no longer exists is worse than no answer. It goes out after the report,
 with every finding that touches an item folded into that item — never appended
 underneath it as a correction.
 
+**When the review returns — clean or not — append one row to
+[`docs/review-yield.md`](../../docs/review-yield.md)**, face `spec`. Its header defines the columns.
+
 Fix every blocking issue the reviewer returns; recommendations are advisory.
 **Then, before re-dispatching, in this order:**
 
@@ -297,9 +300,6 @@ whole reviewer round to report.
 Report the run to your human partner in the form every carrier uses:
 
 > **Command:** [verbatim] — **exit:** [code] — **counts:** [what resolved]
-
-**Then append one row to [`docs/review-yield.md`](../../docs/review-yield.md)**,
-face `spec`. That file's header defines every column and who writes the row.
 
 **Three review rounds maximum.** A round is one fix pass plus one re-dispatch.
 

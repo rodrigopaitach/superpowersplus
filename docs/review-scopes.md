@@ -67,7 +67,22 @@ that weight:
   violate it. The clause is therefore carried in the prompt body itself, never
   in the skill's own prose around it.
 
+- [tests/review-yield/test-review-yield-rules.sh](../tests/review-yield/test-review-yield-rules.sh)
+  — the five-item cap on the advisory bucket, carried by all five reviewer
+  prompts. **Two things about it diverge from the three above, and both are
+  weaknesses rather than design.** It is not in
+  [githooks/pre-commit](../githooks/pre-commit), so a local commit dropping the
+  cap from one carrier is caught only on push. And it does not compare the
+  carriers against each other the way the three above do — it asserts a per-face
+  string in each file, because the cap is deliberately worded per face against
+  that face's own bucket name and there is no single form to compare.
+
 They run whole-tree from the pre-commit hook rather than over the staged range:
 the carriers are edited one at a time, so a range-scoped check would read the
 one being changed and never the others it must match. Each names what drifted
 when it fails.
+
+**That last paragraph does not describe the cap's gate**, which runs from CI
+instead. The reason is not a decision anyone defends: the check was written as a
+test suite because everything else in that change needed one, and nothing moved
+it into the hook afterwards.
