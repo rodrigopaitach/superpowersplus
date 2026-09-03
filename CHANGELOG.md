@@ -271,6 +271,26 @@ References below name them so a claim here can be traced there.
   section is required. Found by reading those tables against the branch rather
   than by a gate: a table claiming to enumerate has no check that it still does.
 
+### Fixed
+
+- **Twenty-two version headings in this file rendered as literal text.** A
+  heading is written `## [1.22.0] - 2026-08-25`, and the bracketed version is a
+  reference link that needs a definition in the footer. The footer stopped being
+  extended at `1.11.0`: measured 2026-09-03, 49 headings against 27 definitions,
+  so every release from `1.12.0` to `1.22.0` showed its own number in square
+  brackets and linked nowhere. All 22 restored.
+
+  **No gate reads this, and adding one was not the fix.**
+  [`check-links.sh`](scripts/check-links.sh) resolves inline links — a label in
+  square brackets followed by the target in parentheses — and a reference link is
+  a different shape entirely;
+  this file is also skipped wholesale by that pass for being history, with only
+  `## Open gaps` sliced back in. The defect is that the footer is extended by
+  hand at the moment of a release, by the same edit that renames
+  `[Unreleased]`, and nothing fails when only the first half happens — the same
+  shape [`CLAUDE.md`](CLAUDE.md), section "Versioning" already names for the
+  rename itself.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added
@@ -5960,6 +5980,28 @@ gate and never reached it, and which then held on the repaired instrument
 against a control run that approved the same fixture with the rule removed. Six
 remain queued in the gap listing the eight precaution rules above.
 
+[1.22.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.22.0
+[1.21.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.21.0
+[1.20.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.20.0
+[1.19.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.19.1
+[1.19.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.19.0
+[1.18.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.18.0
+[1.17.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.17.0
+[1.16.4]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.16.4
+[1.16.3]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.16.3
+[1.16.2]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.16.2
+[1.16.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.16.1
+[1.16.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.16.0
+[1.15.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.15.1
+[1.15.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.15.0
+[1.14.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.14.1
+[1.14.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.14.0
+[1.13.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.13.0
+[1.12.4]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.12.4
+[1.12.3]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.12.3
+[1.12.2]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.12.2
+[1.12.1]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.12.1
+[1.12.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.12.0
 [1.11.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.11.0
 [1.10.0]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.10.0
 [1.9.5]: https://github.com/rodrigopaitach/superpowersplus/releases/tag/v1.9.5
