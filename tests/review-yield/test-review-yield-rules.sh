@@ -100,11 +100,32 @@ reviewers_do_not_write() {
     done
 }
 
+DOC_REVIEWERS=(
+    "skills/brainstorming/spec-document-reviewer-prompt.md"
+    "skills/writing-plans/plan-document-reviewer-prompt.md"
+)
+
+previous_findings_line() {
+    local f
+    for f in "${DOC_REVIEWERS[@]}"; do
+        assert_contains "$f" '\*\*Previous findings:\*\*' "previous_findings_line: $f"
+    done
+}
+
+round_one_in_words() {
+    local f
+    for f in "${DOC_REVIEWERS[@]}"; do
+        assert_contains "$f" 'none — round 1' "round_one_in_words: $f"
+    done
+}
+
 ledger_columns
 ci_step_present
 write_points
 columns_not_restated
 reviewers_do_not_write
+previous_findings_line
+round_one_in_words
 
 if [ "$FAILURES" -gt 0 ]; then
     printf '\n%s assertion(s) failed.\n' "$FAILURES"

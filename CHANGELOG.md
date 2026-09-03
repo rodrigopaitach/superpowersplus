@@ -52,6 +52,18 @@ References below name them so a claim here can be traced there.
   500-line ceiling [`check-skill-size.sh`](scripts/check-skill-size.sh) enforces — the discarded
   version took it to 502, this one to 499.
 
+- **The two document reviewers report what the previous round left open.**
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)
+  and [`plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md)
+  each carry a **Previous findings** line in their Output Format: how many the
+  previous round raised, and how many this round still finds open. Without it a
+  round's yield could only be counted by re-reading its report, and whether a
+  finding survived a fix pass was recorded nowhere at all.
+
+  **Round 1 writes the absence in words — `none — round 1`, never a blank or an
+  omitted line.** A round that carried no previous findings and a round whose
+  verdicts the reviewer skipped otherwise render identically.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added

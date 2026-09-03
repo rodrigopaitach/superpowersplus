@@ -163,6 +163,12 @@ Subagent (general-purpose):
 
     **Status:** Approved | Issues Found
 
+    **Previous findings:** [N] received — [M] still open: [which, or "none"]
+
+    On round 1 write this line as `none — round 1`. Leaving it out makes a
+    round that carried no previous findings and a round whose verdicts you
+    skipped render identically.
+
     **Issues (if any):**
     - [Task X, Step Y]: [specific issue] - [why it matters for implementation]
 
