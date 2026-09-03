@@ -112,6 +112,9 @@ Subagent (general-purpose):
     Issues you noticed entirely outside the fix diff. Non-blocking; the
     controller ledgers these for the final review. "None" if none.
 
+    Report at most five Out-of-Scope items, and the remainder as a count.
+    These are ledgered for the final review, not acted on here.
+
     ### Verdict
 
     **Fix round:** [All findings addressed, no new Critical/Important

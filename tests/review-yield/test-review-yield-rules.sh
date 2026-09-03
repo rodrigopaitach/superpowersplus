@@ -119,6 +119,31 @@ round_one_in_words() {
     done
 }
 
+nit_cap_present() {
+    local f
+    for f in "${DOC_REVIEWERS[@]}" \
+             "skills/requesting-code-review/code-reviewer.md" \
+             "skills/subagent-driven-development/task-reviewer-prompt.md" \
+             "skills/subagent-driven-development/re-review-prompt.md"; do
+        assert_contains "$f" 'at most five' "nit_cap_present: $f"
+        assert_contains "$f" 'remainder as a count' "nit_cap_count: $f"
+    done
+}
+
+nit_cap_per_face() {
+    assert_contains "skills/requesting-code-review/code-reviewer.md" \
+        'at most five Minor' 'nit_cap_per_face: code-reviewer names Minor'
+    assert_contains "skills/subagent-driven-development/task-reviewer-prompt.md" \
+        'at most five Minor' 'nit_cap_per_face: task-reviewer names Minor'
+    assert_contains "skills/subagent-driven-development/re-review-prompt.md" \
+        'at most five Out-of-Scope' 'nit_cap_per_face: re-review names Out-of-Scope'
+    local f
+    for f in "${DOC_REVIEWERS[@]}"; do
+        assert_contains "$f" 'at most five Recommendations' \
+            "nit_cap_per_face: $f names Recommendations"
+    done
+}
+
 ledger_columns
 ci_step_present
 write_points
@@ -126,6 +151,8 @@ columns_not_restated
 reviewers_do_not_write
 previous_findings_line
 round_one_in_words
+nit_cap_present
+nit_cap_per_face
 
 if [ "$FAILURES" -gt 0 ]; then
     printf '\n%s assertion(s) failed.\n' "$FAILURES"

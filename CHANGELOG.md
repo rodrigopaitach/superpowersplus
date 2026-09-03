@@ -64,6 +64,21 @@ References below name them so a claim here can be traced there.
   omitted line.** A round that carried no previous findings and a round whose
   verdicts the reviewer skipped otherwise render identically.
 
+- **All five reviewer faces cap their advisory bucket at five items and report
+  the remainder as a count.** The three that read a diff cap `Minor` —
+  [`code-reviewer.md`](skills/requesting-code-review/code-reviewer.md),
+  [`task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md)
+  — and `Out-of-Scope` —
+  [`re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md);
+  the two that read a document cap `Recommendations`. Advisory findings do not
+  block, so a long list spends the attention the blocking findings above it need.
+
+  **The cap is worded per face, against that face's own bucket name, never as
+  one sentence shared across all five.** The four review faces are deliberately
+  not one rule written four times — see
+  [`docs/review-scopes.md`](docs/review-scopes.md) — and a shared sentence would
+  name a bucket three of them do not have.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added

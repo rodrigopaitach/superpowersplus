@@ -245,6 +245,10 @@ Subagent (general-purpose):
 
     **Recommendations (advisory, do not block approval):**
     - [suggestions for improvement]
+
+    Report at most five Recommendations, and the remainder as a count. These
+    do not block approval, so a long list costs attention the blocking
+    findings need.
 ```
 
 **Placeholders:**
