@@ -95,6 +95,19 @@ References below name them so a claim here can be traced there.
   spec that never had the chance to comply is not an author who skipped it, and
   the two must not be treated alike.
 
+- **The spec reviewer charges the criteria against the stated problem.**
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)
+  gains two blocking rows in its Traceability table: a missing `## Problem`, and
+  an acceptance criterion that does not serve the problem the spec states.
+
+  **The second row is the only place in the chain where that question is ever
+  asked.** Everything downstream traces criteria to tasks and tasks to evidence
+  — the plan, the task reviewer, the final audit all verify that what was
+  specified got built. None of them verifies that what was specified addressed
+  the problem. A criterion serving something else is invented scope that entered
+  before the first task existed, where every later gate reads it as a
+  requirement and passes it through.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added

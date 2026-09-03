@@ -170,6 +170,16 @@ problem_transition() {
         'problem_transition'
 }
 
+problem_blocking() {
+    assert_contains "skills/brainstorming/spec-document-reviewer-prompt.md" \
+        'No `## Problem` section \| BLOCKING' 'problem_blocking'
+}
+
+criteria_serve_problem() {
+    assert_contains "skills/brainstorming/spec-document-reviewer-prompt.md" \
+        'does not serve the stated problem' 'criteria_serve_problem'
+}
+
 ledger_columns
 ci_step_present
 write_points
@@ -181,6 +191,8 @@ nit_cap_present
 nit_cap_per_face
 problem_required_first
 problem_transition
+problem_blocking
+criteria_serve_problem
 
 if [ "$FAILURES" -gt 0 ]; then
     printf '\n%s assertion(s) failed.\n' "$FAILURES"

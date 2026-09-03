@@ -136,6 +136,8 @@ Subagent (general-purpose):
 
     | Finding | Verdict |
     |---------|---------|
+    | No `## Problem` section | BLOCKING — the same treatment the other required sections get. Report it as: "spec predates the requirement — write the section from what the spec already says before proceeding." The section became required after most specs were written, and a spec that never had the chance to comply is not an author who skipped it |
+    | An acceptance criterion that does not serve the stated problem | BLOCKING — name the criterion and what it serves instead. Everything downstream traces criteria to tasks and tasks to evidence; nothing else in the chain ever asks whether the specification addressed the problem, so this is the only place it is charged |
     | No `## Acceptance Criteria` section | BLOCKING |
     | No `## Implicit Requirements` section — "None" is the way to say there are none | BLOCKING |
     | A criterion bundling several behaviors | BLOCKING — it cannot take one verdict; split it |
