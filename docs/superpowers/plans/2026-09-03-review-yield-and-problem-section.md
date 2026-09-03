@@ -175,7 +175,7 @@ reviewer prompts declare the review read-only on the checkout —
 | Branch | The branch the review ran against |
 | Face | `spec`, `plan`, `task <N>`, `re-review <N>`, or `branch` |
 | Round | `1` for the first dispatch of that face, then `2`, `3` |
-| Blocking findings | How many the reviewer returned in this round |
+| Blocking findings | How many the reviewer returned in this round. The two document faces return blocking findings by that name; the three diff faces return Critical and Important, and both count |
 | Still open from the previous round | How many of the previous round's blocking findings this round found unfixed. `—` on round 1 |
 
 | Date | Branch | Face | Round | Blocking findings | Still open from the previous round |
@@ -247,6 +247,12 @@ write_points() {
     done
 }
 
+# columns_not_restated catches a copy of the ledger's header, which is the
+# mutation it is written against. It does NOT catch IR2's other half — the same
+# six columns rewritten as prose ("date, branch, the round, how many blocking
+# findings came back") reads nothing like the header and passes here. That class
+# is declared rather than gated, for the reason AC10 declares its own: a grep
+# cannot tell a paraphrase from a sentence that merely mentions a date.
 columns_not_restated() {
     local f
     for f in "${WRITE_POINTS[@]}"; do
@@ -294,39 +300,46 @@ Expected: FAIL — four `write_points` failures; `columns_not_restated` and `rev
 In `skills/brainstorming/SKILL.md`, immediately after the evidence-line block that follows `Report the run to your human partner in the form every carrier uses:`, add:
 
 ```markdown
-**Then append one row to [`docs/review-yield.md`](../../docs/review-yield.md)** —
-this dispatch's date, branch, face `spec`, the round, how many blocking findings
-came back, and how many of the previous round's are still open. The file's own
-header says what each column holds; do not restate it here. The reviewer cannot
-write this row: its review is read-only on the checkout.
+**Then append one row to [`docs/review-yield.md`](../../docs/review-yield.md)**,
+face `spec`. That file's header defines every column and who writes the row.
 ```
 
 In `skills/writing-plans/SKILL.md`, at the same position after its own run-report line, add the identical paragraph with `face `plan`` in place of `face `spec``.
+
+**Every write point is the same sentence, and carries only what the ledger
+cannot know: which face this dispatch is.** `IR2` puts column definitions in
+`docs/review-yield.md` alone, and what counts as a blocking finding for a given
+face is a column definition. An earlier draft of this step enumerated all six
+columns and then told the reader not to restate them. Side effect worth
+recording: `skills/writing-plans/SKILL.md` is 496 lines against the 500-line
+ceiling `scripts/check-skill-size.sh:34` enforces; the discarded 6-line version
+took it to 502, this one to 499. **That file sitting one line under the ceiling
+is a finding of its own** — the fix is progressive disclosure, which
+`## Execution Handoff` does not qualify for, since every run needs it. Recorded
+in `CHANGELOG.md` under open gaps, not fixed here.
 
 - [ ] **Step 4: Add the instruction to the two task-loop faces and the branch face**
 
 In `skills/subagent-driven-development/SKILL.md`, at the end of `### 3. Review the task`, add:
 
 ```markdown
-**Append one row to [`docs/review-yield.md`](../../docs/review-yield.md)** for
-this dispatch: face `task <N>`, round `1`, the blocking findings the reviewer
-returned, and `—` in the last column. The file's header defines the columns.
+**Append one row to [`docs/review-yield.md`](../../docs/review-yield.md)**,
+face `task <N>`. That file's header defines every column and who writes the row.
 ```
 
 At the end of `### 4. The fix loop`, add:
 
 ```markdown
-**Append one row to [`docs/review-yield.md`](../../docs/review-yield.md)** for
-each re-review: face `re-review <N>`, the round number, its blocking findings,
-and how many of the previous round's this one found still open.
+**Append one row to [`docs/review-yield.md`](../../docs/review-yield.md)** per
+re-review, face `re-review <N>`. That file's header defines every column and who
+writes the row.
 ```
 
 In `skills/requesting-code-review/SKILL.md`, at the start of `**3. Act on feedback:**`, add:
 
 ```markdown
-**First, append one row to [`docs/review-yield.md`](../../docs/review-yield.md)**:
-face `branch`, round `1`, the count of Critical and Important findings, and `—`
-in the last column. Then act on the findings.
+**First, append one row to [`docs/review-yield.md`](../../docs/review-yield.md)**,
+face `branch`. That file's header defines every column and who writes the row.
 ```
 
 - [ ] **Step 5: Run the test to verify it passes**
