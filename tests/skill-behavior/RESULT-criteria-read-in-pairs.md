@@ -7,6 +7,7 @@
 | **Fixture** | [`FIXTURE-contradicting-criteria.md`](FIXTURE-contradicting-criteria.md) (the plan) and [`FIXTURE-contradicting-criteria-spec.md`](FIXTURE-contradicting-criteria-spec.md) (the spec it cites) |
 | **Rule under test** | [`skills/writing-plans/plan-document-reviewer-prompt.md`](../../skills/writing-plans/plan-document-reviewer-prompt.md), the Plan Contract row beginning "No two spec criteria this plan implements contradict each other" |
 | **Rule path** | skills/writing-plans/plan-document-reviewer-prompt.md |
+| **Rule changed since** | 2026-09-03 (1850fb8) — measured against earlier text. Two additions, neither touching the Plan Contract row this record measures: a **Previous findings** line in the Output Format, and a five-item cap on the Recommendations bucket |
 | **Runs** | N=3, and they are not replicates: runs 1–2 carry the rule, run 3 is the control with the rule's row deleted. Under the rule the two runs differed — run 1 never exercised it. Two draws do not settle a rate |
 | **Verdict** | **PASS, 3 of 3 criteria, against a control that approved the same fixture.** Run 3 is that control: the identical fixture and model, the same prompt with the rule's row deleted and nothing else changed. It read every criterion, listed the pair by id among the ones it had checked, and approved. The first run did not exercise the rule at all, and why it did not is a finding in its own right |
 
