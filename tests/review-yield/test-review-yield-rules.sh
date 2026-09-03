@@ -106,14 +106,22 @@ WRITE_POINTS=(
 )
 
 write_points() {
-    local f
-    for f in "${WRITE_POINTS[@]}"; do
-        assert_contains "$f" 'docs/superpowers/review-yield\.md' "write_points: $f"
-    done
-    # AC4 names two sections of this one file — "3. Review the task" and
-    # "4. The fix loop". One grep per file cannot see the second one deleted.
+    assert_in_slice "skills/brainstorming/SKILL.md" \
+        '^\*\*Spec Review:\*\*' '^## ' \
+        'docs/superpowers/review-yield\.md' 'write_points: brainstorming, in Spec Review'
+    assert_in_slice "skills/writing-plans/SKILL.md" '^## Plan Review' '^## ' \
+        'docs/superpowers/review-yield\.md' 'write_points: writing-plans, in Plan Review'
+    assert_in_slice "skills/requesting-code-review/SKILL.md" \
+        '^\*\*3\. Act on feedback:\*\*' '^## ' \
+        'docs/superpowers/review-yield\.md' 'write_points: requesting-code-review, in Act on feedback'
+    assert_in_slice "skills/subagent-driven-development/SKILL.md" \
+        '^### 3\. Review the task' '^### 4\.' \
+        'docs/superpowers/review-yield\.md' 'write_points: sdd, in Review the task'
+    assert_in_slice "skills/subagent-driven-development/SKILL.md" \
+        '^### 4\. The fix loop' '^### 5\.' \
+        'docs/superpowers/review-yield\.md' 'write_points: sdd, in The fix loop'
     assert_count "skills/subagent-driven-development/SKILL.md" \
-        'docs/superpowers/review-yield\.md' 2 'write_points: both sites in subagent-driven-development'
+        'docs/superpowers/review-yield\.md' 2 'write_points: exactly the two sites in sdd'
 }
 
 # columns_not_restated catches a copy of the ledger's header, which is the
@@ -123,16 +131,18 @@ write_points() {
 # is declared rather than gated, for the reason AC10 declares its own: a grep
 # cannot tell a paraphrase from a sentence that merely mentions a date.
 columns_not_restated() {
-    local f c
+    local f c bad
     for f in "${WRITE_POINTS[@]}"; do
+        bad=""
         for c in 'Still open from the previous round' 'Blocking findings' \
                  'blocking findings raised' 'What goes in it'; do
             if grep -qF "$c" "$REPO_ROOT/$f"; then
-                printf 'FAIL columns_not_restated — %s restates a ledger column (%s); IR2 keeps the definitions in docs/review-yield.md alone\n' "$f" "$c"
+                printf 'FAIL columns_not_restated — %s restates a ledger column (%s); IR2 keeps the definitions in skills/requesting-code-review/references/review-yield.md alone\n' "$f" "$c"
                 FAILURES=$((FAILURES + 1))
+                bad=1
             fi
         done
-        printf 'ok   columns_not_restated: %s\n' "$f"
+        [ -n "$bad" ] || printf 'ok   columns_not_restated: %s\n' "$f"
     done
 }
 
@@ -239,21 +249,23 @@ problem_transition() {
 }
 
 problem_blocking() {
-    assert_contains "skills/brainstorming/spec-document-reviewer-prompt.md" \
+    assert_in_slice "skills/brainstorming/spec-document-reviewer-prompt.md" \
+        '## Traceability \(blocking\)' '## Coverage Map' \
         'No `## Problem` section \| BLOCKING' 'problem_blocking'
 }
 
 criteria_serve_problem() {
-    assert_contains "skills/brainstorming/spec-document-reviewer-prompt.md" \
+    assert_in_slice "skills/brainstorming/spec-document-reviewer-prompt.md" \
+        '## Traceability \(blocking\)' '## Coverage Map' \
         'does not serve the stated problem' 'criteria_serve_problem'
 }
 
 not_covered_section_refs() {
     local f="skills/writing-plans/scripts/check-cross-references"
-    assert_contains "$f" 'section reference into another file' \
-        'not_covered_section_refs: names the class'
-    assert_contains "$f" 'check-links\.sh' \
-        'not_covered_section_refs: names where it is covered'
+    assert_in_slice "$f" 'WHAT IT DOES NOT COVER' '^# Usage:' \
+        'section reference into another file' 'not_covered_section_refs: names the class'
+    assert_in_slice "$f" 'WHAT IT DOES NOT COVER' '^# Usage:' \
+        'check-links\.sh' 'not_covered_section_refs: names where it is covered'
 }
 
 ledger_columns

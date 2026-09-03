@@ -417,8 +417,8 @@ pre-judging with a different name. Every adjudication is a ledger entry —
 a silent discard is forbidden.
 
 **Append one row to the project's `docs/superpowers/review-yield.md`** per
-re-review, face `re-review <N>` — columns are in
-[review-yield.md](../requesting-code-review/references/review-yield.md).
+re-review, face `re-review <N>` — columns and the header to create it with
+are in [review-yield.md](../requesting-code-review/references/review-yield.md).
 
 ### 5. Complete the task
 

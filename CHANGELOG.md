@@ -45,8 +45,9 @@ References below name them so a claim here can be traced there.
   controller to append one row.
 
   **All four name only what the ledger cannot know: which face this dispatch
-  is.** They differ in one word, the connective that places each in its own
-  step — "When the review returns", "Append", "First, append". An earlier draft enumerated the six
+  is.** What differs between them is the connective that places each in its own
+  step — "When the review returns — clean or not —", "Append", "First, append"
+  — and nothing else. An earlier draft enumerated the six
   columns in each skill and, in the next sentence, told the reader not to
   restate them. What counts as a blocking finding for a given face is itself a
   column definition, so it went to the ledger too. Measured while making the
@@ -227,6 +228,22 @@ References below name them so a claim here can be traced there.
   lines, 29 of headroom. The open gap recorded earlier in this cycle is closed
   by this entry; compressing the new paragraph to fit would have been the
   workaround the rule names.
+
+- **Three more assertions survived a MOVE, and the transcript could print `ok`
+  and `FAIL` for the same file.** Both found by re-running the two gates after
+  the first fix pass. `write_points`, the two `## Problem` rows and
+  `not_covered_section_refs` were still file-scoped where their criterion names
+  a section, a table and a comment block; all three now use `assert_in_slice`,
+  and all three fail the move mutation. `columns_not_restated` printed its `ok`
+  unconditionally after an inner loop was added, so a failing file got both
+  lines — `FAILURES` still incremented, so no gate escaped, but a self-
+  contradicting transcript is what this suite was being rewritten to stop
+  producing. Its message also still named the file the ledger had moved out of.
+
+  **`| Finding | Verdict |` is not a usable anchor in
+  [`spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md)** —
+  it heads four different tables there, and `slice_between` takes the first
+  match. The slice is keyed on the section heading instead.
 
 ## [1.22.0] - 2026-08-25
 
@@ -5888,6 +5905,24 @@ section where the next one would be written.
   Both are left open because the fix is a change to the extractor with its own
   tests, and neither affects the script's green verdict — only the counts it
   prints. Opened 2026-08-24.
+
+- **Six markdown links inside `skills/` point at repository paths the Codex
+  archive does not ship**, measured 2026-09-03: two to
+  [`docs/context-budget.md`](docs/context-budget.md), from
+  [`writing-plans`](skills/writing-plans/SKILL.md) and from its
+  [`execution-path.md`](skills/writing-plans/references/execution-path.md); two
+  to `scripts/`, from
+  [`escalation-format.md`](skills/using-superpowers/references/escalation-format.md)
+  and [`verification-before-completion`](skills/verification-before-completion/SKILL.md);
+  and two to `tests/`, from those same two files.
+  [`package-codex-plugin.sh`](scripts/package-codex-plugin.sh) ships `skills/`
+  and rejects `docs/`, `scripts/` and `tests/`, so in that package all six
+  resolve to nothing. **This is the class the ledger's write target was fixed
+  for in the same cycle, found by sweeping for its siblings** — but these six
+  are older than that change and none is an instruction to act on the target,
+  which is what made the write target's version urgent. Whether each becomes a
+  backticked path, stays a link for the repository reader, or moves its content
+  into `skills/` is a judgement per link, not a sweep. Opened 2026-09-03.
 
 Most rules in this project are reasoned rather than measured. Four have been
 measured, over eleven adversarial runs: the external-content rule, which held on

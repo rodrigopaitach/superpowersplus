@@ -31,6 +31,7 @@ rest gets marked, which is what this table is.
 | The ledger is `docs/review-yield.md`, linked in markdown | It is the partner project's `docs/superpowers/review-yield.md`, named in backticks (`AC3`, `IR6`) | From an installed plugin the markdown link resolved inside the plugin directory, and the Codex archive ships no `docs/` |
 | The ledger's own header defines the columns (`IR2`) | [`review-yield.md`](../../../skills/requesting-code-review/references/review-yield.md) defines them, and ships | A project that has never run a review has no ledger to read a format from |
 | All five prompts cap the advisory bucket (`AC5`) | Three cap it; `task-reviewer-prompt.md`'s `Minor` and `re-review-prompt.md`'s `Out-of-Scope` do not | The controller transcribes those two into the progress ledger item by item, so a cap deletes findings in transit |
+| The Test Coverage Matrix points `AC5` at `nit_cap_present` | That function is now `capped_faces`, plus a new `uncapped_faces` charging the other half | The rule became two-sided, so one assertion group could not carry it. `check-cross-references` stays green either way — it reads the historical step's code block — so the matrix row is marked here rather than by a gate |
 
 ## Global Constraints
 

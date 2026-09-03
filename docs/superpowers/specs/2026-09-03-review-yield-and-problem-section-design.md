@@ -79,7 +79,7 @@ zero of the 36 such references in the corpus are broken.
 
 **IR3.** No reviewer writes the ledger. The controller appends the row, because three of the five prompts declare the review read-only on the checkout.
 
-**IR4.** The nit cap is worded per face against that face's own bucket name — `#### Minor (Nice to Have)` for the three diff faces, `**Recommendations (advisory, do not block approval):**` for the two document faces — never one sentence shared across all five.
+**IR4.** Where a cap applies it is worded against that face's own bucket name — `#### Minor (Nice to Have)` for `code-reviewer.md`, `**Recommendations (advisory, do not block approval):**` for the two document faces — never one sentence shared across the five. The two uncapped faces state, inside the bucket itself, that it is uncapped and why. **Amended 2026-09-03**, alongside AC5: the enumeration named `#### Minor (Nice to Have)` for all three diff faces, which stopped being true for two of them the moment those two were uncapped.
 
 **IR5.** `## Problem` is written in English, like the six sections already required. The section's content carries no language constraint.
 
