@@ -108,6 +108,31 @@ References below name them so a claim here can be traced there.
   before the first task existed, where every later gate reads it as a
   requirement and passes it through.
 
+### Fixed
+
+- **A green `check-cross-references` no longer reads as coverage of section
+  references.** The script's `WHAT IT DOES NOT COVER` block now names the class
+  it never resolved: a markdown link to another document followed by a quoted
+  section title. It resolves headings only inside the document under check, to
+  find that document's own `AC`/`IR` lists, so a reference naming a heading that
+  does not exist in the target passed green. In this repository
+  [`check-links.sh`](scripts/check-links.sh) catches that class from the
+  pre-commit hook; in a project that installs the plugin without it, nothing
+  does — and the block now says so.
+
+  **Declared rather than implemented, on a measurement.** Across the corpus on
+  03/09/2026 — 201 specs in 11 projects — 36 section references were found in
+  specs and plans: 32 resolve, 0 named a missing heading, and 4 pointed at a
+  missing file, which the existing path check already reports. Nothing of this
+  shape was found broken, so the script gains a declared blind spot instead of a
+  second heading parser. The count is here, with its date, because a number in a
+  script comment ages in silence.
+
+  This happened to this branch's own spec: a reference to bold text that was not
+  a heading passed `check-cross-references` and was then rejected by
+  `check-links.sh` at the commit. The gate that ran first said nothing, and
+  nothing about its silence looked like a gap.
+
 ## [1.22.0] - 2026-08-25
 
 ### Added

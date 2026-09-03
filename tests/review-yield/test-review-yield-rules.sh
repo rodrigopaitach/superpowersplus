@@ -180,6 +180,14 @@ criteria_serve_problem() {
         'does not serve the stated problem' 'criteria_serve_problem'
 }
 
+not_covered_section_refs() {
+    local f="skills/writing-plans/scripts/check-cross-references"
+    assert_contains "$f" 'section reference into another file' \
+        'not_covered_section_refs: names the class'
+    assert_contains "$f" 'check-links\.sh' \
+        'not_covered_section_refs: names where it is covered'
+}
+
 ledger_columns
 ci_step_present
 write_points
@@ -193,6 +201,7 @@ problem_required_first
 problem_transition
 problem_blocking
 criteria_serve_problem
+not_covered_section_refs
 
 if [ "$FAILURES" -gt 0 ]; then
     printf '\n%s assertion(s) failed.\n' "$FAILURES"
