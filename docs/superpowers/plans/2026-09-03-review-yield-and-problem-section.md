@@ -10,7 +10,7 @@
 
 **Tech Stack:** Bash and `grep`, already the stack of every suite under `tests/` — `.github/workflows/ci.yml:54-60` runs them. No new dependency; the spec's `## External Dependencies` names none and this project is zero-dependency.
 
-**Execution:** [blank until the execution path is chosen]
+**Execution:** inline — progress is recorded in session todos (not persisted).
 
 **Escalation shape** (detail and a worked example: `../../../skills/using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
