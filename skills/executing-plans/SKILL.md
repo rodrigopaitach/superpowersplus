@@ -152,6 +152,12 @@ this order, and they feed ONE findings list.
    - Verdict FAIL does not skip the review below and does not send you
      straight to a fix: its NOT DELIVERED rows join the review's findings in
      the same round. Never resolve a gap by editing the plan to stop asking.
+   - **No subagent available to dispatch?** The audit needs an auditor who is
+     not you: it reads your own todos as claims under audit, and an executor
+     auditing their own execution has nothing left to check them against.
+     Take it to your human partner in the escalation shape below, the same way
+     the review gate does. Do not audit your own branch and call the gate
+     satisfied, and do not drop it in silence.
 
 2. **Whole-branch code review — second.**
    - **REQUIRED SUB-SKILL:** Use superpowersplus:requesting-code-review, whose

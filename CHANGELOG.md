@@ -53,6 +53,25 @@ References below name them so a claim here can be traced there.
   would invent a session nobody had. The residue was in the imperative section,
   not in the record.
 
+- **The inline path declared itself the path for a harness without subagents,
+  and then reached a gate that has no non-subagent route.**
+  [`skills/executing-plans/SKILL.md`](skills/executing-plans/SKILL.md),
+  section "Step 3: Audit and Review the Branch", gave its second gate an
+  explicit *"No subagent available to dispatch?"* branch and its first gate
+  none — while
+  [`skills/final-branch-audit/SKILL.md`](skills/final-branch-audit/SKILL.md),
+  section "Dispatch", is a subagent dispatch. An executor who reaches the audit
+  on such a harness has the skill's own Note at the top telling them this is
+  their path, and nothing telling them what to do. The first gate now escalates
+  the same way the second one does.
+
+  **The fix is the missing branch, not an inline auditor.** The audit reads the
+  executor's todos as claims under audit; an executor auditing their own
+  execution removes the independence the gate exists for. Building a second
+  execution mode for it would answer by architecture a cost no run has yet
+  reported — if the escalation turns out to strand real work, that measurement
+  is what would justify the mode.
+
 ## [1.24.0] - 2026-09-03
 
 ### Fixed
