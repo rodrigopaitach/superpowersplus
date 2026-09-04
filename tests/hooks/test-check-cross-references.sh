@@ -275,6 +275,46 @@ run_case "a legacy five-column matrix still passes" 0 "$LEGACY_PLAN"
 run_case "a legacy five-column matrix naming a test no step creates fails" 1 "$(printf '%s' "$LEGACY_PLAN" |
     sed 's/| > rejects the bad input |/| > a test nobody wrote |/')"
 
+# --- a blank line ends the table, and a short row is not a skipped row ------
+# Both measured 2026-09-04 against the header-aware parser, before this fix.
+# The header loop reset `current_header` only on a NON-BLANK non-table line,
+# and a blank line is exactly what separates two markdown tables. A second
+# table whose header carries no `Spec criterion` therefore inherited the
+# six-column header, its rows indexed past their own cells, and every one of
+# them was skipped: the document went from exit 1 naming the missing test to
+# exit 0 saying every reference resolves. The gate failed OPEN, which is the
+# one direction a gate must not fail.
+SECOND_TABLE="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.1 rejects the bad input\n- T1.2 accepts the good input|')
+$VM_HEAD
+| T1.1 | AC1 | behavioral | > rejects the bad input | unit | tests |
+
+| Criterion | Notes |
+|---|---|
+| T1.2 | > a test nobody wrote |"
+
+run_case "a table after a blank line does not inherit the six-column header" 1 "$SECOND_TABLE"
+
+# A row with fewer cells than its header. Reading it by column index silently
+# produced an empty class, and an empty class is not `behavioral`, so the row
+# was dropped before anything in it could be checked. Naming the row is the
+# only outcome that distinguishes "nothing to check here" from "I could not
+# read this".
+SHORT_ROW="$VM_BASE
+$VM_HEAD
+| T1.1 | AC1 | behavioral |"
+
+run_case "a matrix row with fewer cells than its header is reported" 1 "$SHORT_ROW"
+
+# The same defect from the other side: the pipe this repository once wrote
+# inside an instrument cell, which split one row into more cells than the
+# header has.
+WIDE_ROW="$VM_BASE
+$VM_HEAD
+| T1.1 | AC1 | behavioral | > rejects the bad input | grep -c 'a | b' | unit | tests |"
+
+run_case "a matrix row with more cells than its header is reported" 1 "$WIDE_ROW"
+
 # --- fence awareness ------------------------------------------------------
 # A plan that documents the plan format carries `## Task N` inside fenced
 # examples. Measured 2026-08-24: the fence-blind extractor reported 17 tasks for

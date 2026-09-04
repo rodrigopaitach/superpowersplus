@@ -300,27 +300,41 @@ for ln in prose_lines:
             continue
         if TASK_CRIT.search(ln):
             header_for[ln] = current_header
-    elif ln.strip():
+    else:
+        # Any non-table line ends it, blank included — a blank line is what
+        # separates two markdown tables, and leaving the header standing let
+        # the next table's rows index into columns they do not have.
         current_header = None
 
 named_in_matrix = set()
 # Cells that name the suite file as well as the case: charged against that file
 # further down, once `resolve` exists.
 matrix_suites = []
+malformed_rows = []
 for ln in matrix_rows:
     header = header_for.get(ln)
     cells = _cells(ln)
     if header and "evidence class" in header:
+        # Reading a row by column index turns a miscounted row into a SKIPPED
+        # check: the class cell comes back empty, an empty class is not
+        # `behavioral`, and the row is dropped before anything in it is read.
+        # A cell short and a cell too many — a literal `|` inside an
+        # instrument — are the same defect, and both are named rather than
+        # passed over.
+        if len(cells) != len(header):
+            label = " ".join(TASK_CRIT.findall(ln)) or ln.strip()[:40]
+            malformed_rows.append(
+                f"{label} ({len(cells)} cells under a {len(header)}-column header)"
+            )
+            continue
         # Six-column Verification Matrix. Only a `behavioral` row names a
         # test; in `structural` and `negative` the instrument is a read-only
         # command, and `>` and `::` inside it are shell syntax, not test ids.
-        idx = header.index("evidence class")
-        klass = cells[idx].lower() if idx < len(cells) else ""
+        klass = cells[header.index("evidence class")].lower()
         if klass != "behavioral":
             continue
         if "verification instrument" in header:
-            j = header.index("verification instrument")
-            cells = [cells[j]] if j < len(cells) else []
+            cells = [cells[header.index("verification instrument")]]
     # No `Evidence class` column: the historical Test Coverage Matrix. Every
     # cell is scanned, exactly as before — a committed plan keeps its verdict.
     for cell in cells:
@@ -333,6 +347,12 @@ for ln in matrix_rows:
         m = re.search(r"::(\w+)\s*$", cell)
         if m:
             named_in_matrix.add(m.group(1))
+
+if malformed_rows:
+    failures.append(
+        "matrix rows whose cell count does not match their header: "
+        + "; ".join(f"`{r}`" for r in malformed_rows)
+    )
 
 if named_in_matrix:
     counts["tests named in matrix"] = len(named_in_matrix)

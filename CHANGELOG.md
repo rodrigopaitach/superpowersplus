@@ -206,6 +206,26 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **O parser da matriz falhava ABERTO em três formas.** Correção do achado
+  Important do review de branch, e uma das três é regressão medida contra
+  `94d575e`: a leitura por índice de coluna transformava linha malformada em
+  verificação **pulada**, não em defeito reportado. (a) O laço que decide sob
+  que cabeçalho cada linha está resetava o cabeçalho só numa linha
+  não-vazia — e linha em branco é exatamente o que separa duas tabelas
+  markdown, então a segunda tabela herdava o cabeçalho de seis colunas da
+  primeira, suas linhas indexavam além das próprias células e **todas eram
+  descartadas**. Medido com o mesmo documento nos dois scripts: `94d575e` saía
+  1 nomeando o teste inexistente, `fa4900c` saía 0 dizendo *"every reference
+  resolves"*. É o cenário que o comentário do próprio bloco declara servir.
+  (b) Linha com menos células que o cabeçalho devolvia classe vazia, e classe
+  vazia não é `behavioral`, então a linha era pulada antes de qualquer coisa
+  nela ser lida. (c) Linha com **mais** células — o `|` literal dentro de uma
+  célula de instrumento, defeito que este repositório já cometeu — passava
+  igual. As três agora são nomeadas: cabeçalho encerra em qualquer linha
+  não-tabela, e contagem de células diferente da do cabeçalho é falha
+  reportada. Nenhum plano commitado muda de veredito: o caso pinado compara 36
+  documentos e não moveu nenhum.
+
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em
   `skills/writing-plans/scripts/check-cross-references:282-293` **na v1.25.0**
   varria *toda* célula de *toda* linha da matriz procurando `> nome` e
