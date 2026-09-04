@@ -9,6 +9,21 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **The TDD skill's RED example never compiled against its own GREEN
+  example.** [`skills/test-driven-development/SKILL.md`](skills/test-driven-development/SKILL.md),
+  section "RED - Write Failing Test", passed a synchronous callback returning
+  `string` to the `retryOperation` of section "GREEN - Minimal Code", whose
+  parameter is `fn: () => Promise<T>`. Extracted to a file and compiled with
+  `tsc 7.0.2 --strict --target es2020`, the pair fails with
+  `error TS2345: Argument of type '() => string' is not assignable to parameter
+  of type '() => Promise<unknown>'` — exit 1. With the callback marked `async`,
+  exit 0. **Measured both ways, not read**: the fix is one keyword, and the
+  keyword is the one the surrounding `async` test already implies.
+
 ## [1.24.0] - 2026-09-03
 
 ### Fixed
