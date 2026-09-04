@@ -137,10 +137,13 @@ forma de ela passar pelo gate antes de a correção existir.
 | T8.4 O auditor executa verificação read-only por critério | AC19 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.5 O audit aplica o discriminador de compatibilidade | AC20 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.6 O contrato do audit em review-scopes admite execução read-only | AC21 | structural | range localizado em `docs/review-scopes.md` | — | — |
+| T8.7 A regra de abertura do audit exige a evidência que a classe admite | AC41 | structural | range localizado em `skills/final-branch-audit/SKILL.md`, mais `grep -c 'no located citation is NOT DELIVERED'` esperando 0 | — | — |
 | T9.1 O task reviewer verifica por classe declarada | AC22 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md` | — | — |
 | T9.2 A tabela de evidência generaliza para Verification Evidence | AC28 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md` | — | — |
 | T9.3 O litmus e a execução de testes sobrevivem para behavioral | AC29 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md` | — | — |
 | T9.4 A forma da linha de evidência não muda | IR3 | negative | `scripts/check-evidence-line.sh`, exit 0 | — | — |
+| T9.5 O test command é exigido de task com critério behavioral | AC42 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md` | — | — |
+| T9.6 Task só structural ou negative não recebe nem inventa test command | AC42 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md`, mais `grep -c 'REQUIRED: the command that runs'` esperando 0 | — | — |
 | T10.1 O controller entrega instrumentos e não deriva comando universal | AC32 | structural | range localizado em `skills/subagent-driven-development/SKILL.md` | — | — |
 | T11.1 O preflight inline exige classe e instrumento admissível | AC33 | structural | range localizado em `skills/executing-plans/SKILL.md` | — | — |
 | T12.1 Os dois reviewers de código admitem command evidence | AC23 | structural | range localizado em `skills/requesting-code-review/code-reviewer.md` e em `skills/subagent-driven-development/re-review-prompt.md` | — | — |
@@ -1159,9 +1162,10 @@ git commit -m "feat: o plan reviewer cobra as seis colunas e a semantica da clas
 
 ### Task 8: A auditoria final e o contrato em review-scopes
 
-**Spec criterion:** AC16, AC17, AC18, AC19, AC20, AC21
+**Spec criterion:** AC16, AC17, AC18, AC19, AC20, AC21, AC41
 
 **Files:**
+- Modify: `skills/final-branch-audit/SKILL.md:21-22`
 - Modify: `skills/final-branch-audit/SKILL.md:101`
 - Modify: `skills/final-branch-audit/SKILL.md:300`
 - Modify: `docs/review-scopes.md:15`
@@ -1178,8 +1182,39 @@ git commit -m "feat: o plan reviewer cobra as seis colunas e a semantica da clas
 - T8.4: o protocolo declara que o auditor executa verificação read-only específica do critério e pode exigir evidência adicional — instrumento na matriz
 - T8.5: o audit aplica o discriminador de compatibilidade pelo marcador, sem heurística — instrumento na matriz
 - T8.6: `docs/review-scopes.md` declara que o final audit executa verificação read-only por critério, sem assumir o papel do reviewer da suíte — instrumento na matriz
+- T8.7: a regra de abertura do arquivo deixa de exigir located citation universalmente e passa a exigir a evidência que a classe declarada admite — instrumento na matriz
 
-- [ ] **Step 1: Trocar as colunas nas duas ocorrências (T8.1)**
+- [ ] **Step 1: Corrigir a regra de abertura (T8.7)**
+
+`skills/final-branch-audit/SKILL.md:21-22` hoje diz:
+
+```markdown
+**Evidence-or-zero.** A criterion with no located citation is NOT DELIVERED.
+There is no "probably done", no "looks implemented", no partial credit.
+```
+
+**Esta é a primeira regra que o auditor lê, e ela decide todo veredito.** Deixada
+como está, o topo do arquivo contradiz tudo o que os steps seguintes instalam, e
+um critério `negative` — que por definição não tem citação localizada — é
+reprovado antes de qualquer outra coisa. Substitua por:
+
+```markdown
+**Evidence-or-zero.** A criterion is NOT DELIVERED unless it carries the
+delivery evidence AND the verification evidence its declared class admits: a
+located range plus a covering test for `behavioral`, a located range plus a
+read-only validator for `structural`, the declared scope plus a read-only
+command for `negative`. There is no "probably done", no "looks implemented",
+no partial credit. **The absence of a located citation is not itself the
+failure** — it is the failure only where the class requires one, and reading it
+as universal is what made every criterion about an absence structurally
+undeliverable.
+```
+
+**Este step vem primeiro na task de propósito**: os steps seguintes instalam a
+tabela e o protocolo que dependem desta regra, e corrigi-la por último deixaria o
+arquivo contraditório durante a própria edição.
+
+- [ ] **Step 2: Trocar as colunas nas duas ocorrências (T8.1)**
 
 **A tabela ocorre duas vezes e um `grep` ancorado em início de linha vê só uma:**
 `skills/final-branch-audit/SKILL.md:101` e
@@ -1211,7 +1246,7 @@ A primeira das duas cita um arquivo real deste repositório de propósito: o
 exemplo de um critério `structural` sobre um manifest que **nenhum teste deste
 checkout valida** é o caso mais agudo que a spec registra em `## Problem`.
 
-- [ ] **Step 2: Acrescentar o veredito de classe inadequada (T8.2)**
+- [ ] **Step 3: Acrescentar o veredito de classe inadequada (T8.2)**
 
 Na tabela de vereditos que hoje começa em
 `skills/final-branch-audit/SKILL.md:126`, acrescente:
@@ -1224,7 +1259,7 @@ Ela segue a forma da linha
 `| Criterion delivered somewhere other than the plan said | DELIVERED — note the real location in the row |`
 que já está ali, com veredito bloqueante em vez de concessivo.
 
-- [ ] **Step 3: O híbrido restrito (T8.3, T8.4)**
+- [ ] **Step 4: O híbrido restrito (T8.3, T8.4)**
 
 No protocolo do auditor — o bloco que hoje contém
 *"Evidence-or-zero: a criterion with no `path/file.ext:line` citation is NOT
@@ -1253,7 +1288,7 @@ branco) — substitua esse parágrafo por:
     turns this audit into a rubber stamp.
 ```
 
-- [ ] **Step 4: O discriminador de compatibilidade (T8.5)**
+- [ ] **Step 5: O discriminador de compatibilidade (T8.5)**
 
 No mesmo protocolo, acrescente:
 
@@ -1269,7 +1304,7 @@ No mesmo protocolo, acrescente:
     the row records `behavioral`.
 ```
 
-- [ ] **Step 5: O contrato em review-scopes (T8.6)**
+- [ ] **Step 6: O contrato em review-scopes (T8.6)**
 
 `docs/review-scopes.md:15` hoje diz *"**No tests at all** — re-runs the
 *searches* against the spec"*. Substitua a célula por:
@@ -1278,17 +1313,22 @@ No mesmo protocolo, acrescente:
 **Read-only verification, per criterion** — re-runs the searches against the spec, and re-runs the instrument each criterion's evidence class names: the test for `behavioral`, the validating command or the located ranges for `structural`, the command over the declared scope for `negative`. It never mutates the checkout, and it does not take over the project-suite reviewer's job: it re-runs what a criterion claims, not the suite as a whole
 ```
 
-- [ ] **Step 6: Verificar T8.1 pela contagem**
+- [ ] **Step 7: Verificar T8.1 e T8.7 pela contagem**
 
 ```bash
 grep -c 'Delivery evidence' skills/final-branch-audit/SKILL.md
 grep -c 'Implementation | Test | Verdict' skills/final-branch-audit/SKILL.md
+grep -c 'no located citation is NOT DELIVERED' skills/final-branch-audit/SKILL.md
 ```
 
-Expected: `2` e `0`. **Um `2` na primeira e um `1` na segunda significa que só a
-ocorrência não indentada foi trocada** — que é exatamente o erro que AC16 nomeia.
+Expected: `2`, `0` e `0` — o terceiro é T8.7, e **`grep -c` imprime `0` e sai com
+status 1**, então leia o número e não o status. Um `1` ali significa que a regra
+de abertura continua universal e que o Step 1 não entrou.
 
-- [ ] **Step 7: Verificar o teto, os links e a forma da linha de evidência**
+**Um `2` na primeira e um `1` na segunda significa que só a ocorrência não
+indentada foi trocada** — que é exatamente o erro que AC16 nomeia.
+
+- [ ] **Step 8: Verificar o teto, os links e a forma da linha de evidência**
 
 ```bash
 scripts/check-skill-size.sh
@@ -1298,7 +1338,7 @@ scripts/check-evidence-line.sh
 
 Expected: exit 0 nos três. `final-branch-audit/SKILL.md` estava em 372 linhas.
 
-- [ ] **Step 8: Conferir e commitar**
+- [ ] **Step 9: Conferir e commitar**
 
 ```bash
 git diff --stat
@@ -1310,11 +1350,12 @@ git commit -m "feat: o audit verdicta por evidence class e reexecuta o instrumen
 
 ### Task 9: O task reviewer verifica por classe
 
-**Spec criterion:** AC22, AC28, AC29; IR3
+**Spec criterion:** AC22, AC28, AC29, AC42; IR3
 
 **Files:**
 - Modify: `skills/subagent-driven-development/task-reviewer-prompt.md:126-141`
 - Modify: `skills/subagent-driven-development/task-reviewer-prompt.md:183-197`
+- Modify: `skills/subagent-driven-development/task-reviewer-prompt.md:234-236`
 - Modify: `CHANGELOG.md`
 
 **Interfaces:**
@@ -1327,6 +1368,8 @@ git commit -m "feat: o audit verdicta por evidence class e reexecuta o instrumen
 - T9.2: `### Test Evidence` generaliza para Verification Evidence, com uma linha por critério, e `—` deixa de ser bloqueante fora de `behavioral` — instrumento na matriz
 - T9.3: para critérios `behavioral`, a obrigação de executar os testes e o shallow-test litmus ficam preservados integralmente — instrumento na matriz
 - T9.4: `scripts/check-evidence-line.sh` continua verde — instrumento na matriz
+- T9.5: `[TEST_COMMAND]` é exigido quando a task carrega critério `behavioral` cujo verification instrument é um teste — instrumento na matriz
+- T9.6: task só `structural` ou `negative` não recebe test command e não tem nenhum inventado para ela — instrumento na matriz
 
 - [ ] **Step 1: O protocolo por critério (T9.1)**
 
@@ -1405,22 +1448,67 @@ fecha com *"**Reviewer returns:** Spec Compliance verdict (✅/❌/⚠️), Test
 Evidence table"*. Troque `Test Evidence table` por `Verification Evidence table`
 ali também.
 
-- [ ] **Step 4: Verificar**
+- [ ] **Step 4: Tornar `[TEST_COMMAND]` condicional (T9.5, T9.6)**
+
+`skills/subagent-driven-development/task-reviewer-prompt.md:234-236` hoje diz:
+
+```markdown
+- `[TEST_COMMAND]` — REQUIRED: the command that runs this task's tests, taken
+  from the plan's Test Coverage Matrix or the repository's runner config. The
+  reviewer runs it; do not pass a command you have not confirmed exists
+```
+
+**A lista de placeholders é carrier próprio do contrato**, e a Task 10 torna o
+campo condicional no arquivo vizinho. Deixar `REQUIRED` aqui faz os dois
+arquivos dizerem coisas incompatíveis sobre o mesmo campo. Substitua por:
+
+```markdown
+- `[TEST_COMMAND]` — REQUIRED **only when the task carries a `behavioral`
+  criterion whose verification instrument is a test**: the command that runs
+  those tests, taken from the plan's Verification Matrix or the repository's
+  runner config. The reviewer runs it; do not pass a command you have not
+  confirmed exists. **A task whose criteria are all `structural` or `negative`
+  has no admissible value for this field — leave it out, and never derive one.**
+  An invented runner turns a task that asked for no test into a task graded on
+  one.
+```
+
+E no item de `[BASE_TEST_COUNT]`, logo abaixo, acrescente ao fim da primeira
+frase: `— under the same condition as \`[TEST_COMMAND]\`, since a task that runs
+no tests has none to lose`.
+
+**As duas metades são critérios separados de propósito.** T9.5 é a exigência que
+sobrevive; T9.6 é a proibição que entra. Uma redação que dissesse só "é opcional"
+satisfaria T9.5 e deixaria T9.6 sem nada: *opcional* permite ao controller passar
+um comando inventado, que é exatamente o que
+`skills/subagent-driven-development/SKILL.md:272` já proíbe pelo outro lado.
+
+- [ ] **Step 5: Verificar**
 
 ```bash
 scripts/check-evidence-line.sh
 scripts/check-links.sh
 grep -c '| BLOCKING |' skills/subagent-driven-development/task-reviewer-prompt.md
+grep -c 'REQUIRED: the command that runs' skills/subagent-driven-development/task-reviewer-prompt.md
+grep -c 'has no admissible value for this field' skills/subagent-driven-development/task-reviewer-prompt.md
 ```
 
-Expected: exit 0 nos dois primeiros, e **`4`** no terceiro — uma por row da
+**Os dois últimos são T9.5 e T9.6, e é preciso os dois porque cada um pega
+metade do defeito.** Expected: `0` no quarto — a declaração universal de
+`REQUIRED` saiu — e `1` no quinto — a proibição para task só `structural` ou
+`negative` entrou. **Um `0` no quarto com `0` no quinto significa que o campo
+virou apenas opcional**, que satisfaz T9.5 e deixa T9.6 sem nada: opcional
+permite ao controller inventar um comando. `grep -c` imprime o número e sai com
+status 1 quando ele é `0`; leia o número.
+
+Expected para os três primeiros: exit 0 nos dois primeiros, e **`4`** no terceiro — uma por row da
 tabela do litmus, medido em 04/09/2026. **Um `grep` pelo título da seção não
 serve de instrumento aqui:** a expressão *shallow-test litmus* aparece uma vez
 só, e apagar as quatro rows da tabela deixaria a contagem intacta. T9.3 alega que
 o litmus fica preservado; o que prova isso é o número de rows, não o título
 sobreviver.
 
-- [ ] **Step 5: Conferir e commitar**
+- [ ] **Step 6: Conferir e commitar**
 
 ```bash
 git diff --stat
