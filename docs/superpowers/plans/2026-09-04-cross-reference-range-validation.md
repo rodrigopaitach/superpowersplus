@@ -25,7 +25,10 @@ e `python3` dentro do script, que **é um script bash** — a linha 1 é
 inteiramente dentro desse heredoc. Nenhuma entrada nova: a spec declara
 `## External Dependencies` como `None`.
 
-**Execution:** _(em branco até seu parceiro escolher o caminho ao fim de writing-plans)_
+**Execution:** `inline` — session todos (not persisted). **O registro durável é o commit por
+task**: cada task deste plano termina em `git commit`, então quem retomar depois de uma interrupção
+lê `git log main..HEAD` para saber a última task fechada, e o todo perdido custa no máximo a task em
+curso.
 
 **Escalation shape** (detail and a worked example: `../../../skills/using-superpowers/references/escalation-format.md`):
 1. **What breaks or costs** if nothing is decided — one sentence, the consequence and not the mechanism.
