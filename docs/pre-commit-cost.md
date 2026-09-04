@@ -21,8 +21,9 @@ Those three rows were re-measured 2026-08-04 the same way; the other three are u
 **The condition matters more than the number, and there is deliberately no automatic timer.** Most of `check-links.sh` is `python3` startup, which moves with the machine and with whether the interpreter is in cache — an independent measurement the same day reported roughly 7× these figures. Treat the table as a baseline taken this way, on this machine, not as a constant. A stopwatch around the hook would be one more thing to maintain, reporting a number nobody reads on every commit; if a commit ever visibly drags, time the checks one at a time against the table above.
 
 **Some rows are missing on purpose, and the list grows.** `check-evidence-line.sh`,
-`check-escalation-shape.sh` and `check-no-dispatch.sh` each joined the hook after
-both runs above and none was timed the same way. Measuring one now, on a
+`check-escalation-shape.sh`, `check-no-dispatch.sh` and
+`check-skill-frontmatter.sh` each joined the hook after both runs above and none
+was timed the same way. Measuring one now, on a
 different day and a warm-or-cold interpreter, would blend two instruments into
 one table — the failure this project charges everywhere else. They are declared
 absent instead. **Every gate the hook gains lands here undeclared unless someone

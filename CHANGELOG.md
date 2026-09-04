@@ -138,6 +138,17 @@ References below name them so a claim here can be traced there.
   green and the break would have surfaced on push. Recorded here as measured;
   whether it belongs in the hook is a cost question nobody has priced.
 
+- **[`docs/pre-commit-cost.md`](docs/pre-commit-cost.md) declares the new gate
+  absent rather than timing it.** That document states the condition itself —
+  *"Every gate the hook gains lands here undeclared unless someone adds it"* —
+  and `check-skill-frontmatter.sh` had landed undeclared. It joins
+  `check-evidence-line.sh`, `check-escalation-shape.sh` and
+  `check-no-dispatch.sh` in the paragraph of gates present in the hook and
+  absent from the table. **Not measured on purpose:** timing one gate today, on
+  a different machine and a different interpreter state than the 2026-08-02
+  run, would blend two instruments into one table, which is the reason those
+  three are declared rather than timed.
+
 ### Changed
 
 - **The skill that governs how every other skill is written prescribed a
