@@ -1909,6 +1909,18 @@ fallback"* de `[TEST_COMMAND]`, e o fallback de `[BASE_TEST_COUNT]` para
 silenciosa de conteúdo — a mesma coisa que a `writing-plans` chama de escopo
 inventado, do lado da remoção.
 
+**MARCADO na revisão de branch, 04/09/2026 — o Step 1 acima diverge do que foi
+entregue.** `[VERIFICATION_INSTRUMENTS]` foi escrito como campo próprio aqui e na
+lista de placeholders da Task 13, e nenhuma das duas tasks escreveu o sítio de
+substituição no corpo de template nenhum: o token aparecia zero vezes em
+`task-reviewer-prompt.md` e, no `re-review-prompt.md`, só depois de
+`**Placeholders:**`. Era instrução que o controller não conseguia executar. Na
+rodada de correção o campo saiu dos dois carriers e o que ficou escrito é o que
+de facto acontece — os instrumentos viajam no brief, que já carrega classe e
+instrumento por critério. **O registro do que foi executado não se reescreve; se
+marca**, e é o que esta nota faz. AC32 continua entregue: o controller entrega os
+instrumentos, pelo brief que ele mesmo passa.
+
 - [ ] **Step 2: A instrução de entregar test command e base count (T10.2)**
 
 `skills/subagent-driven-development/SKILL.md:292-295` diz, sem condição:
