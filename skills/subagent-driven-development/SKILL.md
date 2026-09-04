@@ -267,19 +267,27 @@ needed.
 - **Reviewer inputs:** the task reviewer gets three paths — the same brief
   file, the report file, and the review package — plus the global
   constraints that bind the task, the test command, and the base test count.
-- **`[TEST_COMMAND]`:** the command that runs this task's tests, taken from
-  the plan's Test Coverage Matrix or, failing that, the repository's runner
-  config (`package.json` scripts, `Makefile`, `pytest.ini`, the CI
-  workflow). Confirm it exists before passing it — an invented command sends
-  the reviewer chasing a runner error instead of the task. Scope it to the
+- **`[VERIFICATION_INSTRUMENTS]`:** the instrument each of this task's
+  criteria names, copied from the plan's Verification Matrix with its
+  evidence class. This is what the reviewer re-runs.
+- **`[TEST_COMMAND]`:** **required only when the task carries at least one
+  `behavioral` criterion** — the command that runs those tests, taken from
+  the matrix or, failing that, the repository's runner config
+  (`package.json` scripts, `Makefile`, `pytest.ini`, the CI workflow).
+  Confirm it exists before passing it — an invented command sends the
+  reviewer chasing a runner error instead of the task. Scope it to the
   task's tests where the runner allows; the full suite is the fallback.
+  **A task with no `behavioral` criterion has no admissible value for this
+  field — leave it out.** Deriving one anyway is how a `structural` task
+  acquires a test nobody asked for.
 - **`[BASE_TEST_COUNT]`:** the test count at BASE, so the reviewer can see
-  whether tests disappeared. You have it from the previous task's review,
-  which reported its counts. No prior run — Task 1, a new suite, a runner
-  that prints no total? Pass `unknown` and say why: the reviewer falls back
-  to reading the diff for tests deleted, renamed away, or newly skipped.
-  Never back-fill it from the implementer's report — that number is part of
-  what is under audit.
+  whether tests disappeared — **under the same condition as
+  `[TEST_COMMAND]`**, since a task that runs no tests has none to lose. You
+  have it from the previous task's review, which reported its counts. No
+  prior run — Task 1, a new suite, a runner that prints no total? Pass
+  `unknown` and say why: the reviewer falls back to reading the diff for
+  tests deleted, renamed away, or newly skipped. Never back-fill it from the
+  implementer's report — that number is part of what is under audit.
 - The global-constraints block you hand the reviewer is its attention
   lens. Copy the binding requirements verbatim from the plan's Global
   Constraints section or the spec: exact values, exact formats, and the
@@ -289,10 +297,13 @@ needed.
   project's spec demands.
 - Do not add open-ended directives like "check all uses" or "run race tests
   if useful" without a concrete, task-specific reason
-- The reviewer re-runs the task's tests itself. The implementer's report is
-  a claim about a run nobody else watched, written by the author of the
-  tests being judged — it is not test evidence. Hand the reviewer the test
-  command and the base count, never a "tests already ran" note
+- The reviewer re-runs the task's verification instruments itself. The
+  implementer's report is a claim about a run nobody else watched, written
+  by the author of what is being judged — it is not evidence. Hand the
+  reviewer the instruments from the plan's Verification Matrix, and, **where
+  the task carries a `behavioral` criterion**, the test command and the base
+  count. Never a "tests already ran" note, and never a command derived for a
+  task that asked for none
 - Do not pre-judge findings for the reviewer — never instruct a reviewer to
   ignore or not flag a specific issue. If you believe a finding would be a
   false positive, let the reviewer raise it and adjudicate it in the review
@@ -346,13 +357,15 @@ findings, and this framing: "A prior implementer attempted this task
 that survives three resumes usually means the implementer cannot see its
 own problem — fresh eyes and a capability bump in one move.
 
-**Every round, either way:** the implementer fixes, re-runs the tests
-covering the amended code, appends its fix report to the same report file,
-and returns the short contract. Before re-dispatching the reviewer, confirm
-the fix report contains the covering tests, the command run, and the
-output; dispatch the re-review once all three are present. Name the
-covering test files in the fix message — a one-line fix does not need the
-whole suite.
+**Every round, either way:** the implementer fixes, re-runs the verification
+instrument each amended criterion names, appends its fix report to the same
+report file, and returns the short contract. Before re-dispatching the
+reviewer, confirm the fix report contains, for every criterion it touched, the
+instrument re-run and its result — the covering tests, the command and the
+output where the criterion is `behavioral`; the read-only check or the located
+range otherwise. Dispatch the re-review once each touched criterion has one.
+Name the covering test files in the fix message where there are tests — a
+one-line fix does not need the whole suite.
 
 **A finding the implementer disputes.** The fix prompt has the implementer
 read the code a finding names before implementing it, and report DISPUTED —

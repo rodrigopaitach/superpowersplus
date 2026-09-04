@@ -145,6 +145,20 @@ References below name them so a claim here can be traced there.
   porque `scripts/check-links.sh` resolve o **título** da seção e não só o
   caminho.
 
+- **O comando de teste só é exigido de task com critério `behavioral`.**
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md),
+  section "Dispatching a Task" — o controller passa a entregar
+  `[VERIFICATION_INSTRUMENTS]`, os instrumentos que os critérios da task
+  nomeiam, copiados da Verification Matrix com a classe de cada um.
+  `[TEST_COMMAND]` e `[BASE_TEST_COUNT]` viram condicionais à existência de
+  critério `behavioral`, e task sem nenhum **não tem valor admissível para o
+  campo**. Isto fecha um travamento real do fix loop: a condição de despacho do
+  re-review exigia que o fix report trouxesse *"the covering tests, the command
+  run, and the output"* e só despachava com os três presentes — uma task só
+  `structural` ou `negative` nunca os reunia, e o re-review nunca era
+  despachado. A condição passa a ser, por critério tocado, o instrumento
+  reexecutado e seu resultado.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em
