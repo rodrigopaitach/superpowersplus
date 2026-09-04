@@ -399,6 +399,25 @@ heurística sobre histórico do git.
   falhando; e o corpus de planos já commitados em `docs/superpowers/plans/`
   produz o mesmo veredito antes e depois da mudança. **Este último é IR10
   medido durante a implementação, não descoberto no fim dela.**
+- **AC41** `[structural]` — a regra de abertura de `final-branch-audit/SKILL.md`
+  deixa de declarar universalmente que critério sem located citation é
+  `NOT DELIVERED`, e passa a exigir delivery evidence e verification evidence
+  admissíveis para a evidence class declarada, preservando located evidence onde
+  a classe a exige. **É carrier próprio, não a tabela de AC16 nem o protocolo do
+  auditor de AC18 e AC19:** a regra mora no corpo de abertura do arquivo, antes
+  de qualquer seção, e é ela que decide todo veredito. Deixada como está, o topo
+  da skill contradiz AC16–AC20 no mesmo arquivo, e um critério `negative` — que
+  por definição não tem citação localizada — é reprovado pela primeira regra que
+  o auditor lê.
+- **AC42** `[structural]` — `task-reviewer-prompt.md` deixa de declarar
+  `[TEST_COMMAND]` universalmente `REQUIRED`: ele é exigido apenas quando a task
+  carrega critério `behavioral` cujo verification instrument é um teste. Task só
+  `structural` ou `negative` não recebe test command e não tem nenhum inventado
+  para ela. **A lista de placeholders é carrier próprio do contrato**, e não é
+  alcançada por AC22, AC28 nem AC29, que tratam do protocolo e da tabela de
+  evidência do mesmo arquivo, nem por AC32, que nomeia apenas
+  `subagent-driven-development/SKILL.md`. Sem este critério, os dois arquivos
+  passam a dizer coisas incompatíveis sobre o mesmo campo.
 
 ## Implicit Requirements
 
@@ -622,12 +641,12 @@ era escolha de estratégia diante de um número que só existe depois do texto.
 
 | Category | State | Where it landed |
 |---|---|---|
-| Functional scope and behavior | Resolved | AC1–AC40, com o escopo enumerado pelo parceiro e ampliado por duas investigações dirigidas — a primeira achou dois carriers esquecidos, a segunda um terceiro, o parser da matriz |
+| Functional scope and behavior | Resolved | AC1–AC42, com o escopo enumerado pelo parceiro e ampliado por duas investigações dirigidas — a primeira achou dois carriers esquecidos, a segunda um terceiro, o parser da matriz — e depois por AC41 e AC42, emendados no gate humano quando o plan reviewer achou mais dois carriers omitidos **em arquivos que a spec já editava** |
 | Domain and data model | Clear | Não há dado nem entidade: a mudança é normativa, em arquivos de texto |
 | Interaction flow | Resolved | AC1 (o documento canônico define a cadeia), AC12 (o plano resolve o instrumento), AC30 (a task carrega o contrato até o brief) e AC22 (o reviewer reexecuta por classe) |
 | Non-functional attributes | Resolved | IR1 (teto), IR3, IR4, IR7 (gates existentes verdes), IR6 (custo de gate novo), IR8 (disciplina de changelog) |
 | Integrations and external dependencies | Clear | IR2 e `## External Dependencies`: zero-dependency por regra |
-| Edge cases and failures | Resolved | AC20, AC34, AC35 e AC36 (marcador, migração e a assimetria contra rota de fuga); AC18 (auditor discorda da classe); AC16 (a ocorrência indentada da tabela); AC28 (`—` deixa de ser bloqueante fora de `behavioral`); AC37 e AC38 (comando com `>` ou `::` confundido com teste); AC39 e AC40 (o schema histórico de cinco colunas preservado) |
+| Edge cases and failures | Resolved | AC20, AC34, AC35 e AC36 (marcador, migração e a assimetria contra rota de fuga); AC18 (auditor discorda da classe); AC16, AC41 e AC42 — as três ocorrências da mesma falha: a regra escrita em mais de um portador do mesmo arquivo, e a enumeração alcançando um só; AC28 (`—` deixa de ser bloqueante fora de `behavioral`); AC37 e AC38 (comando com `>` ou `::` confundido com teste); AC39 e AC40 (o schema histórico de cinco colunas preservado) |
 | Constraints and tradeoffs | Resolved | IR1 e IR6 (teto de linhas e nenhum arquivo novo em `scripts/`); IR5 e IR9, que mantêm o anchor fragment fora desta fatia; IR10, que proíbe a mudança do parser de mover veredito de plano commitado; e o Iron Law do TDD, deliberadamente fora — ver `### Decision record` |
 | Terminology | Resolved | *evidence class* × *measurement status*; *locator* × *evidence*; *current-state* × *provenance*; *source evidence* fora das classes de entrega; *Verification Matrix* × *Test Coverage Matrix*; *legacy behavioral* como estado de compatibilidade × as três evidence classes, que continuam três; e `behavioral` de agente × `behavioral` de script determinístico, distinguidos em AC38 |
 | Completion signals | Resolved | Cada `AC` e `IR` carrega classe declarada; a spec aplica em si o modelo que define |
@@ -651,3 +670,4 @@ era escolha de estratégia diante de um número que só existe depois do texto.
 | Basta parsear a coluna do instrumento no checker? | Não. O parser precisa ser header-aware **e** evidence-class-aware | Parsear a coluna | **Recomendação refutada pelo parceiro**: a coluna do instrumento é justamente onde moram os comandos com `>` e `::`, então parseá-la sem olhar a classe mantém a confusão |
 | A classe de AC38 é `behavioral` sem medição de agente? | Sim. O sujeito é um script determinístico com suíte automatizada | *(não perguntada — trazida pelo parceiro)* | Decisão do parceiro, distinguindo comportamento de programa de comportamento de agente |
 | AC29 afirma comportamento medido? | Não. Vira `structural`: a entrega é o texto preservado no prompt | Manter `[behavioral]` | **Recomendação refutada por medição**: o item que introduziu o litmus fecha com *"Reasoned, not measured."* em `CHANGELOG.md:1704`, e nenhum `RESULT-*` mede essa regra |
+| A spec estava completa quando o plan reviewer achou dois carriers omitidos? | Não. Vira emenda no gate humano: AC41 (a regra de abertura do audit) e AC42 (o placeholder `[TEST_COMMAND]`), **um critério por propriedade, nunca um AC genérico do tipo "todo portador é alcançado"** | Emendar a spec em vez de consertar como step dentro da task | Padrão do projeto — `skills/writing-plans/SKILL.md:235-237`, *"If the work genuinely needs a task the spec does not cover, the spec is incomplete: take it back to your human partner rather than smuggling the task in. Amending the spec is cheap now and blocking later."* **Sem quinta rodada de spec review**: os dois carriers foram achados e verificados por outro gate |
