@@ -142,8 +142,9 @@ forma de ela passar pelo gate antes de a correção existir.
 | T9.2 A tabela de evidência generaliza para Verification Evidence | AC28 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md` | — | — |
 | T9.3 O litmus e a execução de testes sobrevivem para behavioral | AC29 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md` | — | — |
 | T9.4 A forma da linha de evidência não muda | IR3 | negative | `scripts/check-evidence-line.sh`, exit 0 | — | — |
-| T9.5 O test command é exigido de task com critério behavioral | AC42 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md` | — | — |
-| T9.6 Task só structural ou negative não recebe nem inventa test command | AC42 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md`, mais `grep -c 'REQUIRED: the command that runs'` esperando 0 | — | — |
+| T9.5 O test command é exigido de task com critério behavioral | AC42 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md`, mais `grep -c 'REQUIRED: the command that runs'` esperando 0 — a declaração universal saiu | — | — |
+| T9.6 Task só structural ou negative não recebe nem inventa test command | AC42 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md`, mais `grep -c 'has no admissible value for this field'` esperando 1 — a proibição entrou | — | — |
+| T9.7 A referência de seção em review-scopes acompanha o rename | IR4 | negative | `scripts/check-links.sh`, exit 0 | — | — |
 | T10.1 O controller entrega instrumentos e não deriva comando universal | AC32 | structural | range localizado em `skills/subagent-driven-development/SKILL.md` | — | — |
 | T11.1 O preflight inline exige classe e instrumento admissível | AC33 | structural | range localizado em `skills/executing-plans/SKILL.md` | — | — |
 | T12.1 Os dois reviewers de código admitem command evidence | AC23 | structural | range localizado em `skills/requesting-code-review/code-reviewer.md` e em `skills/subagent-driven-development/re-review-prompt.md` | — | — |
@@ -452,7 +453,7 @@ run_case "a legacy five-column matrix naming a test no step creates fails" 1 "$(
 ````
 
 **Os sete comportamentos de AC37 estão nos oito primeiros casos**, um por
-fixture. O oitavo — `only the instrument column of a behavioral row names a
+fixture. O quinto — `only the instrument column of a behavioral row names a
 test` — não é um dos sete: ele existe para o Step 5, e sem ele as duas metades
 da correção não se distinguem.
 
@@ -622,7 +623,7 @@ git commit -m "fix: o parser da matriz lia comando read-only como nome de teste"
 **Spec criterion:** AC5, AC7, AC8, AC9, AC36
 
 **Files:**
-- Modify: `skills/brainstorming/SKILL.md:237`
+- Modify: `skills/brainstorming/SKILL.md:235-237` — Step 2 edita as células de `:235` e `:236`, Step 3 a de `:237`
 - Modify: `skills/brainstorming/references/coverage-map.md:39`
 - Modify: `CHANGELOG.md`
 
@@ -665,13 +666,7 @@ daquela célula:
 ```
 
 Acrescente a mesma frase ao fim da célula de `## Implicit Requirements`, que
-hoje termina em *"None surfaced? Write "None"."*. **E renomeie, dentro dessa
-mesma célula, a única ocorrência de "Test Coverage Matrix" em
-`skills/brainstorming/SKILL.md:236` para "Verification Matrix"** — a célula diz
-que `writing-plans` refina cada `IR` em critérios de task que carregam o id dela
-naquela tabela, e a tabela passa a ter outro nome na Task 6. Deixar o nome
-velho aqui é a mesma falha de segunda ocorrência que a AC16 nomeia para o
-audit.
+hoje termina em *"None surfaced? Write "None"."*.
 
 
 **Escreva o ponteiro como markdown link, não como texto corrido.** No arquivo de
@@ -966,8 +961,14 @@ precisa da evidência que sua classe admite.
 
 - [ ] **Step 2: Trocar a matriz dentro do template de plano (T6.1)**
 
-`skills/writing-plans/SKILL.md:120-135` carrega o heading, a instrução e o
-cabeçalho de cinco colunas com quatro rows de exemplo. Depois da Task 7, todo
+`skills/writing-plans/SKILL.md:120-132` carrega o heading, a instrução e o
+cabeçalho de cinco colunas com quatro rows de exemplo. **O range termina em
+`:132`, a última row da tabela, e não em `:135`:** `:133` é linha em branco,
+`:134` é o separador `---` e `:135` é a crase de fechamento do bloco cercado que
+abre em `:80`. Substituir até `:135` engole a fence e joga `## Task Structure` e
+tudo abaixo dela para dentro de um bloco de código — e nenhum step desta task
+pega isso: `check-skill-size.sh` conta linhas, `check-links.sh` lê links, e os
+greps do Step 8 só afirmam ausências. Depois da Task 7, todo
 plano escrito a partir desse template é reprovado pelo próprio reviewer que a
 Task 7 instala. Substitua o bloco inteiro por:
 
@@ -1350,12 +1351,13 @@ git commit -m "feat: o audit verdicta por evidence class e reexecuta o instrumen
 
 ### Task 9: O task reviewer verifica por classe
 
-**Spec criterion:** AC22, AC28, AC29, AC42; IR3
+**Spec criterion:** AC22, AC28, AC29, AC42; IR3, IR4
 
 **Files:**
 - Modify: `skills/subagent-driven-development/task-reviewer-prompt.md:126-141`
 - Modify: `skills/subagent-driven-development/task-reviewer-prompt.md:183-197`
 - Modify: `skills/subagent-driven-development/task-reviewer-prompt.md:234-236`
+- Modify: `docs/review-scopes.md:27`
 - Modify: `CHANGELOG.md`
 
 **Interfaces:**
@@ -1370,6 +1372,7 @@ git commit -m "feat: o audit verdicta por evidence class e reexecuta o instrumen
 - T9.4: `scripts/check-evidence-line.sh` continua verde — instrumento na matriz
 - T9.5: `[TEST_COMMAND]` é exigido quando a task carrega critério `behavioral` cujo verification instrument é um teste — instrumento na matriz
 - T9.6: task só `structural` ou `negative` não recebe test command e não tem nenhum inventado para ela — instrumento na matriz
+- T9.7: `docs/review-scopes.md` acompanha o rename da seção, e `scripts/check-links.sh` continua verde — instrumento na matriz
 
 - [ ] **Step 1: O protocolo por critério (T9.1)**
 
@@ -1481,9 +1484,23 @@ no tests has none to lose`.
 sobrevive; T9.6 é a proibição que entra. Uma redação que dissesse só "é opcional"
 satisfaria T9.5 e deixaria T9.6 sem nada: *opcional* permite ao controller passar
 um comando inventado, que é exatamente o que
-`skills/subagent-driven-development/SKILL.md:272` já proíbe pelo outro lado.
+`skills/subagent-driven-development/SKILL.md:273-274` já proíbe pelo outro lado.
 
-- [ ] **Step 5: Verificar**
+- [ ] **Step 5: Acompanhar o rename em `docs/review-scopes.md` (T9.7)**
+
+**O rename do Step 3 quebra uma referência um arquivo adiante.**
+`docs/review-scopes.md:27` carrega a forma canônica — um markdown link para
+`task-reviewer-prompt.md` seguido de vírgula e da palavra *section* com o título
+`Test Evidence` entre aspas — e `scripts/check-links.sh` resolve o **título da
+seção**, não só o caminho. Medido:
+depois do rename ele imprime `no heading matching section "Test Evidence"` e sai
+1, onde saía 0. Troque o título ali para `Verification Evidence`.
+
+Este é o terceiro portador do mesmo rename, e ele mora fora do arquivo que a
+task edita. Os outros dois são `### Test Evidence` e a linha
+`**Reviewer returns:**`, ambos no Step 3.
+
+- [ ] **Step 6: Verificar**
 
 ```bash
 scripts/check-evidence-line.sh
@@ -1508,7 +1525,7 @@ só, e apagar as quatro rows da tabela deixaria a contagem intacta. T9.3 alega q
 o litmus fica preservado; o que prova isso é o número de rows, não o título
 sobreviver.
 
-- [ ] **Step 6: Conferir e commitar**
+- [ ] **Step 7: Conferir e commitar**
 
 ```bash
 git diff --stat
@@ -1546,8 +1563,9 @@ O item que hoje começa em `skills/subagent-driven-development/SKILL.md:270` vir
   matrix or, failing that, the repository's runner config (`package.json`
   scripts, `Makefile`, `pytest.ini`, the CI workflow). Confirm it exists before
   passing it: an invented command sends the reviewer chasing a runner error
-  instead of the task. **A task with no `behavioral` criterion has no admissible
-  value for this field — leave it out.** Deriving one anyway is how a
+  instead of the task. Scope it to the task's tests where the runner allows; the
+  full suite is the fallback. **A task with no `behavioral` criterion has no
+  admissible value for this field — leave it out.** Deriving one anyway is how a
   `structural` task acquires a test nobody asked for.
 - **`[BASE_TEST_COUNT]`:** same condition — it exists to show whether tests
   disappeared, and a task that runs no tests has none to lose. When the task
