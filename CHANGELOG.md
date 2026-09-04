@@ -9,6 +9,21 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **`check-cross-references` aprovava range malformado.** A validação comparava
+  só o número final contra o total de linhas do arquivo
+  (`skills/writing-plans/scripts/check-cross-references:409-410` antes desta
+  mudança), então `arquivo:0`, `arquivo:0-5` e `arquivo:10-5` eram reportados
+  como resolvidos. Medido por execução com controle em 04/09/2026: os três
+  saíam com código 0, e o caso de controle — um fim além do arquivo — saía com
+  1, provando que o instrumento funcionava e que os três passavam de verdade.
+  O script roda entre o conserto de uma spec ou plano e o re-despacho do
+  reviewer, para poupar uma rodada; uma citação malformada aprovada custava
+  exatamente a rodada que ele existe para economizar.
+
 ## [1.25.0] - 2026-09-04
 
 ### Added

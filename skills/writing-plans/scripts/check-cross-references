@@ -395,6 +395,15 @@ for m in CITATION.finditer(text):
     seen_citations.add(key)
     if "<" in rel:
         continue  # placeholder, unresolvable on purpose
+    # The range is judged before the file is opened. `0`, `0-N` and an
+    # inverted `N-M` are malformed whatever the file holds, and the
+    # end-of-file comparison below sees none of the three: it compares only
+    # the END against the line count, so `10-5` in a 20-line file is a
+    # citation this check called resolved.
+    end = int(last) if last else first
+    if first < 1 or end < first:
+        unresolved.append(f"`{rel}:{first}` — malformed line range")
+        continue
     path, note = resolve(rel)
     if path is None:
         unresolved.append(f"`{rel}:{first}` — {note}")
@@ -406,7 +415,6 @@ for m in CITATION.finditer(text):
     except OSError as exc:
         unresolved.append(f"`{rel}:{first}` — cannot read: {exc}")
         continue
-    end = int(last) if last else first
     if end > n:
         unresolved.append(
             f"`{rel}:{first}` — {path.name} has {n} line(s)"

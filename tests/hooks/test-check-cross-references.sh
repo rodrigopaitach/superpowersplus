@@ -108,6 +108,36 @@ run_case "spec citing a file that does not exist fails" 1 "${CLEAN_SPEC}
 
 One more finding at \`src/nowhere.ts:3\`."
 
+# --- range validation -----------------------------------------------------
+# The clean side of every pair below. `4-6` is a real range inside the
+# 20-line src/verify.ts that make_repo builds, and `7-7` is the N-N form the
+# spec accepts without canonicalising it to `7`.
+RANGE_SPEC="${CLEAN_SPEC}
+
+A range finding at \`src/verify.ts:4-6\`, and a single-line range at
+\`src/verify.ts:7-7\`."
+
+# Each broken case is RANGE_SPEC with ONE citation replaced. A case written
+# from scratch would differ from the clean side in ways nobody listed, and a
+# pair is only a pair when the difference is the thing under test.
+break_range() { printf '%s' "$RANGE_SPEC" | sed "s|src/verify.ts:4-6|$1|"; }
+
+run_case "spec with valid ranges passes" 0 "$RANGE_SPEC"
+run_case "spec citing line zero fails" 1 "$(break_range 'src/verify.ts:0')"
+run_case "spec citing a zero-based range fails" 1 "$(break_range 'src/verify.ts:0-5')"
+run_case "spec citing an inverted range fails" 1 "$(break_range 'src/verify.ts:10-5')"
+run_case "spec citing a range past the end of the file fails" 1 "$(break_range 'src/verify.ts:5-99')"
+
+# T1.6: the four broken cases are the clean document minus one citation. If
+# break_range ever stops substituting — a renamed path, a changed delimiter —
+# every broken case silently becomes RANGE_SPEC itself and passes, and the four
+# cases above go green for the opposite of their names.
+if [[ "$(break_range 'src/verify.ts:0')" == "$RANGE_SPEC" ]]; then
+    fail "the four broken range cases differ from the clean one by one citation"
+else
+    pass "the four broken range cases differ from the clean one by one citation"
+fi
+
 # --- plan shape: task criteria, matrix, tests ------------------------------
 CLEAN_PLAN='# Plan
 
