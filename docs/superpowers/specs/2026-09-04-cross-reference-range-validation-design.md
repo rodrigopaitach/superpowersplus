@@ -64,7 +64,8 @@ e não depende desta para ser escrito, embora dependa dela para ser implementado
   resolvendo, e o script sai com código 0. A forma `N-N` é aceita.
 - **AC6** — A mensagem de cada citação irresolvida nomeia a citação completa
   como foi escrita, incluindo o número final quando há range, nas três chamadas
-  de `skills/writing-plans/scripts/check-cross-references:400`, `:407` e `:412`.
+  de `skills/writing-plans/scripts/check-cross-references:400`, `:407` e
+  `:411-412` — nesta última a chamada abre em `:411` e o formato está em `:412`.
 - **AC7** — `tests/hooks/test-check-cross-references.sh` carrega, para cada um
   de AC1 a AC4, um par de casos: o documento limpo de AC5, que passa, e o mesmo
   documento com aquela citação quebrada, que falha. AC5 é o lado limpo comum aos
@@ -86,6 +87,10 @@ e não depende desta para ser escrito, embora dependa dela para ser implementado
   ajustar o teste.
 - **IR4** — `CHANGELOG.md` recebe entrada em `[Unreleased]`, exigida por
   `scripts/check-changelog.sh` para mudança sob `skills/`.
+- **IR5** — Os casos de AC7 e AC8 rodam contra o repositório descartável que
+  `tests/hooks/test-check-cross-references.sh:47-54` constrói, com seu
+  `src/verify.ts` de 20 linhas conhecidas, e nunca contra arquivo do
+  repositório, cujo tamanho muda sem aviso.
 
 ## Codebase Findings
 
@@ -160,6 +165,6 @@ IR1, verificada por execução sobre o corpus em vez de declarada.
 
 | Pergunta | Resposta | Recomendação dada | Fonte declarada |
 |---|---|---|---|
-| `N-N` é válido ou se canonicaliza para `N`? | Aceito como válido; `N` continua a forma preferida, sem gate que force a troca | Aceitar `N-N` sem canonicalizar | Padrão do projeto — `skills/writing-plans/scripts/check-cross-references:386`, cujo grupo opcional `(?:-(\d+))?` já aceita a forma sem restringir os dois números a serem diferentes; recusá-la reprovaria citação que hoje resolve corretamente, contra IR1 |
+| `N-N` é válido ou se canonicaliza para `N`? | Aceito como válido; `N` continua a forma preferida, sem gate que force a troca → AC5 | Aceitar `N-N` sem canonicalizar | Padrão do projeto — `skills/writing-plans/scripts/check-cross-references:386`, cujo grupo opcional `(?:-(\d+))?` já aceita a forma sem restringir os dois números a serem diferentes; recusá-la reprovaria citação que hoje resolve corretamente, contra IR1 |
 | Esta spec carrega evidence classes? | Não — o vocabulário é definido por outra spec e ainda não existe | Seguir a convenção vigente | Padrão do projeto — [`brainstorming/SKILL.md`](../../../skills/brainstorming/SKILL.md), section "After the Design", cuja tabela de seções obrigatórias hoje pede critério settleable por citação |
-| A correção espera o modelo de evidência? | Não. É defeito autônomo, e o modelo depende dela para ser implementado, não para ser escrito | Fatiar em duas specs | Padrão do projeto — [`final-branch-audit/SKILL.md`](../../../skills/final-branch-audit/SKILL.md), section "The Traceability Table", em que critério de spec sem task vira `LOST IN TRANSLATION — BLOCKING`, sem escape para partição de escopo |
+| A correção espera o modelo de evidência? | Não. É defeito autônomo, e [`2026-09-04-evidence-model-v2-design.md`](2026-09-04-evidence-model-v2-design.md) depende dela para ser implementada, não para ser escrita | Fatiar em duas specs | Padrão do projeto — [`final-branch-audit/SKILL.md`](../../../skills/final-branch-audit/SKILL.md), section "The Traceability Table", em que critério de spec sem task vira `LOST IN TRANSLATION — BLOCKING`, sem escape para partição de escopo |
