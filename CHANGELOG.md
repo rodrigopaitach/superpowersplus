@@ -9,6 +9,66 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **A risk accepted in 1.3.0 was reversed: the changelog's link-reference
+  footer was published inside every release body.**
+  [`scripts/release-notes.sh`](scripts/release-notes.sh) built a section by
+  slicing to the next `## ` heading and falling through to end-of-file when it
+  found none. `## Open gaps` is the last `## ` in
+  [`CHANGELOG.md`](CHANGELOG.md), so its slice ran to EOF and carried the
+  footer with it. It now stops at either boundary.
+
+  **This was a known WONTFIX, not a discovery** — the `## Open gaps` item
+  carried the standing instruction *do not re-investigate*, and it is closed in
+  this release by the entry above, which records that the item was found in
+  review rather than read beforehand. Two things changed since 1.3.0, both
+  measurable, and neither of them is why the work started: the footer was **eight** lines when the item was written and is
+  **fifty** today (counted in the body generated for 1.23.0 on 2026-09-03, zero
+  after the fix), and the item's own reasoning — not worth touching the one
+  script that decides what every release says — rested on that script having no
+  tests, which is no longer true as of the suite added below.
+
+  The changelog has two kinds of section boundary, a `## ` heading and the
+  footer, and the script honoured one. The fix is the missing boundary, not a
+  bounds check: end-of-file is a legitimate end for a document, and demanding a
+  terminator would have invented a requirement. That fallback is now covered by
+  a case of its own.
+
+  **Fifth occurrence of this shape in this project, not the third** —
+  `usage()` slicing by its last sentence, `section()`'s end-of-file return,
+  `sync-to-codex-plugin.sh`'s `sed` range (13 lines to 48), `slice_between` in
+  1.23.0, and this one. A slice whose terminator is absent degrades into
+  reading the rest of the file, and the output stays plausible.
+
+- **[`scripts/check-links.sh`](scripts/check-links.sh) sliced the same section
+  to end of file, and said in its docstring that this matched
+  `release-notes.sh`.** The sentence was true when written and was falsified by
+  the fix above; the two slices then disagreed by the footer's fifty lines. The
+  gate is now bounded by the same footer boundary and the docstring says what
+  both actually do. **No gate misfired at any point** — the footer contributes
+  zero markdown links, and the gate's counts are byte-identical before and
+  after the change (686 local links, 110 files, 98 URLs, 99 section
+  references), which is the measurement that the narrowing is behaviour-
+  preserving. The URL-diet pass reads whole files rather than this slice, so it
+  is untouched.
+
+### Added
+
+- **[`tests/release-notes/test-release-notes.sh`](tests/release-notes/test-release-notes.sh)**
+  — the first tests `scripts/release-notes.sh` has ever had, on a synthetic
+  changelog rather than the real one, which changes every release. It proves
+  the cut by difference: the footer must be **absent** and the section's own
+  last line **present**, both on the same body, because a cut that stops too
+  early passes the first assertion alone. A second lab with no footer at all
+  exercises the end-of-file fallback, so that claim is asserted rather than
+  only stated. Verified with `mutar` in three directions — removing the footer
+  boundary kills the absence assertions, truncating the slice kills the
+  presence ones, and dropping the fallback kills the no-footer case. Wired
+  into CI.
+
 ## [1.23.0] - 2026-09-03
 
 ### Added
@@ -5763,15 +5823,23 @@ section where the next one would be written.
   lockfile — this repository is zero-dependency and the line varies per project
   anyway. Closing it would need an example project with a versioned lockfile
   inside the repo. (opened plus.1)
-- **A generated release body carries the changelog's link-reference block.**
-  `scripts/release-notes.sh` slices from Open gaps to end of file, and the
-  version-to-tag link definitions live there, so every release body ends with
-  the full list of them. Measured, not assumed: the published v1.2.5 body
-  carries the same eight lines. It renders as literal text on GitHub and breaks nothing.
-  Left as is on purpose — a release body is generated, never hand-written, so
-  the only real fix is teaching the script to stop at the link block, and that
-  is not worth a change to the one script that decides what every release says.
-  **Do not re-investigate: this is known and deliberate.** (opened 1.3.0)
+- **CLOSED in [Unreleased]: a generated release body carried the changelog's
+  link-reference block.** Opened 1.3.0 as a deliberate WONTFIX — "not worth a
+  change to the one script that decides what every release says" — and carrying
+  the standing instruction *do not re-investigate*. The cost side of that
+  judgement was right for 1.3.0 and had rotted by now: the footer was eight
+  lines when the item was written and is fifty today, and `release-notes.sh`
+  had no test of any kind, which is what made touching it expensive. The fix
+  landed with the script's first suite, so the "one script nobody dares change"
+  is no longer unprotected.
+
+  **The reversal was reached by accident, and that is recorded here because the
+  outcome does not prove the method.** The item was not read before the work
+  was proposed or done; it surfaced in review, after the fix was written. Had
+  the 1.3.0 reasoning still held, the same fix would have been made with the
+  same confidence. What produced the right answer was not the process, and a
+  right answer from a broken process is the failure this file exists to make
+  visible. (opened 1.3.0, closed [Unreleased])
 - **A tag cut on a commit outside `main` is never tested.** The residual hole
   left by the CI trigger fix above: `push: branches: ['**']` excludes tag refs,
   so nothing runs for the tag itself. Accepted, not overlooked — a tag here is

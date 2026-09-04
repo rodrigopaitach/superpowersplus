@@ -28,10 +28,26 @@ CHANGELOG="$REPO_ROOT/CHANGELOG.md"
 [ -f "$CHANGELOG" ] || { echo "error: $CHANGELOG not found" >&2; exit 1; }
 
 body="$(python3 - "$CHANGELOG" "$VERSION" <<'PY'
+import re
 import sys
 
 changelog, version = sys.argv[1], sys.argv[2]
 text = open(changelog, encoding="utf-8").read()
+
+
+# A section ends at the next `## ` heading OR at the link-reference footer.
+# Two boundaries, not one, and knowing only the first is what this fixes:
+# `## Open gaps` is the last `## ` in the changelog, so its slice fell through
+# to end-of-file and carried the whole footer into every release body ever
+# generated. Measured on 2026-09-03: 50 `[1.x.x]: …` lines in the body for
+# 1.23.0. The footer is the only place these lines appear — every other link
+# in the changelog is inline. The second alternative is line-anchored, so prose
+# could in principle trip it: a markdown footnote definition, or a wrapped line
+# starting `[the gate]: it was...`. Measured on the whole changelog the day this
+# was written: zero such lines outside the footer, zero inside code fences.
+# Its twin is FOOTER_START in scripts/check-links.sh, which slices the same
+# section. Change one, look at the other.
+SECTION_END = re.compile(r"^(?:## |\[[^\]]+\]: )", re.M)
 
 
 def section(heading):
@@ -39,8 +55,8 @@ def section(heading):
     start = text.find(heading)
     if start == -1:
         raise SystemExit(f"error: section {heading!r} not found in the changelog")
-    end = text.find("\n## ", start + len(heading))
-    block = text[start:end if end != -1 else len(text)].strip()
+    end = SECTION_END.search(text, start + len(heading))
+    block = text[start:end.start() if end else len(text)].strip()
     parts = block.split("\n", 1)
     # A heading with nothing under it. Named, rather than left to fall through
     # to the IndexError it raised the first time — which read like a defect in

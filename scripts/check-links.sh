@@ -102,6 +102,10 @@ HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 SECTION_REF = re.compile(
     r'(?:`([^`\n]+\.md)`|\[[^\]]*\]\(([^)\s]+\.md)\)),\s*section\s+"([^"]+)"')
 SECTION_HEADING = re.compile(r"^\s*(#{1,6})\s+(.*?)\s*#*\s*$")
+# The changelog's link-reference footer. Its twin is SECTION_END in
+# scripts/release-notes.sh: the same boundary, copied rather than shared
+# because the two scripts are independent. Change one, look at the other.
+FOOTER_START = re.compile(r"^\[[^\]]+\]: ", re.M)
 
 
 def open_gaps_source():
@@ -120,10 +124,16 @@ def open_gaps_source():
     readers to do work already done. Both halves — a stale claim and a rotted
     anchor — sat in the only live text no pass could see.
 
-    Sliced from the heading to end of file, the same boundary
-    scripts/release-notes.sh already uses to put this section into a release
-    body. A missing heading raises rather than yielding an empty slice: an
-    empty one would report zero problems and read exactly like a clean pass.
+    Sliced from the heading to the link-reference footer, which is where the
+    live list actually ends: `## Open gaps` is the last `## ` in the file, so
+    slicing to end of file instead takes the whole footer with it. That is the
+    boundary scripts/release-notes.sh uses for the same section, and the two
+    have to agree — this docstring claimed they did while release-notes.sh
+    still ran to EOF, and the claim went on reading as true after the slices
+    diverged by the footer's fifty lines. A missing heading raises rather than
+    yielding an empty slice: an empty one would report zero problems and read
+    exactly like a clean pass. A missing footer does not raise — end of file is
+    a legitimate end for a document.
     """
     path = pathlib.Path("CHANGELOG.md")
     text = path.read_text(encoding="utf-8")
@@ -135,7 +145,10 @@ def open_gaps_source():
             "section is sliced by that exact heading; if it was renamed, "
             "rename it here and in scripts/release-notes.sh together."
         )
-    return (path, text[at + 1:], text.count("\n", 0, at + 1))
+    body = text[at + 1:]
+    footer = FOOTER_START.search(body)
+    return (path, body[: footer.start()] if footer else body,
+            text.count("\n", 0, at + 1))
 
 
 def section_sources():

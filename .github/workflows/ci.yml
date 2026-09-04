@@ -56,6 +56,9 @@ jobs:
       - name: Tests (version bump preflight)
         run: tests/version-bump/test-bump-version.sh
 
+      - name: Tests (release notes section boundaries)
+        run: tests/release-notes/test-release-notes.sh
+
       - name: Tests (review yield rules)
         run: tests/review-yield/test-review-yield-rules.sh
 
