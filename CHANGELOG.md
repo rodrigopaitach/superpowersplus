@@ -57,6 +57,34 @@ References below name them so a claim here can be traced there.
 
 ### Added
 
+- **[`CLAUDE.md`](CLAUDE.md), section "How you work here": grep the live list
+  before proposing work on something.** The failure is measured — the fix
+  above was proposed and written without the `## Open gaps` item that recorded
+  it as deliberate ever being read; the item surfaced in review, after the
+  code. The remedy is reasoned, and three alternatives were measured and
+  dropped before it:
+
+  - **A pre-commit gate crossing staged files against items that name them.**
+    Simulated over 400 commits, each against the live list as it stood in that
+    commit's parent: **26** items were closed or edited by a commit, and the
+    crossing pointed at the right one **4** times — 15% recall, 3% precision
+    across 117 firings. The cause is structural, not a weak matcher: of 45
+    items, **15** name no tracked file at all and **6** name only historical
+    artefacts, so the ceiling is 53%; and an item typically names the file
+    where the problem was *observed*, not the one edited to close it.
+  - **Injecting the list at session start.** [`hooks/session-start`](hooks/session-start)
+    is registered under `${CLAUDE_PLUGIN_ROOT}` ([`hooks/hooks.json`](hooks/hooks.json)),
+    so it runs for everyone who installs the plugin. That would ship this
+    project's internal debt — ~1,100 tokens of item titles, or ~14,000 for the
+    whole list — into every session of every unrelated project.
+  - **A local session-start hook.** Same token cost each session, and a
+    mechanism this checkout does not have, against a file already loaded.
+
+  What the rule has instead of a recall figure: **35 of 45** items name what
+  they are about in a backticked identifier, and the command in the rule, run
+  against `7225fd9` — the commit this session started from — returns the item
+  that was missed. Measured 2026-09-03.
+
 - **[`tests/release-notes/test-release-notes.sh`](tests/release-notes/test-release-notes.sh)**
   — the first tests `scripts/release-notes.sh` has ever had, on a synthetic
   changelog rather than the real one, which changes every release. It proves

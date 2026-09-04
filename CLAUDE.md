@@ -11,6 +11,22 @@
 - **Report faithfully.** Tests that fail, steps you skipped, what you could not verify — say so plainly, with the output.
 - **This file keeps a relation or a condition, never a measured number.** A number that matters lives in [`CHANGELOG.md`](CHANGELOG.md) with its date. A number here ages in silence and goes on reading as true; a condition — something a command answers today — never does.
 - **Most rules here are reasoned, not measured.** When you add one, say which it is.
+- **Before proposing work on something, grep the live list for it.**
+  `## Open gaps` in [`CHANGELOG.md`](CHANGELOG.md) is where decisions are
+  recorded, deliberate WONTFIXes among them, some carrying *do not
+  re-investigate*. It sits at the end of the longest file in the repository,
+  so "I read Open gaps" almost always means "I read its first screen", and an
+  item you did not reach reads exactly like an item that does not exist. The
+  command is `awk '/^## Open gaps/,0' CHANGELOG.md | grep -n '<identifier>'`,
+  the identifier being the script, skill or gate you are about to touch —
+  items name what they are about, which is what makes them reachable this way.
+  **When the grep returns something, the finding is not "there is a defect"
+  but "a recorded decision may have expired"**, and those are different things
+  to bring your human partner: the second one names the premise to re-check.
+  **The failure this rule answers is measured; the rule itself is reasoned** —
+  a session proposed and shipped a fix for a defect this list had recorded as
+  deliberate, and the grep above, run against the commit that session started
+  from, returns the item.
 
 ## Names and paths that break silently
 
