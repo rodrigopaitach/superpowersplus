@@ -28,6 +28,27 @@ References below name them so a claim here can be traced there.
   a fonte canônica: quando um carrier e este documento divergirem, o defeito é
   do carrier.
 
+### Changed
+
+- **A spec passa a declarar a evidence class de cada critério.**
+  [`skills/brainstorming/SKILL.md`](skills/brainstorming/SKILL.md), section
+  "After the Design" — as células de `## Acceptance Criteria` e
+  `## Implicit Requirements` deixam de pedir critério *settleable* por uma
+  citação `file:line` e passam a pedir a evidência que a classe declarada
+  admite: range localizado, verificação read-only, ou fonte fundamentada. Cada
+  critério carrega `[behavioral]`, `[structural]` ou `[negative]` depois do id,
+  e a spec ganha `**Evidence model:** v2` no cabeçalho — o discriminador
+  explícito que diz a quem lê depois se um critério sem classe é erro ou é
+  documento anterior ao modelo. `## Codebase Findings` passa a pedir o **menor
+  range suficiente**, mantendo o quoted snippet intacto: nenhuma minimalidade é
+  exigida do fragmento. Entra também, na section "Where a Claim Comes From", a
+  regra de adequação do instrumento ao alcance da alegação, que não é a
+  "measure, don't estimate" reescrita — lá a falha é não rodar comando, aqui é
+  rodar um cujo alcance é menor que a frase que ele sustenta. Em
+  [`skills/brainstorming/references/coverage-map.md`](skills/brainstorming/references/coverage-map.md),
+  a linha *Completion signals* deixa de ser sobre testabilidade e passa a ser
+  sobre a evidência admissível.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em

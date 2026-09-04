@@ -36,7 +36,7 @@ Covering the ten categories does not end the interview, and no category — cove
 | Edge cases and failures — negative scenarios, limits, concurrency | The test suite is green and the bug reports are about the cases nobody wrote down |
 | Constraints and tradeoffs | A constraint discovered during implementation invalidates work already done |
 | Terminology | Two people use one word for two things and the disagreement surfaces at review, in code |
-| Completion signals — testability of the acceptance criteria | "Done" becomes an opinion. A criterion no `file:line` can settle cannot be traced by the plan or the final audit |
+| Completion signals — the evidence each acceptance criterion admits | "Done" becomes an opinion. A criterion no admissible evidence can settle — no located range, no read-only check, no grounded source — cannot be traced by the plan or the final audit |
 | Placeholders and vague adjectives left unquantified | "Fast", "secure", "a lot of users" survive into the plan and get resolved by whoever implements them, silently |
 
 **The category name is the text before the em dash**; what follows is the gloss of what the category covers, not part of the name. The map in the spec carries the names — `Domain and data model`, not the gloss — so ten rows stay readable. All ten appear, always, in this order.
