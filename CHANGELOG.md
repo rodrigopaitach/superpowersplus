@@ -23,6 +23,12 @@ References below name them so a claim here can be traced there.
   O script roda entre o conserto de uma spec ou plano e o re-despacho do
   reviewer, para poupar uma rodada; uma citação malformada aprovada custava
   exatamente a rodada que ele existe para economizar.
+- **A mensagem de citação irresolvida descartava o número final.** As três
+  chamadas que o script tinha antes desta versão — a quarta é a que a validação
+  de range acrescentou, e cai sob a mesma regra — formatavam
+  `` `{rel}:{first}` ``, então um range inválido `5-200` era reportado como a
+  linha `5` — que existe no arquivo. Quem lia o erro procurava o defeito no
+  lugar errado. A citação passa a ser montada uma vez, como foi escrita.
 
 ## [1.25.0] - 2026-09-04
 

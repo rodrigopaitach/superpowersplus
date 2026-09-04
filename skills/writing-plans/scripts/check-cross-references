@@ -393,31 +393,30 @@ for m in CITATION.finditer(text):
     if key in seen_citations:
         continue
     seen_citations.add(key)
+    # The citation as it was written. Every unresolved message below names
+    # this, never `{rel}:{first}`: dropping the end number reports a line that
+    # exists in the file, and the reader looks for the defect there.
+    cite = f"{rel}:{first}-{last}" if last else f"{rel}:{first}"
     if "<" in rel:
         continue  # placeholder, unresolvable on purpose
-    # The range is judged before the file is opened. `0`, `0-N` and an
-    # inverted `N-M` are malformed whatever the file holds, and the
-    # end-of-file comparison below sees none of the three: it compares only
-    # the END against the line count, so `10-5` in a 20-line file is a
-    # citation this check called resolved.
     end = int(last) if last else first
     if first < 1 or end < first:
-        unresolved.append(f"`{rel}:{first}` — malformed line range")
+        unresolved.append(f"`{cite}` — malformed line range")
         continue
     path, note = resolve(rel)
     if path is None:
-        unresolved.append(f"`{rel}:{first}` — {note}")
+        unresolved.append(f"`{cite}` — {note}")
         continue
     if note:
         shortened += 1
     try:
         n = sum(1 for _ in path.open(encoding="utf-8", errors="replace"))
     except OSError as exc:
-        unresolved.append(f"`{rel}:{first}` — cannot read: {exc}")
+        unresolved.append(f"`{cite}` — cannot read: {exc}")
         continue
     if end > n:
         unresolved.append(
-            f"`{rel}:{first}` — {path.name} has {n} line(s)"
+            f"`{cite}` — {path.name} has {n} line(s)"
             + (f" ({note})" if note else "")
         )
 

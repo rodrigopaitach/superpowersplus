@@ -138,6 +138,22 @@ else
     pass "the four broken range cases differ from the clean one by one citation"
 fi
 
+# AC8: the message names the citation as it was written. Before this fix all
+# four unresolved paths formatted `{rel}:{first}` — the three the script always
+# had, plus the one Task 1 added — so an invalid `10-5` was
+# reported as line 10 — a line that exists in the file, sending the reader to
+# the wrong place. run_case cannot see this: the exit code was already 1.
+msg_dir="$TEST_ROOT/range_message"
+make_repo "$msg_dir"
+printf '%s\n' "$(break_range 'src/verify.ts:10-5')" >"$msg_dir/docs/doc.md"
+msg_out="$("$SCRIPT_UNDER_TEST" "$msg_dir/docs/doc.md" "$msg_dir" 2>&1 || true)"
+if printf '%s' "$msg_out" | grep -q 'verify\.ts:10-5'; then
+    pass "an invalid range is reported with its end number"
+else
+    fail "an invalid range is reported with its end number"
+    printf '%s\n' "$msg_out" | sed 's/^/        /'
+fi
+
 # --- plan shape: task criteria, matrix, tests ------------------------------
 CLEAN_PLAN='# Plan
 
