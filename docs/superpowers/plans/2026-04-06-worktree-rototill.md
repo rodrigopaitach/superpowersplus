@@ -1,5 +1,15 @@
 # Worktree Rototill Implementation Plan
 
+> **Executed, and one instruction inside has since aged.** The setup block under
+> "Step 3: Project Setup" runs `poetry install` on the presence of `pyproject.toml`.
+> That file names the language, not the package manager — a project on uv, Hatch, PDM
+> or plain setuptools either fails there or installs into an environment nobody chose —
+> and the skill now detects the tool from a lockfile, after reading the project's own
+> instructions first (`1.25.0`, 2026-09-04). **Marked, not rewritten** — this is a record
+> of work already done, and the live instruction is in
+> [`skills/using-git-worktrees/SKILL.md`](../../../skills/using-git-worktrees/SKILL.md),
+> section "Step 2: Project Setup".
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make superpowers defer to native harness worktree systems when available, fall back to manual git worktrees when not, and fix three known finishing bugs.
