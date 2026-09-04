@@ -315,6 +315,21 @@ $VM_HEAD
 
 run_case "a matrix row with more cells than its header is reported" 1 "$WIDE_ROW"
 
+# An ESCAPED pipe is a cell's content, not a cell boundary — the form markdown
+# requires for a literal `|`, and the one a read-only shell command needs. The
+# instrument column is where those commands live, so charging a cell count
+# without honouring the escape trades a gate that failed open for one that
+# fails closed on valid markdown. Two documents in this repository already
+# write it: 2026-08-21-upstream-consult-fixes.md and
+# 2026-08-24-knowledge-to-skills-traversal.md.
+ESCAPED_PIPE="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.1 rejects the bad input\n- T1.2 the manifest parses|')
+$VM_HEAD
+| T1.1 | AC1 | behavioral | > rejects the bad input | unit | tests |
+| T1.2 | AC2 | structural | \`grep -c foo file \\| wc -l\` | — | — |"
+
+run_case "an escaped pipe in an instrument is content, not a cell boundary" 0 "$ESCAPED_PIPE"
+
 # --- fence awareness ------------------------------------------------------
 # A plan that documents the plan format carries `## Task N` inside fenced
 # examples. Measured 2026-08-24: the fence-blind extractor reported 17 tasks for

@@ -206,6 +206,22 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A guarda de contagem de células reprovava pipe corretamente escapado.**
+  Achado do re-review sobre o próprio diff de correção: a checagem nova
+  `len(cells) != len(header)` fechou o buraco em que o gate falhava **aberto** e
+  abriu um em que ele falha **fechado**, sobre markdown válido. `_cells`
+  dividia em todo `|`, sem honrar o escape, então um instrumento `structural`
+  escrito como `` `grep -c foo file \| wc -l` `` — a forma que markdown exige
+  para um pipe literal, e a única possível num comando read-only — contava sete
+  células sob um cabeçalho de seis. A coluna de instrumento é exatamente onde
+  esses comandos moram, e este repositório **já escreve assim** em
+  `docs/superpowers/plans/2026-08-21-upstream-consult-fixes.md:43` e
+  `docs/superpowers/plans/2026-08-24-knowledge-to-skills-traversal.md:66`; as
+  duas escapam hoje por serem matrizes históricas de cinco colunas, que não
+  entram no caminho novo. A divisão passa a ignorar `|` precedido de barra
+  invertida, e a célula é desescapada depois. Nenhum dos nove documentos com
+  matriz muda de veredito.
+
 - **A cópia da tabela dentro do prompt de dispatch do audit reensinava a forma
   universal.** Achado Minor do review de branch. A tabela do corpo ganhou
   exemplos por classe; a cópia indentada dentro do `## Output Format` ficou com

@@ -281,8 +281,19 @@ in_code = "\n".join(ln for i, ln in enumerate(lines) if fenced[i])
 
 
 def _cells(ln):
-    """The table row's cells, stripped of pipes, spaces and backticks."""
-    return [c.strip().strip("`") for c in ln.strip().strip("|").split("|")]
+    r"""The table row's cells, stripped of pipes, spaces and backticks.
+
+    A `\|` is a cell's content, not a boundary: it is the form markdown
+    requires for a literal pipe, and the one a read-only shell command needs
+    — and the instrument column is where those commands live. Splitting on it
+    counts a cell that is not there, which the cell-count check below then
+    reports as a malformed row.
+    """
+    inner = ln.strip().strip("|")
+    return [
+        c.strip().strip("`").replace("\\|", "|")
+        for c in re.split(r"(?<!\\)\|", inner)
+    ]
 
 
 # Which header each matrix row sits under. A plan carries one matrix, but a
