@@ -10,16 +10,19 @@ reprova por construção uma classe inteira de critério.
 
 A regra raiz em [`CLAUDE.md`](../../../CLAUDE.md), section "How you work here", diz
 *"Every claim about this code carries a `path/file.ext:line`"*, e
-[`final-branch-audit/SKILL.md`](../../../skills/final-branch-audit/SKILL.md), seção
+[`final-branch-audit/SKILL.md`](../../../skills/final-branch-audit/SKILL.md), section
 "Step 3: Every Task in the Plan", converte isso em veredito: *"a criterion with
 no `path/file.ext:line` citation is NOT DELIVERED"*.
 
 **Não existe linha que prove ausência.** "Nenhuma dependência nova foi
 introduzida", "o manifest continua JSON válido", "todos os links locais
 resolvem" são estruturalmente `NOT DELIVERED`. Este repositório produz
-exatamente esses critérios: é zero-dependency por regra, valida
-`.claude-plugin/plugin.json` por `tests/kimi/test-plugin-manifest.sh` e
-`tests/codex/test-marketplace-manifest.sh`, e roda `scripts/check-links.sh`. O gate mais forte
+exatamente esses critérios: é zero-dependency por regra e roda
+`scripts/check-links.sh`. E o caso mais agudo é um que **nenhum teste deste
+repositório verifica**: que `.claude-plugin/plugin.json` continua JSON válido.
+Um `grep -ran` por esse caminho em `scripts/`, `tests/` e `.github/`, sobre
+`*.sh`, `*.py` e `*.yml`, devolve zero — o único lugar que o nomeia é
+`.version-bump.json:4`, que é alvo de bump e não validador. O gate mais forte
 do projeto não sabe registrar a prova das propriedades que o projeto declara
 sobre si mesmo.
 
@@ -39,7 +42,7 @@ manda medir em vez de estimar, e não cobre este caso, porque medir foi
 exatamente o que aconteceu.
 
 **Fora de escopo.** O gate de anchor fragment não é construído aqui — a decisão
-do universo de validação fica para fatia própria, e IR5 é a guarda. Não entra:
+do universo de validação fica para fatia própria, e IR9 é a guarda. Não entra:
 adicionar citação a `systematic-debugging` ou `verification-before-completion`;
 harmonizar as quatro faces de review; alterar `README.kimi.md` ou
 `README.opencode.md`, que não carregam a promessa; e a correção do parser de
@@ -96,9 +99,11 @@ depender de linhas vizinhas não citadas, sustenta sozinho a afirmação feita.*
 ### Live-document reference
 
 Arquivo deste repositório que é editado a cada release não se ancora por
-`file:line`, que apodrece, mas por **markdown link mais título de seção**. A
-forma canônica ganha as duas verificações: o caminho pela passagem de links e o
-título pela passagem de seções. `section "…"` em inglês é a forma que o gate lê.
+`file:line`, que apodrece, mas por **markdown link mais título de seção** —
+[`CLAUDE.md`](../../../CLAUDE.md), section "Writing a reference". A forma canônica
+ganha as duas verificações: o caminho pela passagem de links e o título pela
+passagem de seções. **A forma que o gate lê é `<link ou caminho em crase>,
+section "Título"`, em inglês e contígua**: `scripts/check-links.sh:102-103`.
 
 ### Os três regimes de frescor
 
@@ -139,8 +144,9 @@ instrumento exaustivo sobre esse conjunto.
 
 ## Acceptance Criteria
 
-- **AC1** `[structural]` — `docs/evidence-model.md` existe e define cada
-  conceito da seção `## The model` desta spec, sem acrescentar nenhum: as três
+- **AC1** `[structural]` — `docs/evidence-model.md` existe e define os onze
+  conceitos que `## The model` desta spec enuncia: a cadeia de três camadas
+  (spec declara a classe, plano resolve o instrumento, audit reexecuta), as três
   delivery classes, a source evidence fora delas, o measurement status como
   dimensão ortogonal, o *smallest sufficient range*, a live-document reference,
   os três regimes de frescor, a distinção locator/evidence, a distinção
@@ -156,8 +162,9 @@ instrumento exaustivo sobre esse conjunto.
 - **AC4** `[structural]` — `CLAUDE.md` e `AGENTS.md` carregam a regra de
   adequação do instrumento ao alcance da alegação, idênticos entre si.
 - **AC5** `[structural]` — `brainstorming/SKILL.md` carrega a regra de adequação
-  do instrumento como regra operacional, na section "Where a Claim Comes From" ou
-  imediatamente adjacente a ela.
+  do instrumento como regra operacional em
+  [`brainstorming/SKILL.md`](../../../skills/brainstorming/SKILL.md),
+  section "Where a Claim Comes From", ou imediatamente adjacente a ela.
 - **AC6** `[structural]` — `spec-document-reviewer-prompt.md` carrega finding
   bloqueante para alegação de completude, cardinalidade, unicidade ou ausência
   sustentada apenas por instrumento parcial.
@@ -184,8 +191,9 @@ instrumento exaustivo sobre esse conjunto.
   task eligibility com a redação nova, sem passar a admitir efeito externo.
 - **AC16** `[structural]` — `final-branch-audit/SKILL.md` usa as colunas
   `Task | Criterion | Delivery evidence | Verification evidence | Verdict` **nas
-  duas ocorrências da tabela**, a da section "The Audit Table" e a de dentro do
-  prompt de dispatch.
+  duas ocorrências da tabela** — a de
+  [`final-branch-audit/SKILL.md`](../../../skills/final-branch-audit/SKILL.md),
+  section "The Audit Table", e a de dentro do prompt de dispatch.
 - **AC17** `[structural]` — `final-branch-audit/SKILL.md` define
   `EVIDENCE CLASS MISMATCH` como veredito bloqueante para classe declarada que
   não serve ao critério.
@@ -215,6 +223,8 @@ instrumento exaustivo sobre esse conjunto.
   inspecionável que casa com a afirmação — range localizado, verificação
   executável ou fonte fundamentada — e deixa de prometer `file:line` como forma
   universal. A redação diverge da referência de propósito, como já é o caso.
+- **AC27** `[structural]` — `docs/evidence-model.md` não define nenhum conceito
+  que `## The model` desta spec não enuncie.
 - **AC26** `[structural]` — o item de `## Open gaps` sobre o gate de `file:line`
   deixa de afirmar que nenhum anchor foi achado podre, e registra os três
   regimes: *ephemeral*, *live persistent* e *historical*.
@@ -232,22 +242,24 @@ instrumento exaustivo sobre esse conjunto.
   documento novo e os links acrescentados.
 - **IR5** `[negative]` — nenhum gate novo passa a exigir fragmento literal em
   citação.
-- **IR5b** `[negative]` — o anchor-fragment gate não é construído nesta branch.
+- **IR9** `[negative]` — o anchor-fragment gate não é construído nesta branch.
 - **IR6** `[negative]` — nenhum arquivo novo entra em `scripts/` nesta branch.
   A motivação de um gate não é auditável; a ausência do arquivo é. Se um gate se
   tornar necessário, ele sai desta branch e leva consigo o defeito medido que o
   paga, registrado em `CHANGELOG.md`.
 - **IR7** `[negative]` — `scripts/check-docs-sync.sh` continua verde:
   `docs/README.pt-BR.md` e `docs/README.en.md` mudam no mesmo commit.
-- **IR8** `[structural]` — `CHANGELOG.md` recebe entrada em `[Unreleased]` para
+- **IR8** `[structural]` — a classe é `structural` e não `negative` porque a
+  entrega é positiva e localizável: as linhas acrescentadas ao `CHANGELOG.md`.
+  `CHANGELOG.md` recebe entrada em `[Unreleased]` para
   cada commit que toque `skills/`, `scripts/`, `githooks/`, `.github/` ou
   `hooks/`, que são os caminhos que `scripts/check-changelog.sh` cobra.
 
 ## Codebase Findings
 
 - **A regra raiz trata `path:line` como universal, em dois arquivos idênticos.**
-  [`CLAUDE.md`](../../../CLAUDE.md) e [`AGENTS.md`](../../../AGENTS.md), ambos na seção
-  "How you work here": *"Every claim about this code carries a
+  [`CLAUDE.md`](../../../CLAUDE.md), section "How you work here", e
+  [`AGENTS.md`](../../../AGENTS.md), section "How you work here": *"Every claim about this code carries a
   `path/file.ext:line`."*
 - **A regra de medir existe e não cobre o defeito do instrumento.**
   `CLAUDE.md:9`: *"**Measure, don't estimate.** Counts, file lists, "this is used
@@ -257,7 +269,7 @@ instrumento exaustivo sobre esse conjunto.
   *"**Most rules here are reasoned, not measured.** When you add one, say which
   it is."* É a fonte da decisão de não criar classe `normative`.
 - **O audit converte evidence-or-zero em veredito.**
-  [`final-branch-audit/SKILL.md`](../../../skills/final-branch-audit/SKILL.md), seção
+  [`final-branch-audit/SKILL.md`](../../../skills/final-branch-audit/SKILL.md), section
   "Step 3: Every Task in the Plan": *"Evidence-or-zero: a criterion with no
   `path/file.ext:line` citation is NOT DELIVERED."*
 - **A tabela do audit ocorre duas vezes, e um grep ancorado em início de linha vê
@@ -300,7 +312,9 @@ instrumento exaustivo sobre esse conjunto.
   identical to this check."*
 - **A forma dentro de `## Output Format` de subagente não pode ficar atrás de
   link.** `scripts/check-evidence-line.sh:6-10` registra a medição 1/3 → 3/3
-  quando a forma voltou ao ponto de uso. É a fonte de AC2 e de IR6.
+  quando a forma voltou ao ponto de uso. É a fonte de AC2. **Não é fonte de IR6**,
+  que depois da reescrita fala de arquivo novo em `scripts/` e não de forma atrás
+  de link.
 - **Os dois READMEs de documentação são um par gated; o showcase não.**
   [`docs/docs-and-links.md`](../../docs-and-links.md), section "Three README-shaped
   files, three jobs": `docs/README.pt-BR.md` é canônico, `docs/README.en.md` o
@@ -313,6 +327,18 @@ instrumento exaustivo sobre esse conjunto.
   parseia célula por padrão de conteúdo (`> nome`), não por posição de coluna.
   Uma coluna adicional muda o prompt e não o script — é o que AC12 e AC13
   exploram.
+- **A passagem de seções só lê a forma inglesa e contígua.**
+  `scripts/check-links.sh:102-103` define
+  `SECTION_REF = re.compile(r'(?:`([^`\n]+\.md)`|\[[^\]]*\]\(([^)\s]+\.md)\)),\s*section\s+"([^"]+)"')`
+  — o nome do arquivo precisa vir imediatamente antes de `, section "…"`, e
+  qualquer palavra entre a vírgula e `section` faz a referência deixar de ser
+  lida. Medido nesta spec durante a autoria: quatro âncoras escritas em português
+  eram invisíveis ao gate, e uma delas nomeava seção inexistente.
+- **A regra da forma canônica é do próprio projeto.**
+  [`CLAUDE.md`](../../../CLAUDE.md), section "Writing a reference": ancorar por
+  `file:line` o que não se move, e por markdown link mais título de seção o
+  arquivo deste repositório editado a cada release, porque *"the canonical form
+  earns both checks"*.
 - **A testabilidade do coverage map é definida por `file:line`.**
   [`brainstorming/references/coverage-map.md`](../../../skills/brainstorming/references/coverage-map.md),
   section "Categories", na row *Completion signals*: *"A criterion no `file:line`
@@ -334,7 +360,7 @@ instrumento exaustivo sobre esse conjunto.
 
 ## External Dependencies
 
-None. O projeto é zero-dependency por regra de [`CLAUDE.md`](../../../CLAUDE.md), seção
+None. O projeto é zero-dependency por regra de [`CLAUDE.md`](../../../CLAUDE.md), section
 "What does not belong here". As ferramentas usadas — `python3`, `bash`, `git` —
 já são pressupostas pelos gates existentes.
 
@@ -353,10 +379,10 @@ já são pressupostas pelos gates existentes.
 | Functional scope and behavior | Resolved | AC1–AC26, com o escopo enumerado pelo parceiro e não inferido |
 | Domain and data model | Clear | Não há dado nem entidade: a mudança é normativa, em arquivos de texto |
 | Interaction flow | Resolved | AC1 (o documento canônico define a cadeia) e AC12 (o plano resolve o instrumento, que é o elo do meio) |
-| Non-functional attributes | Resolved | IR1 (teto), IR3, IR4, IR7 (gates existentes verdes), IR6 (custo de gate novo) |
+| Non-functional attributes | Resolved | IR1 (teto), IR3, IR4, IR7 (gates existentes verdes), IR6 (custo de gate novo), IR8 (disciplina de changelog) |
 | Integrations and external dependencies | Clear | IR2 e `## External Dependencies`: zero-dependency por regra |
 | Edge cases and failures | Resolved | AC20 (spec sem classe), AC18 (auditor discorda da classe), AC16 (a ocorrência indentada da tabela) |
-| Constraints and tradeoffs | Resolved | IR1 e IR6: o teto de linhas e a recusa de criar gate por conveniência são as duas restrições que moldam onde o texto mora |
+| Constraints and tradeoffs | Resolved | IR1 e IR6 (teto de linhas e nenhum arquivo novo em `scripts/`); IR5 e IR9, que mantêm o anchor fragment fora desta fatia |
 | Terminology | Resolved | *evidence class* × *measurement status*; *locator* × *evidence*; *current-state* × *provenance*; *source evidence* fora das classes de entrega |
 | Completion signals | Resolved | Cada `AC` e `IR` carrega classe declarada; a spec aplica em si o modelo que define |
 | Placeholders and vague adjectives | Resolved | *Smallest sufficient range* foi definido formalmente na seção The model, em vez de ficar como adjetivo |
