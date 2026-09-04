@@ -21,12 +21,11 @@ exatamente esses critérios: é zero-dependency por regra e roda
 `scripts/check-links.sh`. E o caso mais agudo é um que **nenhum teste deste
 repositório verifica**: que `.claude-plugin/plugin.json` continua JSON válido.
 Um `grep -ran` por esse caminho em `scripts/`, `tests/` e `.github/`, sobre
-`*.sh`, `*.py` e `*.yml`, devolve zero — o único lugar que o nomeia é
-`.version-bump.json:4`, que é alvo de bump e não validador. **O alcance dessa
-afirmação é a superfície executável e de configuração de máquina**, não a árvore
-inteira: seis arquivos de prosa nomeiam o caminho, e nenhum o valida. O gate mais forte
-do projeto não sabe registrar a prova das propriedades que o projeto declara
-sobre si mesmo.
+`*.sh`, `*.py` e `*.yml`, devolve zero. **Entre as ocorrências medidas para esta
+spec, `.version-bump.json` é o único portador não-prosa** — e ali o caminho é
+alvo de bump, não validação (`.version-bump.json:4`); as demais ocorrências são
+referências em prosa, e nenhuma valida o caminho. O gate mais forte do projeto não sabe registrar a
+prova das propriedades que o projeto declara sobre si mesmo.
 
 **A promessa pública é tecnicamente falsa.** [`README.md`](../../../README.md),
 [`docs/README.en.md`](../../README.en.md) e, traduzida como `arquivo:linha`,
