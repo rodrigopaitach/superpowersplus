@@ -29,6 +29,11 @@ repo_root="$(git rev-parse --show-toplevel)"
 # interpreter starts, just wc over fifteen files.
 "$repo_root/scripts/check-skill-size.sh"
 
+# Whole-tree, beside the size gate and for the same reason: a frontmatter is
+# valid or it is not, whatever commit wrote it. Same cost profile too — awk
+# over fifteen files, no interpreter start per skill.
+"$repo_root/scripts/check-skill-frontmatter.sh"
+
 # Whole-tree too, and for a reason peculiar to it: the carriers of the evidence
 # line are edited one at a time, so a range-scoped check would read the one
 # being changed and never the others it must match.

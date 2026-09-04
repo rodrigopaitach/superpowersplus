@@ -74,6 +74,9 @@ jobs:
       - name: Tests (skill size gate)
         run: tests/hooks/test-check-skill-size.sh
 
+      - name: Tests (skill frontmatter gate)
+        run: tests/hooks/test-check-skill-frontmatter.sh
+
       - name: Tests (evidence line gate)
         run: tests/hooks/test-check-evidence-line.sh
 
@@ -189,6 +192,11 @@ jobs:
       # of which commit put it there.
       - name: Every SKILL.md stays under the line ceiling
         run: scripts/check-skill-size.sh
+
+      # Whole-tree for the same reason as the ceiling above, and the rules are
+      # the Agent Skills specification's rather than this project's.
+      - name: Every SKILL.md frontmatter matches the spec
+        run: scripts/check-skill-frontmatter.sh
 
       # The carriers of the test-evidence line hold one form, copied on purpose
       # because it cannot live behind a link. Without this, "unified in place"

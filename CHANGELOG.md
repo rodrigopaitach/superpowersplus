@@ -11,6 +11,44 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **[`scripts/check-skill-frontmatter.sh`](scripts/check-skill-frontmatter.sh)
+  — the first gate in this repository that reads a frontmatter rather than
+  counting its lines.** It checks `name` against every constraint the Agent
+  Skills specification states — at most 64 characters, lowercase letters,
+  numbers and hyphens, no leading, trailing or consecutive hyphen, equal to the
+  skill's directory — plus the two reserved words Anthropic's best-practices
+  page adds, and `description` non-empty and at most 1024. Wired into
+  [`githooks/pre-commit`](githooks/pre-commit) beside the ceiling gate and into
+  both CI steps.
+
+  **It exists because three frontmatter rules were wrong for as long as nothing
+  read them.** `check-skill-size.sh` was the only script that opened a
+  `SKILL.md` frontmatter, and it counted lines. The rules corrected in this
+  cycle's Changed section were not subtle — a shared character limit, a
+  Title-Case example name — and none of them was caught, because the file
+  stating them was the one every other skill copies from.
+
+  **What it deliberately does not check is the half that matters most.**
+  Whether a description says what the skill does as well as when to use it is a
+  real property and the spec states it, but no pattern separates a description
+  that names its outcome from one that repeats its trigger — searching for
+  `Use when` would rebuild the rule this cycle had to correct. That half
+  belongs to [`writing-skills`](skills/writing-skills/SKILL.md) and to
+  [`tests/skill-behavior/`](tests/skill-behavior/).
+
+  **The suite is
+  [`tests/hooks/test-check-skill-frontmatter.sh`](tests/hooks/test-check-skill-frontmatter.sh),
+  one case per constraint, and one of its cases was vacuous when first
+  written.** The uppercase case used a lowercase directory, so a name of
+  `Bad-Case` was rejected by the name-equals-directory rule and never reached
+  the pattern: the pattern was mutated to accept uppercase and the suite stayed
+  green. It now carries the uppercase directory, and the same mutation turns it
+  red. Five mutations were run in total — the equality never firing, the
+  pattern accepting uppercase, each limit raised to 100000, the reserved list
+  emptied — and each one reddens the case that names it and no other.
+
 ### Fixed
 
 - **The TDD skill's RED example never compiled against its own GREEN
