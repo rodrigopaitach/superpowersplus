@@ -180,8 +180,47 @@ consumidor; nenhuma linha finge ter teste.
 
 **Um `AC`/`IR` de spec anterior ao Evidence Model, que não declara evidence
 class, recebe o fallback de compatibilidade** — veredito idêntico ao anterior ao
-modelo. Vale nas três camadas: ao criar plano novo a partir de spec antiga, na
-revisão desse plano, e na auditoria final.
+modelo. **Vale onde um artefato legacy atravessa o fluxo:** criação e revisão de
+plano novo, os controllers de execução, task review, fix e re-review, e a
+auditoria final. **A decisão de modo é feita no boundary que possui a source
+spec**; os consumidores a jusante recebem o contrato já resolvido e não
+reinterpretam a source spec por conta própria.
+
+**O que o fallback significa, exatamente.** *Legacy behavioral* **não** quer
+dizer que todo conteúdo da antiga coluna `Test` passa a ser lido como teste
+behavioral válido — isso seria historicamente falso. Quer dizer que, na ausência
+de evidence class num artefato legitimamente legacy, o fluxo usa a **semântica
+behavioral de compatibilidade do modelo anterior**, preservando o comportamento
+que já existia:
+
+- row legacy que trazia id de teste utilizável continua usando aquele caminho;
+- row legacy que trazia só comando read-only **não é promovida retroativamente**
+  a `structural` nem a `negative`;
+- row que já era irreverificável pelo task reviewer anterior continua sendo uma
+  limitação legacy;
+- **o fallback não torna válido um plano antigo que já era inválido.** Ele
+  garante apenas que o Evidence Model não introduza regressão nova sobre ele.
+
+**A autoridade é a source spec, nunca o schema do plano.** Com marcador, o modo é
+v2 e a `## Test Coverage Matrix` histórica passa a ser incoerência bloqueante.
+Sem marcador, a source spec é legacy — e isso **não** fixa o schema do plano: um
+plano histórico traz a Test Coverage Matrix, e um plano escrito hoje a partir de
+spec legacy traz a Verification Matrix com `Evidence class` igual a `behavioral`,
+que é exatamente o que AC34 exige. **Marcador ausente com Verification Matrix não
+é incoerência.** O schema é conferência, nunca fonte de verdade.
+
+**Plano sem source spec.** O entry blocker que os dois caminhos de execução já
+têm permanece: o controller **não** conclui sozinho que ausência de source spec
+significa legacy. Ele para, resolve com o parceiro humano, e só depois de
+confirmado que a spec realmente não existe o plano é tratado como legacy para
+fins de compatibilidade. **Nenhum artefato histórico é reescrito para registrar
+essa decisão.**
+
+**Test command no modo legacy.** O controller preserva a derivação pré-v2 de test
+command e de runner **onde ela estava disponível**: não deixa de fornecer um
+comando que o fluxo antigo forneceria, e não inventa um para transformar comando
+estrutural antigo em teste. Onde nenhum comando admissível existe, nenhum se
+inventa.
 
 **`legacy behavioral` não é uma quarta evidence class.** As classes continuam
 sendo exatamente três — `behavioral`, `structural`, `negative` — e
@@ -204,6 +243,8 @@ explícito no cabeçalho da spec, `**Evidence model:** v2`, e a regra é
 | `brainstorming`, ao escrever spec nova ou ao migrar uma antiga no resume | Escreve o marcador e exige classe em todo `AC`/`IR` |
 | Spec reviewer | **Exige o marcador.** Marcador presente com critério sem classe é bloqueante; marcador ausente numa spec que chega ao fluxo atual também é |
 | `writing-plans`, plan reviewer, final audit | Com marcador, classe é obrigatória e a ausência é erro. **Sem marcador, documento histórico → fallback de compatibilidade, com classe efetiva `behavioral`** |
+| `executing-plans` e o controller de `subagent-driven-development` | **Resolvem o modo antes de executar**, a partir da source spec que ambos já são obrigados a ler. Com marcador, classe é obrigatória e a ausência bloqueia **antes do dispatch**; sem marcador, modo legacy com classe efetiva `behavioral` |
+| Task reviewer, implementer, re-reviewer | **Consomem** a decisão já tomada. Não abrem a source spec, não abrem o plano inteiro, e não decidem se um documento v2 pode ser legacy. Um brief sem classe só chega a eles por dispatch de um controller que já resolveu o artefato como legacy — é esse invariante que impede *ausência = legacy* de voltar a ser inferência global |
 
 **A assimetria é o que fecha a rota de fuga:** o reviewer nunca conclui *"sem
 marcador, logo legacy"*, porque isso deixaria uma spec nova defeituosa escapar
@@ -488,6 +529,26 @@ heurística sobre histórico do git.
   (*"The **task's** test command, `[TEST_COMMAND]`, reported verbatim"*), a row
   do re-review (*"**Re-runs** what already ran, reporting command"*) e a
   referência `section "Test Run"` na tabela de rótulos da linha de evidência.
+- **AC48** `[structural]` — **o modo de compatibilidade é resolvido no boundary
+  que possui a source spec, e consumido a jusante sem ser reinterpretado.**
+  `executing-plans/SKILL.md` e `subagent-driven-development/SKILL.md` resolvem o
+  modo **antes de executar**, a partir da source spec que ambos já são obrigados
+  a ler: marcador `**Evidence model:** v2` exige classe explícita em todo
+  critério e a ausência **bloqueia antes do dispatch**; source spec sem marcador
+  entra no fallback legacy, com classe efetiva `behavioral`, preservando a
+  semântica pré-v2 **sem reinterpretar comando histórico como evidence class
+  nova**. Plano sem source spec mantém o entry blocker já existente e só entra em
+  modo legacy depois de confirmado com o parceiro humano que a spec não existe.
+  `task-reviewer-prompt.md`, `implementer-prompt.md` e `re-review-prompt.md`
+  **consomem** essa decisão: classe presente no brief manda; classe ausente sob
+  dispatch legacy vale `behavioral` de compatibilidade; nenhum deles abre a
+  source spec, abre o plano inteiro, decide se um documento v2 pode ser legacy,
+  ou reconhece uma quarta classe. **A autoridade é a source spec, nunca o schema
+  do plano:** marcador com `## Test Coverage Matrix` histórica é incoerência
+  bloqueante, e marcador ausente com Verification Matrix **não** é — é o que
+  AC34 exige de um plano novo escrito a partir de spec legacy. No modo legacy o
+  controller preserva a derivação pré-v2 de test command e runner onde ela
+  existia, e não inventa comando onde não existia.
 
 ## Implicit Requirements
 
@@ -734,14 +795,14 @@ era escolha de estratégia diante de um número que só existe depois do texto.
 
 | Category | State | Where it landed |
 |---|---|---|
-| Functional scope and behavior | Resolved | AC1–AC47. O escopo foi enumerado pelo parceiro, ampliado por duas investigações dirigidas, depois por AC41 e AC42 quando o plan reviewer achou dois carriers omitidos em arquivos que a spec já editava — **e fechado por uma varredura exaustiva que mediu 28 carriers da premissa antiga onde três eram conhecidos.** AC43–AC47 cobrem os cinco contratos que ela agrupou, não linha a linha |
+| Functional scope and behavior | Resolved | AC1–AC48. O escopo foi enumerado pelo parceiro, ampliado por duas investigações dirigidas, depois por AC41 e AC42 quando o plan reviewer achou dois carriers omitidos em arquivos que a spec já editava — **e fechado por uma varredura exaustiva que mediu 28 carriers da premissa antiga onde três eram conhecidos.** AC43–AC47 cobrem os cinco contratos que ela agrupou, não linha a linha. **AC48 entrou depois do review de branch inteira**, que mediu o fallback de compatibilidade presente em quatro carriers a montante e ausente nos cinco do lado da execução |
 | Domain and data model | Clear | Não há dado nem entidade: a mudança é normativa, em arquivos de texto |
-| Interaction flow | Resolved | AC1 (o documento canônico define a cadeia), AC12 (o plano resolve o instrumento), AC30 (a task carrega o contrato até o brief) e AC22 (o reviewer reexecuta por classe) |
+| Interaction flow | Resolved | AC1 (o documento canônico define a cadeia), AC12 (o plano resolve o instrumento), AC30 (a task carrega o contrato até o brief), AC22 (o reviewer reexecuta por classe) e **AC48 (o modo de compatibilidade é resolvido no boundary que possui a source spec e consumido a jusante)** |
 | Non-functional attributes | Resolved | IR1 (teto), IR3, IR4, IR7 (gates existentes verdes), IR6 (custo de gate novo), IR8 (disciplina de changelog) |
 | Integrations and external dependencies | Clear | IR2 e `## External Dependencies`: zero-dependency por regra |
-| Edge cases and failures | Resolved | AC20, AC34, AC35 e AC36 (marcador, migração e a assimetria contra rota de fuga); AC18 (auditor discorda da classe); AC16, AC41, AC42 e AC43–AC47 — a mesma falha em escala crescente: a regra escrita em mais de um portador, e a enumeração alcançando um só. AC45 é a única que trava execução, não só leitura; AC28 (`—` deixa de ser bloqueante fora de `behavioral`); AC37 e AC38 (comando com `>` ou `::` confundido com teste); AC39 e AC40 (o schema histórico de cinco colunas preservado) |
+| Edge cases and failures | Resolved | AC20, AC34, AC35 e AC36 (marcador, migração e a assimetria contra rota de fuga); AC18 (auditor discorda da classe); AC16, AC41, AC42 e AC43–AC47 — a mesma falha em escala crescente: a regra escrita em mais de um portador, e a enumeração alcançando um só. AC45 é a única que trava execução, não só leitura; AC28 (`—` deixa de ser bloqueante fora de `behavioral`); AC37 e AC38 (comando com `>` ou `::` confundido com teste); AC39 e AC40 (o schema histórico de cinco colunas preservado); **AC48 (plano sem source spec, spec v2 com matriz histórica, e plano novo com Verification Matrix a partir de spec legacy — que não é incoerência)** |
 | Constraints and tradeoffs | Resolved | IR1 e IR6 (teto de linhas e nenhum arquivo novo em `scripts/`); IR5 e IR9, que mantêm o anchor fragment fora desta fatia; o Iron Law do TDD, que AC45 declara explicitamente fora, distinguindo *o implementer deve usar TDD* de *o loop de review consegue verificar task não-`behavioral`*; IR10, que proíbe a mudança do parser de mover veredito de plano commitado; e o Iron Law do TDD, deliberadamente fora — ver `### Decision record` |
-| Terminology | Resolved | *evidence class* × *measurement status*; *locator* × *evidence*; *current-state* × *provenance*; *source evidence* fora das classes de entrega; *Verification Matrix* × *Test Coverage Matrix*; *legacy behavioral* como estado de compatibilidade × as três evidence classes, que continuam três; e `behavioral` de agente × `behavioral` de script determinístico, distinguidos em AC38 |
+| Terminology | Resolved | *evidence class* × *measurement status*; *locator* × *evidence*; *current-state* × *provenance*; *source evidence* fora das classes de entrega; *Verification Matrix* × *Test Coverage Matrix*; *legacy behavioral* como estado de compatibilidade × as três evidence classes, que continuam três; e `behavioral` de agente × `behavioral` de script determinístico, distinguidos em AC38; *modo de compatibilidade* (resolvido uma vez, no boundary) × *classe* (declarada por critério), distinguidos em AC48 |
 | Completion signals | Resolved | Cada `AC` e `IR` carrega classe declarada; a spec aplica em si o modelo que define |
 | Placeholders and vague adjectives | Resolved | *Smallest sufficient range* foi definido formalmente na seção The model, em vez de ficar como adjetivo |
 
@@ -754,6 +815,8 @@ era escolha de estratégia diante de um número que só existe depois do texto.
 | Onde mora o modelo? | `docs/evidence-model.md` como documentação conceitual canônica; regra operacional e Output Format inline em cada skill | `docs/review-scopes.md` absorve | **Recomendação recusada pelo parceiro** — `scripts/check-evidence-line.sh:6-10` justifica o inline, não a ausência do documento conceitual |
 | Uma spec com dois planos, ou duas specs? | Duas specs e dois planos | Três fatias, sem enunciar que exigia duas specs | Padrão do projeto — `skills/final-branch-audit/SKILL.md:79`, sem escape de escopo para critério |
 | Onde mora a regra de adequação do instrumento? | Dois níveis: princípio no repositório, regra operacional em `brainstorming` e finding no spec reviewer | Só no `CLAUDE.md` do projeto | Boa prática geral, declarada como tal — regra de projeto mora no arquivo de instrução do projeto. Nenhum padrão deste repositório foi consultado, e era aí que estava o erro. **Recomendação corrigida pelo parceiro**: o `CLAUDE.md` daqui governa quem desenvolve o superpowersplus e não alcança quem instala o plugin noutro projeto, que é justamente quem a regra protege |
+| Onde normalizar o fallback legacy para o lado da execução? | No controller, que é o único boundary que vê a source spec. A autoridade é o marcador; o schema do plano é conferência que bloqueia, nunca decide → AC48 | Normalizar no controller (C), com o marcador como sinal canônico (A) e o schema como conferência (B) | **Medição própria, declarada como tal:** `task-brief` extrai só o bloco da task — sem cabeçalho, sem matriz — e `subagent-driven-development/SKILL.md:210` proíbe dar o plano ao subagente, então os três prompts não têm de onde inferir. As alternativas A e B aplicadas a jusante exigiriam mudar essa regra |
+| Reclassificar retroativamente os rows históricos de comando? | Não. Medido: 72 de 133 rows dos 6 planos com matriz trazem comando read-only na coluna `Test`, e a semântica anterior já os reprovava. AC48 preserva o comportamento, não o repara | Preservar literalmente e registrar a descoberta como item aberto | Decisão do parceiro, sobre medição própria |
 | Bump entra como critério? | Não | *(não perguntada — trazida pelo parceiro)* | Decisão do parceiro |
 | Coluna adicional resolve a matriz? | Não. A `## Test Coverage Matrix` é substituída por uma Verification Matrix com semântica por classe | Acrescentar coluna | **Recomendação refutada por medição**: `skills/writing-plans/SKILL.md:213`, `:242`, `:255` e `:257` continuariam exigindo teste de todo critério, deixando duas regras contraditórias sobre a mesma linha |
 | Criar conceito para *smallest fragment*? | Não. AC9 mantém o quoted snippet existente; a única minimalidade normativa é o *smallest sufficient range* | *(não perguntada — trazida pelo parceiro)* | Decisão do parceiro, evitando um décimo-quarto conceito só para justificar um adjetivo |
