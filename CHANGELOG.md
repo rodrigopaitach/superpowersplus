@@ -88,6 +88,21 @@ References below name them so a claim here can be traced there.
   por progressive disclosure: a edição levou o `SKILL.md` a 507 linhas e
   `scripts/check-skill-size.sh` reprovou; depois da extração são 497.
 
+- **O plan reviewer cobra as seis colunas e a semântica da classe.**
+  [`skills/writing-plans/plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md),
+  section "Plan Review" — a linha que cobrava as cinco colunas da Test Coverage
+  Matrix vira quatro: as seis colunas com uma row por critério; instrumento
+  vazio ou não resolvido, com a nota de que **instrumento `structural` que
+  nomeia arquivo sem range está resolvido**, porque no tempo do plano aquelas
+  linhas ainda não existem e o range é do auditor contra `HEAD`; teste
+  inventado em row `structural` ou `negative`, com `—` em `Test type`/`Layer`
+  explicitamente fora do que se cobra; e divergência entre o bloco da task e a
+  matriz, que importa porque o brief que `scripts/task-brief` extrai carrega o
+  bloco e o reviewer a jusante nunca vê a matriz. Entra a regra do marcador, e
+  a row que exigia critério settleable por citação `file:line` passa a exigir a
+  evidência que a classe admite — era a segunda ocorrência dessa formulação, a
+  primeira estando no spec reviewer.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em
