@@ -178,8 +178,18 @@ forma de ela passar pelo gate antes de a correção existir.
 | T15.4 Nenhum arquivo novo entra em scripts | IR6 | negative | `git diff --diff-filter=A --name-only` da branch, limitado a `scripts/` | — | — |
 | T15.5 O anchor-fragment gate não foi construído | IR9 | negative | `git diff --diff-filter=A --name-only` da branch, procurando gate de fragmento | — | — |
 | T15.6 Todo commit que toca skills tem entrada de changelog | IR8 | negative | `git log --format` da branch cruzado com `git show --name-only` por commit | — | — |
+| T16.1 Os dois controllers resolvem o modo a partir da source spec antes de executar | AC48 | structural | range localizado em `skills/executing-plans/SKILL.md` e em `skills/subagent-driven-development/SKILL.md` | — | — |
+| T16.2 No modo v2 a classe é obrigatória e a ausência bloqueia antes do dispatch | AC48 | structural | range localizado nos dois controllers | — | — |
+| T16.3 No modo legacy a classe efetiva é `behavioral` e a derivação pré-v2 de test command é preservada onde existia, sem inventar comando | AC48 | structural | range localizado nos dois controllers | — | — |
+| T16.4 Plano sem source spec mantém o entry blocker e só entra em legacy após confirmação | AC48 | structural | range localizado nos dois controllers | — | — |
+| T16.5 A autoridade é a source spec: v2 com matriz histórica bloqueia, legacy com Verification Matrix não | AC48 | structural | range localizado nos dois controllers | — | — |
+| T16.6 Os três prompts consomem a decisão, com a cláusula idêntica, sem abrir spec nem plano e sem quarta classe | AC48 | structural | range localizado em `task-reviewer-prompt.md`, `implementer-prompt.md` e `re-review-prompt.md`, mais a conferência de identidade das três ocorrências | — | — |
+| T16.7 O documento canônico carrega o conceito ampliado e a tabela de decisão dos doze casos | AC48 | structural | range localizado em `docs/evidence-model.md`, mais `grep -c` das doze linhas da tabela esperando 12 | — | — |
+| T16.8 Os doze casos têm suíte determinística | AC48 | behavioral | > a v2 spec with a historical Test Coverage Matrix is a blocking mismatch | static | `tests/` |
+| T16.9 Nenhum plano ou spec histórico é modificado por esta task | AC48 | negative | `git diff --name-only` da branch limitado a `docs/superpowers/`, conferindo que só os dois artefatos desta linha de trabalho aparecem | — | — |
+| T16.10 A suíte nova tem step de CI | AC48 | structural | range localizado em `.github/workflows/ci.yml` | — | — |
 
-This plan has 15 tasks.
+This plan has 16 tasks.
 
 ---
 
@@ -2574,4 +2584,320 @@ Expected: nenhuma linha `FALHOU` e exit 0 nos três.
 git diff --stat
 git add CHANGELOG.md
 git commit -m "docs: o item de Open gaps para de afirmar ausencia de defeito medido"
+```
+
+---
+
+### Task 16: O modo de compatibilidade resolve-se no boundary
+
+**Spec criterion:** AC48
+
+**Task acrescentada depois da execução das quinze anteriores**, autorizada pelo
+parceiro no fecho da branch, a partir de um achado do review de branch inteira
+que uma investigação read-only depois localizou. **Nenhuma task histórica é
+reescrita para fingir que sempre conteve isto** — as quinze ficam como
+executadas, e o boundary novo é esta.
+
+**Files:**
+- Modify: `skills/executing-plans/SKILL.md` — o Step 1, entre o item que lê a spec e o preflight
+- Modify: `skills/subagent-driven-development/SKILL.md` — a instrução que lê a spec, e a condição de `[TEST_COMMAND]`
+- Modify: `skills/subagent-driven-development/task-reviewer-prompt.md` — a seção de verificação por classe
+- Modify: `skills/subagent-driven-development/implementer-prompt.md` — o contrato do fix report
+- Modify: `skills/subagent-driven-development/re-review-prompt.md` — a seção de verificação do fix
+- Modify: `docs/evidence-model.md` — o conceito ampliado e a tabela de decisão
+- Create: `tests/compatibility-mode/run-tests.sh` e `tests/compatibility-mode/fixtures/`
+- Modify: `.github/workflows/ci.yml`
+- Modify: `CHANGELOG.md`
+
+**Interfaces:**
+- Consumes: o marcador da Task 4, a Verification Matrix da Task 6, o protocolo
+  por classe da Task 9 e a condição de despacho da Task 10.
+- Produces: nada que outra task consuma. É a última.
+
+**A medição que decidiu o boundary**, e que a redação abaixo pressupõe:
+`skills/subagent-driven-development/scripts/task-brief:52-59` extrai **só o bloco
+da task** — sem cabeçalho de plano, sem matriz —, e
+`skills/subagent-driven-development/SKILL.md:210` proíbe por escrito dar o plano
+inteiro ao subagente. Os três prompts **não têm de onde inferir** o modo. Só os
+dois controllers e a auditoria final leem a source spec, e os dois controllers já
+são obrigados a lê-la. Por isso a decisão mora neles e desce resolvida.
+
+**Acceptance criteria:**
+- T16.1: os dois controllers resolvem o modo a partir da source spec antes de executar — `[structural]`, instrumento na matriz
+- T16.2: no modo v2 a classe é obrigatória e a ausência bloqueia antes do dispatch — `[structural]`, instrumento na matriz
+- T16.3: no modo legacy a classe efetiva é `behavioral`, a derivação pré-v2 de test command é preservada onde existia, e nenhum comando é inventado — `[structural]`, instrumento na matriz
+- T16.4: plano sem source spec mantém o entry blocker e só entra em legacy depois de confirmado — `[structural]`, instrumento na matriz
+- T16.5: a autoridade é a source spec — v2 com matriz histórica bloqueia, legacy com Verification Matrix não — `[structural]`, instrumento na matriz
+- T16.6: os três prompts consomem a decisão com cláusula idêntica, sem abrir spec nem plano e sem quarta classe — `[structural]`, instrumento na matriz
+- T16.7: o documento canônico carrega o conceito ampliado e a tabela dos doze casos — `[structural]`, instrumento na matriz
+- T16.8: os doze casos têm suíte determinística — `[behavioral]`, test: `> a v2 spec with a historical Test Coverage Matrix is a blocking mismatch`
+- T16.9: nenhum plano ou spec histórico é modificado — `[negative]`, instrumento na matriz
+- T16.10: a suíte nova tem step de CI — `[structural]`, instrumento na matriz
+
+- [ ] **Step 1: O bloco de resolução no caminho inline**
+
+Em `skills/executing-plans/SKILL.md`, no `### Step 1: Load and Review Plan`,
+insira um item novo **entre** o item 5 (que lê a spec) e o item 6, renumerando os
+seguintes:
+
+```markdown
+6. **Resolve the compatibility mode, once, before anything else reads the
+   plan.** The spec you just opened is the authority — never the plan's matrix
+   schema:
+   - Header carries `**Evidence model:** v2` → **v2 mode.** Every criterion
+     declares an evidence class, and one that does not is an error you take
+     back to the plan before executing, never a class you assign yourself. A
+     plan in this mode still carrying the historical `## Test Coverage Matrix`
+     is a blocking mismatch: the spec moved and the plan did not.
+   - Header carries no marker → **legacy mode.** The spec predates the model:
+     every criterion's effective class is `behavioral` and its verdict is the
+     one it would have had before the model existed. **This does not repair the
+     plan** — a criterion the old rules could not verify stays unverifiable.
+     The mode exists so the model introduces no NEW regression on it. The
+     plan's schema does not change this: a plan written today from a legacy
+     spec carries the Verification Matrix with `behavioral` in every class
+     cell, which superpowersplus:writing-plans requires and which is **not** a
+     mismatch.
+   - **No spec at all** → the entry blocker above stands. Never conclude legacy
+     from silence: get the path from your human partner, and only once they
+     confirm no spec exists is the plan treated as legacy.
+```
+
+- [ ] **Step 2: O preflight consome o modo**
+
+No mesmo arquivo, o item que hoje começa `7. Check every task carries acceptance
+criteria with a declared evidence class` (e que a renumeração torna 8) ganha, ao
+fim:
+
+```markdown
+   **In legacy mode this check does not apply** — no criterion declares a class,
+   and that is the mode you resolved above, not a concern to raise.
+```
+
+- [ ] **Step 3: O bloco de resolução no controller SDD**
+
+Em `skills/subagent-driven-development/SKILL.md`, imediatamente depois do
+parágrafo que manda ler a spec (*"Read the spec the plan cites in its
+`**Source spec:**` header line…"*), insira o mesmo bloco de resolução, na forma
+de parágrafo:
+
+```markdown
+**Resolve the compatibility mode from that spec, once, before dispatching Task
+1.** The spec is the authority — never the plan's matrix schema. Marker
+`**Evidence model:** v2` → **v2 mode**: every criterion declares a class, one
+that does not is an error you take back to the plan rather than a class you
+assign, and a plan still carrying the historical `## Test Coverage Matrix` is a
+blocking mismatch. No marker → **legacy mode**: effective class `behavioral` on
+every criterion, verdicts as they would have been before the model. **Legacy
+mode does not repair the plan** — a criterion the old rules could not verify
+stays unverifiable; the mode exists so the model introduces no new regression.
+A plan written today from a legacy spec carries the Verification Matrix with
+`behavioral` in every class cell, and that is **not** a mismatch. No spec at
+all → the entry blocker above stands, and only your partner's confirmation that
+none exists makes the plan legacy.
+```
+
+- [ ] **Step 4: A regra de `[TEST_COMMAND]` no modo legacy**
+
+No mesmo arquivo, o item `- **`[TEST_COMMAND]`:**` ganha, ao fim:
+
+```markdown
+  **In legacy mode, follow the pre-v2 derivation instead of this condition:**
+  supply what the old flow would have supplied — the plan's matrix, failing that
+  the runner config — and do not withhold it because no criterion declares
+  `behavioral`. Equally, never invent one to turn a historical structural
+  command into a test: where the old flow had none, this one has none.
+```
+
+- [ ] **Step 5: A cláusula de consumo, idêntica nos três prompts**
+
+Em `task-reviewer-prompt.md`, `implementer-prompt.md` e `re-review-prompt.md`,
+insira **o mesmo corpo, com a mesma indentação de quatro espaços** — é a forma
+que este repositório já usa para conteúdo partilhado entre prompts, e que
+`scripts/check-no-dispatch.sh` cobra por identidade em sete carriers:
+
+```markdown
+    **A brief that declares no evidence class comes from a plan written before
+    this model.** Its criteria take the compatibility fallback: effective class
+    `behavioral`, and the instrument is the test the criterion names. Apply it
+    without checking anything else, because a task from a v2 plan with a missing
+    class never reaches you — the controller resolves the mode from the source
+    spec and blocks that case before dispatch. Do not open the source spec, do
+    not open the plan, do not decide whether a document could be legacy, and do
+    not recognise a fourth class.
+```
+
+Os pontos de inserção, um por arquivo: em `task-reviewer-prompt.md` ao fim da
+seção `## Verify Each Criterion by Its Class`; em `re-review-prompt.md` ao fim da
+seção `## Verify the Fix by Its Instruments`; em `implementer-prompt.md`
+imediatamente depois do parágrafo do fix report que nomeia os instrumentos.
+
+- [ ] **Step 6: O documento canônico**
+
+Em `docs/evidence-model.md`, a seção `### Compatibility: legacy behavioral` ganha
+o mesmo alcance que a spec passou a declarar — o fallback vale onde um artefato
+legacy atravessa o fluxo, a decisão é tomada no boundary que possui a source
+spec, os consumidores a jusante consomem —, mais os três esclarecimentos que a
+medição forçou (autoridade da spec sobre o schema; `legacy behavioral` não
+promove comando histórico a classe nova; plano sem spec mantém o entry blocker).
+**Nenhuma seção `###` nova**: os treze conceitos continuam treze.
+
+Acrescente ao fim da seção a tabela de decisão dos doze casos:
+
+```markdown
+| # | Source spec | Plan | Mode | What the controller supplies |
+|---|---|---|---|---|
+| 1 | legacy, cited | Test Coverage Matrix, a test id in the row | legacy | the pre-v2 test command |
+| 2 | legacy, cited | Test Coverage Matrix, a read-only command in the `Test` cell | legacy | the pre-v2 test command where the old flow derived one; nothing invented, and the row keeps its historical limitation |
+| 3 | legacy, cited | Verification Matrix, every class `behavioral` | legacy | the test command — the schema is not the authority |
+| 4 | v2 | Verification Matrix, `behavioral` criteria | v2 | the test command |
+| 5 | v2 | Verification Matrix, only `structural` and `negative` | v2 | no test command, and none derived |
+| 6 | v2 | a criterion with no class | v2 | nothing — it blocks before dispatch |
+| 7 | v2 | Test Coverage Matrix | v2 | nothing — blocking mismatch |
+| 8 | none cited | any | undecided | nothing — the entry blocker stands, and silence is never legacy |
+| 9 | confirmed not to exist | any | legacy | only the pre-existing fallbacks actually available |
+| 10 | any | any | identical on both paths | inline and subagent resolve the same artifacts the same way |
+| 11 | legacy, cited | a re-review of a legacy fix round | legacy | the test command the task review had; none invented where there was none |
+| 12 | any | any | — | nothing is written: no historical plan or spec is modified while being read |
+```
+
+- [ ] **Step 7: As fixtures**
+
+Crie `tests/compatibility-mode/fixtures/` com **duas specs e oito planos** — a
+spec é a autoridade, e só o marcador dela importa, então os casos 1–3 partilham
+a spec legacy e os casos 4–7 partilham a v2:
+
+```bash
+mkdir -p tests/compatibility-mode/fixtures
+cat > tests/compatibility-mode/fixtures/spec-legacy.md <<'EOF'
+# Legacy spec
+
+**Route:** full process
+
+## Acceptance Criteria
+
+- **AC1** — the thing happens.
+EOF
+cat > tests/compatibility-mode/fixtures/spec-v2.md <<'EOF'
+# V2 spec
+
+**Route:** full process
+**Evidence model:** v2
+
+## Acceptance Criteria
+
+- **AC1** `[behavioral]` — the thing happens.
+EOF
+```
+
+Cada plano é mínimo e difere só na propriedade que o caso discrimina. O caso 8
+não cita spec nenhuma; os demais citam uma das duas acima.
+
+- [ ] **Step 8: A suíte**
+
+Crie `tests/compatibility-mode/run-tests.sh`. Ela não despacha agente nenhum: o
+que prova é que a tabela de decisão cobre os doze casos, que cada fixture **é** o
+caso que diz ser, e que os cinco carriers carregam a cláusula que o resolve.
+Carrier que perde a cláusula, fixture que deriva, ou quarta classe que aparece —
+os três a deixam vermelha.
+
+```bash
+#!/usr/bin/env bash
+# The twelve compatibility-mode cases docs/evidence-model.md enumerates,
+# asserted against the fixtures that carry them and the carriers that resolve
+# them. Deterministic: nothing here dispatches an agent.
+set -uo pipefail
+
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+FIX="$(dirname "$0")/fixtures"
+pass=0; fail=0
+ok()  { printf '  [PASS] %s\n' "$1"; pass=$((pass+1)); }
+bad() { printf '  [FAIL] %s — %s\n' "$1" "$2"; fail=$((fail+1)); }
+check() { if eval "$2" >/dev/null 2>&1; then ok "$1"; else bad "$1" "$3"; fi; }
+
+echo "Testing compatibility mode"
+
+# --- the decision table covers every case, and no more
+rows=$(awk '/^\| # \| Source spec/{f=1;next} f&&/^\| [0-9]/{n++} f&&!/^\|/{exit} END{print n+0}' \
+        "$ROOT/docs/evidence-model.md")
+check "the decision table carries exactly twelve cases" \
+  "[ \"$rows\" -eq 12 ]" "found $rows"
+
+# --- each fixture is still the case it claims
+check "a legacy spec carries no evidence-model marker" \
+  "! grep -q 'Evidence model' $FIX/spec-legacy.md" "marker appeared"
+check "a v2 spec carries the evidence-model marker" \
+  "grep -q '^\*\*Evidence model:\*\* v2' $FIX/spec-v2.md" "marker missing"
+check "a legacy plan naming a test id keeps the historical schema" \
+  "grep -q '^## Test Coverage Matrix' $FIX/plan-1.md && grep -q '| > ' $FIX/plan-1.md" "shape drifted"
+check "a legacy plan whose Test cell holds a read-only command names no test id" \
+  "grep -q '^## Test Coverage Matrix' $FIX/plan-2.md && ! grep -qE '\| >|::' $FIX/plan-2.md" "shape drifted"
+check "a new plan from a legacy spec carries the Verification Matrix" \
+  "grep -q '^## Verification Matrix' $FIX/plan-3.md && grep -q 'behavioral' $FIX/plan-3.md" "shape drifted"
+check "a v2 plan with a behavioral criterion names its test" \
+  "grep -q 'behavioral' $FIX/plan-4.md" "shape drifted"
+check "a v2 structural-only plan declares no behavioral criterion" \
+  "! grep -q '| behavioral |' $FIX/plan-5.md" "a behavioral row appeared"
+check "a v2 plan with a classless criterion has an empty class cell" \
+  "grep -qE '^\| T1\.1 \| AC1 \|  *\|' $FIX/plan-6.md" "shape drifted"
+check "a v2 spec with a historical Test Coverage Matrix is a blocking mismatch" \
+  "grep -q 'spec-v2' $FIX/plan-7.md && grep -q '^## Test Coverage Matrix' $FIX/plan-7.md" "shape drifted"
+check "a plan with no source spec cites none" \
+  "! grep -q '^\*\*Source spec:\*\*' $FIX/plan-8.md" "a source spec appeared"
+
+# --- the two controllers resolve all three outcomes
+for c in skills/executing-plans/SKILL.md skills/subagent-driven-development/SKILL.md; do
+  check "$c resolves the v2 mode" "grep -q 'v2 mode' $ROOT/$c" "clause missing"
+  check "$c resolves the legacy mode" "grep -q 'legacy mode' $ROOT/$c" "clause missing"
+  check "$c keeps the entry blocker for a plan with no spec" \
+    "grep -qi 'no spec at all\|no spec exists' $ROOT/$c" "clause missing"
+done
+
+# --- the three prompts carry one identical clause
+clause() { grep -A6 'A brief that declares no evidence class' "$ROOT/$1" | tr -s ' \n' ' '; }
+a=$(clause skills/subagent-driven-development/task-reviewer-prompt.md)
+b=$(clause skills/subagent-driven-development/implementer-prompt.md)
+c=$(clause skills/subagent-driven-development/re-review-prompt.md)
+check "the three prompts carry the consumption clause" "[ -n \"$a\" ]" "missing"
+check "the three prompts agree on one body" \
+  "[ \"$a\" = \"$b\" ] && [ \"$b\" = \"$c\" ]" "the three bodies diverged"
+
+# --- no fourth class, anywhere
+check "legacy behavioral is never a value in an Evidence class cell" \
+  "! git -C $ROOT grep -qE '\\| *legacy behavioral *\\|'" "a fourth class appeared"
+
+echo
+if [ "$fail" -ne 0 ]; then echo "$fail case(s) failed"; exit 1; fi
+echo "All compatibility-mode cases passed"
+```
+
+- [ ] **Step 9: O step de CI**
+
+Em `.github/workflows/ci.yml`, acrescente o step, ao lado dos outros de `tests/`:
+
+```yaml
+      - name: Compatibility mode
+        run: tests/compatibility-mode/run-tests.sh
+```
+
+- [ ] **Step 10: Verificar**
+
+```bash
+tests/compatibility-mode/run-tests.sh
+scripts/check-skill-size.sh
+scripts/check-links.sh
+scripts/check-no-dispatch.sh
+git diff --name-only main...HEAD -- docs/superpowers/
+```
+
+Expected: exit 0 nos quatro primeiros, e no último **apenas** os dois artefatos
+desta linha de trabalho — nenhum plano ou spec histórico.
+
+- [ ] **Step 11: Conferir e commitar**
+
+```bash
+git diff --stat
+git add skills/ docs/evidence-model.md tests/compatibility-mode/ \
+        .github/workflows/ci.yml CHANGELOG.md
+git commit -m "feat: o modo de compatibilidade resolve-se no boundary do controller"
 ```
