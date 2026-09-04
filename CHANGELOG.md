@@ -51,14 +51,22 @@ References below name them so a claim here can be traced there.
   and the block-scalar guard made unreachable — and each one reddens the case
   that names it and no other.
 
-  **Reviewing the branch found a second hole, this one in the script.** A
-  `description: >` block scalar was read as its one-character indicator, so the
-  gate approved a two-thousand-character description after looking at one. The
-  parser reads single-line values and now refuses the block form rather than
-  measuring it — a gate that certifies what it did not read is the failure it
-  exists to prevent.
-
 ### Fixed
+
+- **The new frontmatter gate approved a description it had not read.** A
+  `description: >` block scalar — the text indented on the lines below — was
+  read by
+  [`scripts/check-skill-frontmatter.sh`](scripts/check-skill-frontmatter.sh) as
+  its one-character indicator, so a two-thousand-character description passed
+  after the gate looked at one. Found by probing the script during this
+  branch's review, not by a case that existed.
+
+  **It refuses the form rather than learning to measure it.** The parser reads
+  single-line values; teaching it block scalars means implementing indentation
+  rules for a shape no skill here uses. Refusing is the honest answer, and a
+  gate that certifies what it did not read is the exact failure this one was
+  added to prevent. The suite gained the case, and the guard was made
+  unreachable to prove the case is not vacuous — it reddens, alone.
 
 - **The TDD skill's RED example never compiled against its own GREEN
   example.** [`skills/test-driven-development/SKILL.md`](skills/test-driven-development/SKILL.md),

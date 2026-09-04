@@ -97,6 +97,18 @@ for skill in skills/*/SKILL.md; do
         done
     fi
 
+    # A YAML block scalar (`description: >` with the text indented below) would
+    # otherwise be read as a one-character value and sail past the limit — the
+    # gate would approve two thousand characters after looking at one. Measured
+    # while reviewing this script. Refusing the form is honest: this parser
+    # cannot measure it, and a gate that certifies what it did not read is the
+    # failure it exists to prevent.
+    case "$desc" in
+        '>'* | '|'*)
+            note "$skill: description is a YAML block scalar — this gate reads single-line values only, so it cannot measure this one. Write it on one line."
+            ;;
+    esac
+
     if [ -z "$desc" ]; then
         note "$skill: no \`description\` field, or it is empty — the spec requires a non-empty one"
     elif [ "${#desc}" -gt "$DESC_MAX" ]; then

@@ -117,6 +117,21 @@ assert_run 1 "a missing description is rejected" "$t" "no-desc"
 t="$(new_tree)"; add_skill "$t" empty-desc empty-desc ""
 assert_run 1 "an empty description is rejected" "$t" "empty-desc"
 
+# A block scalar is refused rather than measured: the parser reads single-line
+# values, so `description: >` with the text indented below would be read as a
+# one-character value. Measured during review — the gate approved 2000
+# characters after looking at one.
+t="$(new_tree)"
+mkdir -p "$t/skills/block-desc"
+{
+    printf -- '---\n'
+    printf 'name: block-desc\n'
+    printf 'description: >\n'
+    printf '  a description written across several lines\n'
+    printf -- '---\n\n# Body\n'
+} > "$t/skills/block-desc/SKILL.md"
+assert_run 1 "a YAML block-scalar description is refused, not measured" "$t" "block scalar"
+
 long_desc="$(printf 'x%.0s' $(seq 1 1025))"
 t="$(new_tree)"; add_skill "$t" long-desc long-desc "$long_desc"
 assert_run 1 "a description over 1024 characters is rejected" "$t" "1024"
