@@ -6126,10 +6126,17 @@ section where the next one would be written.
   [`spec-under-test.md`](tests/skill-behavior/spec-under-test.md) and
   [`docs/releasing.md`](docs/releasing.md), which put the identifier or the
   literal text next to the number.
-  **Not built, and the condition is the whole point of the entry: the first code
-  anchor found drifted turns this from a design into a defect.** Until one is,
-  building the gate would be the invented-by-argument move the entry below
-  refuses on its own terms — a verifier for a class with no measured failure.
+  **The condition it was written against has already fired**, and the entry no
+  longer claims otherwise: the 2026-08-26 anchor above is the first code anchor
+  found drifted. What is still open is not whether a defect exists but **which
+  documents the gate would scan**, and that turns on three freshness regimes the
+  model now names, in [`docs/evidence-model.md`](docs/evidence-model.md),
+  section "The three freshness regimes": *ephemeral* citations, produced and
+  consumed inside one cycle, need no guard; *live persistent* documents — a spec
+  or plan still active, reread in later cycles — are the ones an anchor gate
+  would serve; *historical* records, already executed, are never checked against
+  `HEAD` and a rotted anchor in one is marked, never rewritten. The half that
+  stays open is where the boundary between the second and the third falls.
   The markdown side of the same question is closed and needs no condition: those
   anchors became section references in this cycle, and the section pass reads
   them.
