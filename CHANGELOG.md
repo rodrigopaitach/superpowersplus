@@ -11,6 +11,23 @@ References below name them so a claim here can be traced there.
 
 ## [Unreleased]
 
+### Added
+
+- **[`docs/evidence-model.md`](docs/evidence-model.md) — o modelo de evidência
+  ganha um documento conceitual canônico.** Até aqui a única forma de prova
+  aceita em todo o fluxo era uma citação `path/file.ext:line`, e uma forma
+  universal de prova não consegue exprimir alegação sobre o que **não** está
+  lá: um critério que diz "nenhum carrier ainda declara a regra antiga" não tem
+  linha para citar, e por isso era reprovado por construção, qualquer que fosse
+  o conteúdo da branch. O documento enuncia os treze conceitos do modelo — as
+  três camadas (spec declara a classe, plano resolve o instrumento, auditoria
+  reexecuta), as três delivery evidence classes (`behavioral`, `structural`,
+  `negative`), o menor range suficiente, os três regimes de frescor, a
+  adequação do instrumento ao alcance da alegação, a cláusula de contenção, a
+  Verification Matrix e o estado de compatibilidade `legacy behavioral`. Ele é
+  a fonte canônica: quando um carrier e este documento divergirem, o defeito é
+  do carrier.
+
 ### Fixed
 
 - **`check-cross-references` aprovava range malformado.** A validação comparava
