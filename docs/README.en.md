@@ -14,7 +14,7 @@ A development methodology for coding agents, **based on [Superpowers](https://gi
 
 Superpowers is a set of skills that trigger on their own and make the agent stop before writing code, understand what you actually want, write a spec, plan, and only then implement — with real TDD.
 
-superpowersplus is a derivative work: it keeps all of that and adds one axis: **evidence-or-zero**. Every claim the agent makes about your code requires a `file:line` citation, and whoever verifies re-runs the search instead of taking the writer's word for it.
+superpowersplus is a derivative work: it keeps all of that and adds one axis: **evidence-or-zero**. Every claim the agent makes about your code requires evidence that fits the claim — a located range where a line proves it, an executable check where the claim is about a set or about an absence, a grounded source where what is claimed is a dependency's guarantee. And whoever verifies re-runs it instead of taking the writer's word for it.
 
 ## Why it exists
 
