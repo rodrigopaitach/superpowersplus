@@ -22,7 +22,9 @@ exatamente esses critérios: é zero-dependency por regra e roda
 repositório verifica**: que `.claude-plugin/plugin.json` continua JSON válido.
 Um `grep -ran` por esse caminho em `scripts/`, `tests/` e `.github/`, sobre
 `*.sh`, `*.py` e `*.yml`, devolve zero — o único lugar que o nomeia é
-`.version-bump.json:4`, que é alvo de bump e não validador. O gate mais forte
+`.version-bump.json:4`, que é alvo de bump e não validador. **O alcance dessa
+afirmação é a superfície executável e de configuração de máquina**, não a árvore
+inteira: seis arquivos de prosa nomeiam o caminho, e nenhum o valida. O gate mais forte
 do projeto não sabe registrar a prova das propriedades que o projeto declara
 sobre si mesmo.
 
@@ -223,11 +225,13 @@ instrumento exaustivo sobre esse conjunto.
   inspecionável que casa com a afirmação — range localizado, verificação
   executável ou fonte fundamentada — e deixa de prometer `file:line` como forma
   universal. A redação diverge da referência de propósito, como já é o caso.
-- **AC27** `[structural]` — `docs/evidence-model.md` não define nenhum conceito
-  que `## The model` desta spec não enuncie.
 - **AC26** `[structural]` — o item de `## Open gaps` sobre o gate de `file:line`
   deixa de afirmar que nenhum anchor foi achado podre, e registra os três
   regimes: *ephemeral*, *live persistent* e *historical*.
+- **AC27** `[negative]` — `docs/evidence-model.md` não define nenhum conceito
+  que `## The model` desta spec não enuncie. A classe é `negative` e não
+  `structural` porque a entrega é uma proibição: não há range que prove
+  ausência, exatamente como em AC2, que é a mesma forma sobre o mesmo arquivo.
 
 ## Implicit Requirements
 
@@ -376,7 +380,7 @@ já são pressupostas pelos gates existentes.
 
 | Category | State | Where it landed |
 |---|---|---|
-| Functional scope and behavior | Resolved | AC1–AC26, com o escopo enumerado pelo parceiro e não inferido |
+| Functional scope and behavior | Resolved | AC1–AC27, com o escopo enumerado pelo parceiro e não inferido |
 | Domain and data model | Clear | Não há dado nem entidade: a mudança é normativa, em arquivos de texto |
 | Interaction flow | Resolved | AC1 (o documento canônico define a cadeia) e AC12 (o plano resolve o instrumento, que é o elo do meio) |
 | Non-functional attributes | Resolved | IR1 (teto), IR3, IR4, IR7 (gates existentes verdes), IR6 (custo de gate novo), IR8 (disciplina de changelog) |
