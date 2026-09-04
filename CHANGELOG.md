@@ -5796,6 +5796,22 @@ an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
+- **The historical Test Coverage Matrices already mix the three semantics the
+  model now names, and nothing reclassifies them.** Measured 2026-09-04 over
+  every tracked plan, fence-aware, no sampling: of 133 matrix rows across the
+  six plans that carry a matrix, **59 name a real test id, 72 name a read-only
+  command** — `grep -c …`, `test -f …`, `scripts/check-links.sh` exits 0 — and 2
+  say `NENHUM`. The column is called `Test`; more than half of it was never a
+  test. The consequence for compatibility is the uncomfortable half: the
+  pre-model task reviewer demanded a `Test file:line` and treated `—` as
+  blocking, so **those 72 rows were already unverifiable before the Evidence
+  Model existed**. AC48 preserves that behaviour rather than repairing it — it
+  guarantees no NEW regression, and deliberately does not promote a historical
+  command to `structural` or `negative`. **Reclassifying them is a separate
+  slice** — a legacy-plan migration — and it is not owed by this change. The
+  measurement is what makes it a decision rather than an oversight: the
+  alternative was to let the fallback quietly claim those rows were fine.
+
 - **`check-cross-references` counts a criterion's own definition as a citation
   of itself, so a defined-but-unconnected `AC`/`IR` passes green. Measured, and
   the contract is the open half — not the implementation.** The script's comment
