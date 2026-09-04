@@ -62,10 +62,15 @@ e não depende desta para ser escrito, embora dependa dela para ser implementado
   é o único caso da classe que já funciona.
 - **AC5** — Uma citação com `1 <= início <= fim <= total de linhas` continua
   resolvendo, e o script sai com código 0. A forma `N-N` é aceita.
-- **AC6** — A mensagem de cada citação irresolvida nomeia a citação completa
-  como foi escrita, incluindo o número final quando há range, nas três chamadas
-  de `skills/writing-plans/scripts/check-cross-references:400`, `:407` e
-  `:411-412` — nesta última a chamada abre em `:411` e o formato está em `:412`.
+- **AC6** — Toda entrada de citação irresolvida produzida a partir de uma
+  referência reconhecida por `CITATION`
+  (`skills/writing-plans/scripts/check-cross-references:386`) preserva a citação
+  completa como foi escrita, incluindo o número final quando há range. **Nenhuma
+  delas reconstrói a mensagem apenas como `{rel}:{first}`.** O critério é
+  enunciado como invariante sobre o conjunto, e não sobre uma contagem: quantas
+  chamadas existem é fato do estado-base, descrito em `## Problem` e em
+  `## Codebase Findings`, e a correção acrescenta uma quarta que cai sob a mesma
+  regra.
 - **AC7** — `tests/hooks/test-check-cross-references.sh` carrega, para cada um
   de AC1 a AC4, um par de casos: o documento limpo de AC5, que passa, e o mesmo
   documento com aquela citação quebrada, que falha. AC5 é o lado limpo comum aos
@@ -135,8 +140,8 @@ e não depende desta para ser escrito, embora dependa dela para ser implementado
 
 ## External Dependencies
 
-None. A correção é em `python3` embutido no script, que já é a linguagem do
-arquivo; nada é acrescentado. O projeto é zero-dependency por regra de
+None. A correção fica no bloco `python3` já embutido no script; nenhuma
+dependência é acrescentada. O projeto é zero-dependency por regra de
 [`CLAUDE.md`](../../../CLAUDE.md), section "What does not belong here".
 
 ## Assumptions to Confirm
