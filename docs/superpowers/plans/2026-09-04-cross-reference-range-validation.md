@@ -17,10 +17,13 @@ uma vem com seus casos em `tests/hooks/test-check-cross-references.sh`, na forma
 de par que a suíte já pratica: um documento limpo que passa e o mesmo documento
 com uma citação quebrada que falha.
 
-**Tech Stack:** `python3` embutido no script (já é a linguagem do arquivo,
-`skills/writing-plans/scripts/check-cross-references:1`) e `bash` na suíte
-(`tests/hooks/test-check-cross-references.sh:1`). Nenhuma entrada nova: a spec
-declara `## External Dependencies` como `None`.
+**Tech Stack:** `bash` na suíte (`tests/hooks/test-check-cross-references.sh:1`)
+e `python3` dentro do script, que **é um script bash** — a linha 1 é
+`#!/usr/bin/env bash` e o python vive num heredoc que abre em
+`skills/writing-plans/scripts/check-cross-references:104`
+(`python3 - "$doc" "$root" "$script_dir" <<'PY'`). A correção deste plano é
+inteiramente dentro desse heredoc. Nenhuma entrada nova: a spec declara
+`## External Dependencies` como `None`.
 
 **Execution:** _(em branco até seu parceiro escolher o caminho ao fim de writing-plans)_
 
@@ -52,8 +55,9 @@ Copiadas da `## Implicit Requirements` da spec. Vinculam toda task.
 
 **Baseline medida em 04/09/2026, antes da primeira task:**
 `tests/hooks/test-check-cross-references.sh` sai com código 0 e imprime 33
-linhas `[PASS]`; o caso de corpus reporta *"the committed corpus keeps its
-verdicts (36 of 42 documents compared)"*. `CHANGELOG.md` não tem seção
+linhas `[PASS]`; o caso de corpus passa com zero documentos movidos. **O total
+de documentos comparados não é baseline**: ele sobe a cada spec ou plano
+commitado, e por isso nenhum step deste plano o afirma. `CHANGELOG.md` não tem seção
 `[Unreleased]` — a 1.25.0 foi cortada — então a Task 1 a cria.
 
 ## Test Coverage Matrix
@@ -87,10 +91,10 @@ repositório descartável.
 | T1.3 Uma citação `N-M` cujo início é maior que o fim é irresolvida | AC3 | static | `tests/` | > spec citing an inverted range fails |
 | T1.4 Uma citação cujo fim excede o total de linhas continua irresolvida | AC4 | static | `tests/` | > spec citing a range past the end of the file fails |
 | T1.5 Uma citação com `1 <= início <= fim <= total` resolve, e `N-N` é aceita | AC5 | static | `tests/` | > spec with valid ranges passes |
-| T1.6 Os quatro casos quebrados derivam do documento limpo por uma única substituição de citação | AC7 | static | `tests/` | > the four broken range cases differ from the clean one by one citation |
+| T1.6 Os quatro casos quebrados derivam do documento limpo por uma única substituição de citação | AC7, IR5 | static | `tests/` | > the four broken range cases differ from the clean one by one citation |
 | T1.7 Nenhum documento commitado muda de veredito | IR1, IR3 | static | `tests/` | > the committed corpus keeps its verdicts |
 | T2.1 A mensagem de irresolvido nomeia a citação como foi escrita, com o número final | AC6 | static | `tests/` | > an invalid range is reported with its end number |
-| T2.2 O caso acima falha se a mensagem omitir o número final | AC8 | static | `tests/` | > an invalid range is reported with its end number |
+| T2.2 O caso acima falha se a mensagem omitir o número final | AC8, IR5 | static | `tests/` | > an invalid range is reported with its end number |
 
 **Duas linhas que este repositório não sabe testar, trazidas ao humano conforme
 `skills/writing-plans/SKILL.md:257`:**
@@ -112,7 +116,7 @@ segunda linha da tabela.
 **Spec criterion:** AC1, AC2, AC3, AC4, AC5, AC7; IR1, IR2, IR3, IR4, IR5
 
 **Files:**
-- Modify: `skills/writing-plans/scripts/check-cross-references:386-412`
+- Modify: `skills/writing-plans/scripts/check-cross-references:386-414`
 - Test: `tests/hooks/test-check-cross-references.sh`
 - Modify: `CHANGELOG.md`
 
@@ -129,7 +133,7 @@ segunda linha da tabela.
 - T1.3: Uma citação `N-M` cujo início é maior que o fim é reportada como irresolvida e o script sai com 1 — test: `> spec citing an inverted range fails`
 - T1.4: Uma citação cujo número final excede o total de linhas continua irresolvida, com saída 1 — test: `> spec citing a range past the end of the file fails`
 - T1.5: Uma citação com `1 <= início <= fim <= total de linhas` resolve e o script sai com 0; `N-N` é aceita — test: `> spec with valid ranges passes`
-- T1.6: Os quatro casos que falham derivam do documento limpo por uma única substituição de citação — test: `> the four broken range cases differ from the clean one by one citation`
+- T1.6: Os quatro casos que falham derivam do documento limpo por uma única substituição de citação, e rodam contra o repositório descartável — test: `> the four broken range cases differ from the clean one by one citation`
 - T1.7: Nenhum documento já commitado muda de veredito — test: `> the committed corpus keeps its verdicts`
 - T1.8: A mudança não acrescenta dependência externa — sem teste; ver a matriz
 - T1.9: `CHANGELOG.md` recebe entrada em `[Unreleased]` — sem teste; ver a matriz
@@ -239,8 +243,9 @@ esse é o defeito da Task 2, deliberadamente fora desta.
 - [ ] **Step 4: Rodar para ver passar**
 
 Run: `tests/hooks/test-check-cross-references.sh`
-Expected: PASS — exit 0, e a contagem de `[PASS]` sobe de 33 para 39: os cinco
-`run_case` novos mais a asserção de T1.6.
+Expected: PASS — exit 0, e a contagem de `[PASS]` sobe **em 6**: os cinco
+`run_case` novos mais a asserção de T1.6. O delta é o que se confere; o total
+absoluto muda toda vez que alguém acrescenta um caso a esta suíte.
 
 - [ ] **Step 5: Medir IR1 sobre o corpus inteiro**
 
@@ -274,8 +279,10 @@ for f, c in bad:
 PY
 ```
 
-Expected: `newly rejected: 0`. Medido em 04/09/2026 antes desta task:
-255 de 255 arquivos lidos, 523 citações, 0 reprovadas. **Um número diferente de
+Expected: `newly rejected: 0` — **é essa a parte que carrega peso, e ela não
+envelhece.** Os dois números acima dela crescem com a árvore: medidos em
+04/09/2026, com os dois planos desta linha de trabalho já commitados, eram 257
+de 257 arquivos lidos e 575 citações. **Um número diferente de
 zero é violação de IR1 e a causa se investiga antes de tocar em qualquer
 teste** — a citação real pode ser o defeito, e nesse caso ela se corrige e o
 resultado se registra aqui.
@@ -290,9 +297,15 @@ um verde geral não esconda um caso que deixou de rodar:
 tests/hooks/test-check-cross-references.sh | grep 'the committed corpus keeps its verdicts'
 ```
 
-Expected: `[PASS] the committed corpus keeps its verdicts (36 of 42 documents compared)`.
-**Uma contagem de comparados igual a zero é falha, não sucesso** — o próprio caso
-já trata isso, e a razão está no comentário de `tests/hooks/test-check-cross-references.sh:27-32`.
+Expected: uma linha `[PASS]`, **e nunca um total específico**. O número de
+comparados sobe a cada spec ou plano commitado — era 42 documentos quando este
+plano começou a ser escrito e 44 depois de os dois planos entrarem — então um
+Expected literal é a classe de valor que o implementer ajusta em silêncio no
+único step cuja razão de existir é confirmar IR3. **O que se confirma é o
+invariante**: `[PASS]`, zero documentos com veredito movido, e um número de
+comparados maior que zero. O caso já asserta os três em
+`tests/hooks/test-check-cross-references.sh:519-524`, e a razão de a contagem
+decair está em `tests/hooks/test-check-cross-references.sh:27-32`.
 
 - [ ] **Step 7: Rodar a suíte inteira de hooks**
 
@@ -351,20 +364,23 @@ git commit -m "fix: check-cross-references aprovava linha zero e range invertido
 **Spec criterion:** AC6, AC8; IR4
 
 **Files:**
-- Modify: `skills/writing-plans/scripts/check-cross-references:386-412`
+- Modify: `skills/writing-plans/scripts/check-cross-references:386-414`
 - Test: `tests/hooks/test-check-cross-references.sh`
 - Modify: `CHANGELOG.md`
 
 **Interfaces:**
 - Consumes: o laço de citações como a Task 1 o deixou — `end` computado antes de
-  `resolve(rel)`, e quatro chamadas a `unresolved.append` formatando
-  `` f"`{rel}:{first}` — …" ``.
+  `resolve(rel)`, e **quatro** chamadas a `unresolved.append` formatando
+  `` f"`{rel}:{first}` — …" ``. **A spec fala em três** (AC6 nomeia `:400`, `:407`
+  e `:411-412`) porque foi escrita contra o arquivo original; a quarta é a que a
+  Task 1 acrescentou, e ela cai sob a mesma regra. Quatro é o número correto
+  depois da Task 1, e é o que a auditoria vai encontrar.
 - Produces: uma variável `cite` no topo do laço, com o texto da citação como foi
   escrita. Nenhuma task posterior a consome; este plano tem duas tasks.
 
 **Acceptance criteria:**
 - T2.1: A mensagem de cada citação irresolvida nomeia a citação completa como foi escrita, incluindo o número final quando há range — test: `> an invalid range is reported with its end number`
-- T2.2: O caso acima falha se a mensagem omitir o número final — test: `> an invalid range is reported with its end number`
+- T2.2: O caso acima falha se a mensagem omitir o número final, e roda contra o repositório descartável — test: `> an invalid range is reported with its end number`
 
 - [ ] **Step 1: Escrever o caso que falha**
 
@@ -442,7 +458,8 @@ for m in CITATION.finditer(text):
 - [ ] **Step 4: Rodar para ver passar, e provar que a mutação entra**
 
 Run: `tests/hooks/test-check-cross-references.sh`
-Expected: PASS — exit 0, 40 linhas `[PASS]`.
+Expected: PASS — exit 0, e a contagem de `[PASS]` sobe **em 1** em relação ao
+fim da Task 1: o caso que lê a mensagem. Confira o delta, não o total.
 
 Depois, prove que o caso mede o mecanismo e não um vizinho. Troque
 `cite = f"{rel}:{first}-{last}" if last else f"{rel}:{first}"` por
