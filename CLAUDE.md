@@ -123,6 +123,7 @@ The first says the release exists and is the newest — the badge follows it and
 
 ## Where the rest lives
 
+- [`docs/evidence-model.md`](docs/evidence-model.md) — the three delivery evidence classes, what each admits, and the compatibility state for documents written before the model. **It is canonical: where a skill and this document disagree, the skill is the defect.**
 - [`docs/review-scopes.md`](docs/review-scopes.md) — what each of the four review faces runs, and the shapes copied across carriers on purpose. **Read before editing any reviewer prompt.**
 - [`docs/docs-and-links.md`](docs/docs-and-links.md) — the three README-shaped files and their jobs, what `check-links.sh` reads in each of its three passes, and the third-party link diet. **Read before adding a document or a link.**
 - [`docs/releasing.md`](docs/releasing.md) — the bump audit's false positives, and the `SKILL.md` ceiling exemption that runs on a deadline. **Read when cutting a version.**
