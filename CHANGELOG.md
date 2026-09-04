@@ -49,6 +49,20 @@ References below name them so a claim here can be traced there.
   a linha *Completion signals* deixa de ser sobre testabilidade e passa a ser
   sobre a evidência admissível.
 
+- **O spec reviewer cobra classe, marcador e alcance do instrumento.**
+  [`skills/brainstorming/spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md),
+  section "Groundedness (blocking)" ganha quatro vereditos bloqueantes:
+  alegação de completude, cardinalidade, unicidade ou ausência sustentada por
+  instrumento amostrado, truncado, paginado ou filtrado; `AC`/`IR` sem evidence
+  class declarada; critério que nenhuma evidência admissível resolve; e
+  cabeçalho sem `**Evidence model:** v2`. Este último carrega a assimetria
+  explícita: **da ausência do marcador o reviewer nunca conclui que a spec é
+  histórica** — o fallback existe só nos consumidores a jusante, e concluí-lo
+  aqui deixaria uma spec nova defeituosa escapar pela ausência simultânea do
+  marcador e das classes. Na section "Traceability (blocking)", a linha que
+  cobrava critério *settleable* por citação `file:line` passa a cobrar
+  evidência admissível.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em
