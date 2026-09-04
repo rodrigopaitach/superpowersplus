@@ -418,6 +418,76 @@ heurística sobre histórico do git.
   evidência do mesmo arquivo, nem por AC32, que nomeia apenas
   `subagent-driven-development/SKILL.md`. Sem este critério, os dois arquivos
   passam a dizer coisas incompatíveis sobre o mesmo campo.
+- **AC43** `[structural]` — `brainstorming/SKILL.md` deixa de ensinar que todo
+  `AC`/`IR` é settleable por `file:line`: os critérios passam a ser formulados
+  para admitir a evidence class declarada e a evidência que ela exige, e a
+  referência à `Test Coverage Matrix` nessa definição vira `Verification
+  Matrix`. **Alcança nominalmente os quatro carriers medidos:** a row de
+  `## Acceptance Criteria` (*"stated so a `file:line` citation could settle
+  it"*), a row de `## Implicit Requirements` (*"settled by a `file:line`
+  citation"* e o nome da matriz), o item 1 do `## Checklist` (*"Record every
+  finding as `path/file.ext:line`"*) e a linha do short path (*"The
+  investigation you already did, cited `path/file.ext:line`"*). **Não toca**
+  `file:line` como fonte de recomendação, como achado local nem como saída de
+  gate: ali a forma continua correta.
+- **AC44** `[structural]` — `writing-plans/SKILL.md` e
+  `plan-document-reviewer-prompt.md` deixam de exigir universalmente
+  implementação `file:line` mais teste `file:line` de todo task criterion, e
+  passam a cobrar a evidence class e o verification instrument da Verification
+  Matrix. **Alcança nominalmente os cinco carriers que AC12, AC13, AC30 e AC31
+  não alcançam:** o parágrafo de abertura de `## Acceptance Criteria` em
+  `writing-plans/SKILL.md` (*"each needing an implementation `file:line` and a
+  test `file:line`"*), a linha de exemplo do template de task (*"stated so a
+  `file:line` citation can settle"*), as duas rows do plan reviewer sobre
+  deliverable e sobre critério *"settled by a `file:line` citation"*, e o
+  comentário de `skills/writing-plans/scripts/check-cross-references` que
+  declara que *"writing-plans requires every task criterion to name its covering
+  test"*. **AC12 e AC13 não são reescritos**: eles entregam a matriz e as seis
+  colunas, e a varredura mediu que o contrato é maior que isso.
+- **AC45** `[structural]` — o fix loop de `subagent-driven-development`, o
+  contrato do implementer e `re-review-prompt.md` verificam a fix round pelos
+  verification instruments aplicáveis à task. `[TEST_COMMAND]`, base test count,
+  test run e covering tests são obrigatórios **apenas quando a task carrega
+  critério `behavioral` que os exige**; uma task exclusivamente `structural` ou
+  `negative` é corrigida e re-revisada sem inventar teste nem test command.
+  **Alcança nominalmente:** em `re-review-prompt.md`, a seção
+  `## Tests — Run Them Yourself`, a instrução `Re-run them: [TEST_COMMAND]`, a
+  seção de saída `### Test Run`, os placeholders `[TEST_COMMAND]` e
+  `[BASE_TEST_COUNT]`, e o contrato de retorno *"its own test run"*; em
+  `subagent-driven-development/SKILL.md`, a instrução de entregar ao reviewer o
+  test command e o base count, a exigência de que o fix report contenha os
+  covering tests mais o comando e a saída, e a condição de despacho do
+  re-review; em `implementer-prompt.md`, o contrato do fix report; e a linha de
+  propósito de `task-reviewer-prompt.md` (*"re-runs the task's tests"*).
+  **O Iron Law do TDD continua fora desta fatia** — `implementer-prompt.md:51`
+  não é tocado. A distinção é entre *o implementer deve usar TDD*, que é decisão
+  separada, e *o loop de review consegue verificar uma task não-`behavioral`*,
+  que é este modelo e hoje não consegue: medido, uma fix round de task só
+  `structural` ou `negative` não tem valor admissível para `[TEST_COMMAND]`, e
+  `subagent-driven-development/SKILL.md` só despacha o re-review quando os três
+  campos estão presentes.
+- **AC46** `[structural]` — `final-branch-audit/SKILL.md` aplica evidence class
+  de ponta a ponta, sem nenhuma regra sobrevivente que converta ausência
+  universal de located citation ou de covering test em `NOT DELIVERED`.
+  **Alcança nominalmente os cinco carriers que AC16 a AC20 e AC41 não
+  alcançam:** a introdução (*"with `file:line` citations the auditor located
+  itself"*), a definição das colunas sob a tabela (*"**Implementation** and
+  **Test** are `path/file.ext:line`"* e *"A criterion with no test citation is
+  NOT DELIVERED even when the implementation exists. Untested is undelivered"*),
+  as rows de `## Verdict Rules` que exigem implementação e teste citados, o
+  passo do protocolo que manda *"Search for the covering test the same way"*, e
+  as duas linhas da tabela de racionalizações (*"Evidence is `file:line`"* e
+  *"Untested is undelivered"*). **A exigência de teste sobrevive para
+  `behavioral`**; para `structural` e `negative` o veredito segue o verification
+  instrument que a classe admite.
+- **AC47** `[structural]` — `docs/review-scopes.md` descreve o protocolo novo de
+  task review e de re-review: teste e test command onde a classe `behavioral` os
+  exige, verification instrument por classe nos demais casos, e as referências de
+  seção continuam resolvendo depois dos renames que AC28 e AC45 provocam.
+  **Alcança nominalmente os três carriers medidos:** a row do task reviewer
+  (*"The **task's** test command, `[TEST_COMMAND]`, reported verbatim"*), a row
+  do re-review (*"**Re-runs** what already ran, reporting command"*) e a
+  referência `section "Test Run"` na tabela de rótulos da linha de evidência.
 
 ## Implicit Requirements
 
@@ -615,6 +685,29 @@ heurística sobre histórico do git.
   `| Item in `## Assumptions to Confirm` that IS verifiable in the code | BLOCKING |`.
   Foi ela que pegou a listagem truncada. Não é reescrita: AC6 acrescenta regra
   sobre **alcance do instrumento**, que é afirmação diferente.
+- **A premissa antiga tem 28 portadores no fluxo suportado, e três eram
+  conhecidos.** Varredura exaustiva em 04/09/2026 sobre os 257 arquivos que
+  `git ls-files` devolve, onze padrões (`file:line`, `covering test`,
+  `Test Coverage Matrix`, `TEST_COMMAND`, `Test Evidence`, `Test Run`,
+  `re-run`/`rerun` perto de `test`, `implementation` perto de `test`,
+  `NOT DELIVERED` perto de teste ou evidência, `No tests at all`,
+  `searches against the spec`), sem amostragem: **504 hits brutos, 169 no fluxo
+  suportado, 33 arquivos.** Lidos um a um, o conjunto se separa em **17
+  CONTRADICTION, 11 STALE CONTRACT, 22 já cobertos por AC existente** e o
+  restante em evidência local legítima ou TDD fora de escopo. É a fonte de
+  AC43–AC47, e a razão de eles serem cinco e não vinte e oito: os não cobertos
+  agrupam-se em cinco contratos, não em linhas independentes.
+- **Uma fix round de task só `structural` ou `negative` não roda hoje, e isso
+  foi verificado seguindo o fluxo inteiro.** `re-review-prompt.md:134` declara
+  `[TEST_COMMAND]` `REQUIRED` como *"the same command the task review ran"*, e
+  depois de AC42 essa task review não tem comando; `re-review-prompt.md:64`
+  manda incondicionalmente *"Re-run them"*; `re-review-prompt.md:85-88` exige a
+  seção de saída `### Test Run` com `Command`/`exit`/`counts`;
+  `re-review-prompt.md:147` fecha o contrato com *"its own test run"*; e
+  `skills/subagent-driven-development/SKILL.md:352-354` só despacha o re-review
+  *"once all three are present"*. **Não há valor admissível para o campo e não
+  há caminho que não invente um.** É a fonte de AC45, e a razão de ele ser o
+  único dos cinco que trava execução em vez de leitura.
 - **O item de Open gaps afirma premissa vencida.**
   [`CHANGELOG.md`](../../../CHANGELOG.md), section "Open gaps", item que abre com *"The
   `file:line` form has no gate"*: diz *"Not built, and the condition is the whole
@@ -641,13 +734,13 @@ era escolha de estratégia diante de um número que só existe depois do texto.
 
 | Category | State | Where it landed |
 |---|---|---|
-| Functional scope and behavior | Resolved | AC1–AC42, com o escopo enumerado pelo parceiro e ampliado por duas investigações dirigidas — a primeira achou dois carriers esquecidos, a segunda um terceiro, o parser da matriz — e depois por AC41 e AC42, emendados no gate humano quando o plan reviewer achou mais dois carriers omitidos **em arquivos que a spec já editava** |
+| Functional scope and behavior | Resolved | AC1–AC47. O escopo foi enumerado pelo parceiro, ampliado por duas investigações dirigidas, depois por AC41 e AC42 quando o plan reviewer achou dois carriers omitidos em arquivos que a spec já editava — **e fechado por uma varredura exaustiva que mediu 28 carriers da premissa antiga onde três eram conhecidos.** AC43–AC47 cobrem os cinco contratos que ela agrupou, não linha a linha |
 | Domain and data model | Clear | Não há dado nem entidade: a mudança é normativa, em arquivos de texto |
 | Interaction flow | Resolved | AC1 (o documento canônico define a cadeia), AC12 (o plano resolve o instrumento), AC30 (a task carrega o contrato até o brief) e AC22 (o reviewer reexecuta por classe) |
 | Non-functional attributes | Resolved | IR1 (teto), IR3, IR4, IR7 (gates existentes verdes), IR6 (custo de gate novo), IR8 (disciplina de changelog) |
 | Integrations and external dependencies | Clear | IR2 e `## External Dependencies`: zero-dependency por regra |
-| Edge cases and failures | Resolved | AC20, AC34, AC35 e AC36 (marcador, migração e a assimetria contra rota de fuga); AC18 (auditor discorda da classe); AC16, AC41 e AC42 — as três ocorrências da mesma falha: a regra escrita em mais de um portador do mesmo arquivo, e a enumeração alcançando um só; AC28 (`—` deixa de ser bloqueante fora de `behavioral`); AC37 e AC38 (comando com `>` ou `::` confundido com teste); AC39 e AC40 (o schema histórico de cinco colunas preservado) |
-| Constraints and tradeoffs | Resolved | IR1 e IR6 (teto de linhas e nenhum arquivo novo em `scripts/`); IR5 e IR9, que mantêm o anchor fragment fora desta fatia; IR10, que proíbe a mudança do parser de mover veredito de plano commitado; e o Iron Law do TDD, deliberadamente fora — ver `### Decision record` |
+| Edge cases and failures | Resolved | AC20, AC34, AC35 e AC36 (marcador, migração e a assimetria contra rota de fuga); AC18 (auditor discorda da classe); AC16, AC41, AC42 e AC43–AC47 — a mesma falha em escala crescente: a regra escrita em mais de um portador, e a enumeração alcançando um só. AC45 é a única que trava execução, não só leitura; AC28 (`—` deixa de ser bloqueante fora de `behavioral`); AC37 e AC38 (comando com `>` ou `::` confundido com teste); AC39 e AC40 (o schema histórico de cinco colunas preservado) |
+| Constraints and tradeoffs | Resolved | IR1 e IR6 (teto de linhas e nenhum arquivo novo em `scripts/`); IR5 e IR9, que mantêm o anchor fragment fora desta fatia; o Iron Law do TDD, que AC45 declara explicitamente fora, distinguindo *o implementer deve usar TDD* de *o loop de review consegue verificar task não-`behavioral`*; IR10, que proíbe a mudança do parser de mover veredito de plano commitado; e o Iron Law do TDD, deliberadamente fora — ver `### Decision record` |
 | Terminology | Resolved | *evidence class* × *measurement status*; *locator* × *evidence*; *current-state* × *provenance*; *source evidence* fora das classes de entrega; *Verification Matrix* × *Test Coverage Matrix*; *legacy behavioral* como estado de compatibilidade × as três evidence classes, que continuam três; e `behavioral` de agente × `behavioral` de script determinístico, distinguidos em AC38 |
 | Completion signals | Resolved | Cada `AC` e `IR` carrega classe declarada; a spec aplica em si o modelo que define |
 | Placeholders and vague adjectives | Resolved | *Smallest sufficient range* foi definido formalmente na seção The model, em vez de ficar como adjetivo |
@@ -671,3 +764,4 @@ era escolha de estratégia diante de um número que só existe depois do texto.
 | A classe de AC38 é `behavioral` sem medição de agente? | Sim. O sujeito é um script determinístico com suíte automatizada | *(não perguntada — trazida pelo parceiro)* | Decisão do parceiro, distinguindo comportamento de programa de comportamento de agente |
 | AC29 afirma comportamento medido? | Não. Vira `structural`: a entrega é o texto preservado no prompt | Manter `[behavioral]` | **Recomendação refutada por medição**: o item que introduziu o litmus fecha com *"Reasoned, not measured."* em `CHANGELOG.md:1704`, e nenhum `RESULT-*` mede essa regra |
 | A spec estava completa quando o plan reviewer achou dois carriers omitidos? | Não. Vira emenda no gate humano: AC41 (a regra de abertura do audit) e AC42 (o placeholder `[TEST_COMMAND]`), **um critério por propriedade, nunca um AC genérico do tipo "todo portador é alcançado"** | Emendar a spec em vez de consertar como step dentro da task | Padrão do projeto — `skills/writing-plans/SKILL.md:235-237`, *"If the work genuinely needs a task the spec does not cover, the spec is incomplete: take it back to your human partner rather than smuggling the task in. Amending the spec is cheap now and blocking later."* **Sem quinta rodada de spec review**: os dois carriers foram achados e verificados por outro gate |
+| A varredura exaustiva mudou a forma da emenda? | Sim. Onde três carriers eram conhecidos, a medição achou 28, e eles agrupam-se em cinco contratos — autoria de spec, autoria e revisão de plano, fix loop e re-review, final audit, e a documentação dos review scopes. AC43–AC47, **um AC por contrato, nenhum meta-AC do tipo "todos os carriers são atualizados", e nenhum carrier para `## Open gaps`** | *(não perguntada — o parceiro mandou varrer antes de emendar)* | Medição própria, 04/09/2026, sobre os 257 arquivos rastreados — e é ela que refuta a alternativa que eu havia recomendado: tratar os carriers restantes como fatia própria. **AC45 não é propagação: sem ele o loop de fix não roda para task não-`behavioral`** |
