@@ -82,6 +82,14 @@ Subagent (general-purpose):
     finding's verdict. Every line is a verdict, a finding with file:line,
     or a check you ran — no preamble, no process narration.
 
+    **A finding about a scope rather than a place carries command evidence.**
+    "No call site checks the return value", "this pattern appears nowhere else",
+    "the suite has no case for the failure branch" — none of them has a line
+    that proves them, and citing one line makes the claim smaller than it is.
+    Show the read-only command you ran and its result. A finding about a
+    specific place still carries its located range: command evidence widens what
+    is admissible, it does not replace the range where a range is the proof.
+
     ### Test Run
 
     **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/failed/

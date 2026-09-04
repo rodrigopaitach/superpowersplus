@@ -149,6 +149,14 @@ Subagent (general-purpose):
     - Acknowledge strengths
     - Give a clear verdict
 
+    **A finding about a scope rather than a place carries command evidence.**
+    "No call site checks the return value", "this pattern appears nowhere else",
+    "the suite has no case for the failure branch" — none of them has a line
+    that proves them, and citing one line makes the claim smaller than it is.
+    Show the read-only command you ran and its result. A finding about a
+    specific place still carries its located range: command evidence widens what
+    is admissible, it does not replace the range where a range is the proof.
+
     **DON'T:**
     - Say "looks good" without checking
     - Answer "tests pass" without having run them in this review

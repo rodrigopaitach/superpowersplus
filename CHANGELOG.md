@@ -169,6 +169,22 @@ References below name them so a claim here can be traced there.
   não-`behavioral` ao parceiro humano antes do Step 2. Critério que nenhuma
   evidência admissível resolve continua sendo concern.
 
+- **Achado transversal de review carrega command evidence.**
+  [`skills/requesting-code-review/code-reviewer.md`](skills/requesting-code-review/code-reviewer.md),
+  section "Critical Rules", e
+  [`skills/subagent-driven-development/re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md),
+  section "Output Format" — os dois exigiam `file:line` de **todo** achado, e
+  um achado sobre um escopo não tem linha que o prove: *"nenhum call site
+  confere o retorno"*, *"este padrão não aparece em mais lugar nenhum"*, *"a
+  suíte não tem caso para o ramo de falha"*. Citar uma linha ali **encolhe a
+  alegação** em vez de sustentá-la. Passa a valer o comando read-only e seu
+  resultado. Achado sobre um lugar específico continua carregando seu range
+  localizado: command evidence alarga o que é admissível, não substitui o range
+  onde o range é a prova. A frase é a mesma nos dois arquivos, por unificação
+  no lugar — a forma que [`CLAUDE.md`](CLAUDE.md), section "Where the obvious
+  move is wrong" descreve para conteúdo dentro do `## Output Format` de
+  subagente.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em
