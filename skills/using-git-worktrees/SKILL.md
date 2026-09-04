@@ -101,22 +101,33 @@ cd "$path"
 
 ## Step 2: Project Setup
 
-Auto-detect and run appropriate setup:
+**Read the project's own instructions first** — `CLAUDE.md`, `AGENTS.md`, the
+README, a `Makefile` or `justfile`, the CI workflow. A project that documents
+its setup command has already answered this, and its answer beats detection.
+
+Only when nothing documents it, detect — and detect the **tool**, which is what
+a lockfile names. A manifest names the language:
 
 ```bash
-# Node.js
-if [ -f package.json ]; then npm install; fi
+# Node.js — with a lockfile the versions are pinned, and `npm install` may rewrite it
+if   [ -f package-lock.json ]; then npm ci
+elif [ -f package.json ];      then npm install; fi
+
+# Python — pyproject.toml does NOT mean Poetry (uv, Hatch, PDM, setuptools)
+if   [ -f poetry.lock ];      then poetry install
+elif [ -f uv.lock ];          then uv sync
+elif [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
 # Rust
 if [ -f Cargo.toml ]; then cargo build; fi
 
-# Python
-if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-if [ -f pyproject.toml ]; then poetry install; fi
-
 # Go
 if [ -f go.mod ]; then go mod download; fi
 ```
+
+**Nothing matched?** Say so and ask. A guessed package manager installs into
+the wrong environment or rewrites a lockfile nobody asked you to touch, and
+both are discovered later, by someone else.
 
 ## Step 3: Verify Clean Baseline
 

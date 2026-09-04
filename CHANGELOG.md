@@ -72,6 +72,28 @@ References below name them so a claim here can be traced there.
   reported — if the escalation turns out to strand real work, that measurement
   is what would justify the mode.
 
+### Changed
+
+- **Worktree setup detected the language and ran the wrong tool.**
+  [`skills/using-git-worktrees/SKILL.md`](skills/using-git-worktrees/SKILL.md),
+  section "Step 2: Project Setup", ran `poetry install` on the presence of
+  `pyproject.toml` — a file that says the project is Python and nothing about
+  its package manager, which today is as likely to be uv, Hatch, PDM or plain
+  setuptools. On such a project the command either fails or installs into an
+  environment nobody chose. `npm install` on `package.json` was the same shape
+  one step milder: with a lockfile present it may rewrite the pinned versions
+  the worktree was supposed to reproduce.
+
+  **The detection now reads lockfiles, because a lockfile names the tool and a
+  manifest names the language.** `package-lock.json` takes `npm ci`,
+  `poetry.lock` takes Poetry, `uv.lock` takes uv, and the manifests stay as the
+  fallback below them. Ahead of all of it, the skill now reads the project's
+  own instructions first — `CLAUDE.md`, `AGENTS.md`, README, `Makefile`, CI —
+  because a project that documents its setup has already answered better than
+  any detection can, and this project's own rule of asking the source before
+  guessing did not reach the one skill that guesses on a stranger's repository.
+  Nothing matching is now a question to the human partner, not a guess.
+
 ## [1.24.0] - 2026-09-03
 
 ### Fixed
