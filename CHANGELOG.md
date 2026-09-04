@@ -15,8 +15,9 @@ References below name them so a claim here can be traced there.
 
 - **`check-cross-references` aprovava range malformado.** A validação comparava
   só o número final contra o total de linhas do arquivo
-  (`skills/writing-plans/scripts/check-cross-references:409-410` antes desta
-  mudança), então `arquivo:0`, `arquivo:0-5` e `arquivo:10-5` eram reportados
+  (`skills/writing-plans/scripts/check-cross-references:409-410` **na v1.25.0**,
+  antes desta mudança — as linhas se moveram com ela, e o número só é
+  recuperável contra aquela tag), então `arquivo:0`, `arquivo:0-5` e `arquivo:10-5` eram reportados
   como resolvidos. Medido por execução com controle em 04/09/2026: os três
   saíam com código 0, e o caso de controle — um fim além do arquivo — saía com
   1, provando que o instrumento funcionava e que os três passavam de verdade.
