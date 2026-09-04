@@ -5475,6 +5475,44 @@ an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
+- **This section's own rule against `file:line` is broken 32 times inside it,
+  and the count is measured rather than sampled.** The preamble above states
+  it — references here use the markdown link plus section title, never
+  `file:line`, *"because this list is live and its own items have rotted that
+  way"* — and it records the failure as having happened five times in one
+  series of changes. **Measured 2026-09-04 across everything below that
+  preamble: 32 backticked `file:line` citations, 29 of them into `.md`.**
+  Three resolve to nothing — line 363 of `writing-plans/SKILL.md` and line 134
+  of `executing-plans/SKILL.md` are blank, and the one naming line 141 of
+  `docs/context-audit.md` points past the end of a 140-line file.
+  **A non-blank line is not evidence the citation still holds**, and one case
+  proves it: line 145 of `executing-plans/SKILL.md` resolves to prose about the
+  two gates feeding one findings list, while the row citing it is about a
+  returning NOT DELIVERED row escalating immediately — that rule is now roughly
+  forty lines further down. Counting only the empty ones would report three; the
+  real number is unknown without opening all 29.
+  **The citations above are written out in prose on purpose.** Reproducing them
+  in the backticked form would add four more of exactly what this item counts,
+  and [`check-changelog.sh`](scripts/check-changelog.sh) refused the first
+  draft for precisely that — it resolves anchors, and the `context-audit` one
+  points past the file's end.
+  **That refusal also explains why these rot unseen.** The gate resolves the
+  anchors a staged changelog *adds*, never the ones already in the file, so the
+  `context-audit` citation passed on the day it was written — when that file
+  still had 141 lines — and nothing has read it since. Every citation here was
+  correct once. The gate is a birth certificate, not a health check.
+  **Thirteen of them sit in one table** — the copied-shapes table in the item
+  about eight unmeasured rules — which is why this did not close when the
+  markdown anchors were converted in an earlier cycle: the conversion reached
+  prose and not that table.
+  **Why it is recorded rather than fixed here:** converting a citation means
+  deciding which section it meant, and a wrong section is worse than a stale
+  line — it reads as verified. Thirteen of those decisions belong to the author
+  of the rules they cite. **The one citation this cycle displaced was converted**
+  (the `writing-skills` correction above, now anchored by section), because
+  leaving a line number this cycle made wronger is not a decision anyone
+  recorded.
+
 - **Eleven of the fifteen `description` fields do not follow the rule this
   cycle corrected, and rewriting them is not a cleanup.** Measured
   2026-09-04 across the fifteen `SKILL.md` frontmatters: four already say what
@@ -5887,7 +5925,9 @@ section where the next one would be written.
   trigger phrases quoted inside the description; grep patterns in `SKILL.md`
   for a reference file over 10,000 words; and the rule that information lives
   in `SKILL.md` or in a reference file, never both.
-  **One correction hangs on this review.** `writing-skills/SKILL.md:666` tells
+  **One correction hangs on this review.**
+  [`writing-skills/SKILL.md`](skills/writing-skills/SKILL.md), section "Skill
+  Creation Checklist (TDD Adapted)", sub-block **Deployment**, tells
   the reader to consider contributing back via pull request, and the top of
   [`CLAUDE.md`](CLAUDE.md) states this project takes no outside contributions
   and has no PR process. It is one line and it is wrong today; fixing it alone
