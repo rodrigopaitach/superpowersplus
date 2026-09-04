@@ -63,18 +63,18 @@ face `branch` — columns and the header to create it with are in
 ## Example
 
 ```
-[Just completed Task 2: Add verification function]
+[Last plan task committed; superpowersplus:final-branch-audit has returned]
 
-You: Let me request code review before proceeding.
+You: Let me request the branch code review before presenting merge options.
 
-# The BASE recorded before Task 2 was dispatched — not a grep over commit
-# subjects, which stops matching the day a message is reworded.
-BASE_SHA=a7981ec
+# The fork point, never HEAD~1: this path commits as it goes, so HEAD~1 hands
+# the reviewer the last task's diff and calls it the branch.
+BASE_SHA=$(git merge-base main HEAD)
 HEAD_SHA=$(git rev-parse HEAD)
 
 [Dispatch code reviewer subagent]
-  DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/superpowers/plans/deployment-plan.md
+  DESCRIPTION: Index verification and repair, whole branch
+  PLAN_OR_REQUIREMENTS: docs/superpowers/plans/deployment-plan.md
   BASE_SHA: a7981ec
   HEAD_SHA: 3df7661
 
@@ -88,8 +88,8 @@ HEAD_SHA=$(git rev-parse HEAD)
   Recommendations: Progress reporting for long operations
   Assessment: Ready to proceed
 
-You: [Fix progress indicators]
-[Continue to Task 3]
+You: [Fix progress indicators, re-run what the fix touched]
+[Then superpowersplus:finishing-a-development-branch]
 ```
 
 ## Common Rationalizations

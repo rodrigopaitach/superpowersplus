@@ -24,6 +24,18 @@ References below name them so a claim here can be traced there.
   exit 0. **Measured both ways, not read**: the fix is one keyword, and the
   keyword is the one the surrounding `async` test already implies.
 
+- **`requesting-code-review`'s only example taught the per-task review its own
+  rules had already replaced.** The example opened on *"Just completed Task 2"*
+  and closed on *"Continue to Task 3"*, dispatching this skill after a single
+  task — while the same file's section "When to Request Review" states that the
+  per-task review on the subagent path runs a different instrument,
+  [`task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md),
+  and that anything outside the gates happens only when the human partner asks
+  for it. The mechanics were never wrong, only the frame: the example now runs
+  at the branch gate, takes the fork point rather than a task's recorded base,
+  and hands the reviewer the plan instead of one task. Nothing in
+  [`tests/`](tests/) read the old text — grepped before editing.
+
 ## [1.24.0] - 2026-09-03
 
 ### Fixed
