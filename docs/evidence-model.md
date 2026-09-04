@@ -160,8 +160,60 @@ no row pretends to have a test.
 
 **An `AC`/`IR` from a spec written before this model, declaring no evidence
 class, gets the compatibility fallback** — the same verdict it would have had
-before the model. It holds in all three layers: writing a new plan from an old
-spec, reviewing that plan, and the final audit.
+before the model. **It holds wherever a legacy artifact crosses the flow:**
+writing and reviewing a new plan, the execution controllers, task review, the
+fix round and the re-review, and the final audit. **The mode is decided at the
+boundary that holds the source spec**; the consumers downstream take the
+resolved contract and never reinterpret the spec themselves.
+
+**What the fallback means, exactly.** *Legacy behavioral* does **not** mean that
+everything in the old `Test` column is now read as a valid behavioral test —
+that would be historically false. It means that, absent an evidence class in a
+legitimately legacy artifact, the flow uses the **compatibility behavioral
+semantics of the previous model**, preserving the behaviour that already existed:
+
+- a legacy row that carried a usable test id keeps using that path;
+- a legacy row that carried only a read-only command is **not promoted
+  retroactively** to `structural` or `negative`;
+- a row the previous task reviewer could not verify stays a legacy limitation;
+- **the fallback does not make a bad old plan good.** It guarantees only that
+  the model introduces no new regression on it.
+
+**The authority is the source spec, never the plan's schema.** With the marker,
+the mode is v2 and a historical `## Test Coverage Matrix` becomes a blocking
+mismatch. Without it, the source spec is legacy — and that does **not** fix the
+plan's schema: a historical plan carries the Test Coverage Matrix, and a plan
+written today from a legacy spec carries the Verification Matrix with
+`behavioral` in every class cell, which is exactly what the plan skill requires.
+**No marker with a Verification Matrix is not a mismatch.** The schema is a
+cross-check, never a source of truth.
+
+**A plan with no source spec.** The entry blocker both execution paths already
+carry stands: the controller does **not** conclude on its own that a missing
+source spec means legacy. It stops, resolves it with its human partner, and only
+once they confirm no spec exists is the plan treated as legacy for compatibility.
+**No historical artifact is rewritten to record that decision.**
+
+**Test command in legacy mode.** The controller preserves the pre-v2 derivation
+of test command and runner **where it was available**: it does not withhold a
+command the old flow would have supplied, and it does not invent one to turn an
+old structural command into a test. Where no admissible command exists, none is
+invented.
+
+| # | Source spec | Plan | Mode | What the controller supplies |
+|---|---|---|---|---|
+| 1 | legacy, cited | Test Coverage Matrix, a test id in the row | legacy | the pre-v2 test command |
+| 2 | legacy, cited | Test Coverage Matrix, a read-only command in the `Test` cell | legacy | the pre-v2 test command where the old flow derived one; nothing invented, and the row keeps its historical limitation |
+| 3 | legacy, cited | Verification Matrix, every class `behavioral` | legacy | the test command — the schema is not the authority |
+| 4 | v2 | Verification Matrix, `behavioral` criteria | v2 | the test command |
+| 5 | v2 | Verification Matrix, only `structural` and `negative` | v2 | no test command, and none derived |
+| 6 | v2 | a criterion with no class | v2 | nothing — it blocks before dispatch |
+| 7 | v2 | Test Coverage Matrix | v2 | nothing — blocking mismatch |
+| 8 | none cited | any | undecided | nothing — the entry blocker stands, and silence is never legacy |
+| 9 | confirmed not to exist | any | legacy | only the pre-existing fallbacks actually available |
+| 10 | any | any | identical on both paths | inline and subagent resolve the same artifacts the same way |
+| 11 | legacy, cited | a re-review of a legacy fix round | legacy | the test command the task review had; none invented where there was none |
+| 12 | any | any | — | nothing is written: no historical plan or spec is modified while being read |
 
 **`legacy behavioral` is not a fourth evidence class.** The classes remain
 exactly three — `behavioral`, `structural`, `negative` — and `legacy behavioral`
@@ -183,6 +235,8 @@ marker in the spec header, `**Evidence model:** v2`, and the rule is
 | The skill writing a spec — new, or an old one migrated on resume | Writes the marker and requires a class on every `AC`/`IR` |
 | The spec reviewer | **Requires the marker.** Marker present with a criterion carrying no class is blocking; marker absent on a spec arriving through the current flow is blocking too |
 | The plan skill, the plan reviewer, the final audit | With the marker, a class is mandatory and its absence is an error. **Without the marker, the document is historical → compatibility fallback, effective class `behavioral`** |
+| The two execution controllers | **Resolve the mode before executing**, from the source spec both are already required to read. With the marker a class is mandatory and its absence blocks **before dispatch**; without it, legacy mode |
+| The task reviewer, the implementer, the re-reviewer | **Consume** the decision already made. They do not open the source spec, do not open the plan, and do not decide whether a v2 document could be legacy. A classless brief reaches them only by dispatch from a controller that already resolved the artifact as legacy — that invariant is what stops *absence = legacy* from becoming global inference again |
 
 **The asymmetry is what closes the escape route:** the reviewer never concludes
 *"no marker, therefore legacy"*, because that would let a defective new spec

@@ -158,6 +158,16 @@ against the other. A plan citing no spec is an entry blocker: get the path
 from your human partner before dispatching Task 1, never start and sort it
 out later.
 
+**Resolve the compatibility mode from that spec, once, before dispatching Task
+1, and hand the dispatches the decision rather than the question.** The spec is
+the authority — never the plan's matrix schema. Marker `**Evidence model:** v2`
+→ **v2 mode**. No marker → **legacy mode**, effective class `behavioral`. **No
+spec at all** → the entry blocker above stands; silence is never legacy. What
+each mode requires of a criterion, which combinations are a blocking mismatch,
+and why legacy mode repairs nothing are in
+[`docs/evidence-model.md`](../../docs/evidence-model.md), section
+"Compatibility: legacy behavioral" — read it before Task 1, not during it.
+
 Before dispatching Task 1, scan the plan once for conflicts:
 
 - tasks that contradict each other or the plan's Global Constraints
@@ -284,7 +294,10 @@ needed.
   task's tests where the runner allows; the full suite is the fallback.
   **A task with no `behavioral` criterion has no admissible value for this
   field — leave it out.** Deriving one anyway is how a `structural` task
-  acquires a test nobody asked for.
+  acquires a test nobody asked for. **In legacy mode, follow the pre-v2
+  derivation instead of this condition:** supply what the old flow would have
+  supplied, and never invent one to turn a historical structural command into a
+  test — where the old flow had none, this one has none.
 - **`[BASE_TEST_COUNT]`:** the test count at BASE, so the reviewer can see
   whether tests disappeared — **under the same condition as
   `[TEST_COMMAND]`**, since a task that runs no tests has none to lose. You

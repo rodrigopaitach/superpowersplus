@@ -166,6 +166,15 @@ Subagent (general-purpose):
     there was one, and the output. The re-reviewer runs the same instruments
     itself — your report exists so the two runs can be compared, not to stand
     in for theirs.
+
+    **A brief that declares no evidence class comes from a plan written before
+    this model.** Its criteria take the compatibility fallback: effective class
+    `behavioral`, and the instrument is the test the criterion names. Apply it
+    without checking anything else, because a task from a v2 plan with a missing
+    class never reaches you — the controller resolves the mode from the source
+    spec and blocks that case before dispatch. Do not open the source spec, do
+    not open the plan, do not decide whether a document could be legacy, and do
+    not recognise a fourth class.
     Report the command exactly as you ran it, and the counts it printed.
     Then reply with the same short status contract as your first report.
 

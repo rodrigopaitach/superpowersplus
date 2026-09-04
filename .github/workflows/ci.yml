@@ -117,6 +117,9 @@ jobs:
       - name: Tests (systematic-debugging find-polluter)
         run: tests/systematic-debugging/test-find-polluter.sh
 
+      - name: Tests (compatibility mode)
+        run: tests/compatibility-mode/run-tests.sh
+
       - name: Tests (kimi)
         run: tests/kimi/run-tests.sh
 

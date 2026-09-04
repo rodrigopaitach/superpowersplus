@@ -206,6 +206,32 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **O modo de compatibilidade passa a ser resolvido no boundary do controller.**
+  O fallback para artefato anterior ao modelo estava enunciado em quatro
+  carriers a montante e em **nenhum** dos cinco do lado da execução, o que
+  deixava dois defeitos: todo critério de plano pré-existente virava
+  preocupação no preflight de
+  [`skills/executing-plans/SKILL.md`](skills/executing-plans/SKILL.md), e —
+  pior, porque silencioso — um controller que lesse só
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md)
+  concluía que um plano histórico não tem critério `behavioral` e portanto não
+  há test command, deixando o task reviewer **sem rodar teste nenhum**. Os dois
+  controllers passam a resolver o modo **uma vez**, antes de executar, a partir
+  da source spec que ambos já eram obrigados a ler; os três prompts
+  (`task-reviewer`, `implementer`, `re-review`) **consomem** a decisão com uma
+  cláusula idêntica e não reabrem spec nem plano. A escolha do boundary é
+  medida, não estética: `task-brief` extrai só o bloco da task — sem cabeçalho,
+  sem matriz — e `subagent-driven-development/SKILL.md` proíbe por escrito dar o
+  plano ao subagente, então os prompts **não têm de onde inferir**. A autoridade
+  é a source spec, nunca o schema do plano: marcador com matriz histórica é
+  incoerência bloqueante, e **marcador ausente com Verification Matrix não é** —
+  é o que um plano novo escrito a partir de spec legacy tem de ser.
+  [`docs/evidence-model.md`](docs/evidence-model.md), section "Compatibility:
+  legacy behavioral" ganha o alcance e uma tabela de decisão de doze casos, sem
+  conceito novo — os treze continuam treze. Suíte determinística nova em
+  `tests/compatibility-mode/`, com step de CI, cobrindo os doze casos: 25
+  asserções, e cinco mutações provadas entrando.
+
 - **A guarda de contagem de células reprovava pipe corretamente escapado.**
   Achado do re-review sobre o próprio diff de correção: a checagem nova
   `len(cells) != len(header)` fechou o buraco em que o gate falhava **aberto** e
