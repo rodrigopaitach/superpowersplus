@@ -8,7 +8,7 @@
 | **Rule under test** | The resume requirement on `executing-plans` — 18 lines at `SKILL.md:40-57`, whose confirmation clause moved into Step 2 before run 3 |
 | **Fixtures** | `FIXTURE-interrupted-run.md`, repos `toy-b`, `toy-c`, `toy-d` — one per run, never reused |
 | **Rule path** | skills/executing-plans/SKILL.md |
-| **Rule changed since** | 2026-08-21 (6747733) — measured against earlier text |
+| **Rule changed since** | 2026-09-04 (1544b57) — measured against earlier text. That change adds a no-subagent branch to the conformance audit in "Step 3: Audit and Review the Branch", which is not the section this record measures. Earlier: 2026-08-21 (6747733) |
 | **Runs** | N=3, and run 3 is not a replicate: the confirmation clause moved into Step 2 before it. FAIL, FAIL, PASS is two draws under one rule and one under another |
 | **Verdict** | **Run 1: FAIL. Run 2: FAIL. Run 3: PASS** |
 

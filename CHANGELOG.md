@@ -24,8 +24,9 @@ References below name them so a claim here can be traced there.
   both CI steps.
 
   **It exists because three frontmatter rules were wrong for as long as nothing
-  read them.** `check-skill-size.sh` was the only script that opened a
-  `SKILL.md` frontmatter, and it counted lines. The rules corrected in this
+  read them.** No script here had ever read a
+  `SKILL.md` frontmatter: `check-skill-size.sh` counts the whole file, its
+  frontmatter included, without looking at a single field. The rules corrected in this
   cycle's Changed section were not subtle — a shared character limit, a
   Title-Case example name — and none of them was caught, because the file
   stating them was the one every other skill copies from.
@@ -45,9 +46,17 @@ References below name them so a claim here can be traced there.
   `Bad-Case` was rejected by the name-equals-directory rule and never reached
   the pattern: the pattern was mutated to accept uppercase and the suite stayed
   green. It now carries the uppercase directory, and the same mutation turns it
-  red. Five mutations were run in total — the equality never firing, the
-  pattern accepting uppercase, each limit raised to 100000, the reserved list
-  emptied — and each one reddens the case that names it and no other.
+  red. Six mutations were run in total — the equality never firing, the pattern
+  accepting uppercase, each limit raised to 100000, the reserved list emptied,
+  and the block-scalar guard made unreachable — and each one reddens the case
+  that names it and no other.
+
+  **Reviewing the branch found a second hole, this one in the script.** A
+  `description: >` block scalar was read as its one-character indicator, so the
+  gate approved a two-thousand-character description after looking at one. The
+  parser reads single-line values and now refuses the block form rather than
+  measuring it — a gate that certifies what it did not read is the failure it
+  exists to prevent.
 
 ### Fixed
 
@@ -110,6 +119,25 @@ References below name them so a claim here can be traced there.
   reported — if the escalation turns out to strand real work, that measurement
   is what would justify the mode.
 
+- **Two behaviour records went stale on this branch and nothing local caught
+  it.** The no-subagent branch added to
+  [`skills/executing-plans/SKILL.md`](skills/executing-plans/SKILL.md) put
+  [`RESULT-main-branch-consent.md`](tests/skill-behavior/RESULT-main-branch-consent.md)
+  and
+  [`RESULT-resume-route-inline.md`](tests/skill-behavior/RESULT-resume-route-inline.md)
+  in the state their own gate exists to refuse: measured against a file that
+  has since moved, reading as current for text they never saw. Both now carry
+  the new date, and both say what the change was — a branch added to the
+  conformance audit in "Step 3: Audit and Review the Branch", which is neither
+  the section one record measures nor the one the other does.
+
+  **The gate that found it,
+  [`check-skill-behavior-records.sh`](scripts/check-skill-behavior-records.sh),
+  runs in CI and not in
+  [`githooks/pre-commit`](githooks/pre-commit)** — so eight commits went in
+  green and the break would have surfaced on push. Recorded here as measured;
+  whether it belongs in the hook is a cost question nobody has priced.
+
 ### Changed
 
 - **The skill that governs how every other skill is written prescribed a
@@ -162,9 +190,8 @@ References below name them so a claim here can be traced there.
   fallback below them. Ahead of all of it, the skill now reads the project's
   own instructions first — `CLAUDE.md`, `AGENTS.md`, README, `Makefile`, CI —
   because a project that documents its setup has already answered better than
-  any detection can, and this project's own rule of asking the source before
-  guessing did not reach the one skill that guesses on a stranger's repository.
-  Nothing matching is now a question to the human partner, not a guess.
+  any detection can. Nothing matching is now a question to the human partner,
+  rather than a guess made on their machine.
 
 - **Three failed fixes were stated as proof of a wrong architecture, and a
   95% figure had no measurement behind it.**
