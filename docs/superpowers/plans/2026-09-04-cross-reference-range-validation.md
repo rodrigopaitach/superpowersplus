@@ -250,9 +250,10 @@ absoluto muda toda vez que alguém acrescenta um caso a esta suíte.
 - [ ] **Step 5: Medir IR1 sobre o corpus inteiro**
 
 O caso `the committed corpus keeps its verdicts` compara vereditos apenas dos
-documentos que o commit pinado carrega — 36 de 42 na medição de 04/09/2026 — e
+documentos que o commit pinado carrega, e nunca de todos os que a árvore tem,
 por isso não responde sozinho a IR1, que fala de todas as citações presentes na
-árvore. Rode o script abaixo, que lê **todos** os arquivos rastreados, sem
+árvore. **O número comparado não se afirma aqui:** ele sobe a cada spec ou plano
+commitado, e é o mesmo alvo móvel que o Step 6 se recusa a fixar. Rode o script abaixo, que lê **todos** os arquivos rastreados, sem
 filtro de extensão:
 
 ```bash
@@ -304,8 +305,10 @@ Expected literal é a classe de valor que o implementer ajusta em silêncio no
 único step cuja razão de existir é confirmar IR3. **O que se confirma é o
 invariante**: `[PASS]`, zero documentos com veredito movido, e um número de
 comparados maior que zero. O caso já asserta os três em
-`tests/hooks/test-check-cross-references.sh:519-524`, e a razão de a contagem
-decair está em `tests/hooks/test-check-cross-references.sh:27-32`.
+`tests/hooks/test-check-cross-references.sh:517-531` — a guarda de "não deu para
+rodar", a de zero comparados, o `pass` e a falha por documento movido, nessa
+ordem — e a razão de a contagem decair está em
+`tests/hooks/test-check-cross-references.sh:27-32`.
 
 - [ ] **Step 7: Rodar a suíte inteira de hooks**
 
@@ -361,7 +364,7 @@ git commit -m "fix: check-cross-references aprovava linha zero e range invertido
 
 ### Task 2: A mensagem de irresolvido nomeia a citação inteira
 
-**Spec criterion:** AC6, AC8; IR4
+**Spec criterion:** AC6, AC8; IR4, IR5
 
 **Files:**
 - Modify: `skills/writing-plans/scripts/check-cross-references:386-414`
@@ -392,7 +395,8 @@ acrescentou:
 
 ```bash
 # AC8: the message names the citation as it was written. Before this fix all
-# three unresolved paths formatted `{rel}:{first}`, so an invalid `10-5` was
+# four unresolved paths formatted `{rel}:{first}` — the three the script always
+# had, plus the one Task 1 added — so an invalid `10-5` was
 # reported as line 10 — a line that exists in the file, sending the reader to
 # the wrong place. run_case cannot see this: the exit code was already 1.
 msg_dir="$TEST_ROOT/range_message"
@@ -480,7 +484,8 @@ Sob a mesma seção `### Fixed` que a Task 1 criou em `[Unreleased]`:
 
 ```markdown
 - **A mensagem de citação irresolvida descartava o número final.** As três
-  chamadas que registram uma citação irresolvida formatavam
+  chamadas que o script tinha antes desta versão — a quarta é a que a validação
+  de range acrescentou, e cai sob a mesma regra — formatavam
   `` `{rel}:{first}` ``, então um range inválido `5-200` era reportado como a
   linha `5` — que existe no arquivo. Quem lia o erro procurava o defeito no
   lugar errado. A citação passa a ser montada uma vez, como foi escrita.
