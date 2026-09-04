@@ -195,6 +195,86 @@ run_case "announced task count that disagrees fails" 1 "${CLEAN_PLAN}
 
 This plan has 4 tasks."
 
+# --- Verification Matrix: header-aware, evidence-class-aware --------------
+# Measured 2026-09-04 against this checkout, before the fix: a `negative` row
+# whose instrument was a shell command with a redirect exited 1, naming
+# `/dev/null` as a test no step creates, and a `structural` row whose command
+# ended in `::validate` exited 1 naming `validate`. The instrument column is
+# exactly where read-only commands live, so parsing it without reading the
+# class keeps the confusion.
+
+# CLEAN_PLAN without its matrix. Its task body declares T1.1 and carries the
+# code block that creates `rejects the bad input`.
+VM_BASE="$(printf '%s' "$CLEAN_PLAN" | sed '/^## Test Coverage Matrix$/,$d')"
+
+VM_HEAD='## Verification Matrix
+
+| Criterion | Spec criterion | Evidence class | Verification instrument | Test type | Layer |
+|---|---|---|---|---|---|'
+
+# ONE ROW PER FIXTURE. Three case names over one shared document would be three
+# names for one measurement: any mutation that reddens the document reddens all
+# three, and none of them says which branch broke.
+BEHAVIORAL_ROW="$VM_BASE
+$VM_HEAD
+| T1.1 | AC1 | behavioral | > rejects the bad input | unit | tests |"
+
+STRUCTURAL_ROW="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.2 the manifest parses|')
+$VM_HEAD
+| T1.2 | AC2 | structural | python3 -m json.tool manifest.json > /dev/null | — | — |"
+
+NEGATIVE_ROW="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.3 no new dependency|')
+$VM_HEAD
+| T1.3 | AC3 | negative | the check lives at suite.sh::validate | — | — |"
+
+# A `behavioral` row whose CRITERION cell carries an angle bracket. Only the
+# instrument column may name a test, and this fixture is the only one that says
+# so — it is what separates the two halves of the fix, which are nested.
+BEHAVIORAL_WIDE="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.4 rejects input > 100|')
+$VM_HEAD
+| T1.4 rejects input > 100 | AC4 | behavioral | > rejects the bad input | unit | tests |"
+
+run_case "a behavioral row naming a test a step creates passes" 0 "$BEHAVIORAL_ROW"
+
+run_case "a behavioral row naming a test no step creates fails" 1 "$(printf '%s' "$BEHAVIORAL_ROW" |
+    sed 's/| > rejects the bad input |/| > a test nobody wrote |/')"
+
+run_case "a structural instrument holding an angle bracket is not a test" 0 "$STRUCTURAL_ROW"
+
+run_case "a negative instrument holding a double colon is not a test" 0 "$NEGATIVE_ROW"
+
+run_case "only the instrument column of a behavioral row names a test" 0 "$BEHAVIORAL_WIDE"
+
+run_case "a task criterion with no verification row still fails" 1 "$(printf '%s' "$BEHAVIORAL_ROW" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.1 rejects the bad input\n- T1.9 unrowed|')"
+
+run_case "a verification row with no task criterion still fails" 1 "$BEHAVIORAL_ROW
+| T2.9 | AC9 | structural | a located range | — | — |"
+
+run_case "a duplicated verification row still fails" 1 "$BEHAVIORAL_ROW
+| T1.1 | AC1 | behavioral | > rejects the bad input | unit | tests |"
+
+# --- the legacy five-column schema is not migrated during the read --------
+# A REAL five-column Test Coverage Matrix. CLEAN_PLAN cannot stand in for one:
+# its matrix is `| Criterion | Test |`, two columns, whose header carries no
+# `Spec criterion` and so never reaches either branch of the new code. Using it
+# here would have been a case that names the five-column schema and exercises
+# nothing about it — and a byte-identical duplicate of `clean plan passes`.
+LEGACY_PLAN="$VM_BASE
+## Test Coverage Matrix
+
+| Criterion | Spec criterion | Test type | Layer | Test |
+|---|---|---|---|---|
+| T1.1 | AC1 | unit | tests | > rejects the bad input |"
+
+run_case "a legacy five-column matrix still passes" 0 "$LEGACY_PLAN"
+
+run_case "a legacy five-column matrix naming a test no step creates fails" 1 "$(printf '%s' "$LEGACY_PLAN" |
+    sed 's/| > rejects the bad input |/| > a test nobody wrote |/')"
+
 # --- fence awareness ------------------------------------------------------
 # A plan that documents the plan format carries `## Task N` inside fenced
 # examples. Measured 2026-08-24: the fence-blind extractor reported 17 tasks for

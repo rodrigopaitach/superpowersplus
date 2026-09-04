@@ -270,19 +270,60 @@ if task_headings:
 # function calls, and 26 real tests read as absent on the plan for this branch.
 #
 # Searching the whole document instead of the code blocks does NOT work:
-# writing-plans requires every task criterion to name its covering test, so the
-# criterion line carries the name even when a step renamed the test, and the
-# check passes on the one defect it exists for.
+# a `behavioral` criterion names its covering test on the criterion line, so
+# that line carries the name even when a step renamed the test, and the check
+# passes on the one defect it exists for.
 in_code = "\n".join(ln for i, ln in enumerate(lines) if fenced[i])
 
-# Matrix cells name a test as `> name`, `file.py::name`, or `file:line > name`.
+# A `behavioral` row names its test as `> name`, `file.py::name`, or
+# `file:line > name`. Rows of the other two classes name an instrument, and
+# nothing here reads it.
+
+
+def _cells(ln):
+    """The table row's cells, stripped of pipes, spaces and backticks."""
+    return [c.strip().strip("`") for c in ln.strip().strip("|").split("|")]
+
+
+# Which header each matrix row sits under. A plan carries one matrix, but a
+# document that DOCUMENTS the format carries an example beside the real one,
+# and the two can use different schemas. Headers and rows are contiguous —
+# the `|---|` separator starts with a pipe too — so a non-table line ends the
+# current table.
+header_for = {}
+current_header = None
+for ln in prose_lines:
+    if ln.lstrip().startswith("|"):
+        low = [c.lower() for c in _cells(ln)]
+        if "criterion" in low and "spec criterion" in low:
+            current_header = low
+            continue
+        if TASK_CRIT.search(ln):
+            header_for[ln] = current_header
+    elif ln.strip():
+        current_header = None
+
 named_in_matrix = set()
 # Cells that name the suite file as well as the case: charged against that file
 # further down, once `resolve` exists.
 matrix_suites = []
 for ln in matrix_rows:
-    for cell in ln.split("|"):
-        cell = cell.strip().strip("`")
+    header = header_for.get(ln)
+    cells = _cells(ln)
+    if header and "evidence class" in header:
+        # Six-column Verification Matrix. Only a `behavioral` row names a
+        # test; in `structural` and `negative` the instrument is a read-only
+        # command, and `>` and `::` inside it are shell syntax, not test ids.
+        idx = header.index("evidence class")
+        klass = cells[idx].lower() if idx < len(cells) else ""
+        if klass != "behavioral":
+            continue
+        if "verification instrument" in header:
+            j = header.index("verification instrument")
+            cells = [cells[j]] if j < len(cells) else []
+    # No `Evidence class` column: the historical Test Coverage Matrix. Every
+    # cell is scanned, exactly as before — a committed plan keeps its verdict.
+    for cell in cells:
         m = re.search(r">\s*(.+?)\s*$", cell)
         if m:
             named_in_matrix.add(m.group(1).strip().strip("`"))

@@ -30,6 +30,25 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **O parser da matriz lia comando read-only como nome de teste.** O laço em
+  `skills/writing-plans/scripts/check-cross-references:282-293` **na v1.25.0**
+  varria *toda* célula de *toda* linha da matriz procurando `> nome` e
+  `::nome`, sem olhar sob que cabeçalho a linha estava. Numa Verification
+  Matrix de seis colunas, a coluna `Verification instrument` é exatamente onde
+  moram os comandos read-only das classes `structural` e `negative`, e o `>` de
+  um redirecionamento e o `::` de um caminho viravam nomes de teste que nenhum
+  passo cria. Medido em 04/09/2026, antes da correção: uma linha `negative`
+  cujo instrumento era `python3 -m json.tool manifest.json > /dev/null` saía com
+  1 nomeando `/dev/null`, e uma `structural` terminada em `::validate` saía com
+  1 nomeando `validate`. O parser passa a localizar as colunas pelos títulos do
+  cabeçalho, a ler `Evidence class`, e a interpretar o instrumento como id de
+  teste **apenas** na linha `behavioral` — onde, além disso, só a coluna
+  `Verification instrument` é lida, e não mais a célula do critério. A matriz
+  histórica de cinco colunas não tem coluna `Evidence class` e segue pelo
+  caminho anterior, célula a célula: **nenhum plano já commitado muda de
+  veredito**, conferido pelo caso pinado da suíte, que comparou 36 documentos e
+  não moveu nenhum.
+
 - **`check-cross-references` aprovava range malformado.** A validação comparava
   só o número final contra o total de linhas do arquivo
   (`skills/writing-plans/scripts/check-cross-references:409-410` **na v1.25.0**,
