@@ -107,11 +107,15 @@ downstream was built on it.
    plan citing no spec is an entry blocker: get the path from your human
    partner before Step 2, never start and sort it out later.
 6. Review critically - identify any questions or concerns about the plan
-7. Check every task carries acceptance criteria verifiable by located
-   evidence — one observable behavior each, settled by a `file:line`
-   citation, naming its covering test (the format superpowersplus:writing-plans
-   specifies). A task whose criteria no citation could settle is a concern:
-   the audit in Step 3 will charge exactly what the plan wrote.
+7. Check every task carries acceptance criteria with a declared evidence class
+   and an admissible instrument that can settle the claim — one observable
+   behavior each, in the format superpowersplus:writing-plans specifies. For
+   `behavioral` the instrument is the covering test, and a criterion without one
+   is a concern. **For `structural` and `negative` the absence of a test is not
+   a concern** — the instrument is a read-only check or a located range, and
+   raising it would send every non-behavioral task to your human partner before
+   Step 2. A criterion no admissible evidence could settle IS a concern: the
+   audit in Step 3 will charge exactly what the plan wrote.
 8. If concerns: Raise them with your human partner before starting
 9. If no concerns: Create todos for the plan items and proceed
 

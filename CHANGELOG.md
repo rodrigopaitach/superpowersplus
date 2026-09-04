@@ -159,6 +159,16 @@ References below name them so a claim here can be traced there.
   despachado. A condição passa a ser, por critério tocado, o instrumento
   reexecutado e seu resultado.
 
+- **O preflight do caminho inline para de escalar task sem teste.**
+  [`skills/executing-plans/SKILL.md`](skills/executing-plans/SKILL.md), section
+  "The Process" — o item 7 exigia critério *settleable* por citação `file:line`
+  **nomeando seu covering test**, e passa a exigir classe declarada mais
+  instrumento admissível capaz de resolver a alegação. Para `behavioral` o
+  instrumento continua sendo o covering test; **para `structural` e `negative`
+  a ausência de teste deixa de ser concern** — mantida, ela mandaria toda task
+  não-`behavioral` ao parceiro humano antes do Step 2. Critério que nenhuma
+  evidência admissível resolve continua sendo concern.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em
