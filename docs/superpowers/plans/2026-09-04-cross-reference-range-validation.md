@@ -394,10 +394,13 @@ git commit -m "fix: check-cross-references aprovava linha zero e range invertido
 **Interfaces:**
 - Consumes: o laço de citações como a Task 1 o deixou — `end` computado antes de
   `resolve(rel)`, e **quatro** chamadas a `unresolved.append` formatando
-  `` f"`{rel}:{first}` — …" ``. **A spec fala em três** (AC6 nomeia `:400`, `:407`
-  e `:411-412`) porque foi escrita contra o arquivo original; a quarta é a que a
-  Task 1 acrescentou, e ela cai sob a mesma regra. Quatro é o número correto
-  depois da Task 1, e é o que a auditoria vai encontrar.
+  `` f"`{rel}:{first}` — …" ``. **As seções `## Problem` e
+  `## Codebase Findings` da spec falam em três**, porque descrevem o arquivo
+  original; a quarta é a que a Task 1 acrescentou. **AC6 não conta chamadas** —
+  ele é invariante sobre o conjunto: toda entrada de irresolvido preserva a
+  citação como foi escrita, e nenhuma reconstrói a mensagem como
+  `{rel}:{first}`. Quatro é o número correto depois da Task 1, e as quatro caem
+  sob a mesma regra.
 - Produces: uma variável `cite` no topo do laço, com o texto da citação como foi
   escrita. Nenhuma task posterior a consome; este plano tem duas tasks.
 
