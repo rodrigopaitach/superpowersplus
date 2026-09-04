@@ -103,6 +103,27 @@ References below name them so a claim here can be traced there.
   evidência que a classe admite — era a segunda ocorrência dessa formulação, a
   primeira estando no spec reviewer.
 
+- **O audit verdicta por evidence class e reexecuta o instrumento.**
+  [`skills/final-branch-audit/SKILL.md`](skills/final-branch-audit/SKILL.md),
+  section "The Delivery Table" — a regra de abertura deixa de dizer que
+  *"critério sem citação localizada é NOT DELIVERED"*, que reprovava por
+  construção todo critério `negative`, e passa a exigir a evidência de entrega
+  **e** a de verificação que a classe declarada admite. As colunas
+  `Implementation | Test` viram `Delivery evidence | Verification evidence`
+  **nas duas ocorrências** — a segunda indentada dentro do prompt de dispatch,
+  que um `grep` ancorado em início de linha não vê. Entra o veredito
+  `EVIDENCE CLASS MISMATCH — BLOCKING`, e com ele a proibição explícita de
+  **reclassificar um critério para poder conceder `DELIVERED`**: a inadequação
+  é achado para o parceiro humano, nunca correção que o auditor aplica. O
+  auditor passa a reexecutar o instrumento que a classe nomeia, mantendo-se
+  read-only sobre o checkout, e pode exigir evidência adicional quando o que o
+  plano nomeou não alcança a alegação. O discriminador de compatibilidade é o
+  marcador, sem heurística sobre histórico do git, data ou redação. Em
+  [`docs/review-scopes.md`](docs/review-scopes.md), section "What each face
+  runs", a linha do final audit deixa de dizer **"no tests at all"** e passa a
+  descrever verificação read-only por critério, com a fronteira declarada: ele
+  reexecuta o que um critério alega, não a suíte inteira.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em

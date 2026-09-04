@@ -9,10 +9,10 @@ prohibits flattening. Read it before editing any reviewer prompt.
 
 | Face | What it actually runs |
 |---|---|
-| [task-reviewer-prompt.md](../skills/subagent-driven-development/task-reviewer-prompt.md), section "Tests — Run Them Yourself" | The **task's** test command, `[TEST_COMMAND]`, reported verbatim |
+| [task-reviewer-prompt.md](../skills/subagent-driven-development/task-reviewer-prompt.md), section "Tests — Run Them Yourself" | The verification instrument each criterion names — the task's test command, `[TEST_COMMAND]`, reported verbatim where a `behavioral` criterion requires one; the read-only validator or command otherwise |
 | [code-reviewer.md](../skills/requesting-code-review/code-reviewer.md), section "What to Check" | The **project's** suite, with a fallback to the command the dispatch named |
-| [re-review-prompt.md](../skills/subagent-driven-development/re-review-prompt.md), section "Tests — Run Them Yourself" | **Re-runs** what already ran, reporting command, exit code, and counts |
-| [final-branch-audit/SKILL.md](../skills/final-branch-audit/SKILL.md), section "The Auditor Re-Runs the Searches" | **No tests at all** — re-runs the *searches* against the spec |
+| [re-review-prompt.md](../skills/subagent-driven-development/re-review-prompt.md), section "Tests — Run Them Yourself" | **Re-runs** what already ran — the test command where the fix touched a `behavioral` criterion, the criterion's own read-only instrument otherwise — reporting command, exit code, and counts |
+| [final-branch-audit/SKILL.md](../skills/final-branch-audit/SKILL.md), section "The Auditor Re-Runs the Searches" | **Read-only verification, per criterion** — re-runs the searches against the spec, and re-runs the instrument each criterion's evidence class names: the test for `behavioral`, the validating command or the located ranges for `structural`, the command over the declared scope for `negative`. It never mutates the checkout, and it does not take over the project-suite reviewer's job: it re-runs what a criterion claims, not the suite as a whole |
 
 ## The evidence line
 
