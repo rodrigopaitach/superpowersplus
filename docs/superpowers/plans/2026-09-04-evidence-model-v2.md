@@ -132,18 +132,18 @@ forma de ela passar pelo gate antes de a correção existir.
 | T6.4 O invariante de elegibilidade de task sobrevive à redação nova | AC15 | structural | range localizado em `skills/writing-plans/SKILL.md` | — | — |
 | T6.5 O bloco da task carrega o contrato inteiro | AC30 | structural | range localizado em `skills/writing-plans/SKILL.md` | — | — |
 | T6.6 A skill decide pelo marcador, sem heurística | AC34 | structural | range localizado em `skills/writing-plans/SKILL.md` | — | — |
-| T6.7 A abertura da seção de critérios e a linha do template deixam de exigir implementação mais teste | AC44 | structural | range localizado em `skills/writing-plans/SKILL.md`, mais `grep -c 'an implementation .file:line. and a test'` esperando 0 | — | — |
+| T6.7 A abertura da seção de critérios e a linha do template deixam de exigir implementação mais teste | AC44 | structural | range localizado em `skills/writing-plans/SKILL.md`, mais `grep -c 'implementation .file:line. and a test'` esperando 0 — o padrão sem o `an` inicial casa a linha sozinha, e devolve 1 antes da mudança | — | — |
 | T7.1 O plan reviewer cobra as seis colunas e a semântica da classe | AC13 | structural | range localizado em `skills/writing-plans/plan-document-reviewer-prompt.md` | — | — |
 | T7.2 O plan reviewer decide pelo marcador | AC34 | structural | range localizado em `skills/writing-plans/plan-document-reviewer-prompt.md` | — | — |
 | T7.3 As rows de deliverable e de critério passam a falar de evidência admissível | AC44 | structural | range localizado em `skills/writing-plans/plan-document-reviewer-prompt.md` | — | — |
-| T8.1 A tabela do audit tem as colunas novas nas duas ocorrências | AC16 | structural | `grep -c 'Delivery evidence'` em `skills/final-branch-audit/SKILL.md`, esperando 2 | — | — |
+| T8.1 A tabela do audit tem as colunas novas nas duas ocorrências | AC16 | structural | `grep -c 'Criterion | Delivery evidence | Verification evidence'` em `skills/final-branch-audit/SKILL.md`, esperando 2 — **a frase solta `Delivery evidence` não serve**: o Step 7 a usa numa terceira ocorrência, na definição das colunas | — | — |
 | T8.2 O veredito de classe inadequada existe e bloqueia | AC17 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.3 O auditor aponta inadequação e não reclassifica para conceder | AC18 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.4 O auditor executa verificação read-only por critério | AC19 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.5 O audit aplica o discriminador de compatibilidade | AC20 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.6 O contrato do audit em review-scopes admite execução read-only | AC21 | structural | range localizado em `docs/review-scopes.md` | — | — |
 | T8.7 A regra de abertura do audit exige a evidência que a classe admite | AC41 | structural | range localizado em `skills/final-branch-audit/SKILL.md`, mais `grep -c 'no located citation is NOT DELIVERED'` esperando 0 | — | — |
-| T8.8 A definição das colunas deixa de fixar os dois campos como caminho e linha | AC46 | structural | range localizado em `skills/final-branch-audit/SKILL.md`, mais `grep -c 'Untested is undelivered'` esperando 0 | — | — |
+| T8.8 A definição das colunas nomeia a evidência da classe, e a regra de teste ausente passa a valer só para behavioral | AC46 | structural | range localizado em `skills/final-branch-audit/SKILL.md`, mais três contagens: `grep -c 'Delivery evidence.. and ..Verification evidence'` esperando 1, `grep -c 'A criterion with no test citation is NOT DELIVERED'` esperando 0, e `grep -c 'Untested is undelivered — for that class'` esperando 1 | — | — |
 | T8.9 As Verdict Rules verdictam pelo instrumento da classe | AC46 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.10 O protocolo busca o instrumento que a classe nomeia, não sempre um teste | AC46 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.11 A introdução e a tabela de racionalizações seguem o modelo | AC46 | structural | range localizado em `skills/final-branch-audit/SKILL.md`, mais `grep -c 'Evidence is .file:line.'` esperando 0 | — | — |
@@ -154,7 +154,7 @@ forma de ela passar pelo gate antes de a correção existir.
 | T9.4 A forma da linha de evidência não muda | IR3 | negative | `scripts/check-evidence-line.sh`, exit 0 | — | — |
 | T9.5 O test command é exigido de task com critério behavioral | AC42 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md`, mais `grep -c 'REQUIRED: the command that runs'` esperando 0 — a declaração universal saiu | — | — |
 | T9.6 Task só structural ou negative não recebe nem inventa test command | AC42 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md`, mais `grep -c 'has no admissible value for this field'` esperando 1 — a proibição entrou | — | — |
-| T9.7 A referência de seção em review-scopes acompanha o rename | IR4 | negative | `scripts/check-links.sh`, exit 0 | — | — |
+| T9.7 A referência de seção em review-scopes acompanha o rename desta task | AC47, IR4 | negative | `scripts/check-links.sh`, exit 0 | — | — |
 | T9.8 A linha de propósito deixa de dizer que o reviewer re-roda os testes sempre | AC45 | structural | range localizado em `skills/subagent-driven-development/task-reviewer-prompt.md` | — | — |
 | T10.1 O controller entrega instrumentos e não deriva comando universal | AC32 | structural | range localizado em `skills/subagent-driven-development/SKILL.md` | — | — |
 | T10.2 A instrução de entregar test command e base count vira condicional | AC45 | structural | range localizado em `skills/subagent-driven-development/SKILL.md` | — | — |
@@ -165,6 +165,7 @@ forma de ela passar pelo gate antes de a correção existir.
 | T13.2 A saída e o contrato de retorno do re-review reportam o instrumento da classe | AC45 | structural | range localizado em `skills/subagent-driven-development/re-review-prompt.md` | — | — |
 | T13.3 O contrato do fix report exige os instrumentos aplicáveis | AC45 | structural | range localizado em `skills/subagent-driven-development/implementer-prompt.md` | — | — |
 | T13.4 A forma da linha de evidência sobrevive ao rename | IR3 | negative | `scripts/check-evidence-line.sh`, exit 0 | — | — |
+| T13.5 As referências de seção que esta task quebra são ajustadas no mesmo commit | AC47 | structural | `scripts/check-links.sh`, exit 0, com os dois renames e os dois ajustes no mesmo estado da árvore | — | — |
 | T14.1 A referência canônica descreve a promessa nova | AC24 | structural | range localizado em `docs/README.pt-BR.md` e em `docs/README.en.md` | — | — |
 | T14.2 O showcase descreve a promessa nova | AC25 | structural | range localizado em `README.md` | — | — |
 | T14.3 O par de referências muda no mesmo commit | IR7 | negative | `scripts/check-docs-sync.sh` **com os dois arquivos já staged**, exit 0 — ele lê `git diff --cached` e sai 0 trivialmente sobre índice vazio | — | — |
@@ -612,9 +613,10 @@ que zero.
 
 - [ ] **Step 7: Corrigir o comentário que declara a regra antiga (T3.7)**
 
-`skills/writing-plans/scripts/check-cross-references:273-275` explica por que a
+`skills/writing-plans/scripts/check-cross-references:272-275` explica por que a
 busca de teste olha só os blocos cercados, e a explicação se apoia na regra que
-a Task 6 remove:
+a Task 6 remove. **São quatro linhas, e a primeira delas entra intacta na
+substituição** — trocar só três duplicaria `:272`:
 
 ```python
 # Searching the whole document instead of the code blocks does NOT work:
@@ -623,7 +625,7 @@ a Task 6 remove:
 # check passes on the one defect it exists for.
 ```
 
-Substitua as três linhas por:
+Substitua as quatro linhas de `skills/writing-plans/scripts/check-cross-references:272-275` por:
 
 ```python
 # Searching the whole document instead of the code blocks does NOT work:
@@ -678,7 +680,9 @@ git commit -m "fix: o parser da matriz lia comando read-only como nome de teste"
 **Spec criterion:** AC5, AC7, AC8, AC9, AC36, AC43
 
 **Files:**
-- Modify: `skills/brainstorming/SKILL.md:235-237` — Step 2 edita as células de `:235` e `:236`, Step 3 a de `:237`
+- Modify: `skills/brainstorming/SKILL.md:32` — Step 7 (item 1 do `## Checklist`)
+- Modify: `skills/brainstorming/SKILL.md:92` — Step 7 (a linha do short path)
+- Modify: `skills/brainstorming/SKILL.md:235-237` — Step 2 edita as células de `:235` e `:236`, Step 6 as de `:235` e `:236` de novo, Step 3 a de `:237`
 - Modify: `skills/brainstorming/references/coverage-map.md:39`
 - Modify: `CHANGELOG.md`
 
@@ -1331,11 +1335,18 @@ git commit -m "feat: o plan reviewer cobra as seis colunas e a semantica da clas
 - T8.5: o audit aplica o discriminador de compatibilidade pelo marcador, sem heurística — instrumento na matriz
 - T8.6: `docs/review-scopes.md` declara que o final audit executa verificação read-only por critério, sem assumir o papel do reviewer da suíte — instrumento na matriz
 - T8.7: a regra de abertura do arquivo deixa de exigir located citation universalmente e passa a exigir a evidência que a classe declarada admite — instrumento na matriz
-- T8.8: a definição das colunas sob a tabela deixa de fixar os dois campos como `path/file.ext:line` e a regra *"untested is undelivered"* passa a valer só para `behavioral` — instrumento na matriz
+- T8.8: a definição das colunas sob a tabela nomeia a evidência que cada classe admite, e a regra *"untested is undelivered"* passa a valer só para `behavioral` — instrumento na matriz. **São as duas propriedades do bloco que o step substitui, e a matriz mede as duas**
 - T8.9: as rows de `## Verdict Rules` verdictam pelo instrumento que a classe admite — instrumento na matriz
 - T8.10: o passo do protocolo que manda buscar o covering test passa a buscar o instrumento da classe — instrumento na matriz
 - T8.11: a introdução e as duas rows da tabela de racionalizações seguem o modelo — instrumento na matriz
 - T8.12: as rows de task review e de re-review em `docs/review-scopes.md` descrevem o protocolo novo — instrumento na matriz
+
+**AC47 tem duas propriedades e três donos.** Esta task entrega a primeira — as
+rows descrevendo o protocolo. A segunda, *as referências de seção continuam
+resolvendo depois dos renames*, é entregue onde cada rename acontece: `T9.7`
+para o rename de AC28, na Task 9, e `T13.5` para os dois renames de AC45, na
+Task 13. **Consertar a referência antes do rename reprova `check-links.sh` no
+commit de quem chegar primeiro**, então a metade não pode morar aqui.
 
 - [ ] **Step 1: Corrigir a regra de abertura (T8.7)**
 
@@ -1576,18 +1587,19 @@ reporting command, ..."*. Troque o início por:
 **Re-runs** what already ran — the test command where the fix touched a `behavioral` criterion, the criterion's own read-only instrument otherwise — reporting
 ```
 
-**Uma terceira row deste arquivo depende da Task 13.**
-`docs/review-scopes.md:28` referencia `section "Test Run"` de
-`re-review-prompt.md`, e a Task 13 renomeia essa seção para
-`Verification Run`. **Se a Task 13 já rodou, ajuste o título aqui também**; se
-ainda não, o Step 5 da Task 13 é quem o faz, e `scripts/check-links.sh` reprova
-o commit de quem chegar primeiro sem ajustar. As duas ordens funcionam; ignorar
-não.
+**Duas outras rows deste arquivo pertencem à Task 13, e não a esta.**
+`docs/review-scopes.md:14` referencia `section "Tests — Run Them Yourself"` e
+`docs/review-scopes.md:28` referencia `section "Test Run"`, ambas de
+`re-review-prompt.md` — e a Task 13 renomeia as duas seções. **Não as toque
+aqui.** Consertar a referência antes do rename existir reprova
+`scripts/check-links.sh` no commit desta task, porque o título novo ainda não
+está no arquivo apontado. Quem as ajusta é o Step 3 da Task 13, no mesmo commit
+que renomeia — é a única ordem em que o gate fica verde nos dois commits.
 
 - [ ] **Step 12: Verificar T8.1 e T8.7 pela contagem**
 
 ```bash
-grep -c 'Delivery evidence' skills/final-branch-audit/SKILL.md
+grep -c 'Criterion | Delivery evidence | Verification evidence' skills/final-branch-audit/SKILL.md
 grep -c 'Implementation | Test | Verdict' skills/final-branch-audit/SKILL.md
 grep -c 'no located citation is NOT DELIVERED' skills/final-branch-audit/SKILL.md
 grep -c 'Implementation cited, no covering test' skills/final-branch-audit/SKILL.md
@@ -1597,6 +1609,9 @@ grep -c 'behavioral' skills/final-branch-audit/SKILL.md
 ```
 
 Expected: `2`, `0`, `0`, `0`, `0`, `0` e **um número maior que zero** no último.
+**O primeiro conta a row de cabeçalho inteira, não a frase `Delivery evidence`
+solta:** o Step 7 instala uma terceira ocorrência dessa frase na definição das
+colunas, e um `grep` pela frase devolveria `3` numa execução correta.
 O terceiro é T8.7, o quarto T8.9, o quinto T8.11 e o sexto T8.10. **`grep -c`
 imprime `0` e sai com status 1**, então leia o número e não o status.
 
@@ -1630,7 +1645,7 @@ git commit -m "feat: o audit verdicta por evidence class e reexecuta o instrumen
 
 ### Task 9: O task reviewer verifica por classe
 
-**Spec criterion:** AC22, AC28, AC29, AC42, AC45; IR3, IR4
+**Spec criterion:** AC22, AC28, AC29, AC42, AC45, AC47; IR3, IR4
 
 **Files:**
 - Modify: `skills/subagent-driven-development/task-reviewer-prompt.md:126-141`
@@ -1651,7 +1666,7 @@ git commit -m "feat: o audit verdicta por evidence class e reexecuta o instrumen
 - T9.4: `scripts/check-evidence-line.sh` continua verde — instrumento na matriz
 - T9.5: `[TEST_COMMAND]` é exigido quando a task carrega critério `behavioral` cujo verification instrument é um teste — instrumento na matriz
 - T9.6: task só `structural` ou `negative` não recebe test command e não tem nenhum inventado para ela — instrumento na matriz
-- T9.7: `docs/review-scopes.md` acompanha o rename da seção, e `scripts/check-links.sh` continua verde — instrumento na matriz
+- T9.7: `docs/review-scopes.md` acompanha o rename de seção que **esta** task provoca, e `scripts/check-links.sh` continua verde — instrumento na matriz
 - T9.8: a linha de propósito do prompt deixa de declarar que o reviewer re-roda os testes da task incondicionalmente — instrumento na matriz
 
 - [ ] **Step 1: O protocolo por critério (T9.1)**
@@ -1830,7 +1845,8 @@ sobreviver.
 
 ```bash
 git diff --stat
-git add skills/subagent-driven-development/task-reviewer-prompt.md CHANGELOG.md
+git add skills/subagent-driven-development/task-reviewer-prompt.md \
+        docs/review-scopes.md CHANGELOG.md
 git commit -m "feat: o task reviewer reexecuta o instrumento que a classe pede"
 ```
 
@@ -2079,13 +2095,16 @@ git commit -m "feat: achado transversal de review carrega command evidence"
 
 ### Task 13: O fix loop e o re-review por evidence class
 
-**Spec criterion:** AC45
+**Spec criterion:** AC45, AC47; IR3
 
 **Files:**
-- Modify: `skills/subagent-driven-development/re-review-prompt.md:60-72`
+- Modify: `skills/subagent-driven-development/re-review-prompt.md:60` — o heading
+- Modify: `skills/subagent-driven-development/re-review-prompt.md:62-72` — o corpo da seção
 - Modify: `skills/subagent-driven-development/re-review-prompt.md:85-88`
 - Modify: `skills/subagent-driven-development/re-review-prompt.md:134-136`
-- Modify: `skills/subagent-driven-development/re-review-prompt.md:147`
+- Modify: `skills/subagent-driven-development/re-review-prompt.md:146`
+- Modify: `docs/review-scopes.md:14`
+- Modify: `docs/review-scopes.md:28`
 - Modify: `skills/subagent-driven-development/implementer-prompt.md:161-165`
 - Modify: `CHANGELOG.md`
 
@@ -2111,11 +2130,13 @@ não-`behavioral`*, que é este modelo e hoje não consegue.
 - T13.2: a seção de saída e o contrato de retorno de `re-review-prompt.md` reportam o verification instrument da classe, preservando `Command`/`exit`/`counts` onde há teste — instrumento na matriz
 - T13.3: o contrato do fix report em `implementer-prompt.md` exige os instrumentos aplicáveis à task, não covering tests em toda fix round — instrumento na matriz
 - T13.4: `scripts/check-evidence-line.sh` continua verde — instrumento na matriz
+- T13.5: as duas referências de seção que os renames desta task quebram são ajustadas no mesmo commit, e `scripts/check-links.sh` continua verde — instrumento na matriz
 
 - [ ] **Step 1: Tornar a seção de testes condicional (T13.1)**
 
-`skills/subagent-driven-development/re-review-prompt.md:60-64` hoje abre com
-`## Tests — Run Them Yourself` e manda, sem condição:
+`skills/subagent-driven-development/re-review-prompt.md:60` é o heading
+`## Tests — Run Them Yourself`, e o parágrafo em
+`skills/subagent-driven-development/re-review-prompt.md:62-65` manda, sem condição:
 
 ```markdown
     The implementer appended its fix test run to the report file. That is a
@@ -2171,7 +2192,7 @@ está**: `scripts/check-evidence-line.sh:17-19` lê nomes de campo e nunca o
 conteúdo — *"It reads field names, never their content"* — então `**counts:** —`
 satisfaz o gate. É o instrumento de T13.4.
 
-E `skills/subagent-driven-development/re-review-prompt.md:147` vira:
+E `skills/subagent-driven-development/re-review-prompt.md:146` vira:
 
 ```markdown
 **Re-reviewer returns:** its own verification run (the instrument re-run for
@@ -2181,7 +2202,29 @@ for a disputed finding), new breakage in the fix diff, out-of-scope
 observations, and a round verdict.
 ```
 
-- [ ] **Step 3: Tornar os placeholders condicionais (T13.1)**
+- [ ] **Step 3: Ajustar as referências que os renames quebram (T13.5)**
+
+**Os Steps 1 e 2 renomearam duas seções, e `docs/review-scopes.md` aponta para
+as duas pelo título.** `scripts/check-links.sh` resolve o título, não só o
+caminho: sem este step, o commit desta task sai vermelho. Medido num clone
+descartável aplicando só os Steps 1 e 2:
+
+```
+docs/review-scopes.md:14: re-review-prompt.md -> no heading matching section "Tests — Run Them Yourself"
+docs/review-scopes.md:28: re-review-prompt.md -> no heading matching section "Test Run"
+exit=1
+```
+
+Em `docs/review-scopes.md:14`, troque `section "Tests — Run Them Yourself"` por
+`section "Verify the Fix by Its Instruments"`. Em `docs/review-scopes.md:28`,
+troque `section "Test Run"` por `section "Verification Run"`.
+
+**Este step mora aqui e não na Task 8, que edita o mesmo arquivo.** A Task 8 roda
+antes; ajustar a referência lá apontaria para um título que ainda não existe, e o
+gate reprovaria o commit dela. **O ajuste e o rename têm de sair no mesmo
+commit**, e este é o único ponto do plano em que isso acontece.
+
+- [ ] **Step 4: Tornar os placeholders condicionais (T13.1)**
 
 `skills/subagent-driven-development/re-review-prompt.md:134-136` hoje diz:
 
@@ -2209,7 +2252,7 @@ Substitua as duas primeiras linhas por:
 E a linha de `[BASE_TEST_COUNT]` ganha, no início, `under the same condition as
 `[TEST_COMMAND]`,`.
 
-- [ ] **Step 4: O contrato do fix report (T13.3)**
+- [ ] **Step 5: O contrato do fix report (T13.3)**
 
 `skills/subagent-driven-development/implementer-prompt.md:161-165` hoje diz:
 
@@ -2239,7 +2282,7 @@ Substitua por:
 implementer escreve código; esta linha governa o que o fix report carrega para o
 re-reviewer poder verificar.
 
-- [ ] **Step 5: Verificar**
+- [ ] **Step 6: Verificar**
 
 ```bash
 scripts/check-evidence-line.sh
@@ -2254,14 +2297,16 @@ saiu; `1` no quarto — a proibição entrou; e o quinto continua imprimindo a l
 `51`, provando que o Iron Law não foi tocado. **O par `0`/`0` nos dois greps do
 meio significa que o campo virou apenas opcional**, o que não entrega T13.1.
 
-- [ ] **Step 6: Conferir e commitar**
+- [ ] **Step 7: Conferir e commitar**
 
 ```bash
 git diff --stat
 ```
 
 ```bash
-git add skills/subagent-driven-development/re-review-prompt.md         skills/subagent-driven-development/implementer-prompt.md CHANGELOG.md
+git add skills/subagent-driven-development/re-review-prompt.md \
+        skills/subagent-driven-development/implementer-prompt.md \
+        docs/review-scopes.md CHANGELOG.md
 git commit -m "feat: o fix loop e o re-review verificam pelo instrumento da classe"
 ```
 
