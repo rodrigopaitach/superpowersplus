@@ -74,6 +74,40 @@ References below name them so a claim here can be traced there.
 
 ### Changed
 
+- **The skill that governs how every other skill is written prescribed a
+  frontmatter the specification rejects.** Three divergences in
+  [`skills/writing-skills/SKILL.md`](skills/writing-skills/SKILL.md), section
+  "SKILL.md Structure", checked against
+  the Agent Skills specification at `agentskills.io/specification` and
+  Anthropic's current skill best-practices page on 2026-09-04:
+  **(1)** *"Max 1024 characters total"* — the limits are per field and not
+  shared: `description` 1024, `name` 64. **(2)** The example wrote
+  `name: Skill-Name-With-Hyphens`; the spec requires lowercase, forbids leading,
+  trailing and consecutive hyphens, and requires the name to equal the parent
+  directory. **(3)** *"describes ONLY when to use (NOT what it does)"* — the
+  spec says a description "describes what the skill does and when to use it",
+  and this repository's own vendored copy,
+  [`anthropic-best-practices.md`](skills/writing-skills/anthropic-best-practices.md),
+  section "Checklist for effective Skills", already said the same. Two
+  constraints from Anthropic's page that the open spec does not carry are now
+  written down too: no XML tags in the name, and never the reserved words
+  `anthropic` or `claude`.
+
+  **The `NEVER summarize the workflow` rule survives untouched, and separating
+  it from the third divergence is the whole correction.** Section "Skill
+  Discovery Optimization (SDO)" records a measurement — a description that
+  summarized a workflow made an agent perform one review where the skill body
+  prescribed two — and that measurement is about *how*, never about *what*. The
+  rule now reads what and when, never how, which is what the evidence
+  supports and what the spec asks for. The four `✅ GOOD` examples were
+  rewritten alongside it: leaving examples that demonstrate the old rule is the
+  same defect this cycle fixed in `requesting-code-review`.
+
+  **Eleven of the fifteen skills here do not yet follow the corrected rule**,
+  and that is recorded under `## Open gaps` rather than swept: a `description`
+  is what an agent matches a request against, and the SDO measurement is the
+  reason eleven of them are not rewritten on an argument.
+
 - **Worktree setup detected the language and ran the wrong tool.**
   [`skills/using-git-worktrees/SKILL.md`](skills/using-git-worktrees/SKILL.md),
   section "Step 2: Project Setup", ran `poetry install` on the presence of
@@ -5356,6 +5390,25 @@ writing, which has now happened five times in one series of changes — each tim
 an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
+
+- **Eleven of the fifteen `description` fields do not follow the rule this
+  cycle corrected, and rewriting them is not a cleanup.** Measured
+  2026-09-04 across the fifteen `SKILL.md` frontmatters: four already say what
+  the skill does and when to use it — `brainstorming`, `executing-plans`,
+  `finishing-a-development-branch`, `writing-plans` — and eleven open on
+  `Use when` with no statement of what they do. The corrected rule in
+  [`writing-skills`](skills/writing-skills/SKILL.md), section "SKILL.md
+  Structure", now asks for both.
+  **Why they stay as they are:** the `description` is what the agent matches a
+  request against, and this repository's own section "Skill Discovery
+  Optimization (SDO)" carries the measurement that changing one changes
+  behaviour — a description summarizing workflow made an agent perform one
+  review where the skill body prescribed two. Rewriting eleven of them at once,
+  on the strength of an argument, is the move that measurement warns about.
+  **What would close it:** a baseline of which skill an agent reaches for on a
+  given prompt, then the same prompt after the rewrite. That instrument is
+  [`tests/skill-behavior/`](tests/skill-behavior/), and it costs a live
+  dispatch per case, which is why this is recorded rather than done.
 
 - **The upstream's brainstorming three-path router, to investigate rather than
   adopt.** `obra/superpowers` v6.3.0 (`b36e082`, 2026-08-12) split brainstorming

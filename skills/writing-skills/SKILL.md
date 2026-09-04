@@ -94,18 +94,22 @@ skills/
 
 **Frontmatter (YAML):**
 - Two required fields: `name` and `description` (see [agentskills.io/specification](https://agentskills.io/specification) for all supported fields)
-- Max 1024 characters total
-- `name`: Use letters, numbers, and hyphens only (no parentheses, special chars)
-- `description`: Third-person, describes ONLY when to use (NOT what it does)
-  - Start with "Use when..." to focus on triggering conditions
-  - Include specific symptoms, situations, and contexts
-  - **NEVER summarize the skill's process or workflow** (see SDO section for why)
+- `name`: max 64 characters, and the limit is its own — it is not shared with
+  `description`. Lowercase letters, numbers and hyphens only; no leading or
+  trailing hyphen, no consecutive hyphens, and **it must equal the skill's
+  directory name**. Anthropic's own guidance adds two the open spec does not:
+  no XML tags, and never the reserved words `anthropic` or `claude`
+- `description`: max 1024 characters, its own limit. Third-person, and it says
+  **what the skill does and when to use it** — never *how* it does it
+  - Name the outcome, then the triggering conditions, symptoms and contexts
+  - **NEVER summarize the skill's process or workflow** (see SDO section for
+    why — that rule is measured, and it is about *how*, not *what*)
   - Keep under 500 characters if possible
 
 ```markdown
 ---
-name: Skill-Name-With-Hyphens
-description: Use when [specific triggering conditions and symptoms]
+name: skill-name-matching-the-directory
+description: [What the skill produces or decides]. Use when [triggering conditions and symptoms].
 ---
 
 # Skill Name
@@ -145,11 +149,11 @@ Concrete results
 
 **Purpose:** Your agent reads the description to decide which skills to load for a given task. Make it answer: "Should I read this skill right now?"
 
-**Format:** Start with "Use when..." to focus on triggering conditions
+**Format:** Name what the skill does, then `Use when...` for the triggering conditions
 
-**CRITICAL: Description = When to Use, NOT What the Skill Does**
+**CRITICAL: What and When — never How**
 
-The description should ONLY describe triggering conditions. Do NOT summarize the skill's process or workflow in the description.
+The description says what the skill does and when it applies — both, per [the spec](https://agentskills.io/specification) and Anthropic's discovery guidance. What it must never carry is *how*: the steps, the workflow, the order of operations.
 
 **Why this matters:** Testing revealed that when a description summarizes the skill's workflow, an agent may follow the description instead of reading the full skill content. A description saying "code review between tasks" caused an agent to do ONE review, even though the skill's flowchart clearly showed TWO reviews (spec compliance then code quality).
 
@@ -164,11 +168,11 @@ description: Use when executing plans - dispatches subagent per task with code r
 # ❌ BAD: Too much process detail
 description: Use for TDD - write test first, watch it fail, write minimal code, refactor
 
-# ✅ GOOD: Just triggering conditions, no workflow summary
-description: Use when executing implementation plans with independent tasks in the current session
+# ✅ GOOD: Outcome plus trigger, no workflow
+description: Executes an implementation plan in the current session. Use when the plan's tasks are independent.
 
-# ✅ GOOD: Triggering conditions only
-description: Use when implementing any feature or bugfix, before writing implementation code
+# ✅ GOOD: What it produces, then when
+description: Produces an approved spec from a rough idea. Use before any creative work — new features, components, behavior changes.
 ```
 
 **Content:**
@@ -189,11 +193,11 @@ description: I can help you with async tests when they're flaky
 # ❌ BAD: Mentions technology but skill isn't specific to it
 description: Use when tests use setTimeout/sleep and are flaky
 
-# ✅ GOOD: Starts with "Use when", describes problem, no workflow
-description: Use when tests have race conditions, timing dependencies, or pass/fail inconsistently
+# ✅ GOOD: Names the outcome, describes the problem, no workflow
+description: Finds the cause of nondeterministic test failures. Use when tests have race conditions, timing dependencies, or pass/fail inconsistently.
 
 # ✅ GOOD: Technology-specific skill with explicit trigger
-description: Use when using React Router and handling authentication redirects
+description: Handles authentication redirects in React Router. Use when a route needs to send unauthenticated visitors elsewhere.
 ```
 
 ### 2. Keyword Coverage
@@ -641,9 +645,9 @@ Deploying untested skills = deploying untested code. It's a violation of quality
 - [ ] Identify patterns in rationalizations/failures
 
 **GREEN Phase - Write Minimal Skill:**
-- [ ] Name uses only letters, numbers, hyphens (no parentheses/special chars)
-- [ ] YAML frontmatter with required `name` and `description` fields (max 1024 chars; see [spec](https://agentskills.io/specification))
-- [ ] Description starts with "Use when..." and includes specific triggers/symptoms
+- [ ] Name is lowercase letters, numbers and hyphens, max 64, no leading/trailing or consecutive hyphen, equal to the directory name, no reserved words
+- [ ] YAML frontmatter with required `name` and `description` fields (`description` max 1024 chars, `name` max 64 — separate limits; see [spec](https://agentskills.io/specification))
+- [ ] Description says what the skill does AND when to use it, with specific triggers/symptoms, and never how
 - [ ] Description written in third person
 - [ ] Keywords throughout for search (errors, symptoms, tools)
 - [ ] Clear overview with core principle
