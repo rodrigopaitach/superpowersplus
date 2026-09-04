@@ -24,7 +24,7 @@ diff is judged, and they take no suffix.
 
 | Carrier | Baseline suffix |
 |---|---|
-| [task-reviewer-prompt.md](../skills/subagent-driven-development/task-reviewer-prompt.md), section "Test Evidence" | `base:` |
+| [task-reviewer-prompt.md](../skills/subagent-driven-development/task-reviewer-prompt.md), section "Verification Evidence" | `base:` |
 | [re-review-prompt.md](../skills/subagent-driven-development/re-review-prompt.md), section "Test Run" | `previous:` |
 | [code-reviewer.md](../skills/requesting-code-review/code-reviewer.md), section "Test Run" | none — it has no prior count |
 

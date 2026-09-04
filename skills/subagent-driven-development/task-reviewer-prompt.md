@@ -1,8 +1,8 @@
 # Task Reviewer Prompt Template
 
 Use this template when dispatching a task reviewer subagent. The reviewer
-reads the task's diff once, re-runs the task's tests, and returns two
-verdicts: spec compliance and code quality.
+reads the task's diff once, re-runs the verification instrument each criterion
+names, and returns two verdicts: spec compliance and code quality.
 
 **Purpose:** Verify one task's implementation matches its requirements (nothing
 more, nothing less) and is well-built (clean, tested, maintainable). The
@@ -79,7 +79,29 @@ Subagent (general-purpose):
     code on its merits; a stated rationale never downgrades a finding's
     severity.
 
+    ## Verify Each Criterion by Its Class
+
+    The brief lists each criterion with its delivery evidence class and its
+    verification instrument. Re-run the instrument the class names:
+
+    - `behavioral` — run the test and confirm it asserts the behavior. The
+      section below applies in full.
+    - `structural` — run the read-only validating command, or open the located
+      ranges and confirm they carry what the criterion states.
+    - `negative` — run the read-only command over the declared scope.
+
+    **One task may mix classes**, and a class you cannot verify is a finding,
+    never a criterion you skip. Your verification stays read-only on this
+    checkout: run commands, never mutate the tree, the index, HEAD or branch
+    state. **Never invent a test file to give a `structural` or `negative`
+    criterion something to point at** — a test written to fill a row proves
+    nothing about the property claimed.
+
     ## Tests — Run Them Yourself
+
+    This section governs every `behavioral` criterion in the task, in full and
+    unweakened. Generalising the evidence table below to cover the other two
+    classes does not soften a single row of it.
 
     The implementer's reported test run is a claim about a run you did not
     see, made by the author of the tests being judged. Re-run them.
@@ -180,21 +202,24 @@ Subagent (general-purpose):
       the controller should check — reported alongside the ✅/❌ verdict for
       everything you could verify]
 
-    ### Test Evidence
+    ### Verification Evidence
 
     **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/failed/
     skipped] (base: [BASE_TEST_COUNT])
 
-    | Criterion | Test file:line | Assertion |
-    |-----------|----------------|-----------|
-    | [label + text verbatim from the brief — `T3.1 …`, never `AC`/`IR` (spec ids)] | `test_verify.py:41` | [what it asserts, not the test's name] |
-    | [criterion nothing covers] | — | NONE |
+    | Criterion | Evidence class | Instrument run | Result | Located evidence |
+    |-----------|----------------|----------------|--------|------------------|
+    | [label + text verbatim from the brief — `T3.1 …`, never `AC`/`IR`] | behavioral | [the test command, verbatim] | 1 passed | `tests/hooks/test-check-cross-references.sh:57` |
+    | [next criterion] | structural | `python3 -m json.tool manifest.json` | exit 0 | `.claude-plugin/plugin.json:1-20` |
+    | [next criterion] | negative | `git diff --name-only BASE..HEAD` | no lockfile change | — |
 
-    One row per criterion in the brief, including those with no test — same
-    key as the plan's Test Coverage Matrix (one row per task criterion), so
-    the two line up row for row. A `—` row is a blocking finding, and so is
-    a row whose assertion fails the litmus above. Omitting the table is
-    itself the finding: without it, the task does not close.
+    One row per criterion in the brief — same key as the plan's Verification
+    Matrix, so the two line up row for row. **A `—` in `Located evidence` is a
+    blocking finding only when the class is `behavioral`;** for the other two
+    the instrument and its result are the evidence, and a dash there says the
+    row has none. A row whose instrument was not run is blocking whatever the
+    class. Omitting the table is itself the finding: without it, the task does
+    not close.
 
     ### Strengths
     [What's well done? Be specific.]
@@ -231,11 +256,17 @@ Subagent (general-purpose):
   are already in this template)
 - `[REPORT_FILE]` — REQUIRED: the file the implementer wrote its detailed
   report to
-- `[TEST_COMMAND]` — REQUIRED: the command that runs this task's tests, taken
-  from the plan's Test Coverage Matrix or the repository's runner config. The
-  reviewer runs it; do not pass a command you have not confirmed exists
+- `[TEST_COMMAND]` — REQUIRED **only when the task carries a `behavioral`
+  criterion whose verification instrument is a test**: the command that runs
+  those tests, taken from the plan's Verification Matrix or the repository's
+  runner config. The reviewer runs it; do not pass a command you have not
+  confirmed exists. **A task whose criteria are all `structural` or `negative`
+  has no admissible value for this field — leave it out, and never derive one.**
+  An invented runner turns a task that asked for no test into a task graded on
+  one.
 - `[BASE_TEST_COUNT]` — the test count at `[BASE_SHA]`, so the reviewer can
-  see whether tests disappeared. Omit only when no total is available, and
+  see whether tests disappeared — under the same condition as `[TEST_COMMAND]`,
+  since a task that runs no tests has none to lose. Omit only when no total is available, and
   expect the reviewer to derive the delta from the diff instead. **It is
   labelled `base:` in the evidence line**, which is the one part of that line
   each face words differently: this one compares against the commit before the
@@ -247,6 +278,6 @@ Subagent (general-purpose):
   package to (`scripts/review-package PLAN_FILE BASE HEAD` prints the unique
   path it wrote; the package never enters the controller's context)
 
-**Reviewer returns:** Spec Compliance verdict (✅/❌/⚠️), Test Evidence table
+**Reviewer returns:** Spec Compliance verdict (✅/❌/⚠️), Verification Evidence table
 (command, counts, one row per criterion), Strengths, Issues
 (Critical/Important/Minor), Task quality verdict

@@ -124,6 +124,27 @@ References below name them so a claim here can be traced there.
   descrever verificação read-only por critério, com a fronteira declarada: ele
   reexecuta o que um critério alega, não a suíte inteira.
 
+- **O task reviewer reexecuta o instrumento que a classe pede.**
+  [`skills/subagent-driven-development/task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md),
+  section "Verify Each Criterion by Its Class" — protocolo novo antes da seção
+  de testes, lendo do brief a classe e o instrumento de cada critério, com a
+  nota de que **uma task pode misturar classes** e de que classe não
+  verificável é achado, nunca critério pulado. `### Test Evidence` vira
+  `### Verification Evidence`, com uma linha por critério e cinco colunas, e um
+  `—` em `Located evidence` deixa de ser bloqueante fora de `behavioral`. A
+  seção "Tests — Run Them Yourself" e as quatro rows do shallow-test litmus
+  ficam **intactas**, com uma frase de abertura dizendo que valem em cheio para
+  todo critério `behavioral` — generalizar a tabela de evidência não afrouxa uma
+  linha sequer. `[TEST_COMMAND]` deixa de ser `REQUIRED` universal e passa a ser
+  exigido só quando a task carrega critério `behavioral` cujo instrumento é um
+  teste; task só `structural` ou `negative` **não tem valor admissível para o
+  campo, e não se deriva um** — comando inventado transforma task que não pediu
+  teste em task avaliada por um. O rename da seção tem três portadores, e o
+  terceiro mora fora do arquivo: a referência canônica em
+  [`docs/review-scopes.md`](docs/review-scopes.md) foi ajustada no mesmo commit,
+  porque `scripts/check-links.sh` resolve o **título** da seção e não só o
+  caminho.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em
