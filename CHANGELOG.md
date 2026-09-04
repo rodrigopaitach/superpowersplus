@@ -63,6 +63,31 @@ References below name them so a claim here can be traced there.
   cobrava critério *settleable* por citação `file:line` passa a cobrar
   evidência admissível.
 
+- **A Verification Matrix substitui a Test Coverage Matrix.**
+  [`skills/writing-plans/SKILL.md`](skills/writing-plans/SKILL.md), section
+  "Verification Matrix" — seis colunas fixas (`Criterion`, `Spec criterion`,
+  `Evidence class`, `Verification instrument`, `Test type`, `Layer`) e
+  **nenhuma coluna `Test` separada**: para `behavioral` o id do teste mora em
+  `Verification instrument` e não se repete em duas colunas. Um `—` em
+  `Test type` ou `Layer` deixa de ser achado quando a classe não é
+  `behavioral` — nenhuma linha finge ter teste. As quatro regras que
+  universalizavam teste saem: *"One row, one test"*, a linha
+  *"Names the covering test"*, a instrução sem vírgula dentro do template de
+  plano, e a abertura de `## Acceptance Criteria` que exigia implementação
+  `file:line` **mais** teste `file:line`. A classe vem do marcador, nunca de
+  heurística: com `**Evidence model:** v2` no cabeçalho da spec a classe é
+  obrigatória; sem ele o documento é histórico e a célula lê `behavioral`, que
+  é a classe efetiva do fallback — `legacy behavioral` não é um quarto valor e
+  nunca aparece na coluna. O bloco `**Files:**` passa a dizer que o range de um
+  `Modify:` é navegação e não evidência, e a pergunta de elegibilidade de task
+  passa a ser "esta task deixa um deliverable versionado?", com a nota de que
+  evidência por comando não converte efeito externo em task auditável. O
+  detalhe por classe — o instrumento que cada uma exige e o que cada coluna
+  guarda — foi para
+  [`skills/writing-plans/references/verification-matrix.md`](skills/writing-plans/references/verification-matrix.md),
+  por progressive disclosure: a edição levou o `SKILL.md` a 507 linhas e
+  `scripts/check-skill-size.sh` reprovou; depois da extração são 497.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em

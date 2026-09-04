@@ -53,10 +53,15 @@ reject one task while approving its neighbor. Each task ends with an
 independently testable deliverable.
 
 **Work that leaves nothing in the repository is not a task.** The test is the
-one the audit already runs: does this task leave something a
-`path/file.ext:line` citation can prove? Merging, deploying, applying a
-migration to a real environment, publishing a release, a smoke run somebody
-performs by hand, watching a metric after rollout — none of them do. They
+one the audit already runs: does this task leave a versioned deliverable in
+the branch? Merging, deploying, applying a migration to a real environment,
+publishing a release, a smoke run somebody performs by hand, watching a metric
+after rollout — none of them do. **Command evidence does not change this.** A
+read-only command proves a property OF the deliverable or of the branch's
+state; it never turns an external effect into an auditable task, because there
+is no versioned deliverable for it to speak about. The two invariants are
+separate: task eligibility asks whether something was left behind, evidence
+adequacy asks whether what was left can be checked. They
 happen after the conformance audit returns PASS, outside the plan: the merge
 through superpowersplus:finishing-a-development-branch, the rest in your
 human partner's hands. Written into the plan they deadlock that skill against
@@ -117,19 +122,19 @@ naming and copy rules, platform requirements — one line each, with exact
 values copied verbatim from the spec. Every task's requirements implicitly
 include this section.]
 
-## Test Coverage Matrix
+## Verification Matrix
 
 [One row per task criterion, across every task. The rules that govern this
-table — one row one test, every `AC` and `IR` covered, and where the test
-types and layer names come from — are stated once in this skill's
-"Test Coverage Matrix" section below. Read it before filling this in.]
+table — the six columns, the instrument each evidence class requires, and
+where the test types and layer names come from — are stated once in this
+skill's "Verification Matrix" section below. Read it before filling this in.]
 
-| Criterion | Spec criterion | Test type | Layer | Test |
-|-----------|----------------|-----------|-------|------|
-| T3.1 Rejects expired tokens | AC1 | unit | `tests/auth/` | `tests/auth/test_verify.py::test_rejects_expired` |
-| T3.2 Rejected tokens are logged once | AC1 | unit | `tests/auth/` | `tests/auth/test_verify.py::test_logs_one_rejection` |
-| T5.1 Login survives a token refresh | AC3 | e2e | `e2e/` | `e2e/login.spec.ts > refreshes mid-session` |
-| T5.2 Two refreshes in flight rotate the token once | IR2 | integration | `tests/integration/` | `tests/integration/test_refresh.py::test_concurrent_refresh_rotates_once` |
+| Criterion | Spec criterion | Evidence class | Verification instrument | Test type | Layer |
+|-----------|----------------|----------------|-------------------------|-----------|-------|
+| T3.1 Rejects expired tokens | AC1 | behavioral | `tests/auth/test_verify.py::test_rejects_expired` | unit | `tests/auth/` |
+| T5.1 Login survives a token refresh | AC3 | behavioral | `e2e/login.spec.ts > refreshes mid-session` | e2e | `e2e/` |
+| T5.2 The manifest stays valid JSON | AC7 | structural | `python3 -m json.tool manifest.json` | — | — |
+| T6.1 No new dependency enters the branch | IR2 | negative | `git diff --name-only BASE..HEAD` over the lockfile | — | — |
 
 ---
 ```
@@ -144,14 +149,21 @@ snippet cannot run is a step the implementer debugs instead of executes.
 ### Task N: [Component Name]
 
 **Spec criterion:** [the id of the item in the spec's `## Acceptance
-Criteria` or `## Implicit Requirements` list this task exists to deliver —
-e.g. `AC4 Refresh rotates the token`, `IR2 Concurrent refreshes rotate
-once`. A task with no spec criterion is scope you invented while planning.]
+Criteria` or `## Implicit Requirements` this task exists to deliver, **with
+its declared evidence class** — e.g. `AC4 [behavioral] Refresh rotates the
+token`. A task with no spec criterion is scope you invented while planning.]
 
 **Files:**
 - Create: `exact/path/to/file.py`
 - Modify: `exact/path/to/existing.py:123-145`
 - Test: `tests/exact/path/to/test.py`
+
+**The line range in a `Modify:` entry is navigation, not evidence.** It tells
+the implementer where to open the file, and it ages while the branch is being
+built — the task before this one may have moved it. The audit's evidence is
+resolved against `HEAD` at audit time, never against what the plan wrote.
+Plans locate work; audits locate evidence. The range is optional here and
+carries no verdict.
 
 **Interfaces:**
 - Consumes: [what this task uses from earlier tasks — exact signatures]
@@ -159,12 +171,14 @@ once`. A task with no spec criterion is scope you invented while planning.]
   and return types. A task's implementer sees only their own task; this
   block is how they learn the names and types neighboring tasks use.]
 
-**Acceptance criteria:** [labeled `T<task number>.<n>`. `AC` and `IR` are
-the spec's ids and never a task's — the audit reads one table by spec id and
-another by task label, and the same string in both is how it conflates them.]
-- TN.1: [one observable behavior, stated so a `file:line` citation can settle
-  it] — test: `tests/exact/path/to/test.py::test_first_behavior`
-- TN.2: [next behavior] — test: `tests/exact/path/to/test.py::test_next_behavior`
+**Acceptance criteria:** [labeled `T<task number>.<n>` — `AC` and `IR` are
+the spec's ids and never a task's, because the audit reads one table by spec
+id and another by task label. Each one names its evidence class and its
+verification instrument, so the brief `scripts/task-brief` extracts is enough
+for the implementer and the reviewer without either of them reopening the
+spec or the plan's matrix.]
+- TN.1: [one observable behavior] — `[behavioral]`, test: `tests/exact/path/to/test.py::test_first_behavior`
+- TN.2: [next behavior] — `[structural]`, instrument: `python3 -m json.tool manifest.json`
 
 - [ ] **Step 1: Write the failing test**
 
@@ -201,16 +215,16 @@ git commit -m "feat: <what this task delivers>"
 ## Acceptance Criteria
 
 Every task carries them, and superpowersplus:final-branch-audit charges them one
-by one at the end of the branch — one row per criterion, each needing an
-implementation `file:line` and a test `file:line` before it counts as
-delivered. Write them in the form that audit can settle.
+by one at the end of the branch — one row per criterion, each needing the
+delivery evidence and the verification evidence its declared class admits
+before it counts as delivered. Write them in the form that audit can settle.
 
 | Requirement | Why |
 |-------------|-----|
 | Labeled `T<task number>.<n>`, never `AC` or `IR` | Those two prefixes belong to the spec's ids. The audit's traceability table is keyed by spec id and its delivery table by task label; a task criterion called `AC1` collides with the spec's `AC1` and the two tables stop lining up. |
 | One observable behavior per criterion | A criterion bundling three behaviors cannot take one verdict. |
 | Stated so a citation settles it | "Handles errors well" is unauditable. "Returns 429 with a `Retry-After` header" is a row the auditor can cite or fail. |
-| Names the covering test | The audit fails any criterion whose implementation exists untested. Naming the test here is what makes it exist. |
+| Names the verification instrument its class requires | The audit fails any criterion whose evidence it cannot re-run. For `behavioral` that is the covering test; for `structural` and `negative` it is the read-only check or the located range. Naming it here is what makes it exist. |
 | Backed by steps that build it | A criterion no step implements is a gap you wrote into the plan yourself. |
 
 An unauditable criterion is a plan failure, exactly like a placeholder — the
@@ -227,6 +241,7 @@ plan, in both directions. Two rules make that pass possible:
 | The header cites the spec's exact committed path | The auditor takes the path from the plan. No citation, and the traceability pass cannot run at all — it is reported as blocking, not skipped. |
 | Every task names the spec criterion it delivers | A task tracing to nothing is INVENTED SCOPE at the audit. A spec criterion no task names is LOST IN TRANSLATION. |
 | `AC` and `IR` ids trace identically | The audit charges both lists. An implicit requirement no task names fails the same way an acceptance criterion would. |
+| The spec's evidence model is read from its header, never inferred | A spec carrying `**Evidence model:** v2` declares a class on every criterion, and a criterion without one is an error to take back to the spec. A spec without the marker is historical: its criteria take the fallback, and the matrix cell reads `behavioral`. There is no heuristic — not on the git history, not on the spec's date, not on how the criteria are worded. |
 
 Both failures are found by reading the spec and the plan side by side —
 which is what the auditor does, and what you should do before saving. A
@@ -236,52 +251,63 @@ If the work genuinely needs a task the spec does not cover, the spec is
 incomplete: take it back to your human partner rather than smuggling the
 task in. Amending the spec is cheap now and blocking later.
 
-## Test Coverage Matrix
+## Verification Matrix
 
-One row per task criterion, naming the kind of test required, the layer it
-lives in, and the spec criterion it refines. **One row, one test:** a task
-criterion whose behavior takes two tests is two criteria — split it in the
-task, then give each half its row. A task criterion with no row is a
-criterion nobody planned to test.
+One row per task criterion, naming the delivery evidence class the spec
+declared and the instrument that class requires. **This is not a universal
+test table:** a test is what `behavioral` needs, and inventing one to fill a
+`structural` or `negative` row is the defect this table replaced.
 
-Read the table the other way and it answers the spec: every `AC` and every
-`IR` must appear in the Spec criterion column of at least one row. One that
-appears in none was never planned for testing, whatever the plan says
-elsewhere.
+**The schema is fixed, because a mechanical gate parses the table.** Six
+columns — `Criterion`, `Spec criterion`, `Evidence class`,
+`Verification instrument`, `Test type`, `Layer` — and **no separate `Test`
+column**: for `behavioral` the test id lives in `Verification instrument`, so
+the same id never appears twice. The instrument each class requires and what
+each column holds class by class are in
+[verification-matrix.md](references/verification-matrix.md) — open it before
+filling in your first row.
 
-**`IR` items are criteria of the first class here, not a second tier.** The
-spec's `## Implicit Requirements` — concurrency, error handling,
-observability, edge cases, limits — are refined into task criteria and
-tested on the same terms as every `AC`: a named test type, a real layer, an
-exact test id. An `IR` in no row is an omission, not a decision. If one
-genuinely cannot be tested at the layers this repository has, say so in a
-row of its own and take it to your human partner; do not drop it and do not
-leave the row blank.
+**A `—` in `Test type` or `Layer` is not a finding when the class is not
+`behavioral`.** No row pretends to have a test, and the type and layer
+information is kept where it has a consumer.
 
-The matrix is what the task reviewer charges test by test, and what marks a
-test matching no requirement as invented scope.
+**No criterion is left without a resolved instrument.** Read the table the
+other way and it answers the spec: every `AC` and every `IR` appears in the
+Spec criterion column of at least one row.
+
+**`IR` items are criteria of the first class here, not a second tier.** They
+carry a class and an instrument like every `AC`. What changed is that the
+instrument is chosen by the class: an `IR` reading "no new dependency" is
+`negative`, and its instrument is a read-only command over the diff — never a
+test somebody wrote to give the row something to say.
+
+**Where the class comes from — by marker, never by inference.** A spec whose
+header carries `**Evidence model:** v2` declares a class on every criterion,
+and a criterion without one is an error you take back to the spec. A spec
+without the marker is a historical document: its criteria take the
+compatibility fallback, and the cell reads **`behavioral`** — the effective
+class the fallback yields. **`legacy behavioral` is not a fourth value and
+never appears in this column.** That the class came from the fallback can be
+noted in prose for the reader; no parser, reviewer or auditor is asked to
+recognise a fourth name.
+
+| Criterion | Spec criterion | Evidence class | Verification instrument | Test type | Layer |
+|-----------|----------------|----------------|-------------------------|-----------|-------|
+| T3.1 Rejects expired tokens | AC1 | behavioral | `tests/auth/test_verify.py::test_rejects_expired` | unit | `tests/auth/` |
+| T5.2 The manifest stays valid JSON | AC7 | structural | `python3 -m json.tool manifest.json` | — | — |
+| T6.1 No new dependency enters the branch | IR2 | negative | `git diff --name-only BASE..HEAD` over the lockfile | — | — |
 
 **Read this repository's conventions before writing a single row.** You are
-recording the standard already in use, not importing one:
+recording the standard already in use, not importing one: `CLAUDE.md` and
+`AGENTS.md` for stated testing rules, the runner config for the command that
+runs tests, the CI workflow for which suites gate a merge, and the existing
+tests for the layers that actually exist here. Cite what you found as a
+located range. Found nothing — no test directory, no runner configured? Say
+that in the matrix and propose the layers, labeled as a proposal for your
+human partner to approve.
 
-| Source | What it tells you |
-|--------|-------------------|
-| `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md` | Stated testing rules, coverage floors, banned patterns |
-| Test runner config — `pytest.ini`, `vitest.config.*`, `package.json` scripts, `Makefile` | The command that runs tests, and how suites are split |
-| CI workflow files | Which suites gate a merge, and in what order |
-| Existing tests | The layers that actually exist here, their directories and naming |
-
-Cite what you found as `path/file.ext:line`. Found nothing — no test
-directory, no runner configured? Say that in the matrix and propose the
-layers, labeled as a proposal for your human partner to approve.
-
-| Column | Rule |
-|--------|------|
-| Criterion | The task's own label and text (`T3.1 Rejects expired tokens`), copied verbatim from that task — the label carries the task number, so no separate Task column |
-| Spec criterion | The `AC` or `IR` id it refines, taken from that task's `**Spec criterion:**` line |
-| Test type | This repository's vocabulary, not a generic one — whatever its config and existing tests call the kinds |
-| Layer | The real directory the type lives in here |
-| Test | The exact test id a step in that task creates — one per row |
+The matrix is what the task reviewer charges instrument by instrument, and
+what marks a test matching no requirement as invented scope.
 
 ## No Placeholders
 
