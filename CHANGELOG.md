@@ -206,6 +206,14 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A cópia da tabela dentro do prompt de dispatch do audit reensinava a forma
+  universal.** Achado Minor do review de branch. A tabela do corpo ganhou
+  exemplos por classe; a cópia indentada dentro do `## Output Format` ficou com
+  `` `path:line` `` nas duas colunas novas — e para uma linha `negative` a
+  evidência de entrega é o **escopo declarado**, não um `path:line`. É a mesma
+  falha de segunda ocorrência que a AC16 nomeia, uma camada abaixo: o cabeçalho
+  foi trocado nas duas, o exemplo só numa.
+
 - **`[VERIFICATION_INSTRUMENTS]` era entregue e não existia do outro lado.**
   Correção do achado Important do review de branch. O controller era instruído
   a passar o campo ao task reviewer, e `grep -c 'VERIFICATION_INSTRUMENTS'`

@@ -344,7 +344,7 @@ Subagent (general-purpose):
 
     | Task | Criterion | Delivery evidence | Verification evidence | Verdict |
     |------|-----------|-------------------|-----------------------|---------|
-    | ... | ... | `path:line` | `path:line` | DELIVERED / NOT DELIVERED / OUT OF SCOPE — DECLARED |
+    | ... | ... | `path:line`, or the declared scope for `negative` | `path:line`, or the read-only check you re-ran and what it returned | DELIVERED / NOT DELIVERED / OUT OF SCOPE — DECLARED |
 
     ### Traceability Failures (blocking)
     - LOST IN TRANSLATION — <spec criterion>: no task covers it. Searched:
