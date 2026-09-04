@@ -103,7 +103,7 @@ repositório descartável.
 | T2.2 O caso acima falha se a mensagem omitir o número final | AC8, IR5 | static | `tests/` | > an invalid range is reported with its end number |
 
 **Duas linhas que este repositório não sabe testar, trazidas ao humano conforme
-`skills/writing-plans/SKILL.md:257`:**
+`skills/writing-plans/SKILL.md:256-258`:**
 
 | Criterion | Spec criterion | Test type | Layer | Test |
 |-----------|----------------|-----------|-------|------|
@@ -327,8 +327,8 @@ sinal que este step existe para ler:
 com veredito movido, e um número de comparados maior que zero. O caso já asserta os três em
 `tests/hooks/test-check-cross-references.sh:517-531` — a guarda de "não deu para
 rodar", a de zero comparados, o `pass` e a falha por documento movido, nessa
-ordem — e a razão de a contagem decair está em
-`tests/hooks/test-check-cross-references.sh:27-32`.
+ordem. A razão de a contagem decair está citada no terceiro item acima e não se
+repete aqui.
 
 - [ ] **Step 7: Rodar a suíte inteira de hooks**
 
