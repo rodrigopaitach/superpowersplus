@@ -267,9 +267,14 @@ needed.
 - **Reviewer inputs:** the task reviewer gets three paths — the same brief
   file, the report file, and the review package — plus the global
   constraints that bind the task, the test command, and the base test count.
-- **`[VERIFICATION_INSTRUMENTS]`:** the instrument each of this task's
-  criteria names, copied from the plan's Verification Matrix with its
-  evidence class. This is what the reviewer re-runs.
+- **The verification instruments travel in the brief, not in a field of
+  their own.** `scripts/task-brief` extracts the task block verbatim, and
+  under the plan format that block already names each criterion's evidence
+  class and its instrument — that is what the reviewer re-runs, and the brief
+  is one of the three paths above. **Do not copy them into a placeholder as
+  well.** Two carriers of one contract is the divergence the plan reviewer
+  blocks on, and the one that gets executed is whichever the reader happened
+  to open.
 - **`[TEST_COMMAND]`:** **required only when the task carries at least one
   `behavioral` criterion** — the command that runs those tests, taken from
   the matrix or, failing that, the repository's runner config

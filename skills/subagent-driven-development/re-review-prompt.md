@@ -153,7 +153,10 @@ Subagent (general-purpose):
 **Placeholders:**
 - `[MODEL]` — REQUIRED: reviewer model per SKILL.md Model Selection; scoped
   re-reviews of small fix diffs take a cheap-to-mid tier
-- `[BRIEF_FILE]` — the task brief file (same file the implementer worked from)
+- `[BRIEF_FILE]` — the task brief file (same file the implementer worked
+  from). It carries each criterion's evidence class and its verification
+  instrument, which is what the re-reviewer re-runs where there is no test —
+  they arrive here and in no field of their own
 - `[FINDINGS]` — the Critical/Important findings and spec gaps from the
   previous review, copied verbatim, one per bullet
 - `[REPORT_FILE]` — the implementer's report file (fix reports appended)
@@ -163,9 +166,6 @@ Subagent (general-purpose):
   `structural` or `negative` has no admissible value for this field — leave it
   out.** The task review had none either, and deriving one here would invent a
   runner two faces after the plan declined to ask for one.
-- `[VERIFICATION_INSTRUMENTS]` — the instrument each criterion under
-  verification names, copied from the plan's Verification Matrix with its
-  evidence class. This is what the re-reviewer re-runs when there is no test.
 - `[BASE_TEST_COUNT]` — under the same condition as `[TEST_COMMAND]`, the
   counts the previous review reported. Pass
   `unknown` when there are none, and expect the delta to come from the diff.

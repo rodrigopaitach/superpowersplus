@@ -206,6 +206,23 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **`[VERIFICATION_INSTRUMENTS]` era entregue e não existia do outro lado.**
+  Correção do achado Important do review de branch. O controller era instruído
+  a passar o campo ao task reviewer, e `grep -c 'VERIFICATION_INSTRUMENTS'`
+  devolvia **0** em
+  [`skills/subagent-driven-development/task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md);
+  em
+  [`skills/subagent-driven-development/re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md)
+  ele aparecia só **depois** de `**Placeholders:**`, isto é na lista e nunca no
+  corpo onde seria substituído — o único outro placeholder daquele arquivo sem
+  sítio no corpo é `[MODEL]`, que é parâmetro de dispatch. Era instrução que o
+  controller não conseguia executar. O campo sai dos dois, e o que fica escrito
+  é o que de facto acontece: os instrumentos viajam **no brief**, que
+  `scripts/task-brief` extrai e que já carrega, por critério, a classe e o
+  instrumento. Acrescentar um segundo portador do mesmo contrato seria a
+  divergência que esta mesma branch tornou bloqueante no plan reviewer — dois
+  contratos para um critério, e vale o que o leitor abriu primeiro.
+
 - **O parser da matriz falhava ABERTO em três formas.** Correção do achado
   Important do review de branch, e uma das três é regressão medida contra
   `94d575e`: a leitura por índice de coluna transformava linha malformada em
