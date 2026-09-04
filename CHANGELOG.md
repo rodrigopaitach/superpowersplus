@@ -36,6 +36,23 @@ References below name them so a claim here can be traced there.
   and hands the reviewer the plan instead of one task. Nothing in
   [`tests/`](tests/) read the old text — grepped before editing.
 
+- **The parallel-dispatch skill's live instructions still verified the
+  behaviour its own protocol had banned.**
+  [`skills/dispatching-parallel-agents/SKILL.md`](skills/dispatching-parallel-agents/SKILL.md),
+  section "Verification", asked *"Understand what changed"* and *"Did agents
+  edit same code?"* — questions that only have answers if the agents edited.
+  The same file's section "The Pattern" constrains them to
+  *"Read-only — investigate, do not edit and do not commit"*. The section now
+  verifies diagnoses and orders the fixes serially, which is what the protocol
+  above it produces.
+
+  **The `Real Example from Session` above it was left exactly as it is**, and
+  that is not an oversight: it is explicitly framed as a record of a session
+  run under the earlier boundary, with a paragraph stating what it would be
+  today. Rewriting a record of what was done into the format now prescribed
+  would invent a session nobody had. The residue was in the imperative section,
+  not in the record.
+
 ## [1.24.0] - 2026-09-03
 
 ### Fixed

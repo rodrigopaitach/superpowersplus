@@ -212,8 +212,13 @@ Agent 3 → Fix tool-approval-race-conditions.test.ts
 
 ## Verification
 
-After agents return:
-1. **Review each summary** - Understand what changed
-2. **Check for conflicts** - Did agents edit same code?
-3. **Run full suite** - Verify all fixes work together
+The agents returned diagnoses, not commits — nothing has changed on disk yet.
+
+1. **Read each diagnosis** - The root cause with its `file:line`, and the fix
+   the agent would make
+2. **Order by the overlap they reported** - Each agent named whether its fix
+   touches files the other investigations name
+3. **Apply one fix at a time, re-running the suite after each** - A fix that
+   resolves two domains makes the second unnecessary, and a fix that breaks
+   another domain is caught while only one change is in play
 4. **Spot check** - Agents can make systematic errors
