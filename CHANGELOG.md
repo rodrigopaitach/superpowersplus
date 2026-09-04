@@ -5475,6 +5475,41 @@ an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
+- **`check-cross-references` counts a criterion's own definition as a citation
+  of itself, so a defined-but-unconnected `AC`/`IR` passes green. Measured, and
+  the contract is the open half — not the implementation.** The script's comment
+  at `skills/writing-plans/scripts/check-cross-references:180` reads *"Defined
+  where the list that owns them lives; cited anywhere else."* The implementation
+  one screen below, at
+  `skills/writing-plans/scripts/check-cross-references:194`, is
+  `cited_ac = set(AC_IR.findall(text))` — `findall` over the whole document,
+  which includes the defining lines. Only `cited - defined` is charged, at
+  `:201`; `defined - cited` is never computed. **Measured 2026-09-04, twice in
+  one branch:** `IR5b` and then `AC27` were each introduced by a fix pass,
+  appeared nowhere but their own definition, and both passed with the summary
+  reading `AC/IR defined 36, AC/IR cited 36`. Each was caught by a reviewer, one
+  round apart, after the gate had cleared it.
+  **The historical contract did not settle this direction.**
+  [`2026-08-24-cross-references-extractor-design.md`](docs/superpowers/specs/2026-08-24-cross-references-extractor-design.md)
+  specifies the opposite one — its `AC10` requires an id cited only inside a
+  fence to still count as cited, so that a citation of a nonexistent id fails.
+  Nothing there establishes that every defined criterion must appear outside its
+  own definition. So this is a **measured blind spot and an open contract
+  question**, not a defect with a known fix: the checker cannot distinguish a
+  criterion connected elsewhere in the document from one that exists only in its
+  defining list.
+  **Not fixed here, and `defined_ac - cited_ac` is not assumed to be the
+  answer.** What "cited elsewhere" legitimately includes has to be decided
+  first — the Coverage Map, the decision record, cross-references between
+  criteria, fenced examples that are real citations — and the rule may turn out
+  to be narrower and more useful than *every defined criterion must be cited
+  somewhere else*: something closer to *every defined criterion must participate
+  in the structure that makes it traceable*. The check also runs against plans,
+  which cite a spec's ids without defining them and are already treated
+  differently at `:200`; a new direction must not turn those into false
+  positives. A future slice gets its own spec, and it measures the existing
+  corpus before and after so the documents that change verdict are known by
+  name.
 - **This section's own rule against `file:line` is broken 32 times inside it,
   and the count is measured rather than sampled.** The preamble above states
   it — references here use the markdown link plus section title, never
