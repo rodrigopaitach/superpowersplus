@@ -94,6 +94,28 @@ References below name them so a claim here can be traced there.
   guessing did not reach the one skill that guesses on a stranger's repository.
   Nothing matching is now a question to the human partner, not a guess.
 
+- **Three failed fixes were stated as proof of a wrong architecture, and a
+  95% figure had no measurement behind it.**
+  [`skills/systematic-debugging/SKILL.md`](skills/systematic-debugging/SKILL.md)
+  carried the causal claim in four places, most flatly in section "Red Flags -
+  STOP and Follow Process" (*"3+ failures = architectural problem"*) and at the
+  end of Phase 4.5 (*"This is NOT a failed hypothesis - this is a wrong
+  architecture"*). Three failures prove the hypotheses tried so far were wrong.
+  They do not say where the error lives — the design, a boundary, an
+  assumption, or the hypothesis itself — and the skill's own list of patterns
+  right above it is what distinguishes those. **The circuit breaker is
+  unchanged and deliberate:** stop at three, do not attempt Fix #4 alone. What
+  changed is the conclusion it hands you, which is now a re-evaluation with
+  architecture included rather than a verdict already reached.
+
+  **The 95% is removed rather than sourced.** Section "When Process Reveals
+  'No Root Cause'" asserted that 95% of such cases are incomplete
+  investigation. No measurement in this repository supports the number and
+  producing one is not cheap; this project does not keep a figure it cannot
+  defend, and [`CLAUDE.md`](CLAUDE.md) already refuses numbers picked by
+  argument. The sentence keeps the brake it was there for — name what you ruled
+  out and how — without a statistic nobody counted.
+
 ## [1.24.0] - 2026-09-03
 
 ### Fixed

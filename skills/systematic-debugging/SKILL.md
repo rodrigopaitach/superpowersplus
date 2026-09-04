@@ -192,10 +192,10 @@ You MUST complete each phase before proceeding to the next.
    - STOP
    - Count: How many fixes have you tried?
    - If < 3: Return to Phase 1, re-analyze with new information
-   - **If ≥ 3: STOP and question the architecture (step 5 below)**
-   - DON'T attempt Fix #4 without architectural discussion
+   - **If ≥ 3: STOP. Re-evaluate before any Fix #4 (step 5 below)**
+   - DON'T attempt Fix #4 without that re-evaluation and the conversation it ends in
 
-5. **If 3+ Fixes Failed: Question Architecture**
+5. **If 3+ Fixes Failed: Re-evaluate, Architecture Included**
 
    **Pattern indicating architectural problem:**
    - Each fix reveals new shared state/coupling/problem in different place
@@ -209,7 +209,9 @@ You MUST complete each phase before proceeding to the next.
 
    **Discuss with your human partner before attempting more fixes**
 
-   This is NOT a failed hypothesis - this is a wrong architecture.
+   The pattern above is what tells a wrong architecture from a hypothesis that
+   keeps missing. Three failures on their own do not: they say the next fix
+   needs a new hypothesis, not that the design is the thing to replace.
 
 ## Red Flags - STOP and Follow Process
 
@@ -228,7 +230,7 @@ If you catch yourself thinking:
 
 **ALL of these mean: STOP. Return to Phase 1.**
 
-**If 3+ fixes failed:** Question the architecture (see Phase 4.5)
+**If 3+ fixes failed:** Re-evaluate before another fix, architecture included (see Phase 4.5)
 
 ## your human partner's Signals You're Doing It Wrong
 
@@ -252,7 +254,7 @@ If you catch yourself thinking:
 | "Multiple fixes at once saves time" | Can't isolate what worked. Causes new bugs. |
 | "Reference too long, I'll adapt the pattern" | Partial understanding guarantees bugs. Read it completely. |
 | "I see the problem, let me fix it" | Seeing symptoms ≠ understanding root cause. |
-| "One more fix attempt" (after 2+ failures) | 3+ failures = architectural problem. Question pattern, don't fix again. |
+| "One more fix attempt" (after 2+ failures) | Three failures mean the hypotheses were wrong, not that the next fix is right. Re-evaluate first — assumptions, boundaries, architecture. |
 
 ## Quick Reference
 
@@ -272,7 +274,8 @@ If systematic investigation reveals issue is truly environmental, timing-depende
 3. Implement appropriate handling (retry, timeout, error message)
 4. Add monitoring/logging for future investigation
 
-**But:** 95% of "no root cause" cases are incomplete investigation.
+**But:** "no root cause" is the conclusion an investigation reaches least often
+and claims most easily. Before writing it down, name what you ruled out and how.
 
 ## Supporting Techniques
 
