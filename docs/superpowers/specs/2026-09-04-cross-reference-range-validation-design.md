@@ -9,7 +9,7 @@
 malformadas e as reporta como resolvidas. O parser reconhece a forma
 `arquivo:início-fim` desde `skills/writing-plans/scripts/check-cross-references:386`,
 mas a validação em
-`skills/writing-plans/scripts/check-cross-references:409-414` compara apenas o
+`skills/writing-plans/scripts/check-cross-references:409-410` compara apenas o
 número **final** contra o total de linhas do arquivo. O número inicial nunca é
 validado contra coisa alguma.
 
@@ -20,10 +20,14 @@ Medido por execução em 2026-09-04, com controle, contra este checkout:
 | `README.md` com range `10-5` (invertido) | 0 | 1 |
 | `README.md` com range `0-5` (linha zero) | 0 | 1 |
 | `README.md` com `0` (linha zero, sem range) | 0 | 1 |
-| `README.md` com range `5-200`, arquivo de 171 linhas | 1 | 1 |
+| `README.md` com range `5-200`, arquivo de 171 linhas naquela data | 1 | 1 |
 
 O último é o controle: ele prova que o instrumento funciona e que os três
-primeiros passam de verdade, em vez de não terem sido examinados.
+primeiros passam de verdade, em vez de não terem sido examinados. **A medição
+usou `README.md` porque estava à mão; o controle depende do arquivo ter menos de
+200 linhas e deixaria de ser controle em silêncio se ele crescesse.** Por isso
+AC7 e AC8 são satisfeitos por fixtures que a própria suíte cria, com tamanho
+conhecido por construção, nunca por arquivo do repositório.
 
 **Segundo defeito, na mesma região.** As três chamadas que registram uma
 citação irresolvida — `skills/writing-plans/scripts/check-cross-references:400`,
@@ -41,8 +45,9 @@ economizar.
 **Fora de escopo.** Esta spec trata apenas da validação de range e da mensagem
 de erro. Não altera a forma canônica de citação, não introduz exigência de
 fragmento literal, não toca em nenhuma skill, e não faz parte do modelo de
-evidência — que é assunto de outra spec e não depende desta para ser escrito,
-embora dependa dela para ser implementado.
+evidência — que é assunto de
+[`2026-09-04-evidence-model-v2-design.md`](2026-09-04-evidence-model-v2-design.md)
+e não depende desta para ser escrito, embora dependa dela para ser implementado.
 
 ## Acceptance Criteria
 
@@ -61,8 +66,9 @@ embora dependa dela para ser implementado.
   como foi escrita, incluindo o número final quando há range, nas três chamadas
   de `skills/writing-plans/scripts/check-cross-references:400`, `:407` e `:412`.
 - **AC7** — `tests/hooks/test-check-cross-references.sh` carrega, para cada um
-  de AC1 a AC5, um par de casos: um documento limpo que passa e o mesmo
-  documento com aquela citação quebrada que falha.
+  de AC1 a AC4, um par de casos: o documento limpo de AC5, que passa, e o mesmo
+  documento com aquela citação quebrada, que falha. AC5 é o lado limpo comum aos
+  quatro pares, não um par próprio — um caso válido não tem metade quebrada.
 - **AC8** — `tests/hooks/test-check-cross-references.sh` carrega um caso que
   falha se a mensagem de erro de um range inválido omitir o número final,
   cobrindo AC6.
@@ -111,13 +117,14 @@ embora dependa dela para ser implementado.
   comentário de que ele existe para asseverar que a mudança não moveu o veredito
   de nenhum documento commitado. É o instrumento de IR3.
 - **O script roda entre o conserto e o re-despacho, nos dois carriers.**
-  [`brainstorming/SKILL.md`](../../../skills/brainstorming/SKILL.md) e
-  [`writing-plans/SKILL.md`](../../../skills/writing-plans/SKILL.md), seção "Plan
-  Review", ambas mandando rodá-lo antes de despachar o reviewer. As duas dão a
-  mesma razão com uma palavra de diferença, e por isso nenhuma forma verbatim
-  serve às duas: `skills/brainstorming/SKILL.md:253` diz *"the cheapest defect
-  this document can carry"* e `skills/writing-plans/SKILL.md:334` diz *"the
-  cheapest defect this plan can carry"*.
+  [`writing-plans/SKILL.md`](../../../skills/writing-plans/SKILL.md), section "Plan
+  Review", e [`brainstorming/SKILL.md`](../../../skills/brainstorming/SKILL.md),
+  section "After the Design" — neste a instrução está no bloco `**Spec Review:**`,
+  que é rótulo em negrito e não heading, então a âncora é a seção que o contém.
+  As duas dão a mesma razão com uma palavra de diferença, e por isso nenhuma
+  forma verbatim serve às duas: `skills/brainstorming/SKILL.md:253` diz *"the
+  cheapest defect this document can carry"* e `skills/writing-plans/SKILL.md:334`
+  diz *"the cheapest defect this plan can carry"*.
 - **O gate roda em CI.** `.github/workflows/ci.yml:90`:
   `run: tests/hooks/test-check-cross-references.sh`.
 
@@ -125,7 +132,7 @@ embora dependa dela para ser implementado.
 
 None. A correção é em `python3` embutido no script, que já é a linguagem do
 arquivo; nada é acrescentado. O projeto é zero-dependency por regra de
-[`CLAUDE.md`](../../../CLAUDE.md), seção "What does not belong here".
+[`CLAUDE.md`](../../../CLAUDE.md), section "What does not belong here".
 
 ## Assumptions to Confirm
 
@@ -153,6 +160,6 @@ IR1, verificada por execução sobre o corpus em vez de declarada.
 
 | Pergunta | Resposta | Recomendação dada | Fonte declarada |
 |---|---|---|---|
-| `N-N` é válido ou se canonicaliza para `N`? | Aceito como válido; `N` continua a forma preferida, sem gate que force a troca | *(decidida pelo parceiro)* | Decisão do parceiro |
-| Esta spec carrega evidence classes? | Não — o vocabulário é definido por outra spec e ainda não existe | Seguir a convenção vigente | Padrão do projeto — `skills/brainstorming/SKILL.md`, seção "Required spec sections", que hoje pede critério settleable por citação |
-| A correção espera o modelo de evidência? | Não. É defeito autônomo, e o modelo depende dela para ser implementado, não para ser escrito | Fatiar em duas specs | Padrão do projeto — `skills/final-branch-audit/SKILL.md`, seção "Step 2", em que critério de spec sem task vira `LOST IN TRANSLATION — BLOCKING`, sem escape para partição de escopo |
+| `N-N` é válido ou se canonicaliza para `N`? | Aceito como válido; `N` continua a forma preferida, sem gate que force a troca | Aceitar `N-N` sem canonicalizar | Padrão do projeto — `skills/writing-plans/scripts/check-cross-references:386`, cujo grupo opcional `(?:-(\d+))?` já aceita a forma sem restringir os dois números a serem diferentes; recusá-la reprovaria citação que hoje resolve corretamente, contra IR1 |
+| Esta spec carrega evidence classes? | Não — o vocabulário é definido por outra spec e ainda não existe | Seguir a convenção vigente | Padrão do projeto — [`brainstorming/SKILL.md`](../../../skills/brainstorming/SKILL.md), section "After the Design", cuja tabela de seções obrigatórias hoje pede critério settleable por citação |
+| A correção espera o modelo de evidência? | Não. É defeito autônomo, e o modelo depende dela para ser implementado, não para ser escrito | Fatiar em duas specs | Padrão do projeto — [`final-branch-audit/SKILL.md`](../../../skills/final-branch-audit/SKILL.md), section "The Traceability Table", em que critério de spec sem task vira `LOST IN TRANSLATION — BLOCKING`, sem escape para partição de escopo |
