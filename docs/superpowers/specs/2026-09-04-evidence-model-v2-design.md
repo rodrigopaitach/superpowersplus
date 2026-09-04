@@ -2,6 +2,7 @@
 
 **Route:** full process
 **Data:** 2026-09-04
+**Evidence model:** v2
 
 ## Problem
 
@@ -143,16 +144,90 @@ instrumento exaustivo sobre esse conjunto.
    ou do estado do branch*, e é **read-only**. Nunca transforma deploy,
    publish, migração em ambiente vivo ou monitoramento em task auditável.
 
+### A Verification Matrix substitui a Test Coverage Matrix
+
+O plano registra, por critério, o **verification instrument** que a classe
+declarada exige. Não é matriz universal de testes:
+
+| Classe | Instrumento |
+|---|---|
+| `behavioral` | Teste automatizado, sujeito às regras de qualidade de teste já vigentes |
+| `structural` | Comando validador read-only, ou located ranges suficientes |
+| `negative` | Comando read-only sobre o escopo declarado |
+
+**Nenhum critério fica sem instrumento resolvido, e teste nunca se inventa para
+preencher `structural` ou `negative`.**
+
+Como um gate mecânico passa a parsear a tabela, o schema é fixo. Seis colunas
+obrigatórias, e **nenhuma coluna `Test` separada** — para `behavioral` o id do
+teste vive em `Verification instrument`, sem duplicar o mesmo id em duas
+colunas:
+
+| Coluna | `behavioral` | `structural` e `negative` |
+|---|---|---|
+| `Criterion` | o label da task | idem |
+| `Spec criterion` | o `AC`/`IR` que ele refina | idem |
+| `Evidence class` | `behavioral` | `structural` ou `negative` |
+| `Verification instrument` | id exato do teste | validador read-only, comando read-only, ou evidência localizada conforme a classe |
+| `Test type` | preenchido | `—` |
+| `Layer` | preenchido | `—` |
+
+**`—` em `Test type` e `Layer` não é achado quando a classe não é
+`behavioral`.** A informação de tipo e camada continua preservada onde tem
+consumidor; nenhuma linha finge ter teste.
+
+### Compatibilidade: `legacy behavioral`
+
+**Um `AC`/`IR` de spec anterior ao Evidence Model, que não declara evidence
+class, recebe o fallback de compatibilidade** — veredito idêntico ao anterior ao
+modelo. Vale nas três camadas: ao criar plano novo a partir de spec antiga, na
+revisão desse plano, e na auditoria final.
+
+**`legacy behavioral` não é uma quarta evidence class.** As classes continuam
+sendo exatamente três — `behavioral`, `structural`, `negative` — e
+`legacy behavioral` nomeia o **estado de compatibilidade**, não um valor do
+namespace. Sem marcador, a *effective evidence class* é `behavioral`, obtida
+pelo fallback.
+
+Consequência operacional: um plano novo escrito a partir de spec histórica
+registra na célula `Evidence class` da Verification Matrix o valor
+**`behavioral`**, nunca `legacy behavioral`. Que a classe veio do fallback pode
+ser anotado à parte para quem lê, mas **nenhum parser, reviewer ou auditor
+precisa reconhecer um quarto valor**.
+
+**Não há inferência heurística de classe.** O discriminador é um marcador
+explícito no cabeçalho da spec, `**Evidence model:** v2`, e a regra é
+**assimétrica de propósito**:
+
+| Quem lê | Regra |
+|---|---|
+| `brainstorming`, ao escrever spec nova ou ao migrar uma antiga no resume | Escreve o marcador e exige classe em todo `AC`/`IR` |
+| Spec reviewer | **Exige o marcador.** Marcador presente com critério sem classe é bloqueante; marcador ausente numa spec que chega ao fluxo atual também é |
+| `writing-plans`, plan reviewer, final audit | Com marcador, classe é obrigatória e a ausência é erro. **Sem marcador, documento histórico → fallback de compatibilidade, com classe efetiva `behavioral`** |
+
+**A assimetria é o que fecha a rota de fuga:** o reviewer nunca conclui *"sem
+marcador, logo legacy"*, porque isso deixaria uma spec nova defeituosa escapar
+pela ausência simultânea do marcador e das classes. O fallback existe só nos
+consumidores a jusante, que precisam aceitar artefatos históricos que nunca
+passaram pelo fluxo novo.
+
+**Limitação declarada:** um documento criado fora do fluxo e deliberadamente
+sem marcador é indistinguível de um documento histórico sem recorrer a
+proveniência. O modelo garante a distinção **no fluxo suportado**, e não tenta
+inferir intenção a partir do arquivo. Declarar esse limite é preferível a uma
+heurística sobre histórico do git.
+
 ## Acceptance Criteria
 
-- **AC1** `[structural]` — `docs/evidence-model.md` existe e define os onze
+- **AC1** `[structural]` — `docs/evidence-model.md` existe e define os treze
   conceitos que `## The model` desta spec enuncia: a cadeia de três camadas
   (spec declara a classe, plano resolve o instrumento, audit reexecuta), as três
   delivery classes, a source evidence fora delas, o measurement status como
   dimensão ortogonal, o *smallest sufficient range*, a live-document reference,
   os três regimes de frescor, a distinção locator/evidence, a distinção
-  current-state/provenance, a adequação do instrumento ao alcance da alegação e
-  os dois invariantes da cláusula de contenção.
+  current-state/provenance, a adequação do instrumento ao alcance da alegação,
+  os dois invariantes da cláusula de contenção, a Verification Matrix e a
+  compatibilidade `legacy behavioral`.
 - **AC2** `[negative]` — `docs/evidence-model.md` não contém nenhum bloco
   `## Output Format`.
 - **AC3** `[structural]` — `CLAUDE.md` e `AGENTS.md` afirmam que toda afirmação
@@ -175,17 +250,26 @@ instrumento exaustivo sobre esse conjunto.
   definir a categoria *Completion signals* por `file:line` e passa a defini-la
   por evidência admissível.
 - **AC9** `[structural]` — `brainstorming/SKILL.md` pede, em `## Codebase
-  Findings`, o menor range suficiente e o menor fragmento que identifica o fato.
+  Findings`, o menor range suficiente, mantendo o quoted snippet que a regra
+  atual já exige sem acrescentar exigência de minimalidade ao fragmento — a
+  única minimalidade normativa desta spec é o *smallest sufficient range*.
 - **AC10** `[structural]` — `spec-document-reviewer-prompt.md` bloqueia critério
   sem evidence class declarada.
 - **AC11** `[structural]` — `spec-document-reviewer-prompt.md` bloqueia critério
   que nenhuma evidência admissível pode resolver, substituindo a formulação atual
   que fala em `file:line`.
-- **AC12** `[structural]` — `writing-plans/SKILL.md` exige que o plano resolva o
-  verification instrument de cada critério, registrado numa coluna adicional da
-  `## Test Coverage Matrix`.
-- **AC13** `[structural]` — `plan-document-reviewer-prompt.md` cobra a coluna
-  nova e bloqueia critério cujo instrumento o plano não resolveu.
+- **AC12** `[structural]` — `writing-plans/SKILL.md` substitui a
+  `## Test Coverage Matrix` por uma **Verification Matrix** com as seis colunas
+  obrigatórias que `## The model` fixa — `Criterion`, `Spec criterion`,
+  `Evidence class`, `Verification instrument`, `Test type`, `Layer` — sem coluna
+  `Test` separada, com o id do teste vivendo em `Verification instrument` para
+  `behavioral`, `—` válido em `Test type` e `Layer` fora de `behavioral`, e
+  nenhum critério sem instrumento resolvido.
+- **AC13** `[structural]` — `plan-document-reviewer-prompt.md` cobra as seis
+  colunas e a semântica da classe: bloqueia critério sem instrumento resolvido,
+  deixa de exigir teste de `structural` e `negative`, não trata `—` em
+  `Test type` ou `Layer` como achado fora de `behavioral`, e bloqueia
+  divergência entre o bloco da task e a matriz.
 - **AC14** `[structural]` — `writing-plans/SKILL.md` distingue locator de
   evidence no bloco `**Files:**`, mantendo o range como navegação opcional.
 - **AC15** `[structural]` — `writing-plans/SKILL.md` preserva o invariante de
@@ -204,16 +288,20 @@ instrumento exaustivo sobre esse conjunto.
 - **AC19** `[structural]` — o protocolo do auditor declara que ele executa
   verificação read-only específica do critério, e que pode exigir evidência
   adicional.
-- **AC20** `[structural]` — `final-branch-audit/SKILL.md` declara que critério de
-  spec sem evidence class é tratado como `legacy behavioral`, com o veredito
-  idêntico ao anterior.
+- **AC20** `[structural]` — `final-branch-audit/SKILL.md` aplica o discriminador
+  de compatibilidade: em spec **sem** `**Evidence model:** v2`, critério sem
+  classe recebe o fallback, com classe efetiva `behavioral` e o veredito idêntico
+  ao do modelo anterior; em spec **com** o marcador, ausência de classe é erro e
+  nunca recebe fallback. Sem heurística.
 - **AC21** `[structural]` — `docs/review-scopes.md` declara que o final audit
   executa verificação read-only específica do critério, sem assumir o papel do
   reviewer da suíte do projeto.
-- **AC22** `[structural]` — o bloco `### Test Evidence` de
-  `task-reviewer-prompt.md` aceita, na coluna que hoje exige `Test file:line`,
-  um comando read-only com seu resultado quando a evidence class do critério não
-  é `behavioral`, e continua exigindo teste quando é.
+- **AC22** `[structural]` — `task-reviewer-prompt.md` define o protocolo de
+  verificação por critério: o reviewer lê do brief cada critério com sua
+  evidence class e seu instrumento, e reexecuta o instrumento que a classe pede
+  — teste para `behavioral`, evidência localizada ou validador read-only para
+  `structural`, comando read-only sobre o escopo declarado para `negative`. Uma
+  task pode misturar classes.
 - **AC23** `[structural]` — `code-reviewer.md` e `re-review-prompt.md` admitem
   command evidence para achado transversal, mantendo located range para achado
   local.
@@ -231,6 +319,86 @@ instrumento exaustivo sobre esse conjunto.
   que `## The model` desta spec não enuncie. A classe é `negative` e não
   `structural` porque a entrega é uma proibição: não há range que prove
   ausência, exatamente como em AC2, que é a mesma forma sobre o mesmo arquivo.
+- **AC28** `[structural]` — `task-reviewer-prompt.md` generaliza `### Test
+  Evidence` para **Verification Evidence**, com uma linha por critério
+  distinguindo critério, evidence class, instrumento executado, resultado e
+  evidência localizada quando aplicável; `—` deixa de ser achado bloqueante para
+  critério que não é `behavioral`, e nenhum arquivo de teste é inventado.
+- **AC29** `[structural]` — `task-reviewer-prompt.md` preserva integralmente,
+  para critérios `behavioral`, a obrigação de executar os testes e o
+  shallow-test litmus existente: a generalização para Verification Evidence não
+  remove nem enfraquece essas regras. **A classe é `structural` porque a
+  propriedade entregue é o texto preservado no prompt.** Afirmar que o reviewer
+  se comporta assim em execução seria `behavioral` e exigiria medição que esta
+  spec não tem — e o próprio litmus está registrado como *"Reasoned, not
+  measured"* em `CHANGELOG.md:1704`, no item que o introduziu.
+- **AC30** `[structural]` — `writing-plans/SKILL.md` faz o bloco de cada task
+  carregar spec criterion, evidence class, task criterion e verification
+  instrument, de modo que o brief extraído por `scripts/task-brief` baste ao
+  implementer e ao reviewer sem reler a spec nem a matriz do plano.
+- **AC31** `[structural]` — `writing-plans/SKILL.md` substitui as regras que
+  universalizam teste: a que exige que todo critério nomeie um covering test, a
+  de *one row, one test*, a que cobra `AC` e `IR` nos mesmos termos com tipo,
+  layer e id de teste, e a que manda escalar ao humano quando algo não é
+  testável. No lugar delas fica a classe declarada.
+- **AC32** `[structural]` — `subagent-driven-development/SKILL.md` deixa de
+  derivar `[TEST_COMMAND]` universalmente: entrega ao reviewer os verification
+  instruments da task, exige comando de teste e base test count apenas quando a
+  task tem critério `behavioral`, e nunca inventa runner para satisfazer task
+  `structural` ou `negative`.
+- **AC33** `[structural]` — `executing-plans/SKILL.md` troca o preflight que
+  exige `file:line` mais covering test de todo critério por um que exige
+  evidence class declarada e instrumento admissível capaz de resolver a claim;
+  para `behavioral` isso inclui o covering test, e ausência de teste em
+  `structural` ou `negative` deixa de ser motivo de escalação.
+- **AC34** `[structural]` — `writing-plans/SKILL.md` e
+  `plan-document-reviewer-prompt.md` decidem pelo marcador: spec com
+  `**Evidence model:** v2` exige classe em todo critério e a ausência é erro;
+  spec sem marcador é documento histórico e seus critérios recebem o fallback,
+  com classe efetiva `behavioral` registrada assim na Verification Matrix — nunca
+  um quarto valor. Sem inferência heurística de classe.
+- **AC35** `[structural]` — `spec-document-reviewer-prompt.md` exige o marcador
+  `**Evidence model:** v2` na spec que revisa, e bloqueia tanto o critério sem
+  classe sob marcador presente quanto a spec sem marcador. **Não conclui
+  `legacy behavioral` a partir da ausência do marcador** — esse fallback existe
+  apenas nos consumidores a jusante, e concluí-lo aqui deixaria uma spec nova
+  defeituosa escapar pela ausência simultânea do marcador e das classes.
+- **AC36** `[structural]` — `brainstorming/SKILL.md` escreve o marcador
+  `**Evidence model:** v2` no cabeçalho de toda spec que cria, e o acrescenta,
+  junto das classes, ao migrar uma spec anterior pelo caminho de resume.
+- **AC37** `[structural]` — `skills/writing-plans/scripts/check-cross-references`
+  parseia a Verification Matrix pelo cabeçalho e pela evidence class, não por
+  posição: localiza as colunas pelos títulos, lê `Evidence class` e
+  `Verification instrument`, e **interpreta o instrumento como id de teste
+  apenas na row `behavioral`**. Em `structural` e `negative` o instrumento é
+  dado opaco para esse check — nem `>` nem `::` são lidos como nome de teste. A
+  correspondência entre task criterion e row, e a unicidade da row, continuam
+  cobradas para todas as classes. O script não valida a semântica do comando,
+  que pertence ao plan reviewer e ao audit.
+- **AC38** `[behavioral]` — `tests/hooks/test-check-cross-references.sh` cobre,
+  com casos determinísticos, os sete comportamentos de AC37: row `behavioral`
+  cujo id de teste um step cria passa; row `behavioral` cujo id não existe
+  falha; instrumento `structural` ou `negative` contendo `>` não vira nome de
+  teste; o mesmo contendo `::` não vira nome de teste; task criterion sem row
+  continua falhando; row sem task criterion continua falhando; row duplicada
+  continua falhando. **A classe é `behavioral` porque o sujeito é um programa
+  determinístico com suíte automatizada, não um agente** — a distinção que
+  `## The model` faz entre protocolo entregue e comportamento medido não se
+  aplica a um script cujo comportamento é o próprio teste.
+- **AC39** `[structural]` — `skills/writing-plans/scripts/check-cross-references`
+  reconhece os dois schemas e não migra plano histórico durante a leitura. Na
+  **Verification Matrix** de seis colunas, aplica AC37. Na antiga
+  **Test Coverage Matrix** de cinco colunas, preserva o comportamento anterior:
+  continua reconhecendo os test ids pela forma histórica, não exige
+  `Evidence class`, e não tenta converter comandos, que aquele schema não
+  suporta. Um plano histórico mantém exatamente o veredito que tinha antes da
+  mudança.
+- **AC40** `[behavioral]` — `tests/hooks/test-check-cross-references.sh` cobre os
+  dois schemas de AC39: uma `## Test Coverage Matrix` histórica de cinco colunas,
+  válida, continua passando; a mesma com id de teste inexistente continua
+  falhando; e o corpus de planos já commitados em `docs/superpowers/plans/`
+  produz o mesmo veredito antes e depois da mudança. **Este último é IR10
+  medido durante a implementação, não descoberto no fim dela.**
 
 ## Implicit Requirements
 
@@ -245,7 +413,6 @@ instrumento exaustivo sobre esse conjunto.
   documento novo e os links acrescentados.
 - **IR5** `[negative]` — nenhum gate novo passa a exigir fragmento literal em
   citação.
-- **IR9** `[negative]` — o anchor-fragment gate não é construído nesta branch.
 - **IR6** `[negative]` — nenhum arquivo novo entra em `scripts/` nesta branch.
   A motivação de um gate não é auditável; a ausência do arquivo é. Se um gate se
   tornar necessário, ele sai desta branch e leva consigo o defeito medido que o
@@ -257,6 +424,10 @@ instrumento exaustivo sobre esse conjunto.
   `CHANGELOG.md` recebe entrada em `[Unreleased]` para
   cada commit que toque `skills/`, `scripts/`, `githooks/`, `.github/` ou
   `hooks/`, que são os caminhos que `scripts/check-changelog.sh` cobra.
+- **IR9** `[negative]` — o anchor-fragment gate não é construído nesta branch.
+- **IR10** `[negative]` — nenhum plano já commitado em `docs/superpowers/plans/`
+  muda de veredito por causa da mudança em `check-cross-references`. Verificado
+  por execução do script antes e depois sobre o corpus, não estimado.
 
 ## Codebase Findings
 
@@ -342,6 +513,79 @@ instrumento exaustivo sobre esse conjunto.
   `file:line` o que não se move, e por markdown link mais título de seção o
   arquivo deste repositório editado a cada release, porque *"the canonical form
   earns both checks"*.
+- **Quatro regras de `writing-plans` universalizam teste, e uma coluna nova não
+  as alcança.** `skills/writing-plans/SKILL.md:213` — *"Names the covering test |
+  The audit fails any criterion whose implementation exists untested"*;
+  `:242` — *"**One row, one test**"*; `:255` — `IR` *"tested on the same terms as
+  every `AC`: a named test type, a real layer, an exact test id"*; e `:257`, a
+  válvula: *"If one genuinely cannot be tested at the layers this repository
+  has, say so in a row of its own and take it to your human partner."* **Hoje
+  todo critério estrutural ou negativo para o fluxo e vai ao humano.** É a fonte
+  de AC12 e AC31.
+- **O plan reviewer cobra as cinco colunas e um teste por linha.**
+  `skills/writing-plans/plan-document-reviewer-prompt.md:89` bloqueia matriz sem
+  `Criterion`, `Spec criterion`, `Test type`, `Layer`, `Test`, *"one test each"*,
+  cobrando `IR` *"on the same terms as an `AC`"*. É a fonte de AC13.
+- **A classe chega ao task reviewer pelo brief, se o plano a escrever.**
+  `skills/subagent-driven-development/task-reviewer-prompt.md:24` manda *"Read
+  the task brief: [BRIEF_FILE]"*, e `skills/subagent-driven-development/scripts/task-brief`
+  extrai *"one task's full text from an implementation plan"* — o caminho não
+  tem extensão, e a regex de citação do gate exige nome com ponto
+  (`skills/writing-plans/scripts/check-cross-references:386`), então esta
+  referência vale pela citação literal e não por número de linha que nada
+  verifica. **Nenhum placeholder dedicado carrega classe ou instrumento** — a
+  lista está em
+  `skills/subagent-driven-development/task-reviewer-prompt.md:226-249`. É a fonte de AC30, e a razão de
+  `scripts/task-brief` não precisar mudar.
+- **O `TEST_COMMAND` é obrigatório e o controller é proibido de inventá-lo.**
+  `skills/subagent-driven-development/task-reviewer-prompt.md:234` o declara
+  `REQUIRED`, *"taken from the plan's Test Coverage Matrix or the repository's
+  runner config"*, e `skills/subagent-driven-development/SKILL.md:272` acrescenta
+  *"Confirm it exists before passing it — an invented command sends the reviewer
+  chasing a runner error"*. **Uma task só estrutural ou negativa não tem valor
+  admissível para esse campo.** É a fonte de AC32.
+- **A tabela de evidência já acomoda a forma, e a trata como bloqueante.**
+  `skills/subagent-driven-development/task-reviewer-prompt.md:191` tem a linha
+  `| [criterion nothing covers] | — | NONE |` e `:193` diz *"One row per
+  criterion in the brief, including those with no test"* — mas `:195` sentencia
+  *"A `—` row is a blocking finding"*. É a fonte de AC28.
+- **O preflight do caminho inline escala toda task não-behavioral.**
+  `skills/executing-plans/SKILL.md:111-113` manda conferir critérios *"settled by
+  a `file:line` citation, naming its covering test"*, e declara *"A task whose
+  criteria no citation could settle is a concern"*; `:114` fecha com *"If
+  concerns: Raise them with your human partner before starting"*. **Não é
+  rejeição: é escalação, e a escalação para a execução antes do Step 2.** É a
+  fonte de AC33.
+- **Existe precedente de regra de compatibilidade para spec anterior a uma
+  exigência, e ele não alcança `writing-plans`.**
+  [`brainstorming/SKILL.md`](../../../skills/brainstorming/SKILL.md), section
+  "Checklist", e a mesma skill em section "After the Design", ambas abrem com
+  *"Resuming a spec written before …"*. Nada equivalente existe em
+  `writing-plans`, e é por isso que AC34 e AC35 são necessários além de AC20.
+- **O parser da matriz confunde comando read-only com nome de teste, e isso foi
+  medido por execução.** `skills/writing-plans/scripts/check-cross-references:212-214`
+  seleciona como row da matriz qualquer linha de tabela que contenha `T<n>.<n>`
+  — **o nome da seção é irrelevante**, então renomear para *Verification Matrix*
+  não afeta o parser. Sobre **cada célula** da row, `:283-286` aplica
+  `re.search(r">\s*(.+?)\s*$", cell)` e `:292` aplica
+  `re.search(r"::(\w+)\s*$", cell)`; o resultado entra em `named_in_matrix` e
+  `:298` exige que apareça num bloco de código. **Quatro fixtures rodadas em
+  2026-09-04 contra este checkout:** row `behavioral` com id de teste normal →
+  exit 0; row `negative` com `` `git diff --name-only BASE..HEAD` `` → exit 0;
+  row `negative` com `` `grep -q pattern file >/dev/null` `` → **exit 1**,
+  *"tests named in the coverage matrix that no step creates: `/dev/null`"*; row
+  `structural` com `::` no comando → **exit 1**, nomeando `validate`. **Não é
+  nomenclatura envelhecida: é comportamento quebrado**, e é a fonte de AC37 e
+  AC38.
+- **Nenhum campo de cabeçalho é universal nas specs, e nenhum gate os lê.**
+  Medido em 2026-09-04 sobre os 24 arquivos de `docs/superpowers/specs/`: só o
+  `# Título` aparece em todos; `**Date:**` em 10, `**Status:**` em 12,
+  `**Route:**` em 5, e **12 specs não têm campo de data nenhum**. Não existe
+  campo de schema, versão ou formato em nenhuma. `check-cross-references` lê
+  headings, ids e citações; `scripts/check-links.sh` lê links e títulos de
+  seção — **nenhum dos dois lê o cabeçalho**, então acrescentar
+  `**Evidence model:** v2` é ignorado com segurança por ambos. É a fonte de
+  AC36 e do discriminador em `## The model`.
 - **A testabilidade do coverage map é definida por `file:line`.**
   [`brainstorming/references/coverage-map.md`](../../../skills/brainstorming/references/coverage-map.md),
   section "Categories", na row *Completion signals*: *"A criterion no `file:line`
@@ -369,24 +613,23 @@ já são pressupostas pelos gates existentes.
 
 ## Assumptions to Confirm
 
-- **Quantas linhas cada edição acrescenta a `writing-plans/SKILL.md` e a
-  `subagent-driven-development/SKILL.md`.** Não é respondível pela árvore hoje:
-  depende do texto final, que ainda não existe. Instrumento tentado:
-  `grep -ac '' skills/*/SKILL.md` sobre o conjunto completo, que dá o estado
-  atual mas não o incremento. IR1 é a guarda; o plano mede depois de escrever.
+None. A única pendência que esta seção carregava — quantas linhas as edições
+acrescentam aos carriers perto do teto — foi decidida pelo parceiro e está
+registrada no `### Decision record` abaixo. Não era assunção sobre o sistema:
+era escolha de estratégia diante de um número que só existe depois do texto.
 
 ## Coverage Map
 
 | Category | State | Where it landed |
 |---|---|---|
-| Functional scope and behavior | Resolved | AC1–AC27, com o escopo enumerado pelo parceiro e não inferido |
+| Functional scope and behavior | Resolved | AC1–AC40, com o escopo enumerado pelo parceiro e ampliado por duas investigações dirigidas — a primeira achou dois carriers esquecidos, a segunda um terceiro, o parser da matriz |
 | Domain and data model | Clear | Não há dado nem entidade: a mudança é normativa, em arquivos de texto |
-| Interaction flow | Resolved | AC1 (o documento canônico define a cadeia) e AC12 (o plano resolve o instrumento, que é o elo do meio) |
+| Interaction flow | Resolved | AC1 (o documento canônico define a cadeia), AC12 (o plano resolve o instrumento), AC30 (a task carrega o contrato até o brief) e AC22 (o reviewer reexecuta por classe) |
 | Non-functional attributes | Resolved | IR1 (teto), IR3, IR4, IR7 (gates existentes verdes), IR6 (custo de gate novo), IR8 (disciplina de changelog) |
 | Integrations and external dependencies | Clear | IR2 e `## External Dependencies`: zero-dependency por regra |
-| Edge cases and failures | Resolved | AC20 (spec sem classe), AC18 (auditor discorda da classe), AC16 (a ocorrência indentada da tabela) |
-| Constraints and tradeoffs | Resolved | IR1 e IR6 (teto de linhas e nenhum arquivo novo em `scripts/`); IR5 e IR9, que mantêm o anchor fragment fora desta fatia |
-| Terminology | Resolved | *evidence class* × *measurement status*; *locator* × *evidence*; *current-state* × *provenance*; *source evidence* fora das classes de entrega |
+| Edge cases and failures | Resolved | AC20, AC34, AC35 e AC36 (marcador, migração e a assimetria contra rota de fuga); AC18 (auditor discorda da classe); AC16 (a ocorrência indentada da tabela); AC28 (`—` deixa de ser bloqueante fora de `behavioral`); AC37 e AC38 (comando com `>` ou `::` confundido com teste); AC39 e AC40 (o schema histórico de cinco colunas preservado) |
+| Constraints and tradeoffs | Resolved | IR1 e IR6 (teto de linhas e nenhum arquivo novo em `scripts/`); IR5 e IR9, que mantêm o anchor fragment fora desta fatia; IR10, que proíbe a mudança do parser de mover veredito de plano commitado; e o Iron Law do TDD, deliberadamente fora — ver `### Decision record` |
+| Terminology | Resolved | *evidence class* × *measurement status*; *locator* × *evidence*; *current-state* × *provenance*; *source evidence* fora das classes de entrega; *Verification Matrix* × *Test Coverage Matrix*; *legacy behavioral* como estado de compatibilidade × as três evidence classes, que continuam três; e `behavioral` de agente × `behavioral` de script determinístico, distinguidos em AC38 |
 | Completion signals | Resolved | Cada `AC` e `IR` carrega classe declarada; a spec aplica em si o modelo que define |
 | Placeholders and vague adjectives | Resolved | *Smallest sufficient range* foi definido formalmente na seção The model, em vez de ficar como adjetivo |
 
@@ -400,3 +643,11 @@ já são pressupostas pelos gates existentes.
 | Uma spec com dois planos, ou duas specs? | Duas specs e dois planos | Três fatias, sem enunciar que exigia duas specs | Padrão do projeto — `skills/final-branch-audit/SKILL.md:79`, sem escape de escopo para critério |
 | Onde mora a regra de adequação do instrumento? | Dois níveis: princípio no repositório, regra operacional em `brainstorming` e finding no spec reviewer | Só no `CLAUDE.md` do projeto | Boa prática geral, declarada como tal — regra de projeto mora no arquivo de instrução do projeto. Nenhum padrão deste repositório foi consultado, e era aí que estava o erro. **Recomendação corrigida pelo parceiro**: o `CLAUDE.md` daqui governa quem desenvolve o superpowersplus e não alcança quem instala o plugin noutro projeto, que é justamente quem a regra protege |
 | Bump entra como critério? | Não | *(não perguntada — trazida pelo parceiro)* | Decisão do parceiro |
+| Coluna adicional resolve a matriz? | Não. A `## Test Coverage Matrix` é substituída por uma Verification Matrix com semântica por classe | Acrescentar coluna | **Recomendação refutada por medição**: `skills/writing-plans/SKILL.md:213`, `:242`, `:255` e `:257` continuariam exigindo teste de todo critério, deixando duas regras contraditórias sobre a mesma linha |
+| Criar conceito para *smallest fragment*? | Não. AC9 mantém o quoted snippet existente; a única minimalidade normativa é o *smallest sufficient range* | *(não perguntada — trazida pelo parceiro)* | Decisão do parceiro, evitando um décimo-quarto conceito só para justificar um adjetivo |
+| O Iron Law do TDD entra nesta fatia? | Não. Contradição entre task `structural`/`negative` e a regra se escala como problema separado | Deixar fora | Padrão do projeto — `skills/subagent-driven-development/implementer-prompt.md:51`, *"Step 1 is not conditional on the task asking for it"*, é decisão de TDD anterior a esta spec |
+| Extrair preventivamente de `writing-plans` e `subagent-driven-development`, que estão perto do teto? | Não. IR1 é a guarda: escreve-se a mudança certa, roda-se o gate, e o excedente vai para `references/` se ele disparar | Guarda em vez de task preventiva | Padrão do projeto — `CLAUDE.md`, section "Where the obvious move is wrong": *"A `SKILL.md` over the line ceiling is fixed by progressive disclosure, never by compression"*. Baseline datada 04/09/2026: `writing-plans` 471, `subagent-driven-development` 468, `executing-plans` 242, `final-branch-audit` 372, `brainstorming` 403 |
+| Como distinguir spec anterior ao modelo de spec nova defeituosa? | Marcador `**Evidence model:** v2`, com regra assimétrica: reviewer exige o marcador; só os consumidores a jusante tratam a ausência como histórico | Marcador, com o reviewer sempre exigindo classe | Medição própria, 04/09/2026 — nenhum campo de cabeçalho é universal nas 24 specs e nenhum gate os lê, então o marcador é seguro de acrescentar. **Correção do parceiro**: sem a assimetria, uma spec nova sem marcador *e* sem classes escaparia como legacy |
+| Basta parsear a coluna do instrumento no checker? | Não. O parser precisa ser header-aware **e** evidence-class-aware | Parsear a coluna | **Recomendação refutada pelo parceiro**: a coluna do instrumento é justamente onde moram os comandos com `>` e `::`, então parseá-la sem olhar a classe mantém a confusão |
+| A classe de AC38 é `behavioral` sem medição de agente? | Sim. O sujeito é um script determinístico com suíte automatizada | *(não perguntada — trazida pelo parceiro)* | Decisão do parceiro, distinguindo comportamento de programa de comportamento de agente |
+| AC29 afirma comportamento medido? | Não. Vira `structural`: a entrega é o texto preservado no prompt | Manter `[behavioral]` | **Recomendação refutada por medição**: o item que introduziu o litmus fecha com *"Reasoned, not measured."* em `CHANGELOG.md:1704`, e nenhum `RESULT-*` mede essa regra |
