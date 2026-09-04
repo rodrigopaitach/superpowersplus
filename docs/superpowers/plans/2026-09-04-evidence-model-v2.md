@@ -136,7 +136,7 @@ forma de ela passar pelo gate antes de a correção existir.
 | T7.1 O plan reviewer cobra as seis colunas e a semântica da classe | AC13 | structural | range localizado em `skills/writing-plans/plan-document-reviewer-prompt.md` | — | — |
 | T7.2 O plan reviewer decide pelo marcador | AC34 | structural | range localizado em `skills/writing-plans/plan-document-reviewer-prompt.md` | — | — |
 | T7.3 As rows de deliverable e de critério passam a falar de evidência admissível | AC44 | structural | range localizado em `skills/writing-plans/plan-document-reviewer-prompt.md` | — | — |
-| T8.1 A tabela do audit tem as colunas novas nas duas ocorrências | AC16 | structural | `grep -c 'Criterion | Delivery evidence | Verification evidence'` em `skills/final-branch-audit/SKILL.md`, esperando 2 — **a frase solta `Delivery evidence` não serve**: o Step 7 a usa numa terceira ocorrência, na definição das colunas | — | — |
+| T8.1 A tabela do audit tem as colunas novas nas duas ocorrências | AC16 | structural | `grep -c 'Criterion . Delivery evidence . Verification evidence'` em `skills/final-branch-audit/SKILL.md`, esperando 2 — o `.` casa o pipe sem carregar um literal para dentro da célula, e a frase solta `Delivery evidence` não serviria: o Step 7 a usa numa terceira ocorrência, na definição das colunas | — | — |
 | T8.2 O veredito de classe inadequada existe e bloqueia | AC17 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.3 O auditor aponta inadequação e não reclassifica para conceder | AC18 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
 | T8.4 O auditor executa verificação read-only por critério | AC19 | structural | range localizado em `skills/final-branch-audit/SKILL.md` | — | — |
@@ -1587,11 +1587,13 @@ reporting command, ..."*. Troque o início por:
 **Re-runs** what already ran — the test command where the fix touched a `behavioral` criterion, the criterion's own read-only instrument otherwise — reporting
 ```
 
-**Duas outras rows deste arquivo pertencem à Task 13, e não a esta.**
-`docs/review-scopes.md:14` referencia `section "Tests — Run Them Yourself"` e
-`docs/review-scopes.md:28` referencia `section "Test Run"`, ambas de
-`re-review-prompt.md` — e a Task 13 renomeia as duas seções. **Não as toque
-aqui.** Consertar a referência antes do rename existir reprova
+**Duas referências de seção deste arquivo pertencem à Task 13, e não a esta —
+uma delas na primeira coluna da row que este step acabou de editar.** A row do
+re-review referencia `section "Tests — Run Them Yourself"` na coluna do arquivo,
+e a tabela de rótulos mais abaixo referencia `section "Test Run"`, ambas de
+`re-review-prompt.md`; a Task 13 renomeia as duas seções. Este step muda a coluna
+que **descreve** o que a face roda; a coluna que **aponta** para a seção fica
+para lá. **Não a toque aqui.** Consertar a referência antes do rename existir reprova
 `scripts/check-links.sh` no commit desta task, porque o título novo ainda não
 está no arquivo apontado. Quem as ajusta é o Step 3 da Task 13, no mesmo commit
 que renomeia — é a única ordem em que o gate fica verde nos dois commits.
@@ -1599,7 +1601,7 @@ que renomeia — é a única ordem em que o gate fica verde nos dois commits.
 - [ ] **Step 12: Verificar T8.1 e T8.7 pela contagem**
 
 ```bash
-grep -c 'Criterion | Delivery evidence | Verification evidence' skills/final-branch-audit/SKILL.md
+grep -c 'Criterion . Delivery evidence . Verification evidence' skills/final-branch-audit/SKILL.md
 grep -c 'Implementation | Test | Verdict' skills/final-branch-audit/SKILL.md
 grep -c 'no located citation is NOT DELIVERED' skills/final-branch-audit/SKILL.md
 grep -c 'Implementation cited, no covering test' skills/final-branch-audit/SKILL.md
@@ -1611,7 +1613,11 @@ grep -c 'behavioral' skills/final-branch-audit/SKILL.md
 Expected: `2`, `0`, `0`, `0`, `0`, `0` e **um número maior que zero** no último.
 **O primeiro conta a row de cabeçalho inteira, não a frase `Delivery evidence`
 solta:** o Step 7 instala uma terceira ocorrência dessa frase na definição das
-colunas, e um `grep` pela frase devolveria `3` numa execução correta.
+colunas, e um `grep` pela frase devolveria `3` numa execução correta. **Os `.`
+no lugar dos pipes são semântica de `grep`, não escapamento visual** — cada um
+casa o `|` real da row de cabeçalho, e o padrão continua específico: medido, ele
+devolve `0` contra a linha da definição das colunas, que não tem `Criterion`
+antes.
 O terceiro é T8.7, o quarto T8.9, o quinto T8.11 e o sexto T8.10. **`grep -c`
 imprime `0` e sai com status 1**, então leia o número e não o status.
 
@@ -2098,11 +2104,12 @@ git commit -m "feat: achado transversal de review carrega command evidence"
 **Spec criterion:** AC45, AC47; IR3
 
 **Files:**
-- Modify: `skills/subagent-driven-development/re-review-prompt.md:60` — o heading
-- Modify: `skills/subagent-driven-development/re-review-prompt.md:62-72` — o corpo da seção
-- Modify: `skills/subagent-driven-development/re-review-prompt.md:85-88`
-- Modify: `skills/subagent-driven-development/re-review-prompt.md:134-136`
-- Modify: `skills/subagent-driven-development/re-review-prompt.md:146`
+- Modify: `skills/subagent-driven-development/re-review-prompt.md` — quatro
+  regiões, **nomeadas por seção e por texto, nunca por linha**, porque a Task 12
+  edita este arquivo antes: o heading `## Tests — Run Them Yourself` e o
+  parágrafo abaixo dele; o bloco `### Test Run` dentro de `## Output Format`; os
+  itens `[TEST_COMMAND]` e `[BASE_TEST_COUNT]` da lista de placeholders; e a
+  linha `**Reviewer returns:**` do fecho
 - Modify: `docs/review-scopes.md:14`
 - Modify: `docs/review-scopes.md:28`
 - Modify: `skills/subagent-driven-development/implementer-prompt.md:161-165`
@@ -2120,6 +2127,16 @@ para um problema independente — achado transversal carregando command evidence
 que é AC23. Juntar as duas coisas num commit misturaria dois problemas no mesmo
 arquivo.
 
+**Nenhum step desta task localiza por número de linha em `re-review-prompt.md`.**
+A Task 12 edita o mesmo arquivo e roda antes: ela insere oito linhas dentro de
+`## Output Format`, e todo número contado antes dela envelhece por oito no
+momento em que esta task executa. **Cada step aqui cita o texto verbatim que
+substitui, mais a seção que o contém** — é o que um implementer novo, que nunca
+viu a Task 12 rodar, precisa para achar exatamente uma ocorrência. Os ranges no
+bloco `**Files:**` são navegação e nada mais, na forma que
+`skills/writing-plans/SKILL.md` fixa: a auditoria resolve a evidência contra
+`HEAD`, nunca contra o que o plano escreveu.
+
 **O que esta task NÃO toca:** `skills/subagent-driven-development/implementer-prompt.md:51`,
 o Iron Law do TDD. A distinção é entre *o implementer deve usar TDD*, que é
 decisão fora desta fatia, e *o loop de review consegue verificar uma task
@@ -2134,9 +2151,9 @@ não-`behavioral`*, que é este modelo e hoje não consegue.
 
 - [ ] **Step 1: Tornar a seção de testes condicional (T13.1)**
 
-`skills/subagent-driven-development/re-review-prompt.md:60` é o heading
-`## Tests — Run Them Yourself`, e o parágrafo em
-`skills/subagent-driven-development/re-review-prompt.md:62-65` manda, sem condição:
+Em `skills/subagent-driven-development/re-review-prompt.md`, o heading
+`## Tests — Run Them Yourself` e o parágrafo imediatamente abaixo dele, que hoje
+manda, sem condição:
 
 ```markdown
     The implementer appended its fix test run to the report file. That is a
@@ -2172,7 +2189,17 @@ há teste. O parágrafo `Stay read-only` fica intocado — vale para as três cl
 
 - [ ] **Step 2: Generalizar a seção de saída e o contrato de retorno (T13.2)**
 
-`skills/subagent-driven-development/re-review-prompt.md:85-88` vira:
+Em `skills/subagent-driven-development/re-review-prompt.md`, **dentro da seção
+`## Output Format`**, o bloco que hoje diz:
+
+```markdown
+    ### Test Run
+
+    **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/failed/
+    skipped] (previous: [BASE_TEST_COUNT])
+```
+
+vira:
 
 ```markdown
     ### Verification Run
@@ -2192,7 +2219,14 @@ está**: `scripts/check-evidence-line.sh:17-19` lê nomes de campo e nunca o
 conteúdo — *"It reads field names, never their content"* — então `**counts:** —`
 satisfaz o gate. É o instrumento de T13.4.
 
-E `skills/subagent-driven-development/re-review-prompt.md:146` vira:
+E a linha que abre com `**Re-reviewer returns:**` — **a única do arquivo**, no
+bloco de fecho depois dos placeholders — hoje diz:
+
+```markdown
+**Re-reviewer returns:** its own test run (command, exit code, counts),
+```
+
+e vira:
 
 ```markdown
 **Re-reviewer returns:** its own verification run (the instrument re-run for
@@ -2215,9 +2249,23 @@ docs/review-scopes.md:28: re-review-prompt.md -> no heading matching section "Te
 exit=1
 ```
 
-Em `docs/review-scopes.md:14`, troque `section "Tests — Run Them Yourself"` por
-`section "Verify the Fix by Its Instruments"`. Em `docs/review-scopes.md:28`,
-troque `section "Test Run"` por `section "Verification Run"`.
+Em `docs/review-scopes.md` há **exatamente uma** ocorrência de cada uma das duas
+referências, e é por elas que se localiza — a Task 8 edita este mesmo arquivo
+antes desta, na **outra coluna** das mesmas rows, então número de linha aqui é
+localizador que envelhece:
+
+- a referência que aponta para `re-review-prompt.md` e termina em
+  `section "Tests — Run Them Yourself"` passa a terminar em
+  `section "Verify the Fix by Its Instruments"`;
+- a referência que aponta para `re-review-prompt.md` e termina em
+  `section "Test Run"` passa a terminar em `section "Verification Run"`.
+
+**As duas precisam do arquivo-alvo para serem únicas, e é por isso que ele está
+escrito nas duas.** Cada um dos dois títulos aparece **duas** vezes neste
+arquivo: `Tests — Run Them Yourself` também referencia `task-reviewer-prompt.md`,
+cuja seção a Task 9 preserva com o mesmo nome; e `Test Run` também referencia
+`code-reviewer.md`, cujo revisor continua reportando um test run. **Nenhuma das
+duas outras muda** — trocar por título sem olhar o alvo quebraria as duas.
 
 **Este step mora aqui e não na Task 8, que edita o mesmo arquivo.** A Task 8 roda
 antes; ajustar a referência lá apontaria para um título que ainda não existe, e o
@@ -2226,7 +2274,9 @@ commit**, e este é o único ponto do plano em que isso acontece.
 
 - [ ] **Step 4: Tornar os placeholders condicionais (T13.1)**
 
-`skills/subagent-driven-development/re-review-prompt.md:134-136` hoje diz:
+Na lista de placeholders ao fim de
+`skills/subagent-driven-development/re-review-prompt.md`, os dois primeiros itens
+hoje dizem:
 
 ```markdown
 - `[TEST_COMMAND]` — REQUIRED: the same command the task review ran, so the
