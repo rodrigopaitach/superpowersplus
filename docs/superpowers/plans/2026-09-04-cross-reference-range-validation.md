@@ -55,9 +55,15 @@ Copiadas da `## Implicit Requirements` da spec. Vinculam toda task.
 
 **Baseline medida em 04/09/2026, antes da primeira task:**
 `tests/hooks/test-check-cross-references.sh` sai com código 0 e imprime 33
-linhas `[PASS]`; o caso de corpus passa com zero documentos movidos. **O total
-de documentos comparados não é baseline**: ele sobe a cada spec ou plano
-commitado, e por isso nenhum step deste plano o afirma. `CHANGELOG.md` não tem seção
+linhas `[PASS]`; o caso de corpus passa com zero documentos movidos. **Nenhum
+dos dois números que ele imprime é baseline, e eles se movem em direções
+opostas:** o total conta os `.md` de `docs/superpowers/specs/` e
+`docs/superpowers/plans/` na árvore
+(`tests/hooks/test-check-cross-references.sh:495-497`) e sobe a cada documento
+commitado; o comparado conta só os que o commit pinado carrega, porque
+`tests/hooks/test-check-cross-references.sh:506` pula os demais, e está
+**congelado**. Medido em 04/09/2026: o pin carrega 36 documentos, a árvore tem
+44, e a suíte imprime `36 of 44`. `CHANGELOG.md` não tem seção
 `[Unreleased]` — a 1.25.0 foi cortada — então a Task 1 a cria.
 
 ## Test Coverage Matrix
@@ -69,7 +75,7 @@ caso é cobrada contra aquele arquivo antes de a task rodar
 (`skills/writing-plans/scripts/check-cross-references:285-289`), o que reprovaria
 um caso que este plano ainda vai criar; é a mesma forma que a fixture
 `CLEAN_PLAN` da própria suíte usa em
-`tests/hooks/test-check-cross-references.sh:130`. O tipo `static` e a camada
+`tests/hooks/test-check-cross-references.sh:131`. O tipo `static` e a camada
 `tests/` são o vocabulário deste repositório: `docs/testing.md:6-8` descreve
 `tests/` como *"Bash + node + python checks for manifests, plugin loading, hooks,
 sync scripts, and skill behavior"*.
@@ -252,8 +258,9 @@ absoluto muda toda vez que alguém acrescenta um caso a esta suíte.
 O caso `the committed corpus keeps its verdicts` compara vereditos apenas dos
 documentos que o commit pinado carrega, e nunca de todos os que a árvore tem,
 por isso não responde sozinho a IR1, que fala de todas as citações presentes na
-árvore. **O número comparado não se afirma aqui:** ele sobe a cada spec ou plano
-commitado, e é o mesmo alvo móvel que o Step 6 se recusa a fixar. Rode o script abaixo, que lê **todos** os arquivos rastreados, sem
+árvore. **Nenhum dos dois números se afirma aqui**, e o Step 6 explica por quê:
+o total sobe com a árvore, o comparado está congelado no que o pin carrega, e a
+razão entre eles é a cobertura decaindo. Rode o script abaixo, que lê **todos** os arquivos rastreados, sem
 filtro de extensão:
 
 ```bash
@@ -283,7 +290,7 @@ PY
 Expected: `newly rejected: 0` — **é essa a parte que carrega peso, e ela não
 envelhece.** Os dois números acima dela crescem com a árvore: medidos em
 04/09/2026, com os dois planos desta linha de trabalho já commitados, eram 257
-de 257 arquivos lidos e 575 citações. **Um número diferente de
+de 257 arquivos lidos e 576 citações. **Um número diferente de
 zero é violação de IR1 e a causa se investiga antes de tocar em qualquer
 teste** — a citação real pode ser o defeito, e nesse caso ela se corrige e o
 resultado se registra aqui.
@@ -298,13 +305,26 @@ um verde geral não esconda um caso que deixou de rodar:
 tests/hooks/test-check-cross-references.sh | grep 'the committed corpus keeps its verdicts'
 ```
 
-Expected: uma linha `[PASS]`, **e nunca um total específico**. O número de
-comparados sobe a cada spec ou plano commitado — era 42 documentos quando este
-plano começou a ser escrito e 44 depois de os dois planos entrarem — então um
-Expected literal é a classe de valor que o implementer ajusta em silêncio no
-único step cuja razão de existir é confirmar IR3. **O que se confirma é o
-invariante**: `[PASS]`, zero documentos com veredito movido, e um número de
-comparados maior que zero. O caso já asserta os três em
+Expected: uma linha `[PASS]`, **e nunca um par de números específico**. Os dois
+que a linha imprime se movem em direções opostas, e confundi-los inverte o
+sinal que este step existe para ler:
+
+- **O total sobe.** Ele conta os `.md` que estão na árvore
+  (`tests/hooks/test-check-cross-references.sh:495-497`), então cada spec ou
+  plano commitado o aumenta — era 42 enquanto este plano era escrito e é 44
+  desde que os dois planos entraram.
+- **O comparado está congelado.**
+  `tests/hooks/test-check-cross-references.sh:506` pula todo documento que o
+  commit pinado não carrega, e nenhum documento novo entra nessa conta.
+  Medido em 04/09/2026: o pin carrega 36 documentos, e é 36 que a linha imprime.
+- **A razão entre os dois cai a cada release, e é isso que a linha registra.**
+  `tests/hooks/test-check-cross-references.sh:27-30` diz exatamente isso:
+  *"coverage falls with every release while the case goes on reading as green"*.
+  **Uma queda do comparado é o único sinal desse arquivo que pede ação** — e um
+  Expected que diga que ele sobe faz o implementer ler a queda como normal.
+
+**O que se confirma é o invariante**, não os números: `[PASS]`, zero documentos
+com veredito movido, e um número de comparados maior que zero. O caso já asserta os três em
 `tests/hooks/test-check-cross-references.sh:517-531` — a guarda de "não deu para
 rodar", a de zero comparados, o `pass` e a falha por documento movido, nessa
 ordem — e a razão de a contagem decair está em
