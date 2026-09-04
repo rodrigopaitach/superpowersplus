@@ -57,15 +57,27 @@ Subagent (general-purpose):
     does not block this task and does not extend the loop. A broad
     whole-branch review happens after all tasks are complete.
 
-    ## Tests — Run Them Yourself
+    ## Verify the Fix by Its Instruments
 
-    The implementer appended its fix test run to the report file. That is a
-    claim about a run you did not watch, written by the author of the tests.
-    Re-run them: `[TEST_COMMAND]`. Report the command verbatim, its exit
-    code, and the counts (passed / failed / skipped).
+    Each finding under verification belongs to a task criterion with a
+    declared evidence class, and you re-run the instrument that class names.
 
-    Compare against `[BASE_TEST_COUNT]`, the count the previous review
-    reported. A count that fell — or any test this fix diff deleted, renamed
+    **When the fix touches a `behavioral` criterion**, the implementer
+    appended its test run to the report file. That is a claim about a run you
+    did not watch, written by the author of the tests. Re-run them:
+    `[TEST_COMMAND]`. Report the command verbatim, its exit code, and the
+    counts (passed / failed / skipped), and compare against
+    `[BASE_TEST_COUNT]`.
+
+    **When the task carries no `behavioral` criterion**, there is no test
+    command and none is derived. Re-run the read-only validator or command the
+    criterion names, or reopen the located range, and report what you ran and
+    what it returned. **A task verified this way is not a task verified less:**
+    inventing a runner to fill the section would report a pass about something
+    nobody asked to be built.
+
+    **Where there was a test run:** compare against `[BASE_TEST_COUNT]`, the
+    count the previous review reported. A count that fell — or any test this fix diff deleted, renamed
     away, or newly marked skipped, `xfail`, or `.only` — is new breakage:
     report it under New Breakage in the Fix Diff, whatever the pass line
     says. A finding "fixed" by deleting the test that caught it is NOT
@@ -90,10 +102,16 @@ Subagent (general-purpose):
     specific place still carries its located range: command evidence widens what
     is admissible, it does not replace the range where a range is the proof.
 
-    ### Test Run
+    ### Verification Run
 
     **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/failed/
     skipped] (previous: [BASE_TEST_COUNT])
+
+    One line per instrument you re-ran. For a `behavioral` criterion the
+    command is the test command and the counts are test counts; for
+    `structural` and `negative` it is the read-only validator or command, and
+    `counts:` reads `—`. A criterion settled by a located range carries the
+    range here instead of a command.
 
     ### Finding Verdicts
 
@@ -139,9 +157,17 @@ Subagent (general-purpose):
 - `[FINDINGS]` — the Critical/Important findings and spec gaps from the
   previous review, copied verbatim, one per bullet
 - `[REPORT_FILE]` — the implementer's report file (fix reports appended)
-- `[TEST_COMMAND]` — REQUIRED: the same command the task review ran, so the
-  two runs compare; the re-reviewer runs it itself
-- `[BASE_TEST_COUNT]` — the counts the previous review reported. Pass
+- `[TEST_COMMAND]` — REQUIRED **only when the fix round touches a
+  `behavioral` criterion**: the same command the task review ran, so the two
+  runs compare; the re-reviewer runs it itself. **A task whose criteria are all
+  `structural` or `negative` has no admissible value for this field — leave it
+  out.** The task review had none either, and deriving one here would invent a
+  runner two faces after the plan declined to ask for one.
+- `[VERIFICATION_INSTRUMENTS]` — the instrument each criterion under
+  verification names, copied from the plan's Verification Matrix with its
+  evidence class. This is what the re-reviewer re-runs when there is no test.
+- `[BASE_TEST_COUNT]` — under the same condition as `[TEST_COMMAND]`, the
+  counts the previous review reported. Pass
   `unknown` when there are none, and expect the delta to come from the diff.
   **It is labelled `previous:` in the evidence line**, which is the one part of
   that line each face words differently: this one compares against the previous
@@ -151,7 +177,8 @@ Subagent (general-purpose):
 - `[HEAD_SHA]` — current commit
 - `[DIFF_FILE]` — the path `scripts/review-package PLAN_FILE FIX_BASE HEAD` printed
 
-**Re-reviewer returns:** its own test run (command, exit code, counts),
+**Re-reviewer returns:** its own verification run (the instrument re-run for
+each criterion, with command, exit code and counts where a test applies),
 per-finding verdicts (ADDRESSED / NOT ADDRESSED, or CONFIRMED / WITHDRAWN
 for a disputed finding), new breakage in the fix diff, out-of-scope
 observations, and a round verdict.

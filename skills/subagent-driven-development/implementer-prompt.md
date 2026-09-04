@@ -158,11 +158,14 @@ Subagent (general-purpose):
     DISPUTED, CONFIRMED and WITHDRAWN are the only three states — do not
     invent a fourth.
 
-    Fix the rest, re-run the tests that cover the amended code, and append a
+    Fix the rest, re-run the verification instrument each amended criterion
+    names — the covering tests for a `behavioral` criterion, the read-only
+    validator or command for a `structural` or `negative` one — and append a
     fix report to your report file: what you changed, every finding you
-    DISPUTED with its citation, the covering tests you ran, the command, and
-    the output. The re-reviewer runs that same command itself — your report
-    exists so the two runs can be compared, not to stand in for theirs.
+    DISPUTED with its citation, the instruments you re-ran, the command where
+    there was one, and the output. The re-reviewer runs the same instruments
+    itself — your report exists so the two runs can be compared, not to stand
+    in for theirs.
     Report the command exactly as you ran it, and the counts it printed.
     Then reply with the same short status contract as your first report.
 

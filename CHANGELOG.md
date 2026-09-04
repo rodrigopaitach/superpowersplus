@@ -185,6 +185,25 @@ References below name them so a claim here can be traced there.
   move is wrong" descreve para conteúdo dentro do `## Output Format` de
   subagente.
 
+- **O fix loop e o re-review verificam pelo instrumento da classe.**
+  [`skills/subagent-driven-development/re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md),
+  section "Verify the Fix by Its Instruments" (antes *"Tests — Run Them
+  Yourself"*) e section "Verification Run" (antes *"Test Run"*) — o re-reviewer
+  passa a reexecutar o instrumento que a classe de cada critério nomeia, com
+  test command e base count exigidos só quando a fix round toca critério
+  `behavioral`; task sem nenhum **não tem valor admissível para o campo**. A
+  linha `**Command:** … **exit:** … **counts:** …` fica byte a byte: o gate lê
+  nomes de campo e nunca o conteúdo, então `counts: —` o satisfaz. Em
+  [`skills/subagent-driven-development/implementer-prompt.md`](skills/subagent-driven-development/implementer-prompt.md),
+  section "The Fix Round", o contrato do fix report deixa de exigir covering
+  tests de toda rodada e passa a exigir os instrumentos aplicáveis. **O Iron
+  Law do TDD não foi tocado** — ele governa como o implementer escreve código,
+  não o que o fix report carrega. Os dois renames de seção quebrariam duas
+  referências em [`docs/review-scopes.md`](docs/review-scopes.md), e elas foram
+  ajustadas **no mesmo commit**, que é a única ordem em que o gate de links
+  fica verde nos dois: cada um dos dois títulos aparece duas vezes no arquivo,
+  apontando para prompts diferentes, e as outras duas ocorrências não mudam.
+
 ### Fixed
 
 - **O parser da matriz lia comando read-only como nome de teste.** O laço em
