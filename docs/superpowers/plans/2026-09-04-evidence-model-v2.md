@@ -185,7 +185,7 @@ forma de ela passar pelo gate antes de a correção existir.
 | T16.5 A autoridade é a source spec: v2 com matriz histórica bloqueia, legacy com Verification Matrix não | AC48 | structural | range localizado nos dois controllers | — | — |
 | T16.6 Os três prompts consomem a decisão, com a cláusula idêntica, sem abrir spec nem plano e sem quarta classe | AC48 | structural | range localizado em `task-reviewer-prompt.md`, `implementer-prompt.md` e `re-review-prompt.md`, mais a conferência de identidade das três ocorrências | — | — |
 | T16.7 O documento canônico carrega o conceito ampliado e a tabela de decisão dos doze casos | AC48 | structural | range localizado em `docs/evidence-model.md`, mais `grep -c` das doze linhas da tabela esperando 12 | — | — |
-| T16.8 Os doze casos têm suíte determinística | AC48 | behavioral | > a v2 spec with a historical Test Coverage Matrix is a blocking mismatch | static | `tests/` |
+| T16.8 Os doze casos da tabela de decisão têm verificação determinística, e a regra que os dois controllers delegam está declarada onde eles apontam | AC48 | structural | `tests/compatibility-mode/run-tests.sh`, exit 0, mais range localizado em `docs/evidence-model.md`, seção "Compatibility: legacy behavioral" | — | — |
 | T16.9 Nenhum plano ou spec histórico é modificado por esta task | AC48 | negative | `git diff --name-only` da branch limitado a `docs/superpowers/`, conferindo que só os dois artefatos desta linha de trabalho aparecem | — | — |
 | T16.10 A suíte nova tem step de CI | AC48 | structural | range localizado em `.github/workflows/ci.yml` | — | — |
 
@@ -2630,9 +2630,20 @@ são obrigados a lê-la. Por isso a decisão mora neles e desce resolvida.
 - T16.5: a autoridade é a source spec — v2 com matriz histórica bloqueia, legacy com Verification Matrix não — `[structural]`, instrumento na matriz
 - T16.6: os três prompts consomem a decisão com cláusula idêntica, sem abrir spec nem plano e sem quarta classe — `[structural]`, instrumento na matriz
 - T16.7: o documento canônico carrega o conceito ampliado e a tabela dos doze casos — `[structural]`, instrumento na matriz
-- T16.8: os doze casos têm suíte determinística — `[behavioral]`, test: `> a v2 spec with a historical Test Coverage Matrix is a blocking mismatch`
+- T16.8: os doze casos têm verificação determinística, e a regra do blocking mismatch está declarada onde os dois controllers apontam — `[structural]`, instrumento na matriz
 - T16.9: nenhum plano ou spec histórico é modificado — `[negative]`, instrumento na matriz
 - T16.10: a suíte nova tem step de CI — `[structural]`, instrumento na matriz
+
+**T16.8 é `structural`, não `behavioral`, e a distinção é a que AC38 fixa.** Lá a
+classe é `behavioral` *"porque o sujeito é um programa determinístico com suíte
+automatizada, não um agente"*. Aqui não há programa sob teste: `run-tests.sh`
+inspeciona prosa em markdown — fixtures e carriers —, e quem resolve o modo é um
+agente lendo `SKILL.md`. A exceção de AC38 não alcança este caso, então vale a
+regra geral de `## The model`: *"the protocol defines/requires" é `structural`*.
+AC48, o critério de spec que esta task serve, já é `[structural]`. **A classe foi
+corrigida na task review, não no fecho**: o instrumento anterior nomeava uma
+regra — *blocking mismatch* — que o corpo da asserção não media, o que é o
+defeito que este modelo existe para separar.
 
 - [ ] **Step 1: O bloco de resolução no caminho inline**
 

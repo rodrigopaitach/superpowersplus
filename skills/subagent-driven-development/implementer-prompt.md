@@ -175,6 +175,7 @@ Subagent (general-purpose):
     spec and blocks that case before dispatch. Do not open the source spec, do
     not open the plan, do not decide whether a document could be legacy, and do
     not recognise a fourth class.
+
     Report the command exactly as you ran it, and the counts it printed.
     Then reply with the same short status contract as your first report.
 

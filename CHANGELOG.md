@@ -206,6 +206,37 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A task review da Task 16 achou quatro asserções que passavam verdes com o
+  alvo ausente, e o instrumento de um critério não media a alegação do próprio
+  critério.** Em
+  [`tests/compatibility-mode/run-tests.sh`](tests/compatibility-mode/run-tests.sh),
+  quatro asserções negativas tinham a forma `! grep -q`. Sobre arquivo que não
+  existe o `grep` sai **2** — "não consegui olhar", não "não achei" — e o `!`
+  inverte isso para verdadeiro, com o `stderr` já descartado pelo helper: a
+  deleção de uma fixture lia exatamente como a propriedade valendo. As quatro
+  ganham guarda de existência, e a que varre o repositório inteiro atrás de uma
+  quarta classe passa a exigir que o `git` responda antes de aceitar o silêncio
+  como prova. Provado mutando: deletada cada fixture, e reescrita a row 7 da
+  tabela de decisão, a suíte fica vermelha na asserção correspondente — e a
+  primeira tentativa de mutação **não entrou**, porque a frase alvo está
+  quebrada entre duas linhas e o `sed` opera linha a linha, que é precisamente
+  o motivo de a suíte comparar o texto com o espaço em branco colapsado.
+  Junto: `T16.8` deixa de ser `[behavioral]` e passa a `[structural]` — a
+  exceção que AC38 abre vale para um script cujo sujeito é um programa
+  determinístico, e aqui o sujeito é prosa em markdown lida por um agente —, e
+  a asserção que nomeava a regra do *blocking mismatch* sem medi-la é
+  substituída por duas que verificam a regra onde os dois controllers apontam.
+  O item de `## Open gaps` sobre as matrizes históricas perde os números que
+  nenhum instrumento reproduzia: três parsers fence-aware escritos depois
+  discordavam do total e entre si, porque ele depende de decisões de parsing
+  que a entrada nunca declarou. A decisão registrada ali não muda —
+  compatibilidade não é migração retroativa —, e agora ela se apoia em
+  exemplos localizados, não numa contagem órfã. Em
+  [`skills/subagent-driven-development/implementer-prompt.md`](skills/subagent-driven-development/implementer-prompt.md),
+  a cláusula de compatibilidade tinha sido colada sem linha em branco e
+  re-parenteava duas frases do fix report, fazendo *"the command"* ler como o
+  instrumento do fallback legacy em vez do comando do próprio conserto.
+
 - **O modo de compatibilidade passa a ser resolvido no boundary do controller.**
   O fallback para artefato anterior ao modelo estava enunciado em quatro
   carriers a montante e em **nenhum** dos cinco do lado da execução, o que
@@ -5797,20 +5828,38 @@ form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
 - **The historical Test Coverage Matrices already mix the three semantics the
-  model now names, and nothing reclassifies them.** Measured 2026-09-04 over
-  every tracked plan, fence-aware, no sampling: of 133 matrix rows across the
-  six plans that carry a matrix, **59 name a real test id, 72 name a read-only
-  command** — `grep -c …`, `test -f …`, `scripts/check-links.sh` exits 0 — and 2
-  say `NENHUM`. The column is called `Test`; more than half of it was never a
-  test. The consequence for compatibility is the uncomfortable half: the
-  pre-model task reviewer demanded a `Test file:line` and treated `—` as
-  blocking, so **those 72 rows were already unverifiable before the Evidence
-  Model existed**. AC48 preserves that behaviour rather than repairing it — it
+  model now names, and nothing reclassifies them.** A legacy row's `Test` cell
+  holds any of three things. A real test id:
+  [`docs/superpowers/plans/2026-08-24-cross-references-extractor.md`](docs/superpowers/plans/2026-08-24-cross-references-extractor.md),
+  section "Test Coverage Matrix", row `T1.1`, names
+  `tests/hooks/test-mdfence.sh > nested fence keeps inner content fenced`. A
+  read-only validation command:
+  [`docs/superpowers/plans/2026-08-21-execution-path-context-budget.md`](docs/superpowers/plans/2026-08-21-execution-path-context-budget.md),
+  section "Test Coverage Matrix", row `T1.3`, names
+  `grep -i 'turning point' docs/context-budget.md`. Or `NENHUM`, which
+  [`docs/superpowers/plans/2026-09-04-cross-reference-range-validation.md`](docs/superpowers/plans/2026-09-04-cross-reference-range-validation.md),
+  section "Test Coverage Matrix", uses where no layer asserts the property at
+  all. The column is called `Test`, and not everything in it is a test.
+
+  **This item carries no count, and the omission is the point.** An earlier
+  version of it stated a row total and a split across the three forms without
+  the command that produced them. Three independent fence-aware parsers written
+  afterwards disagreed with that total and with each other, because the number
+  depends on parsing decisions — an escaped pipe, a row whose cell count
+  disagrees with its header — that the entry never declared. The decision below
+  does not rest on the number, so the number is gone rather than re-derived: a
+  quantity with no reproducible instrument is exactly what this project refuses
+  to accept from anyone else.
+
+  The consequence for compatibility is the uncomfortable half: the pre-model
+  task reviewer demanded a `Test file:line` and treated `—` as blocking, so
+  **every command-bearing row was already unverifiable before the Evidence Model
+  existed**. AC48 preserves that behaviour rather than repairing it — it
   guarantees no NEW regression, and deliberately does not promote a historical
   command to `structural` or `negative`. **Reclassifying them is a separate
-  slice** — a legacy-plan migration — and it is not owed by this change. The
-  measurement is what makes it a decision rather than an oversight: the
-  alternative was to let the fallback quietly claim those rows were fine.
+  slice** — a legacy-plan migration — and it is not owed by this change.
+  Compatibility is not retroactive migration, and the alternative rejected here
+  was to let the fallback quietly claim those rows were fine.
 
 - **`check-cross-references` counts a criterion's own definition as a citation
   of itself, so a defined-but-unconnected `AC`/`IR` passes green. Measured, and
