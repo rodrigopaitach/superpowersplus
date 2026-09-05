@@ -7,7 +7,7 @@
 | **Fixture** | [`FIXTURE-main-branch-consent.md`](FIXTURE-main-branch-consent.md) |
 | **Rule under test** | [`skills/executing-plans/SKILL.md`](../../skills/executing-plans/SKILL.md), section "Remember", last bullet |
 | **Rule path** | skills/executing-plans/SKILL.md |
-| **Rule changed since** | 2026-09-04 (1544b57) — measured against earlier text. That change adds a no-subagent branch to the conformance audit in "Step 3: Audit and Review the Branch", which is not the section this record measures. Earlier: 2026-08-21 (6747733) |
+| **Rule changed since** | 2026-09-04 (1544b57, then 0718d7a) — measured against earlier text. 1544b57 adds a no-subagent branch to the conformance audit in "Step 3: Audit and Review the Branch"; 0718d7a rewrites item 7 of "Step 1: Load and Review Plan" to ask for a declared evidence class and an admissible instrument instead of a `file:line` citation naming a covering test. **Neither is the section this record measures**, and both are named here because the gate compares dates only: a second edit on the same day satisfies it while the row still argues about the first commit. Earlier: 2026-08-21 (6747733) |
 | **Runs** | N=6: three states, two runs each, and the pairs agreed (A PASS/PASS, B FAIL/FAIL, C PASS/PASS). The only record here with replicates under a fixed condition |
 | **Verdict** | **PASS where the rule sits.** Position is not the variable — presence is |
 

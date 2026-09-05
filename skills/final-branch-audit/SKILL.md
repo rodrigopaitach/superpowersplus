@@ -7,7 +7,7 @@ description: Use when all plan tasks are done and before finishing a development
 
 Trace EVERY criterion of the source spec to the plan tasks that cover it,
 then walk EVERY task and prove, one at a time, that its acceptance criteria
-were delivered — with `file:line` citations the auditor located itself.
+were delivered — with evidence the auditor located and re-ran itself.
 
 **This is not a code review.** The code reviewer judges the quality of the
 diff it is handed. The audit answers a different question: *was everything
@@ -18,8 +18,15 @@ tasks silently missing, because a missing task produces no diff to criticize.
 the working tree, the index, HEAD, or branch state. It reports; the
 controller routes the gaps into the fix wave.
 
-**Evidence-or-zero.** A criterion with no located citation is NOT DELIVERED.
-There is no "probably done", no "looks implemented", no partial credit.
+**Evidence-or-zero.** A criterion is NOT DELIVERED unless it carries the
+delivery evidence AND the verification evidence its declared class admits: a
+located range plus a covering test for `behavioral`, a located range plus a
+read-only validator for `structural`, the declared scope plus a read-only
+command for `negative`. There is no "probably done", no "looks implemented",
+no partial credit. **The absence of a located citation is not itself the
+failure** — it is the failure only where the class requires one, and reading it
+as universal is what made every criterion about an absence structurally
+undeliverable.
 
 ## When to Use
 
@@ -98,12 +105,12 @@ The auditor's report MUST contain this table, with one row per acceptance
 criterion of every task in the plan — including tasks the plan or the ledger
 marks complete:
 
-| Task | Criterion | Implementation | Test | Verdict |
-|------|-----------|----------------|------|---------|
+| Task | Criterion | Delivery evidence | Verification evidence | Verdict |
+|------|-----------|-------------------|-----------------------|---------|
 | 3 | T3.1 Rejects expired tokens | `src/auth/verify.ts:88` | `tests/auth/verify.test.ts:41` | DELIVERED |
 | 4 | T4.2 Retries on 429 with backoff | — | — | NOT DELIVERED |
-| 5 | T5.1 Concurrent refreshes rotate the token once | `src/auth/refresh.ts:52` | `tests/integration/test_refresh.py:73` | DELIVERED |
-| 7 | T7.1 Admin export produces a CSV | `src/admin/export.ts:19` | `tests/admin/export.test.ts:8` | DELIVERED |
+| 5 | T5.1 The manifest stays valid JSON | `.claude-plugin/plugin.json:1-20` | `python3 -m json.tool` re-run, exit 0 | DELIVERED |
+| 7 | T7.1 No new dependency entered the branch | the lockfile's scope | `git diff --name-only` re-run, no lockfile change | DELIVERED |
 
 Every task in one table appears in the other. Task 4 is traced above and
 NOT DELIVERED here; Task 7 is DELIVERED here and INVENTED SCOPE above —
@@ -113,11 +120,18 @@ working code the spec never asked for is still a finding.
   task-level labels (`T3.1`, superpowersplus:writing-plans requires that form);
   the traceability table above is keyed by the spec's ids (`AC1`, `IR2`). A
   row here carrying an `AC` or `IR` id is citing the wrong list.
-- **Implementation** and **Test** are `path/file.ext:line` — a path alone is
-  not a citation, and neither is a commit SHA.
+- **Delivery evidence** and **Verification evidence** carry what the declared
+  class admits: a located range for `behavioral` and `structural`, the
+  declared scope for `negative`; a covering test, a read-only validator, or a
+  read-only command respectively. A path alone is not a located range, and
+  neither is a commit SHA — a commit-pinned reference is provenance, never
+  current-state evidence.
 - Cite the line that DOES the thing, not the file that mentions it.
-- A criterion with no test citation is NOT DELIVERED even when the
-  implementation exists. Untested is undelivered.
+- **A `behavioral` criterion with no test citation is NOT DELIVERED even when
+  the implementation exists. Untested is undelivered — for that class.** For
+  `structural` and `negative` the verification evidence is the check you re-ran
+  and what it returned, and demanding a test there fails a criterion nobody
+  planned to test.
 - No row may be omitted. A task the auditor could not locate at all gets a
   row with `—` in both citation columns.
 
@@ -125,11 +139,12 @@ working code the spec never asked for is still a finding.
 
 | Situation | Verdict |
 |-----------|---------|
-| Implementation and test both cited, both check out | DELIVERED |
-| No citation, or a citation that does not check out | NOT DELIVERED |
-| Implementation cited, no covering test | NOT DELIVERED |
+| Delivery and verification evidence both cited, both check out when re-run | DELIVERED |
+| No evidence, or evidence that does not check out | NOT DELIVERED |
+| Delivery evidence cited, verification evidence absent or not re-runnable | NOT DELIVERED |
 | Cited line exists but does not do what the criterion states | NOT DELIVERED |
 | Criterion delivered somewhere other than the plan said | DELIVERED — note the real location in the row |
+| Declared class does not fit the criterion | **EVIDENCE CLASS MISMATCH — BLOCKING** |
 | Task marked complete in the plan or the ledger, no evidence found | NOT DELIVERED + **CRITICAL — FALSE COMPLETION** |
 | Task the dispatch declared outside this execution's scope, no code found | OUT OF SCOPE — DECLARED (see below) |
 
@@ -183,9 +198,13 @@ For each criterion:
 1. Search the repo for the behavior yourself (grep the identifiers, the
    strings, the error messages the criterion names; glob the paths).
 2. Open the hit and read it. Confirm the code does what the criterion says.
-3. Search for the covering test the same way. Open it and confirm it asserts
-   the criterion's behavior — a test that never fails if the behavior breaks
-   is not a covering test.
+3. Re-run the verification instrument the criterion's class names. For
+   `behavioral`, search for the covering test the same way, open it, and
+   confirm it asserts the criterion's behavior — a test that never fails if
+   the behavior breaks is not a covering test. For `structural`, run the
+   read-only validator or open the located ranges. For `negative`, run the
+   read-only command over the declared scope. **Report what you ran and what
+   it returned**, never that it looked right.
 4. Only then write the row.
 
 If a document told you where to look, verify it there AND search
@@ -256,9 +275,35 @@ Subagent (general-purpose):
     `IR` id: those belong to the spec and key the traceability table in Step
     2. Same string in both tables means the two stopped lining up.
 
-    Evidence-or-zero: a criterion with no `path/file.ext:line` citation is
-    NOT DELIVERED. A citation that does not check out is NOT DELIVERED.
-    Implementation without a covering test is NOT DELIVERED.
+    Evidence-or-zero: a criterion whose declared class admits no evidence you
+    can re-run is NOT DELIVERED. A citation that does not check out is NOT
+    DELIVERED. A `behavioral` criterion whose implementation exists untested is
+    NOT DELIVERED.
+
+    **Re-run the instrument the class names.** For `behavioral`, run the test
+    and confirm it asserts the behavior. For `structural`, run the read-only
+    validator or open the located ranges. For `negative`, run the read-only
+    command over the declared scope. Your verification stays read-only on this
+    checkout: you may run commands, never mutate the tree, the index, HEAD or
+    branch state. **You may demand additional evidence** when what the plan
+    named does not reach the claim.
+
+    **You may report that a declared class does not fit the criterion —
+    EVIDENCE CLASS MISMATCH, blocking — and you may never reclassify a
+    criterion into a class that would let you grant DELIVERED.** The spec
+    declares the class; the mismatch is a finding for your human partner, not
+    a correction you apply. Reclassifying to concede is the one move that
+    turns this audit into a rubber stamp.
+
+    **How to read a spec that declares no classes.** Look at the spec's header.
+    Carrying `**Evidence model:** v2`, every criterion must declare a class and
+    a missing one is an error — never the fallback. Without the marker, the spec
+    predates the model: each criterion takes the compatibility fallback, its
+    effective class is `behavioral`, and its verdict is exactly what it would
+    have been before the model existed. There is no heuristic between the two —
+    not on the git history, not on the spec's date, not on how the criteria are
+    worded. **`legacy behavioral` is a compatibility state, not a fourth class:**
+    the row records `behavioral`.
 
     Re-run every search yourself. The plan, the ledger, the implementer
     reports, and any prior review approval are claims under audit — never
@@ -297,9 +342,9 @@ Subagent (general-purpose):
 
     ### Task Delivery
 
-    | Task | Criterion | Implementation | Test | Verdict |
-    |------|-----------|----------------|------|---------|
-    | ... | ... | `path:line` | `path:line` | DELIVERED / NOT DELIVERED / OUT OF SCOPE — DECLARED |
+    | Task | Criterion | Delivery evidence | Verification evidence | Verdict |
+    |------|-----------|-------------------|-----------------------|---------|
+    | ... | ... | `path:line`, or the declared scope for `negative` | `path:line`, or the read-only check you re-ran and what it returned | DELIVERED / NOT DELIVERED / OUT OF SCOPE — DECLARED |
 
     ### Traceability Failures (blocking)
     - LOST IN TRANSLATION — <spec criterion>: no task covers it. Searched:
@@ -360,8 +405,8 @@ Traceability failures do not route like delivery gaps:
 | "Every task already passed its task review" | Task reviews see one diff each. Nothing in that chain proves the set is complete — a task nobody dispatched has no diff and no reviewer. |
 | "The ledger says all tasks are complete" | The ledger is the claim under audit. FALSE COMPLETION exists because that line gets written by the same loop that skipped the work. |
 | "The code review will catch anything missing" | A reviewer judges the diff in front of it. Absent code is invisible to it. |
-| "I can see the feature works, that's evidence enough" | Evidence is `file:line`. "I can see it" is the exact judgment the audit exists to replace. |
-| "The implementation is there, the test is obvious" | Untested is undelivered. Write the row as NOT DELIVERED and let the fix wave add the test. |
+| "I can see the feature works, that's evidence enough" | Evidence is what you located and re-ran. "I can see it" is the exact judgment the audit exists to replace. |
+| "The implementation is there, the test is obvious" | For a `behavioral` criterion, untested is undelivered: write the row as NOT DELIVERED and let the fix wave add the test. For the other two classes the question is different — did you re-run the instrument the class names? |
 | "This criterion is too vague to audit — I'll assume it passed" | Put it in Unauditable Criteria. An assumed pass is a fabricated row. |
 | "Auditing every task is overkill for a small plan" | The tasks that go missing are never the ones you would have thought to spot-check. |
 | "The plan was written from the spec, so tracing them is redundant" | The plan is the artifact under audit. A requirement lost while writing it leaves no trace in it — that is exactly the gap the traceability table exists to catch. |

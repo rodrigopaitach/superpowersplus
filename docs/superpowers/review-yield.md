@@ -11,6 +11,25 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 03/09/2026 | review-yield-and-problem-section | branch | 2 | 0 | 0 |
 | 03/09/2026 | review-yield-and-problem-section | branch | 3 | 1 | 0 |
 | 03/09/2026 | main (release-notes footer fix) | branch | 1 | 5 | — |
+| 04/09/2026 | main (evidence-model spec) | spec | 1 | 9 | — |
+| 04/09/2026 | evidence-model (range validation) | spec | 2 | 3 | 0 |
+| 04/09/2026 | evidence-model (evidence model v2) | spec | 1 | 9 | — |
+| 04/09/2026 | evidence-model (range validation) | spec | 3 | 0 | 0 |
+| 04/09/2026 | evidence-model (evidence model v2) | spec | 2 | 6 | 0 |
+| 04/09/2026 | evidence-model (evidence model v2) | spec | 3 | 2 | 0 |
+| 04/09/2026 | evidence-model (evidence model v2) | spec | 4 | 1 | 0 |
+| 04/09/2026 | evidence-model (range validation) | plan | 1 | 2 | — |
+| 04/09/2026 | evidence-model (range validation) | plan | 2 | 4 | 0 |
+| 04/09/2026 | evidence-model (range validation) | plan | 3 | 1 | 0 |
+| 04/09/2026 | evidence-model (evidence model v2) | plan | 1 | 6 | — |
+| 04/09/2026 | evidence-model (evidence model v2) | plan | 2 | 4 | 0 |
+| 04/09/2026 | evidence-model (evidence model v2) | plan | 3 | 8 | 0 |
+| 04/09/2026 | evidence-model (evidence model v2) | plan | 4 | 2 | 0 |
+| 04/09/2026 | evidence-model (range validation impl) | branch | 1 | 0 | — |
+| 04/09/2026 | evidence-model (whole branch) | branch | 1 | 4 | — |
+| 04/09/2026 | evidence-model (whole branch) | branch | 2 | 1 | 1 |
+| 05/09/2026 | evidence-model (whole branch) | branch | 3 | 3 | 0 |
+| 05/09/2026 | evidence-model (whole branch) | branch | 4 | 0 | 0 |
 
 **Round 3 was not empty, and that is the first thing this table says.** The
 tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and

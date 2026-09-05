@@ -14,7 +14,7 @@ Uma metodologia de desenvolvimento para agentes de código, **baseada em [Superp
 
 O Superpowers é um conjunto de skills que se ativam sozinhas e fazem o agente parar antes de escrever código, entender o que você quer, escrever uma especificação, planejar, e só então implementar — com TDD de verdade.
 
-O superpowersplus é obra derivada: mantém tudo isso e acrescenta um eixo: **evidence-or-zero**. Toda afirmação que o agente faz sobre o seu código exige uma citação `arquivo:linha`, e quem verifica reexecuta a busca em vez de aceitar a palavra de quem escreveu.
+O superpowersplus é obra derivada: mantém tudo isso e acrescenta um eixo: **evidence-or-zero**. Toda afirmação que o agente faz sobre o seu código exige evidência que case com a afirmação — um trecho localizado quando existe linha que a prove, uma verificação executável quando a afirmação é sobre um conjunto ou sobre uma ausência, uma fonte fundamentada quando o que se afirma é garantia de uma dependência. E quem verifica reexecuta em vez de aceitar a palavra de quem escreveu.
 
 ## Por que existe
 

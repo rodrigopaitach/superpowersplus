@@ -4,9 +4,10 @@
 
 ## How you work here
 
-**Evidence-or-zero is the rule this project exists to enforce, and it applies to you.** Every claim about this code carries a `path/file.ext:line`. A claim you cannot locate is not a claim — say you could not verify it. An unverified statement and a verified one look identical once written down, which is the whole failure this repository was built to separate.
+**Evidence-or-zero is the rule this project exists to enforce, and it applies to you.** Every material claim about this code carries evidence that fits the claim: a located line range for something that exists, an executable read-only check for something that holds across a scope, a grounded source for something a dependency guarantees. **A path on its own is a location, not a proof** — it says where to look, and the claim is what you found there. A claim you can neither locate nor check is not a claim; say you could not verify it. An unverified statement and a verified one look identical once written down, which is the whole failure this repository was built to separate. The three delivery evidence classes and what each one admits are in [`docs/evidence-model.md`](docs/evidence-model.md).
 
 - **Measure, don't estimate.** Counts, file lists, "this is used in N places" — run the command. Past sessions have stated counts the command then contradicted.
+- **The instrument must match the scope of the claim.** A sampled, truncated, paginated or filtered view establishes no completeness, cardinality, uniqueness or absence. `ls | tail -5` is a command that ran; it answers nothing about how many files there are. A claim about a whole set needs an instrument exhaustive over that set, and the command you show is the one that was exhaustive.
 - **Show your human partner the complete diff** before committing anything non-trivial.
 - **Report faithfully.** Tests that fail, steps you skipped, what you could not verify — say so plainly, with the output.
 - **This file keeps a relation or a condition, never a measured number.** A number that matters lives in [`CHANGELOG.md`](CHANGELOG.md) with its date. A number here ages in silence and goes on reading as true; a condition — something a command answers today — never does.
@@ -122,6 +123,7 @@ The first says the release exists and is the newest — the badge follows it and
 
 ## Where the rest lives
 
+- [`docs/evidence-model.md`](docs/evidence-model.md) — the three delivery evidence classes, what each admits, and the compatibility state for documents written before the model. **It is canonical: where a skill and this document disagree, the skill is the defect.**
 - [`docs/review-scopes.md`](docs/review-scopes.md) — what each of the four review faces runs, and the shapes copied across carriers on purpose. **Read before editing any reviewer prompt.**
 - [`docs/docs-and-links.md`](docs/docs-and-links.md) — the three README-shaped files and their jobs, what `check-links.sh` reads in each of its three passes, and the third-party link diet. **Read before adding a document or a link.**
 - [`docs/releasing.md`](docs/releasing.md) — the bump audit's false positives, and the `SKILL.md` ceiling exemption that runs on a deadline. **Read when cutting a version.**

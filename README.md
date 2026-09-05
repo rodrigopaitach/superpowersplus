@@ -2,7 +2,7 @@
 
 [![Release](https://img.shields.io/github/v/release/rodrigopaitach/superpowersplus?style=flat-square&label=release)](https://github.com/rodrigopaitach/superpowersplus/releases/latest) [![CI](https://img.shields.io/github/actions/workflow/status/rodrigopaitach/superpowersplus/ci.yml?style=flat-square&label=ci)](https://github.com/rodrigopaitach/superpowersplus/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/rodrigopaitach/superpowersplus?style=flat-square&label=license)](LICENSE)
 
-A development methodology for coding agents, where every claim the agent makes about your code carries a `file:line` citation — and whoever verifies re-runs the search instead of taking the writer's word for it.
+A development methodology for coding agents, where every claim the agent makes about your code carries inspectable evidence that fits the claim — a located range, an executable check, or a grounded source — and whoever verifies re-runs it instead of taking the writer's word for it.
 
 > **Based on [Superpowers](https://github.com/obra/superpowers), by Jesse Vincent (Prime Radiant), under the MIT license.** superpowersplus is a derivative work: it keeps Superpowers' skills and workflow and adds its own verification layer on top. It is not affiliated with Jesse Vincent, Prime Radiant, or Anthropic, and speaks for none of them.
 >
@@ -99,7 +99,7 @@ Codex, Cursor, and GitHub Copilot CLI install from their own marketplaces, which
 
 It starts the moment you fire up your coding agent. As soon as it sees you are building something, it does *not* jump to writing code. It steps back and asks what you are really trying to do — and, before asking anything, it reads your actual code.
 
-Once it has teased a spec out of the conversation, it shows it to you in chunks short enough to actually read. Then a reviewer subagent opens every `file:line` the spec cites and blocks on any claim the code does not back.
+Once it has teased a spec out of the conversation, it shows it to you in chunks short enough to actually read. Then a reviewer subagent opens every range the spec cites, re-runs every check it claims, and blocks on anything the code does not back.
 
 After you sign off, the agent builds an implementation plan clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI, and DRY — and a second reviewer charges the plan against the spec.
 
@@ -109,13 +109,13 @@ Then it works through the tasks with a fresh subagent each, reviewing as it goes
 
 ### The workflow
 
-1. **brainstorming** — Activates before writing code. Investigates the real code first, builds a ten-category coverage map to decide what to ask, refines through questions that each carry a recommendation and its source, presents the design in sections. Saves a spec with numbered acceptance criteria; a reviewer subagent then opens every `file:line` it cites.
+1. **brainstorming** — Activates before writing code. Investigates the real code first, builds a ten-category coverage map to decide what to ask, refines through questions that each carry a recommendation and its source, presents the design in sections. Saves a spec with numbered acceptance criteria, each declaring the evidence class that settles it; a reviewer subagent then checks every one against the evidence that class admits.
 2. **using-git-worktrees** — Activates after design approval. Isolated workspace on a new branch, project setup, clean test baseline.
 3. **writing-plans** — Breaks work into bite-sized tasks (2–5 minutes each). Every task has exact file paths, complete code, verification steps, and the spec criterion it delivers. A reviewer blocks on a missing spec path, a task nothing motivated, or a criterion with no test row.
 4. **subagent-driven-development** or **executing-plans** — Fresh subagent per task with two-stage review (spec compliance, then code quality), or batches with human checkpoints.
 5. **test-driven-development** — Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
 6. **requesting-code-review** — Between tasks. Reviews against the plan, reports issues by severity. Critical issues block progress.
-7. **final-branch-audit** — When all plan tasks are done. Traces every spec criterion to the tasks covering it, then verdicts each one against `file:line` evidence. A requirement no task covers is lost in translation; a task no criterion motivated is invented scope; no citation, not delivered.
+7. **final-branch-audit** — When all plan tasks are done. Traces every spec criterion to the tasks covering it, then verdicts each one by re-running the evidence its class admits — a located range and its covering test, a read-only validator, or a read-only command over a declared scope. A requirement no task covers is lost in translation; a task no criterion motivated is invented scope; no evidence it can re-run, not delivered.
 8. **finishing-a-development-branch** — Verifies tests and the audit verdict, presents options (merge/PR/keep/discard), cleans up the worktree.
 
 ## What gets generated

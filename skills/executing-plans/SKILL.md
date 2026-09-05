@@ -106,14 +106,29 @@ downstream was built on it.
    superpowersplus:final-branch-audit traces one against the other at the end. A
    plan citing no spec is an entry blocker: get the path from your human
    partner before Step 2, never start and sort it out later.
-6. Review critically - identify any questions or concerns about the plan
-7. Check every task carries acceptance criteria verifiable by located
-   evidence — one observable behavior each, settled by a `file:line`
-   citation, naming its covering test (the format superpowersplus:writing-plans
-   specifies). A task whose criteria no citation could settle is a concern:
-   the audit in Step 3 will charge exactly what the plan wrote.
-8. If concerns: Raise them with your human partner before starting
-9. If no concerns: Create todos for the plan items and proceed
+6. **Resolve the compatibility mode, once, before anything else reads the
+   plan.** The spec you just opened is the authority — never the plan's matrix
+   schema. Marker `**Evidence model:** v2` → **v2 mode**. No marker → **legacy
+   mode**, effective class `behavioral` on every criterion. **No spec at all**
+   → the entry blocker above stands; silence is never legacy. What each mode
+   requires of a criterion, which combinations are a blocking mismatch, and why
+   legacy mode repairs nothing are in
+   [`docs/evidence-model.md`](../../docs/evidence-model.md), section
+   "Compatibility: legacy behavioral" — read it here, before item 8 charges it.
+7. Review critically - identify any questions or concerns about the plan
+8. Check every task carries acceptance criteria with a declared evidence class
+   and an admissible instrument that can settle the claim — one observable
+   behavior each, in the format superpowersplus:writing-plans specifies. For
+   `behavioral` the instrument is the covering test, and a criterion without one
+   is a concern. **For `structural` and `negative` the absence of a test is not
+   a concern** — the instrument is a read-only check or a located range, and
+   raising it would send every non-behavioral task to your human partner before
+   Step 2. A criterion no admissible evidence could settle IS a concern: the
+   audit in Step 3 will charge exactly what the plan wrote.
+   **In legacy mode this check does not apply** — no criterion declares a
+   class, and that is the mode you resolved above, not a concern to raise.
+9. If concerns: Raise them with your human partner before starting
+10. If no concerns: Create todos for the plan items and proceed
 
 ### Step 2: Execute Tasks
 

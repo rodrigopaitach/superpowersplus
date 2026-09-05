@@ -158,6 +158,16 @@ against the other. A plan citing no spec is an entry blocker: get the path
 from your human partner before dispatching Task 1, never start and sort it
 out later.
 
+**Resolve the compatibility mode from that spec, once, before dispatching Task
+1, and hand the dispatches the decision rather than the question.** The spec is
+the authority — never the plan's matrix schema. Marker `**Evidence model:** v2`
+→ **v2 mode**. No marker → **legacy mode**, effective class `behavioral`. **No
+spec at all** → the entry blocker above stands; silence is never legacy. What
+each mode requires of a criterion, which combinations are a blocking mismatch,
+and why legacy mode repairs nothing are in
+[`docs/evidence-model.md`](../../docs/evidence-model.md), section
+"Compatibility: legacy behavioral" — read it before Task 1, not during it.
+
 Before dispatching Task 1, scan the plan once for conflicts:
 
 - tasks that contradict each other or the plan's Global Constraints
@@ -267,19 +277,35 @@ needed.
 - **Reviewer inputs:** the task reviewer gets three paths — the same brief
   file, the report file, and the review package — plus the global
   constraints that bind the task, the test command, and the base test count.
-- **`[TEST_COMMAND]`:** the command that runs this task's tests, taken from
-  the plan's Test Coverage Matrix or, failing that, the repository's runner
-  config (`package.json` scripts, `Makefile`, `pytest.ini`, the CI
-  workflow). Confirm it exists before passing it — an invented command sends
-  the reviewer chasing a runner error instead of the task. Scope it to the
+- **The verification instruments travel in the brief, not in a field of
+  their own.** `scripts/task-brief` extracts the task block verbatim, and
+  under the plan format that block already names each criterion's evidence
+  class and its instrument — that is what the reviewer re-runs, and the brief
+  is one of the three paths above. **Do not copy them into a placeholder as
+  well.** Two carriers of one contract is the divergence the plan reviewer
+  blocks on, and the one that gets executed is whichever the reader happened
+  to open.
+- **`[TEST_COMMAND]`:** **required only when the task carries at least one
+  `behavioral` criterion** — the command that runs those tests, taken from
+  the matrix or, failing that, the repository's runner config
+  (`package.json` scripts, `Makefile`, `pytest.ini`, the CI workflow).
+  Confirm it exists before passing it — an invented command sends the
+  reviewer chasing a runner error instead of the task. Scope it to the
   task's tests where the runner allows; the full suite is the fallback.
+  **A task with no `behavioral` criterion has no admissible value for this
+  field — leave it out.** Deriving one anyway is how a `structural` task
+  acquires a test nobody asked for. **In legacy mode, follow the pre-v2
+  derivation instead of this condition:** supply what the old flow would have
+  supplied, and never invent one to turn a historical structural command into a
+  test — where the old flow had none, this one has none.
 - **`[BASE_TEST_COUNT]`:** the test count at BASE, so the reviewer can see
-  whether tests disappeared. You have it from the previous task's review,
-  which reported its counts. No prior run — Task 1, a new suite, a runner
-  that prints no total? Pass `unknown` and say why: the reviewer falls back
-  to reading the diff for tests deleted, renamed away, or newly skipped.
-  Never back-fill it from the implementer's report — that number is part of
-  what is under audit.
+  whether tests disappeared — **under the same condition as
+  `[TEST_COMMAND]`**, since a task that runs no tests has none to lose. You
+  have it from the previous task's review, which reported its counts. No
+  prior run — Task 1, a new suite, a runner that prints no total? Pass
+  `unknown` and say why: the reviewer falls back to reading the diff for
+  tests deleted, renamed away, or newly skipped. Never back-fill it from the
+  implementer's report — that number is part of what is under audit.
 - The global-constraints block you hand the reviewer is its attention
   lens. Copy the binding requirements verbatim from the plan's Global
   Constraints section or the spec: exact values, exact formats, and the
@@ -289,10 +315,13 @@ needed.
   project's spec demands.
 - Do not add open-ended directives like "check all uses" or "run race tests
   if useful" without a concrete, task-specific reason
-- The reviewer re-runs the task's tests itself. The implementer's report is
-  a claim about a run nobody else watched, written by the author of the
-  tests being judged — it is not test evidence. Hand the reviewer the test
-  command and the base count, never a "tests already ran" note
+- The reviewer re-runs the task's verification instruments itself. The
+  implementer's report is a claim about a run nobody else watched, written
+  by the author of what is being judged — it is not evidence. Hand the
+  reviewer the instruments from the plan's Verification Matrix, and, **where
+  the task carries a `behavioral` criterion**, the test command and the base
+  count. Never a "tests already ran" note, and never a command derived for a
+  task that asked for none
 - Do not pre-judge findings for the reviewer — never instruct a reviewer to
   ignore or not flag a specific issue. If you believe a finding would be a
   false positive, let the reviewer raise it and adjudicate it in the review
@@ -346,13 +375,15 @@ findings, and this framing: "A prior implementer attempted this task
 that survives three resumes usually means the implementer cannot see its
 own problem — fresh eyes and a capability bump in one move.
 
-**Every round, either way:** the implementer fixes, re-runs the tests
-covering the amended code, appends its fix report to the same report file,
-and returns the short contract. Before re-dispatching the reviewer, confirm
-the fix report contains the covering tests, the command run, and the
-output; dispatch the re-review once all three are present. Name the
-covering test files in the fix message — a one-line fix does not need the
-whole suite.
+**Every round, either way:** the implementer fixes, re-runs the verification
+instrument each amended criterion names, appends its fix report to the same
+report file, and returns the short contract. Before re-dispatching the
+reviewer, confirm the fix report contains, for every criterion it touched, the
+instrument re-run and its result — the covering tests, the command and the
+output where the criterion is `behavioral`; the read-only check or the located
+range otherwise. Dispatch the re-review once each touched criterion has one.
+Name the covering test files in the fix message where there are tests — a
+one-line fix does not need the whole suite.
 
 **A finding the implementer disputes.** The fix prompt has the implementer
 read the code a finding names before implementing it, and report DISPUTED —
@@ -382,9 +413,9 @@ DISPUTED, CONFIRMED and WITHDRAWN are the only dispute states.
 
 **The re-review is scoped.** Run `scripts/review-package PLAN_FILE FIX_BASE HEAD`
 where FIX_BASE is the head the previous review saw, and dispatch
-[re-review-prompt.md](re-review-prompt.md) with the findings list, the
-brief, the report file, the printed diff path, and the same test command
-and counts the task review reported — the re-reviewer runs the tests too.
+[re-review-prompt.md](re-review-prompt.md) with the findings list, the brief, the
+report file, the printed diff path, and the verification inputs the task review
+reported — its test command and counts where it ran tests, none invented where not.
 The re-reviewer verdicts each finding ADDRESSED or NOT ADDRESSED and flags
 new breakage in the fix diff only. New Critical/Important breakage in the fix diff joins the open
 findings list. Out-of-scope observations go to the ledger as deferred

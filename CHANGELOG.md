@@ -9,6 +9,436 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **[`docs/evidence-model.md`](docs/evidence-model.md) — o modelo de evidência
+  ganha um documento conceitual canônico.** Até aqui a única forma de prova
+  aceita em todo o fluxo era uma citação `path/file.ext:line`, e uma forma
+  universal de prova não consegue exprimir alegação sobre o que **não** está
+  lá: um critério que diz "nenhum carrier ainda declara a regra antiga" não tem
+  linha para citar, e por isso era reprovado por construção, qualquer que fosse
+  o conteúdo da branch. O documento enuncia os treze conceitos do modelo — as
+  três camadas (spec declara a classe, plano resolve o instrumento, auditoria
+  reexecuta), as três delivery evidence classes (`behavioral`, `structural`,
+  `negative`), o menor range suficiente, os três regimes de frescor, a
+  adequação do instrumento ao alcance da alegação, a cláusula de contenção, a
+  Verification Matrix e o estado de compatibilidade `legacy behavioral`. Ele é
+  a fonte canônica: quando um carrier e este documento divergirem, o defeito é
+  do carrier.
+
+### Changed
+
+- **A spec passa a declarar a evidence class de cada critério.**
+  [`skills/brainstorming/SKILL.md`](skills/brainstorming/SKILL.md), section
+  "After the Design" — as células de `## Acceptance Criteria` e
+  `## Implicit Requirements` deixam de pedir critério *settleable* por uma
+  citação `file:line` e passam a pedir a evidência que a classe declarada
+  admite: range localizado, verificação read-only, ou fonte fundamentada. Cada
+  critério carrega `[behavioral]`, `[structural]` ou `[negative]` depois do id,
+  e a spec ganha `**Evidence model:** v2` no cabeçalho — o discriminador
+  explícito que diz a quem lê depois se um critério sem classe é erro ou é
+  documento anterior ao modelo. `## Codebase Findings` passa a pedir o **menor
+  range suficiente**, mantendo o quoted snippet intacto: nenhuma minimalidade é
+  exigida do fragmento. Entra também, na section "Where a Claim Comes From", a
+  regra de adequação do instrumento ao alcance da alegação, que não é a
+  "measure, don't estimate" reescrita — lá a falha é não rodar comando, aqui é
+  rodar um cujo alcance é menor que a frase que ele sustenta. Em
+  [`skills/brainstorming/references/coverage-map.md`](skills/brainstorming/references/coverage-map.md),
+  a linha *Completion signals* deixa de ser sobre testabilidade e passa a ser
+  sobre a evidência admissível.
+
+- **O spec reviewer cobra classe, marcador e alcance do instrumento.**
+  [`skills/brainstorming/spec-document-reviewer-prompt.md`](skills/brainstorming/spec-document-reviewer-prompt.md),
+  section "Groundedness (blocking)" ganha quatro vereditos bloqueantes:
+  alegação de completude, cardinalidade, unicidade ou ausência sustentada por
+  instrumento amostrado, truncado, paginado ou filtrado; `AC`/`IR` sem evidence
+  class declarada; critério que nenhuma evidência admissível resolve; e
+  cabeçalho sem `**Evidence model:** v2`. Este último carrega a assimetria
+  explícita: **da ausência do marcador o reviewer nunca conclui que a spec é
+  histórica** — o fallback existe só nos consumidores a jusante, e concluí-lo
+  aqui deixaria uma spec nova defeituosa escapar pela ausência simultânea do
+  marcador e das classes. Na section "Traceability (blocking)", a linha que
+  cobrava critério *settleable* por citação `file:line` passa a cobrar
+  evidência admissível.
+
+- **A Verification Matrix substitui a Test Coverage Matrix.**
+  [`skills/writing-plans/SKILL.md`](skills/writing-plans/SKILL.md), section
+  "Verification Matrix" — seis colunas fixas (`Criterion`, `Spec criterion`,
+  `Evidence class`, `Verification instrument`, `Test type`, `Layer`) e
+  **nenhuma coluna `Test` separada**: para `behavioral` o id do teste mora em
+  `Verification instrument` e não se repete em duas colunas. Um `—` em
+  `Test type` ou `Layer` deixa de ser achado quando a classe não é
+  `behavioral` — nenhuma linha finge ter teste. As quatro regras que
+  universalizavam teste saem: *"One row, one test"*, a linha
+  *"Names the covering test"*, a instrução sem vírgula dentro do template de
+  plano, e a abertura de `## Acceptance Criteria` que exigia implementação
+  `file:line` **mais** teste `file:line`. A classe vem do marcador, nunca de
+  heurística: com `**Evidence model:** v2` no cabeçalho da spec a classe é
+  obrigatória; sem ele o documento é histórico e a célula lê `behavioral`, que
+  é a classe efetiva do fallback — `legacy behavioral` não é um quarto valor e
+  nunca aparece na coluna. O bloco `**Files:**` passa a dizer que o range de um
+  `Modify:` é navegação e não evidência, e a pergunta de elegibilidade de task
+  passa a ser "esta task deixa um deliverable versionado?", com a nota de que
+  evidência por comando não converte efeito externo em task auditável. O
+  detalhe por classe — o instrumento que cada uma exige e o que cada coluna
+  guarda — foi para
+  [`skills/writing-plans/references/verification-matrix.md`](skills/writing-plans/references/verification-matrix.md),
+  por progressive disclosure: a edição levou o `SKILL.md` a 507 linhas e
+  `scripts/check-skill-size.sh` reprovou; depois da extração são 497.
+
+- **O plan reviewer cobra as seis colunas e a semântica da classe.**
+  [`skills/writing-plans/plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md),
+  section "Plan Review" — a linha que cobrava as cinco colunas da Test Coverage
+  Matrix vira quatro: as seis colunas com uma row por critério; instrumento
+  vazio ou não resolvido, com a nota de que **instrumento `structural` que
+  nomeia arquivo sem range está resolvido**, porque no tempo do plano aquelas
+  linhas ainda não existem e o range é do auditor contra `HEAD`; teste
+  inventado em row `structural` ou `negative`, com `—` em `Test type`/`Layer`
+  explicitamente fora do que se cobra; e divergência entre o bloco da task e a
+  matriz, que importa porque o brief que `scripts/task-brief` extrai carrega o
+  bloco e o reviewer a jusante nunca vê a matriz. Entra a regra do marcador, e
+  a row que exigia critério settleable por citação `file:line` passa a exigir a
+  evidência que a classe admite — era a segunda ocorrência dessa formulação, a
+  primeira estando no spec reviewer.
+
+- **O audit verdicta por evidence class e reexecuta o instrumento.**
+  [`skills/final-branch-audit/SKILL.md`](skills/final-branch-audit/SKILL.md),
+  section "The Delivery Table" — a regra de abertura deixa de dizer que
+  *"critério sem citação localizada é NOT DELIVERED"*, que reprovava por
+  construção todo critério `negative`, e passa a exigir a evidência de entrega
+  **e** a de verificação que a classe declarada admite. As colunas
+  `Implementation | Test` viram `Delivery evidence | Verification evidence`
+  **nas duas ocorrências** — a segunda indentada dentro do prompt de dispatch,
+  que um `grep` ancorado em início de linha não vê. Entra o veredito
+  `EVIDENCE CLASS MISMATCH — BLOCKING`, e com ele a proibição explícita de
+  **reclassificar um critério para poder conceder `DELIVERED`**: a inadequação
+  é achado para o parceiro humano, nunca correção que o auditor aplica. O
+  auditor passa a reexecutar o instrumento que a classe nomeia, mantendo-se
+  read-only sobre o checkout, e pode exigir evidência adicional quando o que o
+  plano nomeou não alcança a alegação. O discriminador de compatibilidade é o
+  marcador, sem heurística sobre histórico do git, data ou redação. Em
+  [`docs/review-scopes.md`](docs/review-scopes.md), section "What each face
+  runs", a linha do final audit deixa de dizer **"no tests at all"** e passa a
+  descrever verificação read-only por critério, com a fronteira declarada: ele
+  reexecuta o que um critério alega, não a suíte inteira.
+
+- **O task reviewer reexecuta o instrumento que a classe pede.**
+  [`skills/subagent-driven-development/task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md),
+  section "Verify Each Criterion by Its Class" — protocolo novo antes da seção
+  de testes, lendo do brief a classe e o instrumento de cada critério, com a
+  nota de que **uma task pode misturar classes** e de que classe não
+  verificável é achado, nunca critério pulado. `### Test Evidence` vira
+  `### Verification Evidence`, com uma linha por critério e cinco colunas, e um
+  `—` em `Located evidence` deixa de ser bloqueante fora de `behavioral`. A
+  seção "Tests — Run Them Yourself" e as quatro rows do shallow-test litmus
+  ficam **intactas**, com uma frase de abertura dizendo que valem em cheio para
+  todo critério `behavioral` — generalizar a tabela de evidência não afrouxa uma
+  linha sequer. `[TEST_COMMAND]` deixa de ser `REQUIRED` universal e passa a ser
+  exigido só quando a task carrega critério `behavioral` cujo instrumento é um
+  teste; task só `structural` ou `negative` **não tem valor admissível para o
+  campo, e não se deriva um** — comando inventado transforma task que não pediu
+  teste em task avaliada por um. O rename da seção tem três portadores, e o
+  terceiro mora fora do arquivo: a referência canônica em
+  [`docs/review-scopes.md`](docs/review-scopes.md) foi ajustada no mesmo commit,
+  porque `scripts/check-links.sh` resolve o **título** da seção e não só o
+  caminho.
+
+- **O comando de teste só é exigido de task com critério `behavioral`.**
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md),
+  section "Dispatching a Task" — o controller passa a entregar
+  `[VERIFICATION_INSTRUMENTS]`, os instrumentos que os critérios da task
+  nomeiam, copiados da Verification Matrix com a classe de cada um.
+  `[TEST_COMMAND]` e `[BASE_TEST_COUNT]` viram condicionais à existência de
+  critério `behavioral`, e task sem nenhum **não tem valor admissível para o
+  campo**. Isto fecha um travamento real do fix loop: a condição de despacho do
+  re-review exigia que o fix report trouxesse *"the covering tests, the command
+  run, and the output"* e só despachava com os três presentes — uma task só
+  `structural` ou `negative` nunca os reunia, e o re-review nunca era
+  despachado. A condição passa a ser, por critério tocado, o instrumento
+  reexecutado e seu resultado.
+
+- **O preflight do caminho inline para de escalar task sem teste.**
+  [`skills/executing-plans/SKILL.md`](skills/executing-plans/SKILL.md), section
+  "The Process" — o item 7 exigia critério *settleable* por citação `file:line`
+  **nomeando seu covering test**, e passa a exigir classe declarada mais
+  instrumento admissível capaz de resolver a alegação. Para `behavioral` o
+  instrumento continua sendo o covering test; **para `structural` e `negative`
+  a ausência de teste deixa de ser concern** — mantida, ela mandaria toda task
+  não-`behavioral` ao parceiro humano antes do Step 2. Critério que nenhuma
+  evidência admissível resolve continua sendo concern.
+
+- **Achado transversal de review carrega command evidence.**
+  [`skills/requesting-code-review/code-reviewer.md`](skills/requesting-code-review/code-reviewer.md),
+  section "Critical Rules", e
+  [`skills/subagent-driven-development/re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md),
+  section "Output Format" — os dois exigiam `file:line` de **todo** achado, e
+  um achado sobre um escopo não tem linha que o prove: *"nenhum call site
+  confere o retorno"*, *"este padrão não aparece em mais lugar nenhum"*, *"a
+  suíte não tem caso para o ramo de falha"*. Citar uma linha ali **encolhe a
+  alegação** em vez de sustentá-la. Passa a valer o comando read-only e seu
+  resultado. Achado sobre um lugar específico continua carregando seu range
+  localizado: command evidence alarga o que é admissível, não substitui o range
+  onde o range é a prova. A frase é a mesma nos dois arquivos, por unificação
+  no lugar — a forma que [`CLAUDE.md`](CLAUDE.md), section "Where the obvious
+  move is wrong" descreve para conteúdo dentro do `## Output Format` de
+  subagente.
+
+- **O fix loop e o re-review verificam pelo instrumento da classe.**
+  [`skills/subagent-driven-development/re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md),
+  section "Verify the Fix by Its Instruments" (antes *"Tests — Run Them
+  Yourself"*) e section "Verification Run" (antes *"Test Run"*) — o re-reviewer
+  passa a reexecutar o instrumento que a classe de cada critério nomeia, com
+  test command e base count exigidos só quando a fix round toca critério
+  `behavioral`; task sem nenhum **não tem valor admissível para o campo**. A
+  linha `**Command:** … **exit:** … **counts:** …` fica byte a byte: o gate lê
+  nomes de campo e nunca o conteúdo, então `counts: —` o satisfaz. Em
+  [`skills/subagent-driven-development/implementer-prompt.md`](skills/subagent-driven-development/implementer-prompt.md),
+  section "The Fix Round", o contrato do fix report deixa de exigir covering
+  tests de toda rodada e passa a exigir os instrumentos aplicáveis. **O Iron
+  Law do TDD não foi tocado** — ele governa como o implementer escreve código,
+  não o que o fix report carrega. Os dois renames de seção quebrariam duas
+  referências em [`docs/review-scopes.md`](docs/review-scopes.md), e elas foram
+  ajustadas **no mesmo commit**, que é a única ordem em que o gate de links
+  fica verde nos dois: cada um dos dois títulos aparece duas vezes no arquivo,
+  apontando para prompts diferentes, e as outras duas ocorrências não mudam.
+
+### Fixed
+
+- **A conferência de identidade entre os três prompts media uma janela fixa de
+  linhas, e por isso não via a única deriva provável.** Em
+  [`tests/compatibility-mode/run-tests.sh`](tests/compatibility-mode/run-tests.sh),
+  a cláusula partilhada era extraída com `grep -A7`. Isso capturava o bloco
+  inteiro **por coincidência** — a cláusula tem oito linhas —, e uma nona linha
+  acrescentada a **um só** dos três prompts caía fora da janela: os corpos eram
+  comparados iguais enquanto diferiam, e a asserção chamada *"the three prompts
+  agree on one body"* passava verde. Medido pelo review de branch e reproduzido
+  antes do reparo. A extração passa a ser **estrutural**: do marcador até a
+  primeira linha em branco ou a primeira linha que abandona a indentação do
+  corpo — o mesmo invariante que
+  [`scripts/check-no-dispatch.sh`](scripts/check-no-dispatch.sh) sustenta com o
+  seu `MIN_INDENT`, e sem constante de janela alguma. Cinco provas viajam com a
+  correção: corpos iguais passam; texto alterado dentro do bloco em um prompt
+  reprova; linha removida de um prompt reprova; **linha nova ao fim de um só
+  prompt reprova** — a regressão que o gate não via; e a mesma linha nova nos
+  três volta a passar. A varredura por janelas fixas de contexto em `scripts/`,
+  `tests/`, `githooks/`, `hooks/` e `skills/*/scripts/` não encontra nenhuma
+  outra: esta era a única.
+
+- **Uma frase de empacotamento continuava mandando passar ao re-review um
+  comando de teste que a task pode não ter.** O contrato do fix loop em
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md),
+  section "The Task Loop", já resolve o instrumento por classe, e
+  [`skills/subagent-driven-development/re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md)
+  já torna `[TEST_COMMAND]` condicional — mas a linha que descreve o despacho
+  do re-review sobreviveu do contrato antigo, mandando repassar *"o mesmo test
+  command e counts que o task review reportou"* e afirmando que o re-reviewer
+  roda os testes. **O defeito não é hipotético: ocorreu no próprio re-review
+  desta mudança**, cuja task não tinha nenhum critério `behavioral` e para a
+  qual o operador teve de contrariar a frase por escrito, declarando ao
+  subagente que não havia comando e que ele não deveria derivar um — que é
+  exatamente o que AC45 e o campo condicional existem para impedir. A frase
+  passa a pedir os *verification inputs* que aquele review reportou: test
+  command e counts onde houve teste, nada inventado onde não houve.
+  Substituição no mesmo número de linhas, medido antes e depois — o arquivo
+  fica em 499 contra o teto de 500, sem progressive disclosure.
+
+- **A interpolação de prosa de carrier numa string avaliada por `eval` executava
+  comando, e o primeiro reparo tratou o caso em vez da causa.** O re-review da
+  Task 16 mediu o que a task review tinha subestimado: em
+  [`tests/compatibility-mode/run-tests.sh`](tests/compatibility-mode/run-tests.sh),
+  o helper `check()` avalia a command string que recebe, e um site interpolava o
+  corpo da cláusula de consumo — texto lido dos três prompts — antes dessa
+  avaliação. Com uma aspa dupla no conteúdo, o que entra no `eval` deixa de ser
+  uma comparação e passa a ser um comando: provado num diretório descartável,
+  onde a forma antiga criou o arquivo que o payload mandava criar e a nova não.
+  O reparo anterior fechou um site e não varreu os irmãos. A varredura agora é
+  exaustiva sobre o arquivo, e o que ela achou: um único `eval`, e um segundo
+  site com a mesma forma insegura — corrigido. **Nenhuma contagem de sites viaja
+  com esta entrada**: ela dependeria de qual forma de contar se declara, e as
+  três razoáveis discordam entre si — o reparo seguinte, nesta mesma série,
+  mudaria qualquer número escrito aqui. Um terceiro, que parecia
+  igual, mantém a variável literal na command string e só a expande dentro do
+  `eval`, sob aspas: medido separadamente, não executa nada, e **fica como
+  está** — igualá-lo visualmente ao resto trocaria uma forma provada segura por
+  outra sem ganho.
+
+- **A cardinalidade que saiu do `## Open gaps` continuava viva em dois outros
+  portadores.** Remover o número de um documento e deixá-lo nos demais não
+  remove a afirmação: a tabela de decisões da spec do Evidence Model v2 ainda a
+  dava como medição vigente, e a fixture do caso 2 da suíte de compatibilidade
+  — que roda no CI — abria com a mesma contagem como descrição do que ela
+  representa. Ambos passam à propriedade qualitativa que se verifica abrindo:
+  as matrizes históricas misturam row com test id, row com comando read-only e
+  row com `NENHUM`. Sobrevive apenas a contagem de **seis planos com matriz**,
+  que três parsers independentes reproduziram. A decisão registrada não muda —
+  compatibilidade não é migração retroativa. A varredura que fechou o item
+  classificou cada ocorrência restante dos números como citação de linha ou
+  medição de outro assunto, e não reescreveu registro histórico por conter o
+  número.
+
+- **A task review da Task 16 achou quatro asserções que passavam verdes com o
+  alvo ausente, e o instrumento de um critério não media a alegação do próprio
+  critério.** Em
+  [`tests/compatibility-mode/run-tests.sh`](tests/compatibility-mode/run-tests.sh),
+  quatro asserções negativas tinham a forma `! grep -q`. Sobre arquivo que não
+  existe o `grep` sai **2** — "não consegui olhar", não "não achei" — e o `!`
+  inverte isso para verdadeiro, com o `stderr` já descartado pelo helper: a
+  deleção de uma fixture lia exatamente como a propriedade valendo. As quatro
+  ganham guarda de existência, e a que varre o repositório inteiro atrás de uma
+  quarta classe passa a exigir que o `git` responda antes de aceitar o silêncio
+  como prova. Provado mutando: deletada cada fixture, e reescrita a row 7 da
+  tabela de decisão, a suíte fica vermelha na asserção correspondente — e a
+  primeira tentativa de mutação **não entrou**, porque a frase alvo está
+  quebrada entre duas linhas e o `sed` opera linha a linha, que é precisamente
+  o motivo de a suíte comparar o texto com o espaço em branco colapsado.
+  Junto: `T16.8` deixa de ser `[behavioral]` e passa a `[structural]` — a
+  exceção que AC38 abre vale para um script cujo sujeito é um programa
+  determinístico, e aqui o sujeito é prosa em markdown lida por um agente —, e
+  a asserção que nomeava a regra do *blocking mismatch* sem medi-la é
+  substituída por duas que verificam a regra onde os dois controllers apontam.
+  O item de `## Open gaps` sobre as matrizes históricas perde os números que
+  nenhum instrumento reproduzia: três parsers fence-aware escritos depois
+  discordavam do total e entre si, porque ele depende de decisões de parsing
+  que a entrada nunca declarou. A decisão registrada ali não muda —
+  compatibilidade não é migração retroativa —, e agora ela se apoia em
+  exemplos localizados, não numa contagem órfã. Em
+  [`skills/subagent-driven-development/implementer-prompt.md`](skills/subagent-driven-development/implementer-prompt.md),
+  a cláusula de compatibilidade tinha sido colada sem linha em branco e
+  re-parenteava duas frases do fix report, fazendo *"the command"* ler como o
+  instrumento do fallback legacy em vez do comando do próprio conserto.
+
+- **O modo de compatibilidade passa a ser resolvido no boundary do controller.**
+  O fallback para artefato anterior ao modelo estava enunciado em quatro
+  carriers a montante e em **nenhum** dos cinco do lado da execução, o que
+  deixava dois defeitos: todo critério de plano pré-existente virava
+  preocupação no preflight de
+  [`skills/executing-plans/SKILL.md`](skills/executing-plans/SKILL.md), e —
+  pior, porque silencioso — um controller que lesse só
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md)
+  concluía que um plano histórico não tem critério `behavioral` e portanto não
+  há test command, deixando o task reviewer **sem rodar teste nenhum**. Os dois
+  controllers passam a resolver o modo **uma vez**, antes de executar, a partir
+  da source spec que ambos já eram obrigados a ler; os três prompts
+  (`task-reviewer`, `implementer`, `re-review`) **consomem** a decisão com uma
+  cláusula idêntica e não reabrem spec nem plano. A escolha do boundary é
+  medida, não estética: `task-brief` extrai só o bloco da task — sem cabeçalho,
+  sem matriz — e `subagent-driven-development/SKILL.md` proíbe por escrito dar o
+  plano ao subagente, então os prompts **não têm de onde inferir**. A autoridade
+  é a source spec, nunca o schema do plano: marcador com matriz histórica é
+  incoerência bloqueante, e **marcador ausente com Verification Matrix não é** —
+  é o que um plano novo escrito a partir de spec legacy tem de ser.
+  [`docs/evidence-model.md`](docs/evidence-model.md), section "Compatibility:
+  legacy behavioral" ganha o alcance e uma tabela de decisão de doze casos, sem
+  conceito novo — os treze continuam treze. Suíte determinística nova em
+  `tests/compatibility-mode/`, com step de CI, cobrindo os doze casos da tabela:
+  cada fixture é o caso que diz ser, os dois controllers resolvem os três
+  desfechos e apontam para o documento canônico, e a regra que eles delegam está
+  declarada onde apontam. As asserções negativas distinguem ausência legítima de
+  erro de acesso, a cláusula partilhada é comparada entre os três prompts por
+  delimitação estrutural, e o harness não interpola conteúdo variável antes do
+  `eval`. **A contagem de asserções não é registrada**: ela muda a cada reparo, e
+  a decisão não depende dela.
+
+- **A guarda de contagem de células reprovava pipe corretamente escapado.**
+  Achado do re-review sobre o próprio diff de correção: a checagem nova
+  `len(cells) != len(header)` fechou o buraco em que o gate falhava **aberto** e
+  abriu um em que ele falha **fechado**, sobre markdown válido. `_cells`
+  dividia em todo `|`, sem honrar o escape, então um instrumento `structural`
+  escrito como `` `grep -c foo file \| wc -l` `` — a forma que markdown exige
+  para um pipe literal, e a única possível num comando read-only — contava sete
+  células sob um cabeçalho de seis. A coluna de instrumento é exatamente onde
+  esses comandos moram, e este repositório **já escreve assim** em
+  `docs/superpowers/plans/2026-08-21-upstream-consult-fixes.md:43` e
+  `docs/superpowers/plans/2026-08-24-knowledge-to-skills-traversal.md:66`; as
+  duas escapam hoje por serem matrizes históricas de cinco colunas, que não
+  entram no caminho novo. A divisão passa a ignorar `|` precedido de barra
+  invertida, e a célula é desescapada depois. Nenhum dos nove documentos com
+  matriz muda de veredito.
+
+- **A cópia da tabela dentro do prompt de dispatch do audit reensinava a forma
+  universal.** Achado Minor do review de branch. A tabela do corpo ganhou
+  exemplos por classe; a cópia indentada dentro do `## Output Format` ficou com
+  `` `path:line` `` nas duas colunas novas — e para uma linha `negative` a
+  evidência de entrega é o **escopo declarado**, não um `path:line`. É a mesma
+  falha de segunda ocorrência que a AC16 nomeia, uma camada abaixo: o cabeçalho
+  foi trocado nas duas, o exemplo só numa.
+
+- **`[VERIFICATION_INSTRUMENTS]` era entregue e não existia do outro lado.**
+  Correção do achado Important do review de branch. O controller era instruído
+  a passar o campo ao task reviewer, e `grep -c 'VERIFICATION_INSTRUMENTS'`
+  devolvia **0** em
+  [`skills/subagent-driven-development/task-reviewer-prompt.md`](skills/subagent-driven-development/task-reviewer-prompt.md);
+  em
+  [`skills/subagent-driven-development/re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md)
+  ele aparecia só **depois** de `**Placeholders:**`, isto é na lista e nunca no
+  corpo onde seria substituído — o único outro placeholder daquele arquivo sem
+  sítio no corpo é `[MODEL]`, que é parâmetro de dispatch. Era instrução que o
+  controller não conseguia executar. O campo sai dos dois, e o que fica escrito
+  é o que de facto acontece: os instrumentos viajam **no brief**, que
+  `scripts/task-brief` extrai e que já carrega, por critério, a classe e o
+  instrumento. Acrescentar um segundo portador do mesmo contrato seria a
+  divergência que esta mesma branch tornou bloqueante no plan reviewer — dois
+  contratos para um critério, e vale o que o leitor abriu primeiro.
+
+- **O parser da matriz falhava ABERTO em três formas.** Correção do achado
+  Important do review de branch, e uma das três é regressão medida contra
+  `94d575e`: a leitura por índice de coluna transformava linha malformada em
+  verificação **pulada**, não em defeito reportado. (a) O laço que decide sob
+  que cabeçalho cada linha está resetava o cabeçalho só numa linha
+  não-vazia — e linha em branco é exatamente o que separa duas tabelas
+  markdown, então a segunda tabela herdava o cabeçalho de seis colunas da
+  primeira, suas linhas indexavam além das próprias células e **todas eram
+  descartadas**. Medido com o mesmo documento nos dois scripts: `94d575e` saía
+  1 nomeando o teste inexistente, `fa4900c` saía 0 dizendo *"every reference
+  resolves"*. É o cenário que o comentário do próprio bloco declara servir.
+  (b) Linha com menos células que o cabeçalho devolvia classe vazia, e classe
+  vazia não é `behavioral`, então a linha era pulada antes de qualquer coisa
+  nela ser lida. (c) Linha com **mais** células — o `|` literal dentro de uma
+  célula de instrumento, defeito que este repositório já cometeu — passava
+  igual. As três agora são nomeadas: cabeçalho encerra em qualquer linha
+  não-tabela, e contagem de células diferente da do cabeçalho é falha
+  reportada. Nenhum plano commitado muda de veredito: o caso pinado compara 36
+  documentos e não moveu nenhum.
+
+- **O parser da matriz lia comando read-only como nome de teste.** O laço em
+  `skills/writing-plans/scripts/check-cross-references:282-293` **na v1.25.0**
+  varria *toda* célula de *toda* linha da matriz procurando `> nome` e
+  `::nome`, sem olhar sob que cabeçalho a linha estava. Numa Verification
+  Matrix de seis colunas, a coluna `Verification instrument` é exatamente onde
+  moram os comandos read-only das classes `structural` e `negative`, e o `>` de
+  um redirecionamento e o `::` de um caminho viravam nomes de teste que nenhum
+  passo cria. Medido em 04/09/2026, antes da correção: uma linha `negative`
+  cujo instrumento era `python3 -m json.tool manifest.json > /dev/null` saía com
+  1 nomeando `/dev/null`, e uma `structural` terminada em `::validate` saía com
+  1 nomeando `validate`. O parser passa a localizar as colunas pelos títulos do
+  cabeçalho, a ler `Evidence class`, e a interpretar o instrumento como id de
+  teste **apenas** na linha `behavioral` — onde, além disso, só a coluna
+  `Verification instrument` é lida, e não mais a célula do critério. A matriz
+  histórica de cinco colunas não tem coluna `Evidence class` e segue pelo
+  caminho anterior, célula a célula: **nenhum plano já commitado muda de
+  veredito**, conferido pelo caso pinado da suíte, que comparou 36 documentos e
+  não moveu nenhum.
+
+- **`check-cross-references` aprovava range malformado.** A validação comparava
+  só o número final contra o total de linhas do arquivo
+  (`skills/writing-plans/scripts/check-cross-references:409-410` **na v1.25.0**,
+  antes desta mudança — as linhas se moveram com ela, e o número só é
+  recuperável contra aquela tag), então `arquivo:0`, `arquivo:0-5` e `arquivo:10-5` eram reportados
+  como resolvidos. Medido por execução com controle em 04/09/2026: os três
+  saíam com código 0, e o caso de controle — um fim além do arquivo — saía com
+  1, provando que o instrumento funcionava e que os três passavam de verdade.
+  O script roda entre o conserto de uma spec ou plano e o re-despacho do
+  reviewer, para poupar uma rodada; uma citação malformada aprovada custava
+  exatamente a rodada que ele existe para economizar.
+- **A mensagem de citação irresolvida descartava o número final.** As três
+  chamadas que o script tinha antes desta versão — a quarta é a que a validação
+  de range acrescentou, e cai sob a mesma regra — formatavam
+  `` `{rel}:{first}` ``, então um range inválido `5-200` era reportado como a
+  linha `5` — que existe no arquivo. Quem lia o erro procurava o defeito no
+  lugar errado. A citação passa a ser montada uma vez, como foi escrita.
+
 ## [1.25.0] - 2026-09-04
 
 ### Added
@@ -5475,6 +5905,75 @@ an instruction asked for `file:line` in a place the rule assigns to the section
 form, and each time the rule was right. It is written here because this is the
 section where the next one would be written.
 
+- **The historical Test Coverage Matrices already mix the three semantics the
+  model now names, and nothing reclassifies them.** A legacy row's `Test` cell
+  holds any of three things. A real test id:
+  [`docs/superpowers/plans/2026-08-24-cross-references-extractor.md`](docs/superpowers/plans/2026-08-24-cross-references-extractor.md),
+  section "Test Coverage Matrix", row `T1.1`, names
+  `tests/hooks/test-mdfence.sh > nested fence keeps inner content fenced`. A
+  read-only validation command:
+  [`docs/superpowers/plans/2026-08-21-execution-path-context-budget.md`](docs/superpowers/plans/2026-08-21-execution-path-context-budget.md),
+  section "Test Coverage Matrix", row `T1.3`, names
+  `grep -i 'turning point' docs/context-budget.md`. Or `NENHUM`, which
+  [`docs/superpowers/plans/2026-09-04-cross-reference-range-validation.md`](docs/superpowers/plans/2026-09-04-cross-reference-range-validation.md),
+  section "Test Coverage Matrix", uses where no layer asserts the property at
+  all. The column is called `Test`, and not everything in it is a test.
+
+  **This item carries no count, and the omission is the point.** An earlier
+  version of it stated a row total and a split across the three forms without
+  the command that produced them. Three independent fence-aware parsers written
+  afterwards disagreed with that total and with each other, because the number
+  depends on parsing decisions — an escaped pipe, a row whose cell count
+  disagrees with its header — that the entry never declared. The decision below
+  does not rest on the number, so the number is gone rather than re-derived: a
+  quantity with no reproducible instrument is exactly what this project refuses
+  to accept from anyone else.
+
+  The consequence for compatibility is the uncomfortable half: the pre-model
+  task reviewer demanded a `Test file:line` and treated `—` as blocking, so
+  **every command-bearing row was already unverifiable before the Evidence Model
+  existed**. AC48 preserves that behaviour rather than repairing it — it
+  guarantees no NEW regression, and deliberately does not promote a historical
+  command to `structural` or `negative`. **Reclassifying them is a separate
+  slice** — a legacy-plan migration — and it is not owed by this change.
+  Compatibility is not retroactive migration, and the alternative rejected here
+  was to let the fallback quietly claim those rows were fine.
+
+- **`check-cross-references` counts a criterion's own definition as a citation
+  of itself, so a defined-but-unconnected `AC`/`IR` passes green. Measured, and
+  the contract is the open half — not the implementation.** The script's comment
+  at `skills/writing-plans/scripts/check-cross-references:180` reads *"Defined
+  where the list that owns them lives; cited anywhere else."* The implementation
+  one screen below, at
+  `skills/writing-plans/scripts/check-cross-references:194`, is
+  `cited_ac = set(AC_IR.findall(text))` — `findall` over the whole document,
+  which includes the defining lines. Only `cited - defined` is charged, at
+  `:201`; `defined - cited` is never computed. **Measured 2026-09-04, twice in
+  one branch:** `IR5b` and then `AC27` were each introduced by a fix pass,
+  appeared nowhere but their own definition, and both passed with the summary
+  reading `AC/IR defined 36, AC/IR cited 36`. Each was caught by a reviewer, one
+  round apart, after the gate had cleared it.
+  **The historical contract did not settle this direction.**
+  [`2026-08-24-cross-references-extractor-design.md`](docs/superpowers/specs/2026-08-24-cross-references-extractor-design.md)
+  specifies the opposite one — its `AC10` requires an id cited only inside a
+  fence to still count as cited, so that a citation of a nonexistent id fails.
+  Nothing there establishes that every defined criterion must appear outside its
+  own definition. So this is a **measured blind spot and an open contract
+  question**, not a defect with a known fix: the checker cannot distinguish a
+  criterion connected elsewhere in the document from one that exists only in its
+  defining list.
+  **Not fixed here, and `defined_ac - cited_ac` is not assumed to be the
+  answer.** What "cited elsewhere" legitimately includes has to be decided
+  first — the Coverage Map, the decision record, cross-references between
+  criteria, fenced examples that are real citations — and the rule may turn out
+  to be narrower and more useful than *every defined criterion must be cited
+  somewhere else*: something closer to *every defined criterion must participate
+  in the structure that makes it traceable*. The check also runs against plans,
+  which cite a spec's ids without defining them and are already treated
+  differently at `:200`; a new direction must not turn those into false
+  positives. A future slice gets its own spec, and it measures the existing
+  corpus before and after so the documents that change verdict are known by
+  name.
 - **This section's own rule against `file:line` is broken 32 times inside it,
   and the count is measured rather than sampled.** The preamble above states
   it — references here use the markdown link plus section title, never
@@ -5857,10 +6356,17 @@ section where the next one would be written.
   [`spec-under-test.md`](tests/skill-behavior/spec-under-test.md) and
   [`docs/releasing.md`](docs/releasing.md), which put the identifier or the
   literal text next to the number.
-  **Not built, and the condition is the whole point of the entry: the first code
-  anchor found drifted turns this from a design into a defect.** Until one is,
-  building the gate would be the invented-by-argument move the entry below
-  refuses on its own terms — a verifier for a class with no measured failure.
+  **The condition it was written against has already fired**, and the entry no
+  longer claims otherwise: the 2026-08-26 anchor above is the first code anchor
+  found drifted. What is still open is not whether a defect exists but **which
+  documents the gate would scan**, and that turns on three freshness regimes the
+  model now names, in [`docs/evidence-model.md`](docs/evidence-model.md),
+  section "The three freshness regimes": *ephemeral* citations, produced and
+  consumed inside one cycle, need no guard; *live persistent* documents — a spec
+  or plan still active, reread in later cycles — are the ones an anchor gate
+  would serve; *historical* records, already executed, are never checked against
+  `HEAD` and a rotted anchor in one is marked, never rewritten. The half that
+  stays open is where the boundary between the second and the third falls.
   The markdown side of the same question is closed and needs no condition: those
   anchors became section references in this cycle, and the section pass reads
   them.

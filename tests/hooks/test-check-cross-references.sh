@@ -108,6 +108,52 @@ run_case "spec citing a file that does not exist fails" 1 "${CLEAN_SPEC}
 
 One more finding at \`src/nowhere.ts:3\`."
 
+# --- range validation -----------------------------------------------------
+# The clean side of every pair below. `4-6` is a real range inside the
+# 20-line src/verify.ts that make_repo builds, and `7-7` is the N-N form the
+# spec accepts without canonicalising it to `7`.
+RANGE_SPEC="${CLEAN_SPEC}
+
+A range finding at \`src/verify.ts:4-6\`, and a single-line range at
+\`src/verify.ts:7-7\`."
+
+# Each broken case is RANGE_SPEC with ONE citation replaced. A case written
+# from scratch would differ from the clean side in ways nobody listed, and a
+# pair is only a pair when the difference is the thing under test.
+break_range() { printf '%s' "$RANGE_SPEC" | sed "s|src/verify.ts:4-6|$1|"; }
+
+run_case "spec with valid ranges passes" 0 "$RANGE_SPEC"
+run_case "spec citing line zero fails" 1 "$(break_range 'src/verify.ts:0')"
+run_case "spec citing a zero-based range fails" 1 "$(break_range 'src/verify.ts:0-5')"
+run_case "spec citing an inverted range fails" 1 "$(break_range 'src/verify.ts:10-5')"
+run_case "spec citing a range past the end of the file fails" 1 "$(break_range 'src/verify.ts:5-99')"
+
+# T1.6: the four broken cases are the clean document minus one citation. If
+# break_range ever stops substituting — a renamed path, a changed delimiter —
+# every broken case silently becomes RANGE_SPEC itself and passes, and the four
+# cases above go green for the opposite of their names.
+if [[ "$(break_range 'src/verify.ts:0')" == "$RANGE_SPEC" ]]; then
+    fail "the four broken range cases differ from the clean one by one citation"
+else
+    pass "the four broken range cases differ from the clean one by one citation"
+fi
+
+# AC8: the message names the citation as it was written. Before this fix all
+# four unresolved paths formatted `{rel}:{first}` — the three the script always
+# had, plus the one Task 1 added — so an invalid `10-5` was
+# reported as line 10 — a line that exists in the file, sending the reader to
+# the wrong place. run_case cannot see this: the exit code was already 1.
+msg_dir="$TEST_ROOT/range_message"
+make_repo "$msg_dir"
+printf '%s\n' "$(break_range 'src/verify.ts:10-5')" >"$msg_dir/docs/doc.md"
+msg_out="$("$SCRIPT_UNDER_TEST" "$msg_dir/docs/doc.md" "$msg_dir" 2>&1 || true)"
+if printf '%s' "$msg_out" | grep -q 'verify\.ts:10-5'; then
+    pass "an invalid range is reported with its end number"
+else
+    fail "an invalid range is reported with its end number"
+    printf '%s\n' "$msg_out" | sed 's/^/        /'
+fi
+
 # --- plan shape: task criteria, matrix, tests ------------------------------
 CLEAN_PLAN='# Plan
 
@@ -148,6 +194,141 @@ run_case "matrix naming a test no step creates fails" 1 "$(printf '%s' "$CLEAN_P
 run_case "announced task count that disagrees fails" 1 "${CLEAN_PLAN}
 
 This plan has 4 tasks."
+
+# --- Verification Matrix: header-aware, evidence-class-aware --------------
+# Measured 2026-09-04 against this checkout, before the fix: a `negative` row
+# whose instrument was a shell command with a redirect exited 1, naming
+# `/dev/null` as a test no step creates, and a `structural` row whose command
+# ended in `::validate` exited 1 naming `validate`. The instrument column is
+# exactly where read-only commands live, so parsing it without reading the
+# class keeps the confusion.
+
+# CLEAN_PLAN without its matrix. Its task body declares T1.1 and carries the
+# code block that creates `rejects the bad input`.
+VM_BASE="$(printf '%s' "$CLEAN_PLAN" | sed '/^## Test Coverage Matrix$/,$d')"
+
+VM_HEAD='## Verification Matrix
+
+| Criterion | Spec criterion | Evidence class | Verification instrument | Test type | Layer |
+|---|---|---|---|---|---|'
+
+# ONE ROW PER FIXTURE. Three case names over one shared document would be three
+# names for one measurement: any mutation that reddens the document reddens all
+# three, and none of them says which branch broke.
+BEHAVIORAL_ROW="$VM_BASE
+$VM_HEAD
+| T1.1 | AC1 | behavioral | > rejects the bad input | unit | tests |"
+
+STRUCTURAL_ROW="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.2 the manifest parses|')
+$VM_HEAD
+| T1.2 | AC2 | structural | python3 -m json.tool manifest.json > /dev/null | — | — |"
+
+NEGATIVE_ROW="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.3 no new dependency|')
+$VM_HEAD
+| T1.3 | AC3 | negative | the check lives at suite.sh::validate | — | — |"
+
+# A `behavioral` row whose CRITERION cell carries an angle bracket. Only the
+# instrument column may name a test, and this fixture is the only one that says
+# so — it is what separates the two halves of the fix, which are nested.
+BEHAVIORAL_WIDE="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.4 rejects input > 100|')
+$VM_HEAD
+| T1.4 rejects input > 100 | AC4 | behavioral | > rejects the bad input | unit | tests |"
+
+run_case "a behavioral row naming a test a step creates passes" 0 "$BEHAVIORAL_ROW"
+
+run_case "a behavioral row naming a test no step creates fails" 1 "$(printf '%s' "$BEHAVIORAL_ROW" |
+    sed 's/| > rejects the bad input |/| > a test nobody wrote |/')"
+
+run_case "a structural instrument holding an angle bracket is not a test" 0 "$STRUCTURAL_ROW"
+
+run_case "a negative instrument holding a double colon is not a test" 0 "$NEGATIVE_ROW"
+
+run_case "only the instrument column of a behavioral row names a test" 0 "$BEHAVIORAL_WIDE"
+
+run_case "a task criterion with no verification row still fails" 1 "$(printf '%s' "$BEHAVIORAL_ROW" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.1 rejects the bad input\n- T1.9 unrowed|')"
+
+run_case "a verification row with no task criterion still fails" 1 "$BEHAVIORAL_ROW
+| T2.9 | AC9 | structural | a located range | — | — |"
+
+run_case "a duplicated verification row still fails" 1 "$BEHAVIORAL_ROW
+| T1.1 | AC1 | behavioral | > rejects the bad input | unit | tests |"
+
+# --- the legacy five-column schema is not migrated during the read --------
+# A REAL five-column Test Coverage Matrix. CLEAN_PLAN cannot stand in for one:
+# its matrix is `| Criterion | Test |`, two columns, whose header carries no
+# `Spec criterion` and so never reaches either branch of the new code. Using it
+# here would have been a case that names the five-column schema and exercises
+# nothing about it — and a byte-identical duplicate of `clean plan passes`.
+LEGACY_PLAN="$VM_BASE
+## Test Coverage Matrix
+
+| Criterion | Spec criterion | Test type | Layer | Test |
+|---|---|---|---|---|
+| T1.1 | AC1 | unit | tests | > rejects the bad input |"
+
+run_case "a legacy five-column matrix still passes" 0 "$LEGACY_PLAN"
+
+run_case "a legacy five-column matrix naming a test no step creates fails" 1 "$(printf '%s' "$LEGACY_PLAN" |
+    sed 's/| > rejects the bad input |/| > a test nobody wrote |/')"
+
+# --- a blank line ends the table, and a short row is not a skipped row ------
+# Both measured 2026-09-04 against the header-aware parser, before this fix.
+# The header loop reset `current_header` only on a NON-BLANK non-table line,
+# and a blank line is exactly what separates two markdown tables. A second
+# table whose header carries no `Spec criterion` therefore inherited the
+# six-column header, its rows indexed past their own cells, and every one of
+# them was skipped: the document went from exit 1 naming the missing test to
+# exit 0 saying every reference resolves. The gate failed OPEN, which is the
+# one direction a gate must not fail.
+SECOND_TABLE="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.1 rejects the bad input\n- T1.2 accepts the good input|')
+$VM_HEAD
+| T1.1 | AC1 | behavioral | > rejects the bad input | unit | tests |
+
+| Criterion | Notes |
+|---|---|
+| T1.2 | > a test nobody wrote |"
+
+run_case "a table after a blank line does not inherit the six-column header" 1 "$SECOND_TABLE"
+
+# A row with fewer cells than its header. Reading it by column index silently
+# produced an empty class, and an empty class is not `behavioral`, so the row
+# was dropped before anything in it could be checked. Naming the row is the
+# only outcome that distinguishes "nothing to check here" from "I could not
+# read this".
+SHORT_ROW="$VM_BASE
+$VM_HEAD
+| T1.1 | AC1 | behavioral |"
+
+run_case "a matrix row with fewer cells than its header is reported" 1 "$SHORT_ROW"
+
+# The same defect from the other side: the pipe this repository once wrote
+# inside an instrument cell, which split one row into more cells than the
+# header has.
+WIDE_ROW="$VM_BASE
+$VM_HEAD
+| T1.1 | AC1 | behavioral | > rejects the bad input | grep -c 'a | b' | unit | tests |"
+
+run_case "a matrix row with more cells than its header is reported" 1 "$WIDE_ROW"
+
+# An ESCAPED pipe is a cell's content, not a cell boundary — the form markdown
+# requires for a literal `|`, and the one a read-only shell command needs. The
+# instrument column is where those commands live, so charging a cell count
+# without honouring the escape trades a gate that failed open for one that
+# fails closed on valid markdown. Two documents in this repository already
+# write it: 2026-08-21-upstream-consult-fixes.md and
+# 2026-08-24-knowledge-to-skills-traversal.md.
+ESCAPED_PIPE="$(printf '%s' "$VM_BASE" |
+    sed 's|^- T1.1 rejects the bad input$|- T1.1 rejects the bad input\n- T1.2 the manifest parses|')
+$VM_HEAD
+| T1.1 | AC1 | behavioral | > rejects the bad input | unit | tests |
+| T1.2 | AC2 | structural | \`grep -c foo file \\| wc -l\` | — | — |"
+
+run_case "an escaped pipe in an instrument is content, not a cell boundary" 0 "$ESCAPED_PIPE"
 
 # --- fence awareness ------------------------------------------------------
 # A plan that documents the plan format carries `## Task N` inside fenced

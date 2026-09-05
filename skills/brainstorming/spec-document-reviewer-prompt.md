@@ -89,6 +89,10 @@ Subagent (general-purpose):
     | Item in `## Assumptions to Confirm` that IS verifiable in the code | BLOCKING — not a legitimate assumption. Go verify it yourself; if the code answers it, the spec had to cite it. |
     | Item in `## Assumptions to Confirm` with no search record | BLOCKING — see below |
     | A claim that a permission, privilege, or system state will be changed, with no statement of how the role that applies it reaches that state | BLOCKING — the target state being correct is a different claim from the change being applicable, and only the first is usually checked. Measured: four independent review lenses and 68 catalogue measurements passed a defect of exactly this shape |
+    | A claim of completeness, cardinality, uniqueness or absence resting on a sampled, truncated, paginated or filtered instrument | BLOCKING — the command ran, and that is exactly what hides this: `ls \| tail -5` answers nothing about how many files exist. This is not the rule above about assumptions the code can answer; here the code WAS consulted, and the reach of the consultation is what fell short. Name the exhaustive instrument the claim needs |
+    | An `AC` or `IR` with no declared delivery evidence class | BLOCKING — without it nothing downstream can resolve an instrument, and the plan invents a test or drops the criterion. The three classes are in [`docs/evidence-model.md`](../../docs/evidence-model.md), section "Delivery evidence classes" |
+    | A criterion no admissible evidence could settle | BLOCKING — a located range, a read-only check, or a grounded source. A criterion none of the three can reach is unauditable, and the branch fails at the end on wording the spec controlled |
+    | The spec header carries no `**Evidence model:** v2` | BLOCKING — **and never conclude from its absence that the spec is a historical document.** That fallback exists only in the consumers downstream, which have to accept artefacts written before the model. Concluding it here would let a new spec escape through the simultaneous absence of the marker and of the classes, which is the one hole the asymmetry closes |
 
     `## Assumptions to Confirm` is not an exemption. Every item there must state
     what was searched and why the code could not answer it: the searches run
@@ -141,7 +145,7 @@ Subagent (general-purpose):
     | No `## Acceptance Criteria` section | BLOCKING |
     | No `## Implicit Requirements` section — "None" is the way to say there are none | BLOCKING |
     | A criterion bundling several behaviors | BLOCKING — it cannot take one verdict; split it |
-    | A criterion no `file:line` citation could settle ("handles errors well") | BLOCKING — rewrite it as an observable behavior |
+    | A criterion no admissible evidence could settle ("handles errors well") | BLOCKING — rewrite it as an observable behavior, stated so the evidence its declared class admits can reach it |
     | A requirement stated in the prose sections but absent from the list | BLOCKING — name it; the plan traces the list, not the prose |
 
     Read the prose for implicit requirements the spec discusses and never
