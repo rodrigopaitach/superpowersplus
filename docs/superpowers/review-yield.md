@@ -28,6 +28,8 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 04/09/2026 | evidence-model (range validation impl) | branch | 1 | 0 | — |
 | 04/09/2026 | evidence-model (whole branch) | branch | 1 | 4 | — |
 | 04/09/2026 | evidence-model (whole branch) | branch | 2 | 1 | 1 |
+| 05/09/2026 | evidence-model (whole branch) | branch | 3 | 3 | 0 |
+| 05/09/2026 | evidence-model (whole branch) | branch | 4 | 0 | 0 |
 
 **Round 3 was not empty, and that is the first thing this table says.** The
 tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and
