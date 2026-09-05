@@ -206,6 +206,26 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A conferência de identidade entre os três prompts media uma janela fixa de
+  linhas, e por isso não via a única deriva provável.** Em
+  [`tests/compatibility-mode/run-tests.sh`](tests/compatibility-mode/run-tests.sh),
+  a cláusula partilhada era extraída com `grep -A7`. Isso capturava o bloco
+  inteiro **por coincidência** — a cláusula tem oito linhas —, e uma nona linha
+  acrescentada a **um só** dos três prompts caía fora da janela: os corpos eram
+  comparados iguais enquanto diferiam, e a asserção chamada *"the three prompts
+  agree on one body"* passava verde. Medido pelo review de branch e reproduzido
+  antes do reparo. A extração passa a ser **estrutural**: do marcador até a
+  primeira linha em branco ou a primeira linha que abandona a indentação do
+  corpo — o mesmo invariante que
+  [`scripts/check-no-dispatch.sh`](scripts/check-no-dispatch.sh) sustenta com o
+  seu `MIN_INDENT`, e sem constante de janela alguma. Cinco provas viajam com a
+  correção: corpos iguais passam; texto alterado dentro do bloco em um prompt
+  reprova; linha removida de um prompt reprova; **linha nova ao fim de um só
+  prompt reprova** — a regressão que o gate não via; e a mesma linha nova nos
+  três volta a passar. A varredura por janelas fixas de contexto em `scripts/`,
+  `tests/`, `githooks/`, `hooks/` e `skills/*/scripts/` não encontra nenhuma
+  outra: esta era a única.
+
 - **Uma frase de empacotamento continuava mandando passar ao re-review um
   comando de teste que a task pode não ter.** O contrato do fix loop em
   [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md),
@@ -234,8 +254,11 @@ References below name them so a claim here can be traced there.
   uma comparação e passa a ser um comando: provado num diretório descartável,
   onde a forma antiga criou o arquivo que o payload mandava criar e a nova não.
   O reparo anterior fechou um site e não varreu os irmãos. A varredura agora é
-  completa e está registrada: dezesseis chamadas de `check()`, um único `eval`,
-  e um segundo site com a mesma forma — corrigido. Um terceiro, que parecia
+  exaustiva sobre o arquivo, e o que ela achou: um único `eval`, e um segundo
+  site com a mesma forma insegura — corrigido. **Nenhuma contagem de sites viaja
+  com esta entrada**: ela dependeria de qual forma de contar se declara, e as
+  três razoáveis discordam entre si — o reparo seguinte, nesta mesma série,
+  mudaria qualquer número escrito aqui. Um terceiro, que parecia
   igual, mantém a variável literal na command string e só a expande dentro do
   `eval`, sob aspas: medido separadamente, não executa nada, e **fica como
   está** — igualá-lo visualmente ao resto trocaria uma forma provada segura por
@@ -309,8 +332,14 @@ References below name them so a claim here can be traced there.
   [`docs/evidence-model.md`](docs/evidence-model.md), section "Compatibility:
   legacy behavioral" ganha o alcance e uma tabela de decisão de doze casos, sem
   conceito novo — os treze continuam treze. Suíte determinística nova em
-  `tests/compatibility-mode/`, com step de CI, cobrindo os doze casos: 25
-  asserções, e cinco mutações provadas entrando.
+  `tests/compatibility-mode/`, com step de CI, cobrindo os doze casos da tabela:
+  cada fixture é o caso que diz ser, os dois controllers resolvem os três
+  desfechos e apontam para o documento canônico, e a regra que eles delegam está
+  declarada onde apontam. As asserções negativas distinguem ausência legítima de
+  erro de acesso, a cláusula partilhada é comparada entre os três prompts por
+  delimitação estrutural, e o harness não interpola conteúdo variável antes do
+  `eval`. **A contagem de asserções não é registrada**: ela muda a cada reparo, e
+  a decisão não depende dela.
 
 - **A guarda de contagem de células reprovava pipe corretamente escapado.**
   Achado do re-review sobre o próprio diff de correção: a checagem nova

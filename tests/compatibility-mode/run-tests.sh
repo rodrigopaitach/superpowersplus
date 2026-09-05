@@ -103,8 +103,17 @@ check "the decision table's row 7 carries the same verdict" \
   "row 7 drifted"
 
 # --- the three prompts carry one identical clause, and none of them decides
+# Delimited structurally, never by a line count. `grep -A7` matched the clause
+# only because it happens to be eight lines long: a ninth line added to ONE
+# prompt fell outside the window and the three bodies compared equal while
+# differing — measured, and the drift this check exists to catch. The clause is
+# an indented paragraph inside a fenced `prompt: |` body, so its end is the
+# first blank line or the first line that leaves that indent, which is the same
+# invariant scripts/check-no-dispatch.sh holds with MIN_INDENT.
 clause() {
-  grep -A7 'A brief that declares no evidence class' "$ROOT/$1" | tr -s ' \n' ' '
+  awk 'f && (/^[[:space:]]*$/ || $0 !~ /^    /) { exit }
+       /A brief that declares no evidence class/ && !f { f = 1 }
+       f { print }' "$ROOT/$1" | tr -s ' \n' ' '
 }
 a=$(clause skills/subagent-driven-development/task-reviewer-prompt.md)
 b=$(clause skills/subagent-driven-development/implementer-prompt.md)

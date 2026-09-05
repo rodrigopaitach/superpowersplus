@@ -2645,6 +2645,13 @@ corrigida na task review, não no fecho**: o instrumento anterior nomeava uma
 regra — *blocking mismatch* — que o corpo da asserção não media, o que é o
 defeito que este modelo existe para separar.
 
+**Nota pós-execução, T16.9 — marcar como envelhecido, não reescrever.** O
+instrumento diz *"só os dois artefatos desta linha de trabalho"*, e hoje a
+varredura devolve cinco: os artefatos de review e de audit acrescentados depois
+da execução entraram no mesmo escopo. **A cardinalidade fica como foi escrita.**
+O invariante sob verificação é que **nenhum artefato histórico pré-existente foi
+modificado**, e esse continua valendo — os arquivos a mais nasceram nesta branch.
+
 - [ ] **Step 1: O bloco de resolução no caminho inline**
 
 Em `skills/executing-plans/SKILL.md`, no `### Step 1: Load and Review Plan`,
