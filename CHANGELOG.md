@@ -206,6 +206,24 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **Uma frase de empacotamento continuava mandando passar ao re-review um
+  comando de teste que a task pode não ter.** O contrato do fix loop em
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md),
+  section "The Task Loop", já resolve o instrumento por classe, e
+  [`skills/subagent-driven-development/re-review-prompt.md`](skills/subagent-driven-development/re-review-prompt.md)
+  já torna `[TEST_COMMAND]` condicional — mas a linha que descreve o despacho
+  do re-review sobreviveu do contrato antigo, mandando repassar *"o mesmo test
+  command e counts que o task review reportou"* e afirmando que o re-reviewer
+  roda os testes. **O defeito não é hipotético: ocorreu no próprio re-review
+  desta mudança**, cuja task não tinha nenhum critério `behavioral` e para a
+  qual o operador teve de contrariar a frase por escrito, declarando ao
+  subagente que não havia comando e que ele não deveria derivar um — que é
+  exatamente o que AC45 e o campo condicional existem para impedir. A frase
+  passa a pedir os *verification inputs* que aquele review reportou: test
+  command e counts onde houve teste, nada inventado onde não houve.
+  Substituição no mesmo número de linhas, medido antes e depois — o arquivo
+  fica em 499 contra o teto de 500, sem progressive disclosure.
+
 - **A interpolação de prosa de carrier numa string avaliada por `eval` executava
   comando, e o primeiro reparo tratou o caso em vez da causa.** O re-review da
   Task 16 mediu o que a task review tinha subestimado: em

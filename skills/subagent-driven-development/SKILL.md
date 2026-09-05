@@ -413,9 +413,9 @@ DISPUTED, CONFIRMED and WITHDRAWN are the only dispute states.
 
 **The re-review is scoped.** Run `scripts/review-package PLAN_FILE FIX_BASE HEAD`
 where FIX_BASE is the head the previous review saw, and dispatch
-[re-review-prompt.md](re-review-prompt.md) with the findings list, the
-brief, the report file, the printed diff path, and the same test command
-and counts the task review reported — the re-reviewer runs the tests too.
+[re-review-prompt.md](re-review-prompt.md) with the findings list, the brief, the
+report file, the printed diff path, and the verification inputs the task review
+reported — its test command and counts where it ran tests, none invented where not.
 The re-reviewer verdicts each finding ADDRESSED or NOT ADDRESSED and flags
 new breakage in the fix diff only. New Critical/Important breakage in the fix diff joins the open
 findings list. Out-of-scope observations go to the ledger as deferred
