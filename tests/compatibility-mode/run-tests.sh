@@ -116,8 +116,15 @@ if [ -n "$a" ]; then
 else
   bad "the three prompts carry the consumption clause" "not found"
 fi
-check "the three prompts agree on one body" \
-  "[ \"$a\" = \"$b\" ] && [ \"$b\" = \"$c\" ]" "the three bodies diverged"
+# Same reason as the check above, and the same fix: $a/$b/$c hold carrier prose,
+# and interpolating that into an eval'd string lets a quote inside it run a
+# command. The neighbouring `printf` check keeps the variable literal in the
+# command string instead, which is equally safe and is left as it is.
+if [ "$a" = "$b" ] && [ "$b" = "$c" ]; then
+  ok "the three prompts agree on one body"
+else
+  bad "the three prompts agree on one body" "the three bodies diverged"
+fi
 check "the consumption clause forbids opening the spec or the plan" \
   "printf '%s' \"\$a\" | grep -q 'Do not open the source spec, do not open the plan'" \
   "the prohibition is missing"

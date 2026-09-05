@@ -206,6 +206,37 @@ References below name them so a claim here can be traced there.
 
 ### Fixed
 
+- **A interpolação de prosa de carrier numa string avaliada por `eval` executava
+  comando, e o primeiro reparo tratou o caso em vez da causa.** O re-review da
+  Task 16 mediu o que a task review tinha subestimado: em
+  [`tests/compatibility-mode/run-tests.sh`](tests/compatibility-mode/run-tests.sh),
+  o helper `check()` avalia a command string que recebe, e um site interpolava o
+  corpo da cláusula de consumo — texto lido dos três prompts — antes dessa
+  avaliação. Com uma aspa dupla no conteúdo, o que entra no `eval` deixa de ser
+  uma comparação e passa a ser um comando: provado num diretório descartável,
+  onde a forma antiga criou o arquivo que o payload mandava criar e a nova não.
+  O reparo anterior fechou um site e não varreu os irmãos. A varredura agora é
+  completa e está registrada: dezesseis chamadas de `check()`, um único `eval`,
+  e um segundo site com a mesma forma — corrigido. Um terceiro, que parecia
+  igual, mantém a variável literal na command string e só a expande dentro do
+  `eval`, sob aspas: medido separadamente, não executa nada, e **fica como
+  está** — igualá-lo visualmente ao resto trocaria uma forma provada segura por
+  outra sem ganho.
+
+- **A cardinalidade que saiu do `## Open gaps` continuava viva em dois outros
+  portadores.** Remover o número de um documento e deixá-lo nos demais não
+  remove a afirmação: a tabela de decisões da spec do Evidence Model v2 ainda a
+  dava como medição vigente, e a fixture do caso 2 da suíte de compatibilidade
+  — que roda no CI — abria com a mesma contagem como descrição do que ela
+  representa. Ambos passam à propriedade qualitativa que se verifica abrindo:
+  as matrizes históricas misturam row com test id, row com comando read-only e
+  row com `NENHUM`. Sobrevive apenas a contagem de **seis planos com matriz**,
+  que três parsers independentes reproduziram. A decisão registrada não muda —
+  compatibilidade não é migração retroativa. A varredura que fechou o item
+  classificou cada ocorrência restante dos números como citação de linha ou
+  medição de outro assunto, e não reescreveu registro histórico por conter o
+  número.
+
 - **A task review da Task 16 achou quatro asserções que passavam verdes com o
   alvo ausente, e o instrumento de um critério não media a alegação do próprio
   critério.** Em
