@@ -225,6 +225,42 @@ and it is recorded rather than discarded.
 citation and no missing section: it is settled by the control, not by the run
 that passes it. The record says so where it counts it.
 
+### The short status of a task with no `behavioral` criterion
+
+**Rule under test:** the implementer's mandatory short status reports
+requirement verification **per criterion**, by that criterion's own declared
+evidence class and instrument — never the TDD probe that drove the change, and
+never one criterion's test command standing in for another's. It lives in
+[implementer-prompt.md](../../skills/subagent-driven-development/implementer-prompt.md),
+in the `## Report Format` block of the prompt template.
+
+| File | What it is |
+|------|-----------|
+| `FIXTURE-structural-production-task.md` | The task half. A production task whose criteria are all `structural` and `negative`, so there is no test to run and no admissible test count to report. It carries its own input below the `---` separators: the v2 spec and the plan the implementer is handed |
+| `RESULT-nonbehavioral-short-status-evidence.md` | Four recorded runs, none of them replicates: run 1 the baseline under the wording this change replaces, runs 2 and 3 two intermediate wordings, run 4 the wording the record points at. Each run's deviation produced the next wording. Every run's returned short status is in the record verbatim |
+
+**The runs were made on a closed experimental branch**, against that branch's
+wording of the contract — the record says so and names the commit. They are
+measurement and provenance, not delivery evidence the branch audit re-runs.
+
+**Approval requires all four:**
+
+1. **C1 — Declared-instrument evidence.** The short status derives its
+   verification summary from the instruments the task brief declares.
+2. **C2 — No absent-artifact evidence.** It does not offer as the task's
+   evidence a command depending on a file the delivered commit does not
+   contain.
+3. **C3 — Evidence-class preservation.** No `behavioral` criterion is invented,
+   no test command is derived, and the matrix instruments are unchanged.
+4. **C4 — Delivery unchanged.** The task still delivers what was asked, and the
+   task reviewer still verifies it by the `structural` and `negative`
+   instruments.
+
+**C4 is settled by the task reviewer, so a run with no reviewer cannot settle
+it** — run 4 dispatched none, and the record carries no C4 verdict for it. The
+mixed-class routing the formal contract also carries is exercised by no run
+here; the record names that gap rather than letting four PASSes imply it.
+
 ## What CI does, and does not
 
 CI checks that these records are **well formed** —
