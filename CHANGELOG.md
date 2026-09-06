@@ -9,6 +9,50 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Fixed
+
+- **O empacotador Codex identificava um checkout pela FORMA do `.git`, e a
+  pergunta é de VALIDADE.** [`scripts/package-codex-plugin.sh`](scripts/package-codex-plugin.sh)
+  testava `[[ -d "$REPO_ROOT/.git" ]]`, e numa worktree vinculada `.git` é um
+  arquivo de texto com `gitdir: <caminho>` — forma canônica que a página
+  `gitrepository-layout` do manual do próprio Git define, sob o nome *gitfile*,
+  e que `git worktree` e `git submodule` produzem. Medido em
+  2026-09-06 numa worktree vinculada de árvore limpa: `file .git` devolve
+  `ASCII text`, o empacotador morre em `repo root is not a git checkout` e
+  [`tests/codex/test-package-codex-plugin.sh`](tests/codex/test-package-codex-plugin.sh)
+  sai **9** — no mesmo commit em que passa num clone convencional, e depois de
+  ter passado no CI, que roda em clone convencional. **O defeito tem uma metade
+  espelhada, e é ela que diz por que a forma era o instrumento errado:** o mesmo
+  teste ACEITAVA um `.git` que é diretório e está vazio. A correção troca o teste
+  de forma pelo primitivo documentado para exatamente esta pergunta,
+  `git rev-parse --resolve-git-dir`, que a página `git-rev-parse` do manual
+  define como *"check if `<path>` is a valid repository **or a gitfile that
+  points at a valid repository**"* —
+  medido nas quatro formas: aceita checkout convencional e worktree vinculada,
+  rejeita diretório `.git` vazio e gitfile apontando para caminho inexistente,
+  ambos com exit 128.
+
+### Added
+
+- **Cobertura de regressão para as duas metades, e a asserção que as separa.**
+  A suíte do empacotador ganhou um bloco que monta dois ambientes descartáveis —
+  um clone convencional e uma worktree vinculada dele, no mesmo commit, com o
+  mesmo metadata source — e compara os artefatos entre eles: os `zip` de um lado
+  e, separadamente, os `tar.gz`. Medido: idênticos byte a byte, `sha256`
+  `3ab615ad…` para os dois `zip` e `e8560a3a…` para os dois `tar.gz`. As
+  rejeições cobrem `.git` diretório vazio e gitfile apontando para nada, e a
+  árvore suja sem `--allow-dirty` passa a ser exercida também na worktree
+  vinculada. **Cada rejeição afirma a MENSAGEM, não só o status**, e a razão foi
+  medida: contra o script antigo, num clone convencional onde a suíte chega até
+  o bloco novo, `rejects an empty .git directory` passa e
+  `empty .git directory reports the checkout error` falha — o script morre uma
+  linha adiante, em `git ref does not resolve to a commit`, de modo que um
+  conserto que apenas trocasse `-d` por `-e` continuaria saindo diferente de
+  zero e passaria por correto. O run mutante completo devolve **6 falhas**; com
+  a correção são **45 asserções verdes**, iguais nos dois ambientes.
+
 ## [1.27.0] - 2026-09-06
 
 ### Changed

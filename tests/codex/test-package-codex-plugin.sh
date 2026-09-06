@@ -303,6 +303,160 @@ else
 fi
 assert_contains "$dirty_output" "Working tree has uncommitted changes:" "dirty worktree reports changed files"
 
+# `.git` is a directory in a conventional checkout and a plain `gitdir:` file in a
+# linked worktree; gitrepository-layout names both. Measured 2026-09-06: the
+# previous `[[ -d "$REPO_ROOT/.git" ]]` check died "repo root is not a git
+# checkout" in every linked worktree with a clean tree, and this suite exited 9
+# in the worktree it was run from. The same check accepted an empty `.git`
+# directory, which is why the rejection cases below assert the error text rather
+# than only a non-zero status: a check that tested for existence instead of
+# shape would still exit non-zero, one line further down and with another message.
+#
+# Both environments are throwaway clones under $TEST_ROOT. The script under test
+# is staged and committed there so the two checkouts carry the same script at the
+# same commit, without committing anything in this repository.
+fixture_repo="$TEST_ROOT/fixture-repo"
+fixture_worktree="$TEST_ROOT/fixture-worktree"
+git clone -q --no-local "$REPO_ROOT" "$fixture_repo"
+cp "$SCRIPT_UNDER_TEST" "$fixture_repo/scripts/package-codex-plugin.sh"
+git -C "$fixture_repo" add scripts/package-codex-plugin.sh
+git -C "$fixture_repo" \
+  -c user.name='codex package fixture' \
+  -c user.email='fixture@example.invalid' \
+  commit -q --allow-empty -m 'fixture: stage the script under test'
+git -C "$fixture_repo" worktree add -q --detach "$fixture_worktree" HEAD
+
+if [[ -d "$fixture_repo/.git" ]]; then
+  pass "conventional fixture carries a .git directory"
+else
+  fail "conventional fixture carries a .git directory"
+fi
+
+if [[ -f "$fixture_worktree/.git" ]]; then
+  pass "linked worktree fixture carries a .git gitfile"
+else
+  fail "linked worktree fixture carries a .git gitfile"
+fi
+
+assert_equals \
+  "$(git -C "$fixture_worktree" rev-parse HEAD)" \
+  "$(git -C "$fixture_repo" rev-parse HEAD)" \
+  "both fixture environments sit on the same commit"
+
+conventional_zip="$TEST_ROOT/from-conventional.zip"
+worktree_zip="$TEST_ROOT/from-worktree.zip"
+conventional_tar="$TEST_ROOT/from-conventional.tar.gz"
+worktree_tar="$TEST_ROOT/from-worktree.tar.gz"
+
+# No --allow-dirty: both fixtures are clean, so this also exercises the default
+# path that the dirty-worktree case below rejects.
+if conventional_output="$(
+  "$fixture_repo/scripts/package-codex-plugin.sh" \
+    --metadata-source "$metadata_source" --output "$conventional_zip" 2>&1
+)"; then
+  pass "package script runs in a conventional checkout with a clean tree"
+else
+  fail "package script runs in a conventional checkout with a clean tree"
+  printf '%s\n' "$conventional_output" | sed 's/^/      /'
+fi
+
+if worktree_output="$(
+  "$fixture_worktree/scripts/package-codex-plugin.sh" \
+    --metadata-source "$metadata_source" --output "$worktree_zip" 2>&1
+)"; then
+  pass "package script runs in a linked worktree with a clean tree"
+else
+  fail "package script runs in a linked worktree with a clean tree"
+  printf '%s\n' "$worktree_output" | sed 's/^/      /'
+fi
+
+if cmp -s "$conventional_zip" "$worktree_zip"; then
+  pass "conventional checkout and linked worktree produce identical zip archives"
+else
+  fail "conventional checkout and linked worktree produce identical zip archives"
+fi
+
+if conventional_tar_output="$(
+  "$fixture_repo/scripts/package-codex-plugin.sh" \
+    --metadata-source "$metadata_source" --format tar.gz --output "$conventional_tar" 2>&1
+)"; then
+  pass "package script writes tar.gz from a conventional checkout"
+else
+  fail "package script writes tar.gz from a conventional checkout"
+  printf '%s\n' "$conventional_tar_output" | sed 's/^/      /'
+fi
+
+if worktree_tar_output="$(
+  "$fixture_worktree/scripts/package-codex-plugin.sh" \
+    --metadata-source "$metadata_source" --format tar.gz --output "$worktree_tar" 2>&1
+)"; then
+  pass "package script writes tar.gz from a linked worktree"
+else
+  fail "package script writes tar.gz from a linked worktree"
+  printf '%s\n' "$worktree_tar_output" | sed 's/^/      /'
+fi
+
+if cmp -s "$conventional_tar" "$worktree_tar"; then
+  pass "conventional checkout and linked worktree produce identical tar.gz archives"
+else
+  fail "conventional checkout and linked worktree produce identical tar.gz archives"
+fi
+
+empty_git_root="$TEST_ROOT/empty-git-root"
+broken_gitfile_root="$TEST_ROOT/broken-gitfile-root"
+for invalid_root in "$empty_git_root" "$broken_gitfile_root"; do
+  mkdir -p "$invalid_root/scripts"
+  cp "$SCRIPT_UNDER_TEST" "$invalid_root/scripts/package-codex-plugin.sh"
+done
+mkdir -p "$empty_git_root/.git"
+printf 'gitdir: %s\n' "$TEST_ROOT/no-such-git-dir" >"$broken_gitfile_root/.git"
+
+set +e
+empty_git_output="$(
+  "$empty_git_root/scripts/package-codex-plugin.sh" \
+    --metadata-source "$metadata_source" --output "$TEST_ROOT/empty-git.zip" 2>&1
+)"
+empty_git_status=$?
+set -e
+if [[ "$empty_git_status" -ne 0 ]]; then
+  pass "package script rejects an empty .git directory"
+else
+  fail "package script rejects an empty .git directory"
+fi
+assert_contains "$empty_git_output" "repo root is not a git checkout" \
+  "empty .git directory reports the checkout error"
+
+set +e
+broken_gitfile_output="$(
+  "$broken_gitfile_root/scripts/package-codex-plugin.sh" \
+    --metadata-source "$metadata_source" --output "$TEST_ROOT/broken-gitfile.zip" 2>&1
+)"
+broken_gitfile_status=$?
+set -e
+if [[ "$broken_gitfile_status" -ne 0 ]]; then
+  pass "package script rejects a gitfile pointing at nothing"
+else
+  fail "package script rejects a gitfile pointing at nothing"
+fi
+assert_contains "$broken_gitfile_output" "repo root is not a git checkout" \
+  "gitfile pointing at nothing reports the checkout error"
+
+set +e
+dirty_worktree_output="$(
+  printf '\n# dirty fixture\n' >>"$fixture_worktree/README.md"
+  "$fixture_worktree/scripts/package-codex-plugin.sh" \
+    --metadata-source "$metadata_source" --output "$TEST_ROOT/dirty-worktree.zip" 2>&1
+)"
+dirty_worktree_status=$?
+set -e
+if [[ "$dirty_worktree_status" -ne 0 ]]; then
+  pass "package script rejects a dirty linked worktree by default"
+else
+  fail "package script rejects a dirty linked worktree by default"
+fi
+assert_contains "$dirty_worktree_output" "Working tree has uncommitted changes:" \
+  "dirty linked worktree reports changed files"
+
 if [[ "$FAILURES" -eq 0 ]]; then
   echo "All Codex package archive tests passed"
 else

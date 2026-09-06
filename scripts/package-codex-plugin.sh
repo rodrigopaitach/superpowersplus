@@ -140,7 +140,14 @@ if [[ "$FORMAT" == "zip" ]]; then
   command -v unzip >/dev/null || die "unzip not found in PATH"
 fi
 
-[[ -d "$REPO_ROOT/.git" ]] || die "repo root is not a git checkout: $REPO_ROOT"
+# `.git` is a directory in a conventional checkout and a plain `gitdir:` file in a
+# linked worktree or a submodule -- both canonical per gitrepository-layout.
+# --resolve-git-dir is the documented primitive for "a valid repository or a
+# gitfile that points at a valid repository", so it accepts either shape and still
+# rejects a `.git` that resolves to nothing. git's own message names the internal
+# path it failed on; this one names the root the packager was pointed at.
+git rev-parse --resolve-git-dir "$REPO_ROOT/.git" >/dev/null 2>&1 ||
+  die "repo root is not a git checkout: $REPO_ROOT"
 git -C "$REPO_ROOT" rev-parse --verify "$REF^{commit}" >/dev/null ||
   die "git ref does not resolve to a commit: $REF"
 
