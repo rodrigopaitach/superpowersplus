@@ -396,15 +396,15 @@ CARRIER=skills/subagent-driven-development/implementer-prompt.md
 #   ruff (run by the formatter hook, resolving its cache dir from the cwd)
 #     writes .ruff_cache/.gitignore, .ruff_cache/CACHEDIR.TAG, and
 #     content-addressed entries .ruff_cache/<version>/<digits>
-#   `review-package` writes .superpowers/sdd/.gitignore and the per-plan
-#     packages review-<sha>..<sha>.diff
+#   `sdd-workspace` creates the workspace and writes .superpowers/sdd/.gitignore
+#   `review-package` writes the per-plan packages review-<sha>..<sha>.diff
 # Read from the sources, NOT measured here — this plan ran inline, so the
 # subagent path's workspace files were never created and no instance exists
 # on this tree:
 #   task-<n>-brief.md   — `scripts/task-brief`
 #   task-<n>-report.md  — written by the implementer subagent (SKILL.md)
 #   the progress ledger — written by the controller (references/resuming.md)
-# `sdd-workspace` creates the directory and its .gitignore and writes no .md.
+# `sdd-workspace` writes no .md itself; the three above have other writers.
 # Anything else under either root is NOT demonstrated tool output and fails as
 # unclassified — including a file named like a manifest or a lockfile.
 PROCESS_ARTIFACTS='^\.ruff_cache/\.gitignore$'
