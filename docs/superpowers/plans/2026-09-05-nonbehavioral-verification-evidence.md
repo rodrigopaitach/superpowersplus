@@ -240,9 +240,8 @@ with:
         range** in place of a command, and no test or command is invented
         to fill the shape.
       Any further fact goes in a short phrase after the line, outside the
-      form: a fourth field bolded and chained into the form with an
-      em-dash makes the carriers disagree and fails
-      `scripts/check-evidence-line.sh`.
+      form: the form is these three fields and takes no fourth one
+      chained into it with an em-dash.
       **The instruments are the ones your brief declares, reported as you
       ran them** — never a wider, narrower or differently-scoped check that
       would have answered the same question, and never another criterion's
@@ -296,7 +295,7 @@ the whole claim without leaning on an uncited neighbour:
 - **T1.4** AC4 — the declared-instrument paragraph in full: the brief's instruments as run, and none of wider, narrower, differently-scoped, or another criterion's test command
 - **T1.5** AC5 — the command-instrument bullet's clause asking for the real exit code of that instrument
 - **T1.6** AC6 — the same bullet's `counts:` clause: the literal `—` and nothing else, never a verdict, an output, or a description
-- **T1.7** AC7 — the prose-placement rule: further facts go in a short phrase outside the form, and a fourth chained field fails the gate
+- **T1.7** AC7 — the prose-placement rule: further facts go in a short phrase outside the form, and the form takes no fourth chained field. The gate is the row's *second* half and runs here, in this repository; the carrier no longer names it (I4)
 - **T1.8** AC8 — the located-evidence bullet: the smallest semantically sufficient located range in place of a command, nothing invented to fill the shape
 - **T1.9** AC9 — the TDD-probe separation paragraph in full, including the both-roles case
 
@@ -389,6 +388,14 @@ ALLOWED="$ALLOWED"'|docs/superpowers/plans/2026-09-05-nonbehavioral-verification
 ALLOWED="$ALLOWED"'|docs/superpowers/review-yield\.md)$'
 CARRIER=skills/subagent-driven-development/implementer-prompt.md
 
+# The roots this execution declares for tool output, each named with the tool
+# that writes it. They are an ALLOWLIST over roots, the same shape as the nine
+# paths above: a difference anywhere else is unclassifiable and fails.
+#   .ruff_cache/  — the formatter hook runs `ruff` on every .py written, and
+#                   ruff resolves its cache dir from the cwd
+#   .superpowers/ — the review protocol's own workspace (`review-package`)
+PROCESS_ROOTS='^(\.ruff_cache/|\.superpowers/)'
+
 ir7=0
 ir7fail() { printf 'IR7 FAIL: %s\n' "$1"; ir7=1; }
 
@@ -414,7 +421,10 @@ else
   [ -n "$extra" ] && ir7fail "paths outside the nine declared:"$'\n'"$extra"
 fi
 
-# --- half 2: the ignored set, membership AND content, against the pre-edit baseline
+# --- half 2: the ignored set, membership AND content, against the pre-edit
+#     baseline. A difference is not a verdict: it is CLASSIFIED, and only two
+#     outcomes are clean — a path under a declared process root, or no
+#     difference at all. Everything else, and every failure to look, fails.
 if [ -n "$SNAP" ]; then
   if [ ! -r "$SNAP" ]; then
     ir7fail "baseline missing or unreadable at $SNAP — the ignored half cannot be evaluated"
@@ -424,23 +434,47 @@ if [ -n "$SNAP" ]; then
     ir7fail "baseline at $SNAP is newer than $CARRIER — it was taken after the edits and proves nothing"
   else
     now="$(mktemp)"
+    drift="$(mktemp)"
     if ! ( set -o pipefail
            git ls-files --others --exclude-standard --ignored -z \
              | sort -z | xargs -0 -r sha256sum > "$now" ); then
       ir7fail "could not read the ignored set"
-    elif ! drift="$(diff -- <(tail -n +2 -- "$SNAP") "$now")"; then
-      ir7fail "the ignored set changed since Step 0 (added or modified):"$'\n'"$drift"
+    else
+      diff -- <(tail -n +2 -- "$SNAP") "$now" > "$drift"
+      d=$?
+      if [ "$d" -gt 1 ]; then
+        ir7fail "could not compare the ignored set against the baseline (diff exit $d)"
+      elif [ "$d" -eq 1 ]; then
+        # Full inventory preserved: every differing path is printed, then classified.
+        paths="$(sed -n 's/^[<>] [0-9a-f]\{64\}  //p' -- "$drift" | sort -u)"
+        n="$(printf '%s\n' "$paths" | grep -c '[^[:space:]]')"
+        printf 'IR7: the ignored set differs from the Step 0 baseline — %s path(s), each classified below\n' "$n"
+        if [ "$n" -eq 0 ]; then
+          ir7fail "the ignored set differs but no path could be parsed from the comparison:"$'\n'"$(cat -- "$drift")"
+        fi
+        while IFS= read -r p; do
+          [ -z "$p" ] && continue
+          if printf '%s\n' "$p" | grep -qE '(^|/)scripts/'; then
+            ir7fail "IR7 forbidden class — file under scripts/: $p"
+          elif printf '%s\n' "$p" | grep -qE "$PROCESS_ROOTS"; then
+            printf '  process artifact, declared root: %s\n' "$p"
+          else
+            ir7fail "unclassifiable ignored difference, under no declared process root: $p"
+          fi
+        done <<EOF
+$paths
+EOF
+      fi
     fi
-    rm -f -- "$now"
+    rm -f -- "$now" "$drift"
   fi
 fi
 
-[ "$ir7" -eq 0 ] && echo "IR7: clean — change set within the nine declared, ignored set unchanged"
+[ "$ir7" -eq 0 ] && echo "IR7: clean — change set within the nine declared; every ignored difference classified as declared process output, none in a forbidden class"
 [ "$ir7" -eq 0 ] || rc=1
 
 echo "Step 6 exit: $rc                 (T1.12, T1.13, T1.14 and T1.15 all feed it)"
-test "$rc" -eq 0                      # last statement, so the block's exit carries every failure
-```
+test "$rc" -eq 0                      # last statement, so the block's exit carries every failure```
 
 Expected: `Step 6 exit: 0`, and the block itself returns 0. **That exit
 aggregates the block's mechanical checks and nothing more.** It settles
@@ -468,6 +502,12 @@ live inside `implementer-prompt.md`, **the file this task edits**. A path-scoped
 and from the working tree and compare them character for character, so any edit
 inside either one fails the check. Anchors rather than line numbers, because
 Step 1 moves every line number below it.
+
+**The half-2 rule changed in the closing fix wave, and the paragraphs below
+describe the form Tasks 1 and 2 were verified with.** Read them as the record
+of what ran; the classification the block now performs, why it replaced
+freezing the ignored set, and what it does not reach are in
+"Closing fix wave" at the end of this plan.
 
 **Why T1.15 is an allowlist and not a list of forbidden filenames.** A
 catalogue of manifest names is never finished. Two were measured and found blind:
@@ -866,3 +906,124 @@ the measured inventory of what these artifacts contain, not a permanent ceiling.
 git add tests/skill-behavior/FIXTURE-structural-production-task.md tests/skill-behavior/RESULT-nonbehavioral-short-status-evidence.md tests/skill-behavior/README.md
 git commit -m "docs(skill-behavior): o registro dos runs que mediram o contrato do short status"
 ```
+
+---
+
+## Closing fix wave
+
+The branch's two gates ran after Task 2: the conformance audit returned PASS,
+and the whole-branch code review returned *With fixes* — no Critical, five
+Important, four Minor. This section records what the wave changed and why. **It
+does not rewrite the steps above.** Tasks 1 and 2 were executed and verified
+with the text and the instrument the steps prescribed at the time; where this
+wave replaced either, the step now carries the corrected version and the reason
+is here.
+
+### The carrier
+
+- **The fix round still asked for counts an instrument may not have.**
+  `## After Review Findings` closed with *"Report the command exactly as you ran
+  it, and the counts it printed"*, and the next sentence sent the implementer to
+  the short-status contract, whose `structural` / `negative` bullet fixes
+  `counts:` at the literal `—`. For a read-only validator there are no counts,
+  so the two sentences could not both be obeyed. It now reports each instrument
+  and what it returned, and defers to `Report Format` for what each criterion
+  carries. **The original prescription did not cover this sentence at all** —
+  no criterion of the source spec points at it, and the delivery did not meet
+  it before this wave.
+- **The dispatched body named a gate that exists only in this repository.** The
+  prescribed replacement text ended by saying a fourth chained field *"makes the
+  carriers disagree and fails `scripts/check-evidence-line.sh`"*. Lines 5-243 of
+  that file are the prompt body pasted verbatim into an implementer working in
+  **your partner's** project, where neither that script nor the notion of
+  carriers exists — and cannot: `scripts/package-codex-plugin.sh` refuses any
+  archive path matching `^scripts/`, so the gate is source-only. Measured: at
+  BASE this file named no `scripts/` path at all, so the reference was a
+  regression this delivery introduced. The sentence now states the rule without
+  the internal name. **`AC7` is preserved in both halves** — further facts go in
+  prose outside the form, and the form takes no fourth chained field — and the
+  gate itself is untouched and still runs here, which is the second half of
+  `T1.7` and the only thing that ever verified the absence of a fourth field.
+
+### The record and the ledger
+
+- **Run 1's verdict was settled against the original reviewer report**, not
+  reconciled by reading. The record's C4 cell said the reviewer *"approved with
+  zero findings"* while its run table said *"Approved, one Minor"*. The
+  reviewer's own report for that run — dispatched over `93cd7cf..b1df353`, the
+  SHAs the record names — returns `Critical: None`, `Important: None`,
+  `Minor: None`, `Task quality: Approved`. The cell was right and the table was
+  wrong, which is the opposite of the reconciliation that suggested itself.
+- **The dangling `## Open gaps` pointer is provenance, not a new decision.** The
+  record's sentence about the open item pointed at a `## Open gaps` entry that
+  exists in the **experimental** branch's changelog at `d021ef6`, not in this
+  one. The record now says so. No item was added to `## Open gaps` to make a
+  reference resolve — inventing a decision to satisfy a pointer is the failure
+  the section exists to prevent.
+- **The review ledger's round-3 cell.** It read `1` in *Still open from the
+  previous round*, and round 2 of that face returned **zero** blocking findings,
+  so no such finding could have been found unfixed. The source of the `1` is
+  real and recoverable — round 3's report says *"10 received — 1 still open"* —
+  but those ten were advisory and human-review items, not the previous round's
+  blocking findings, which is the only quantity that column holds.
+
+### The IR7 instrument
+
+**What the requirement says, and what the instrument was asking.** `IR7` forbids
+adding or modifying a dependency manifest, a lockfile, or a file under
+`scripts/`. Half 2 of the instrument asked for something wider: that the
+**entire ignored set** be unchanged in membership and content. It failed twice
+during this branch, both times on activity that was not the delivery — the
+formatter hook running `ruff`, which resolves its cache directory from the cwd
+and rewrote `.ruff_cache/`; and the review protocol's own `review-package`,
+which writes into `.superpowers/`. Neither is a manifest, a lockfile or a file
+under `scripts/`. **An instrument whose scope exceeds its claim fails on things
+the claim permits**, which is the same defect class as an instrument whose scope
+falls short, in the other direction.
+
+**What replaced it.** A difference in the ignored set is no longer a verdict; it
+is **classified**, and only two outcomes are clean:
+
+| Case | Outcome |
+|---|---|
+| Path is under `scripts/`, at any position, in any root | **IR7 forbidden class** — fails |
+| Path is under a declared process-artifact root, and is not the case above | Process output — reported by name, does not fail |
+| Anything else | **Unclassifiable** — fails |
+
+The declared roots are named with the tool that writes them: `.ruff_cache/` for
+the formatter hook, `.superpowers/` for the review protocol. **This is the same
+allowlist shape as half 1**, one level up: half 1 admits nine paths, half 2
+admits two roots, and everything outside either one fails. That is what closes
+the manifest question without a catalogue of manifest names — the round-3
+blocker that a catalogue can never be finished stands, and is not reopened here.
+A `node_modules/`, a `vendor/` or a `.venv/` is under no declared root, so an
+ignored manifest or lockfile appearing in one **fails as unclassifiable**
+without anybody having to have named it.
+
+**The scope, stated:** the full inventory is preserved — every differing path is
+printed with its classification, none is suppressed — and the baseline is still
+taken before any edit, still resolved through the worktree-keyed pointer, and
+still never recomputed after the fact. Collection failure, a missing or foreign
+or post-edit baseline, an unparseable comparison, and any unclassifiable
+difference each fail the row and reach the block's exit code.
+
+**The limit, stated rather than left to be discovered.** Within a declared root
+the classification is by path, so the `scripts/` test catches a script placed
+there — demonstrated — but a file *named* like a dependency manifest, written
+inside `.ruff_cache/` or `.superpowers/`, would be reported as process output
+rather than as a violation. It would still be printed by name in the inventory,
+it is not in any commit, and nothing consults those two roots as a package root.
+That residue is the price of refusing a manifest-name catalogue, and it is
+recorded here rather than left for the next reader to find.
+
+**Demonstrated in an isolated scratch clone, thirteen cases, asserting on the
+process exit code and never on printed text:** a `.ruff_cache/` content change
+and a `.superpowers/` addition are clean; an ignored `node_modules/package.json`,
+an ignored `node_modules/package-lock.json`, an ignored file under
+`scripts/__pycache__/`, a script inside a declared root, an untracked root
+lockfile and a modification to a tracked file under `scripts/` are each caught;
+and a missing baseline, a missing pointer and an unavailable `git` each still
+fail. **The two baselines this branch took are preserved**, and the comparison
+over the full window — from the first, taken before any edit and before `ruff`
+ran, to the delivered tree — classifies four differing paths, all of them
+declared process output and none in a forbidden class.

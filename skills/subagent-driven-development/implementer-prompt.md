@@ -176,8 +176,10 @@ Subagent (general-purpose):
     not open the plan, do not decide whether a document could be legacy, and do
     not recognise a fourth class.
 
-    Report the command exactly as you ran it, and the counts it printed.
-    Then reply with the same short status contract as your first report.
+    Report each instrument exactly as you ran it and what it returned. Then
+    reply with the same short status contract as your first report — the
+    per-criterion evidence rules under Report Format govern what each
+    criterion carries there.
 
     ## Report Format
 
@@ -223,9 +225,8 @@ Subagent (general-purpose):
         range** in place of a command, and no test or command is invented
         to fill the shape.
       Any further fact goes in a short phrase after the line, outside the
-      form: a fourth field bolded and chained into the form with an
-      em-dash makes the carriers disagree and fails
-      `scripts/check-evidence-line.sh`.
+      form: the form is these three fields and takes no fourth one
+      chained into it with an em-dash.
       **The instruments are the ones your brief declares, reported as you
       ran them** — never a wider, narrower or differently-scoped check that
       would have answered the same question, and never another criterion's

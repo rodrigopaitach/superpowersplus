@@ -45,8 +45,10 @@ References below name them so a claim here can be traced there.
   ao lado não substitui o instrumento declarado de um `structural` ou
   `negative`, não autoriza omiti-lo, e não o converte em evidência de teste.
 - **O caminho `behavioral` não mudou e o gate não foi tocado.** A forma
-  `**Command:** … — **exit:** … — **counts:** …` continua byte a byte dentro do
-  bullet behavioral, nenhum quarto campo encadeado entrou, e
+  `**Command:** … — **exit:** … — **counts:** …` mantém os mesmos três nomes de
+  campo, na mesma ordem e com o mesmo encadeamento por travessão — o texto não é
+  byte-idêntico ao anterior porque o bullet passou a ser aninhado e a linha andou
+  dois espaços à direita. Nenhum quarto campo encadeado entrou, e
   [`scripts/check-evidence-line.sh`](scripts/check-evidence-line.sh) não foi
   modificado — ele lê nomes de campo e nunca o conteúdo, então `counts: —` já o
   satisfazia. O Iron Law do TDD, suas três exceções e a seção `TDD Evidence` do
@@ -65,8 +67,37 @@ References below name them so a claim here can be traced there.
 - **O controller passa a nomear o retorno do implementer como verification
   evidence**, uma linha descritiva em
   [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md),
-  section "1. Dispatch the implementer" — quatro palavras no lugar de quatro. O
-  contrato detalhado continua morando no prompt; o controller não o repete.
+  section "1. Dispatch the implementer": a frase deixa de dizer *a one-line test
+  summary* e passa a dizer *the verification evidence*. O contrato detalhado
+  continua morando no prompt; o controller não o repete.
+- **A entrega carrega o registro versionado dos runs que mediram o contrato.**
+  [`tests/skill-behavior/RESULT-nonbehavioral-short-status-evidence.md`](tests/skill-behavior/RESULT-nonbehavioral-short-status-evidence.md),
+  a fixture
+  [`tests/skill-behavior/FIXTURE-structural-production-task.md`](tests/skill-behavior/FIXTURE-structural-production-task.md)
+  e o registro no
+  [`tests/skill-behavior/README.md`](tests/skill-behavior/README.md) do diretório.
+  São quatro runs de agente vivo sobre fixtures descartáveis, feitos numa branch
+  experimental fechada e contra a redação **daquela** branch: **proveniência e
+  estudos de caso, não delivery evidence** que a auditoria de branch reexecuta. O
+  registro nomeia o que não foi medido — nenhum run exercitou o caso misto (`AC2`),
+  e o run 4 não teve reviewer despachado, de modo que não carrega veredito para o
+  critério que o reviewer decide. Quatro observações não são uma taxa e não
+  garantem comportamento.
+- **Correções da onda de encerramento da branch, todas apontadas pela revisão
+  final.** Em
+  [`skills/subagent-driven-development/implementer-prompt.md`](skills/subagent-driven-development/implementer-prompt.md):
+  a instrução de *After Review Findings* ainda mandava reportar as contagens
+  impressas, o que um instrumento read-only não tem — agora ela remete ao contrato
+  por critério do `Report Format`; e o corpo despachado ao implementer deixou de
+  nomear um gate que só existe neste repositório, preservando a regra de `AC7`
+  (informação adicional em prosa, fora da forma, sem quarto campo encadeado). O
+  gate continua existindo e rodando aqui, sem alteração. No registro de runs:
+  o veredito do run 1 foi conferido no relatório original do reviewer e a linha da
+  tabela que dizia *one Minor* foi corrigida, e a referência a um item de
+  `## Open gaps` passou a declarar que ela é do changelog da branch experimental.
+  Em [`docs/superpowers/review-yield.md`](docs/superpowers/review-yield.md), a
+  célula que atribuía à rodada 3 um bloqueador remanescente de uma rodada que não
+  teve bloqueador algum. **Nenhum dos sete carriers protegidos foi tocado.**
 
 ## [1.26.0] - 2026-09-05
 
