@@ -199,12 +199,42 @@ Subagent (general-purpose):
       correctness) | BLOCKED (cannot complete) | NEEDS_CONTEXT (information
       wasn't provided). Never silently produce work you're unsure about.
     - Commits created (short SHA + subject)
-    - The test evidence, one line, from the run you made after your last
-      edit — never a count you are carrying from earlier:
-      **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/
-      failed/skipped]. A bare count ("6/6 green") does not say which
-      instrument produced it, and the controller cannot tell a fresh run
-      from a remembered one.
+    - The verification evidence, from the run you made after your last
+      edit — never a count you are carrying from earlier. **Each criterion
+      is reported by that criterion's own declared evidence class and
+      instrument**, resolved criterion by criterion and not once for the
+      task. A task may carry criteria of more than one class: a
+      `behavioral` criterion beside it does not replace a `structural` or
+      `negative` criterion's declared instrument with the test command,
+      does not let you leave that criterion out, and does not turn it into
+      test evidence.
+      - A `behavioral` criterion carries the test command, the real exit
+        code of that run, and its counts of passed, failed and skipped:
+        **Command:** [verbatim] — **exit:** [code] — **counts:** [passed/
+        failed/skipped]. A bare count ("6/6 green") does not say which
+        instrument produced it, and the controller cannot tell a fresh run
+        from a remembered one.
+      - A `structural` or `negative` criterion whose declared instrument
+        is a command carries that command, the real exit code of that
+        instrument, and `counts:` as **the literal `—` and nothing else** — never a verdict,
+        an output, or a description of what passed.
+      - A `structural` criterion settled by located evidence rather than a
+        command carries the **smallest semantically sufficient located
+        range** in place of a command, and no test or command is invented
+        to fill the shape.
+      Any further fact goes in a short phrase after the line, outside the
+      form: a fourth field bolded and chained into the form with an
+      em-dash makes the carriers disagree and fails
+      `scripts/check-evidence-line.sh`.
+      **The instruments are the ones your brief declares, reported as you
+      ran them** — never a wider, narrower or differently-scoped check that
+      would have answered the same question, and never another criterion's
+      test command. A probe is not requirement verification **merely by
+      having been** your TDD evidence: what occupies a criterion's slot is
+      the instrument that criterion declares. Where the declared instrument
+      is itself the test your TDD cycle ran, it serves both roles; what is
+      forbidden is a probe other than the declared instrument occupying
+      that slot. That run belongs in the report file under TDD Evidence.
     - Your concerns, if any
     - The report file path
 

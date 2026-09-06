@@ -9,6 +9,65 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Changed
+
+- **A evidência do short status passa a ser verificação do requisito, resolvida
+  por critério e pela classe de evidência que aquele critério declara.** O slot
+  obrigatório de evidência do short status, no bloco `## Report Format` do
+  template em
+  [`skills/subagent-driven-development/implementer-prompt.md`](skills/subagent-driven-development/implementer-prompt.md),
+  era enunciado como uma rodada de teste, e não distinguia, por critério, a
+  evidência de que o processo de TDD rodou da evidência de que o requisito foi
+  verificado. Um critério cujo instrumento declarado não é um teste não tinha
+  valor admissível para aquele slot. **O que isso permitia foi medido numa
+  produção `structural` + `negative`:** um probe que o implementer escreveu para
+  dirigir o próprio ciclo de TDD foi reportado ali no lugar do instrumento de
+  verificação declarado pelo critério — e esse probe não era o instrumento
+  declarado nem estava presente no commit entregue, de modo que a única linha
+  que o controller lê antes de despachar o reviewer nomeava um artefato ausente
+  da árvore. O bullet reescrito abre pelo roteamento — cada critério é reportado
+  pela classe e pelo instrumento que *ele* declara, resolvido critério a critério
+  e não uma vez para a task — e pendura as três formas como pares: o caminho
+  `behavioral` com comando, exit real e contagens de passed/failed/skipped; o
+  caminho `structural`/`negative` cujo instrumento é um comando, com o exit real
+  daquele instrumento e `counts:` como o traço literal; e o caminho `structural`
+  resolvido por evidência localizada, que carrega o menor range semanticamente
+  suficiente no lugar de um comando e não inventa teste nem comando para
+  preencher a forma.
+- **A fronteira é o critério, não a task.** Uma task pode carregar critérios de
+  mais de uma classe, e uma regra condicionada a "esta task não tem critério
+  `behavioral`" deixaria justamente o caso misto descoberto: um único critério
+  behavioral rotearia o status inteiro pelo slot em forma de teste e os
+  instrumentos declarados dos demais critérios nunca chegariam ao controller. O
+  contrato agora diz as três leituras do invariante — um critério `behavioral`
+  ao lado não substitui o instrumento declarado de um `structural` ou
+  `negative`, não autoriza omiti-lo, e não o converte em evidência de teste.
+- **O caminho `behavioral` não mudou e o gate não foi tocado.** A forma
+  `**Command:** … — **exit:** … — **counts:** …` continua byte a byte dentro do
+  bullet behavioral, nenhum quarto campo encadeado entrou, e
+  [`scripts/check-evidence-line.sh`](scripts/check-evidence-line.sh) não foi
+  modificado — ele lê nomes de campo e nunca o conteúdo, então `counts: —` já o
+  satisfazia. O Iron Law do TDD, suas três exceções e a seção `TDD Evidence` do
+  relatório completo também não foram alterados: esta mudança separa duas
+  responsabilidades no relato, e não decide se TDD se aplica a uma task
+  `structural`.
+- **Os carriers irmãos ficaram de fora porque foram medidos e não reproduzem o
+  defeito — não porque a correção tenha sido adiada.**
+  `skills/subagent-driven-development/task-reviewer-prompt.md:96` já proíbe
+  inventar arquivo de teste para dar a um critério `structural` ou `negative`
+  algo para apontar, e
+  `skills/subagent-driven-development/re-review-prompt.md:121-122` já diz que,
+  para essas classes, o instrumento é o validador ou comando read-only e que
+  `counts:` lê `—`. Nenhum dos sete arquivos que a spec mantém fora do diff foi
+  corrigido nesta entrega, e nenhum precisava ser.
+- **O controller passa a nomear o retorno do implementer como verification
+  evidence**, uma linha descritiva em
+  [`skills/subagent-driven-development/SKILL.md`](skills/subagent-driven-development/SKILL.md),
+  section "1. Dispatch the implementer" — quatro palavras no lugar de quatro. O
+  contrato detalhado continua morando no prompt; o controller não o repete.
+
 ## [1.26.0] - 2026-09-05
 
 ### Added
