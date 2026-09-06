@@ -30,6 +30,12 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 04/09/2026 | evidence-model (whole branch) | branch | 2 | 1 | 1 |
 | 05/09/2026 | evidence-model (whole branch) | branch | 3 | 3 | 0 |
 | 05/09/2026 | evidence-model (whole branch) | branch | 4 | 0 | 0 |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 1 | 0 | — |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 2 | 2 | 0 |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 3 | 0 | 0 |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 1 | 2 | — |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 2 | 0 | 0 |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 3 | 3 | 1 |
 
 **Round 3 was not empty, and that is the first thing this table says.** The
 tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and
