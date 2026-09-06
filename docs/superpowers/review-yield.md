@@ -37,6 +37,7 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 2 | 0 | 0 |
 | 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 3 | 3 | 0 |
 | 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 1 | 5 | — |
+| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 2 | 1 | 0 |
 
 **Round 3 was not empty, and that is the first thing this table says.** The
 tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and
@@ -57,10 +58,14 @@ findings, a wider set the ledger has no column for. The cell is `0`; the `1`
 is recorded here so the correction is not mistaken for the count going
 missing.
 
-**The `branch` face's row counts Critical and Important together**, as the
-column definition requires of the three diff faces: that review returned no
-Critical and five Important. Its round 2 is the re-review of the closing fix
-wave, and gets its own row when it runs.
+**The `branch` face's rows count Critical and Important together**, as the
+column definition requires of the three diff faces. Round 1 returned no
+Critical and five Important. Round 2 is the re-review of the closing fix wave:
+it found all five repaired — so `0` still open — and returned one new Important
+of its own, a closing code fence the wave itself had swallowed. **A fix wave
+that repairs five and introduces one is what this column exists to make
+visible**, and it is the second time on this branch that a round after the
+'tidy story' cutoff was not empty.
 
 **The `spec` face's three rounds on this branch carry no row, and the reason is
 the one this file exists to end.** They ran before the ledger did; round 1's

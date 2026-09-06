@@ -286,7 +286,12 @@ the pair this record's Run 1 section names — returns `Critical: None`,
 was right and this table was wrong. Recorded rather than quietly amended,
 because the reading that suggested itself — that *zero findings* had meant
 *zero blocking* findings — would have kept the wrong cell and made the record
-less accurate, not more.
+less accurate, not more. **That report is not reachable from this repository** —
+the run happened in a throwaway repository that no longer exists, and neither it
+nor its transcript is in this tree or in `d021ef6`. What is checkable here is
+that the record contradicted itself, that the half kept is the one its own C4
+verdict cell already asserted, and that the change is recorded in place rather
+than quietly applied.
 
 **All four ran on `haiku` against the same fixture.** Three behaviours from one
 tier is variance, and this record does not read runs 3 and 4's cleanliness as an

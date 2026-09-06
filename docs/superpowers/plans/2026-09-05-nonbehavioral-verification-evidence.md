@@ -474,7 +474,8 @@ fi
 [ "$ir7" -eq 0 ] || rc=1
 
 echo "Step 6 exit: $rc                 (T1.12, T1.13, T1.14 and T1.15 all feed it)"
-test "$rc" -eq 0                      # last statement, so the block's exit carries every failure```
+test "$rc" -eq 0                      # last statement, so the block's exit carries every failure
+```
 
 Expected: `Step 6 exit: 0`, and the block itself returns 0. **That exit
 aggregates the block's mechanical checks and nothing more.** It settles
@@ -933,10 +934,10 @@ is here.
   it before this wave.
 - **The dispatched body named a gate that exists only in this repository.** The
   prescribed replacement text ended by saying a fourth chained field *"makes the
-  carriers disagree and fails `scripts/check-evidence-line.sh`"*. Lines 5-243 of
-  that file are the prompt body pasted verbatim into an implementer working in
-  **your partner's** project, where neither that script nor the notion of
-  carriers exists — and cannot: `scripts/package-codex-plugin.sh` refuses any
+  carriers disagree and fails `scripts/check-evidence-line.sh`"*. The fenced
+  prompt body of that file — everything between its two fence lines — is
+  pasted verbatim into an implementer working in **your partner's** project,
+  where neither that script nor the notion of carriers exists — and cannot: `scripts/package-codex-plugin.sh` refuses any
   archive path matching `^scripts/`, so the gate is source-only. Measured: at
   BASE this file named no `scripts/` path at all, so the reference was a
   regression this delivery introduced. The sentence now states the rule without
@@ -1023,7 +1024,19 @@ an ignored `node_modules/package-lock.json`, an ignored file under
 `scripts/__pycache__/`, a script inside a declared root, an untracked root
 lockfile and a modification to a tracked file under `scripts/` are each caught;
 and a missing baseline, a missing pointer and an unavailable `git` each still
-fail. **The two baselines this branch took are preserved**, and the comparison
-over the full window — from the first, taken before any edit and before `ruff`
-ran, to the delivered tree — classifies four differing paths, all of them
-declared process output and none in a forbidden class.
+fail. **Every baseline this branch took is preserved**, and the comparison over
+the full window — from the first, taken before any edit and before `ruff` ran, to
+the delivered tree — classifies every differing path as declared process output,
+with none in a forbidden class. **The count is deliberately not written here.** It
+grows whenever the review protocol writes another package under `.superpowers/`,
+and a number in this file would go on reading as true after the next one: the
+first version of this sentence said *four*, and was overtaken within the same
+session by the review package built to check it. Run the comparison; the block
+prints every path it classifies.
+
+**One more limit, from the re-audit.** The baseline is taken at Task 1 Step 0,
+which runs after the spec and the plan are committed — so the ignored-set window
+opens at that commit, not at BASE. An ignored file added by one of those two
+commits would sit *inside* the baseline rather than appear as a difference. What
+bounds it here is that `.gitignore` is not in the change set, so the ignore rules
+are identical to BASE, and both commits are documentation only.
