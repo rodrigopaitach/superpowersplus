@@ -937,7 +937,8 @@ is here.
   carriers disagree and fails `scripts/check-evidence-line.sh`"*. The fenced
   prompt body of that file — everything between its two fence lines — is
   pasted verbatim into an implementer working in **your partner's** project,
-  where neither that script nor the notion of carriers exists — and cannot: `scripts/package-codex-plugin.sh` refuses any
+  where neither that script nor the notion of carriers exists — and cannot:
+  `scripts/package-codex-plugin.sh` refuses any
   archive path matching `^scripts/`, so the gate is source-only. Measured: at
   BASE this file named no `scripts/` path at all, so the reference was a
   regression this delivery introduced. The sentence now states the rule without

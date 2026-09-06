@@ -64,12 +64,24 @@ Critical and five Important. Round 2 is the re-review of the closing fix wave:
 it found all five repaired — so `0` still open — and returned one new Important
 of its own, a closing code fence the wave itself had swallowed. **A fix wave
 that repairs five and introduces one is what this column exists to make
-visible**, and it is the second time on this branch that a round after the
-'tidy story' cutoff was not empty.
+visible**. It is also not the first round on this branch that the tidy story
+would have predicted empty and that was not: `spec | 2` returned two and
+`plan | 3` returned three. Named rather than counted — an ordinal over a table
+that keeps growing goes stale the next time somebody appends to it, which is
+how the first version of this sentence came to say *second*.
 
-**The `spec` face's three rounds on this branch carry no row, and the reason is
-the one this file exists to end.** They ran before the ledger did; round 1's
-nine blocking findings are recoverable from the commit that answered them, and
-rounds 2 and 3 are not — their counts were never written down anywhere, and
-reconstructing them now would be inventing the first entries of a record whose
-whole point is that it is measured. The gap is the argument.
+**The `spec` face's three rounds on `review-yield-and-problem-section` carry
+no row, and the reason is the one this file exists to end.** They ran before
+the ledger did; round 1's nine blocking findings are recoverable from the
+commit that answered them, and rounds 2 and 3 are not — their counts were
+never written down anywhere, and reconstructing them now would be inventing
+the first entries of a record whose whole point is that it is measured. The
+gap is the argument.
+
+**That paragraph read "this branch" until 06/09/2026.** It was written when
+the table held three rows and no `spec` row at all (`7ec54eb`), so "this
+branch" was unambiguous then. Rows for
+`worktree-fix+nonbehavioral-verification-evidence` were appended later, its
+`spec` rounds 1 to 3 among them, and a reader then met a sentence saying the
+`spec` rounds carry no row sitting directly under three rows that do. Only the
+branch name was added; the claim is unchanged.
