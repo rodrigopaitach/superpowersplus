@@ -35,7 +35,8 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 3 | 0 | 0 |
 | 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 1 | 2 | — |
 | 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 2 | 0 | 0 |
-| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 3 | 3 | 1 |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 3 | 3 | 0 |
+| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 1 | 5 | — |
 
 **Round 3 was not empty, and that is the first thing this table says.** The
 tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and
@@ -43,6 +44,23 @@ tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 
 returned one blocking finding, and it was a defect **round 2's own fix pass had
 left behind**: a rename marked in one of the two places that carried it. Four
 rows are not a policy, and the shape they make is not the one that was expected.
+
+**What the `plan` round 3 cell used to say, and why it does not say it now.**
+It read `1`, and the number was real but answered a different question. Round
+3's report opens *"Previous findings: 10 received — 1 still open"*, and that
+one was finding #5, Task 2's claim about the neighbouring README entries. But
+round 2 of that face returned **Approved, zero blocking findings** — its only
+findings section is headed *Recommendations (advisory, do not block)* — so
+there was no blocking finding for round 3 to find unfixed, which is the only
+quantity this column holds. The ten were advisory items and human-review
+findings, a wider set the ledger has no column for. The cell is `0`; the `1`
+is recorded here so the correction is not mistaken for the count going
+missing.
+
+**The `branch` face's row counts Critical and Important together**, as the
+column definition requires of the three diff faces: that review returned no
+Critical and five Important. Its round 2 is the re-review of the closing fix
+wave, and gets its own row when it runs.
 
 **The `spec` face's three rounds on this branch carry no row, and the reason is
 the one this file exists to end.** They ran before the ledger did; round 1's

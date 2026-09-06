@@ -7,7 +7,7 @@
 | **Fixture** | [`FIXTURE-structural-production-task.md`](FIXTURE-structural-production-task.md) |
 | **Rule under test** | [`implementer-prompt.md`](../../skills/subagent-driven-development/implementer-prompt.md), the short-status bullet that names the evidence line — before this change it read "The test evidence, one line" and offered only test counts |
 | **Rule path** | skills/subagent-driven-development/implementer-prompt.md |
-| **Rule changed since** | 2026-09-05, commit `15ebb14` — the formal carrier changed after these runs were measured: that commit rewrote the short-status evidence bullet, so the wording these runs exercised is the experimental one, not the shipped one. The runs did not exercise the mixed-class routing that same commit introduced |
+| **Rule changed since** | 2026-09-06, commits `15ebb14` then `d23f51d` — the formal carrier changed twice after these runs were measured. The first rewrote the short-status evidence bullet; the second corrected the fix-round reporting instruction and removed a repository-internal gate name from the body dispatched to the implementer. The wording these runs exercised is the experimental branch's, not the shipped one, and no run exercised the mixed-class routing the first of those commits introduced |
 | **Runs** | N=4, and none of them are replicates: run 1 is the baseline under the wording this change replaces, runs 2 and 3 two intermediate wordings, run 4 the wording this record ships. Each run's deviation is what produced the next wording. One draw per condition is a draw, not a rate |
 | **Verdict** | **Run 1 FAIL (2 of 4). Runs 2 and 3 PASS on the criteria, each leaving one deviation that the next wording closed — a substituted instrument, then a verdict written into `counts:`. Run 4, against the shipped wording, PASS on C1, C2 and C3, with every `counts:` field reading `—`; C4 was not measured in run 4, because no task reviewer was dispatched in it and C4 is the criterion the reviewer settles.** Run 3's reviewer, on the full template, approved with zero findings. The runs also produced three different TDD behaviours from one model tier, which is the variance this record refuses to read as an effect |
 
@@ -183,8 +183,11 @@ does say the probe is "something your commit need not even contain", and an
 implementer reading that as licence to remove it is a plausible path from this
 edit to that `rm`. **A cleanup rule is deliberately not added here** — writing
 one now would credit a sentence with a behaviour that has already happened
-without it, and the open item this leaves is recorded in `CHANGELOG.md` under
-`## Open gaps`.
+without it. The open item this leaves is recorded under `## Open gaps` in the
+**experimental branch's** `CHANGELOG.md`, at
+`d021ef6207bfd258dc96b60ee58a0490ba7dc87d` — that branch's changelog was not
+carried into this delivery, so the item is not in this repository's
+`## Open gaps`, and none was created here to make the reference resolve.
 
 ## What the recorded runs establish, and what they do not
 
@@ -269,10 +272,21 @@ something to point at')".
 
 | | Probe written? | What served as RED | Left in the tree | Reviewer verdict |
 |---|---|---|---|---|
-| Run 1 | yes, `pytest` re-implementing the structural instrument | the probe | probe, `__pycache__/`, `.pytest_cache/` | Approved, one Minor |
+| Run 1 | yes, `pytest` re-implementing the structural instrument | the probe | probe, `__pycache__/`, `.pytest_cache/` | Approved, zero findings |
 | Run 2 | yes, `pytest`, this one importing the module | the probe | `.pytest_cache/` only — the probe was deleted at tool call 18 | **Needs fixes**, one Critical, adjudicated below |
 | Run 3 | **no** | the declared `structural` instrument itself | nothing | Approved, zero findings, full template |
 | Run 4 | **no** | the declared `structural` instrument itself | nothing | not dispatched — this run measures the `counts:` field only |
+
+**Run 1's reviewer verdict was corrected against the source, not reconciled.**
+This table read *"Approved, one Minor"* while the C4 cell above reads *"the
+reviewer approved with zero findings"*, and only one of the two could be right.
+The reviewer's own report for that run — the dispatch names `93cd7cf..b1df353`,
+the pair this record's Run 1 section names — returns `Critical: None`,
+`Important: None`, `Minor: None`, and `Task quality: Approved`. So the C4 cell
+was right and this table was wrong. Recorded rather than quietly amended,
+because the reading that suggested itself — that *zero findings* had meant
+*zero blocking* findings — would have kept the wrong cell and made the record
+less accurate, not more.
 
 **All four ran on `haiku` against the same fixture.** Three behaviours from one
 tier is variance, and this record does not read runs 3 and 4's cleanliness as an
