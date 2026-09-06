@@ -392,13 +392,19 @@ CARRIER=skills/subagent-driven-development/implementer-prompt.md
 # directory they sit in. A whole-directory dispensation would admit a manifest
 # or a lockfile written inside that directory, which is precisely what IR7
 # forbids; naming the shapes keeps the allowlist while closing that door.
-# Measured on this tree:
+# Measured on this tree, one instance of each shape present:
 #   ruff (run by the formatter hook, resolving its cache dir from the cwd)
 #     writes .ruff_cache/.gitignore, .ruff_cache/CACHEDIR.TAG, and
 #     content-addressed entries .ruff_cache/<version>/<digits>
-#   the review protocol writes .superpowers/sdd/.gitignore, per-plan packages
-#     review-<sha>..<sha>.diff, and the workspace's own .md briefs, reports
-#     and progress ledger (`sdd-workspace`, `review-package`)
+#   `review-package` writes .superpowers/sdd/.gitignore and the per-plan
+#     packages review-<sha>..<sha>.diff
+# Read from the sources, NOT measured here — this plan ran inline, so the
+# subagent path's workspace files were never created and no instance exists
+# on this tree:
+#   task-<n>-brief.md   — `scripts/task-brief`
+#   task-<n>-report.md  — written by the implementer subagent (SKILL.md)
+#   the progress ledger — written by the controller (references/resuming.md)
+# `sdd-workspace` creates the directory and its .gitignore and writes no .md.
 # Anything else under either root is NOT demonstrated tool output and fails as
 # unclassified — including a file named like a manifest or a lockfile.
 PROCESS_ARTIFACTS='^\.ruff_cache/\.gitignore$'
@@ -1017,11 +1023,16 @@ recorded in a plan is not an authorisation to ship a weaker requirement.
 What the row admits now is the set of artifacts the identified tools were
 **measured** to produce: `ruff`'s `.gitignore`, its `CACHEDIR.TAG` and its
 content-addressed `<version>/<digits>` entries; the review protocol's
-`.gitignore`, its `review-<sha>..<sha>.diff` packages, and the `.md` briefs,
-reports and ledger `sdd-workspace` creates. Everything else under either root
-is not demonstrated tool output and **fails as unclassified** — a file named
-like a manifest included, because nothing about being inside a cache directory
-makes a path one of those shapes.
+`.gitignore` and its `review-<sha>..<sha>.diff` packages. **Two evidence
+classes, and the comment keeps them apart:** those four shapes have an
+instance on this tree, while the subagent path's `.md` files — the brief from
+`scripts/task-brief`, the report from the implementer, the progress ledger
+from the controller — are read from those sources and have none here, because
+this plan was executed inline and that workspace was never created.
+`sdd-workspace` makes the directory and its `.gitignore`; it writes no `.md`.
+Everything else under either root is not demonstrated tool output and **fails
+as unclassified** — a file named like a manifest included, because nothing
+about being inside a cache directory makes a path one of those shapes.
 
 **This is still not a catalogue of manifest names**, and the round-3 blocker
 that such a catalogue can never be finished is not reopened. Nothing here
@@ -1051,21 +1062,21 @@ and never on printed text.** For the shape rule the demonstration is a RED
 first: the four manifest-and-lockfile paths above exit 0 under the superseded
 rule and exit 1 under this one, while a new `ruff` cache entry, a new review
 package and a workspace `.md` brief all still exit 0. For the half-1 allowlist
-and the failure modes, the earlier demonstration stands:** a `.ruff_cache/` content change
-and a `.superpowers/` addition are clean; an ignored `node_modules/package.json`,
-an ignored `node_modules/package-lock.json`, an ignored file under
-`scripts/__pycache__/`, a script inside a declared root, an untracked root
-lockfile and a modification to a tracked file under `scripts/` are each caught;
-and a missing baseline, a missing pointer and an unavailable `git` each still
-fail. **Every baseline this branch took is preserved**, and the comparison over
-the full window — from the first, taken before any edit and before `ruff` ran, to
-the delivered tree — classifies every differing path as declared process output,
-with none in a forbidden class. **The count is deliberately not written here.** It
-grows whenever the review protocol writes another package under `.superpowers/`,
-and a number in this file would go on reading as true after the next one: the
-first version of this sentence said *four*, and was overtaken within the same
-session by the review package built to check it. Run the comparison; the block
-prints every path it classifies.
+and the failure modes, the earlier demonstration stands: a `.ruff_cache/`
+content change and a `.superpowers/` addition are clean; an ignored
+`node_modules/package.json`, an ignored `node_modules/package-lock.json`, an
+ignored file under `scripts/__pycache__/`, a script inside a declared root, an
+untracked root lockfile and a modification to a tracked file under `scripts/`
+are each caught; and a missing baseline, a missing pointer and an unavailable
+`git` each still fail. **Every baseline this branch took is preserved**, and
+the comparison over the full window — from the first, taken before any edit
+and before `ruff` ran, to the delivered tree — classifies every differing path
+as declared process output, with none in a forbidden class. **The count is
+deliberately not written here.** It grows whenever the review protocol writes
+another package under `.superpowers/`, and a number in this file would go on
+reading as true after the next one: the first version of this sentence said
+*four*, and was overtaken within the same session by the review package built
+to check it. Run the comparison; the block prints every path it classifies.
 
 **One more limit, from the re-audit.** The baseline is taken at Task 1 Step 0,
 which runs after the spec and the plan are committed — so the ignored-set window

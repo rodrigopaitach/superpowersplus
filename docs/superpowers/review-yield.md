@@ -39,6 +39,7 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 1 | 5 | — |
 | 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 2 | 1 | 0 |
 | 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 3 | 0 | 0 |
+| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 4 | 1 | 0 |
 
 **Round 3 was not empty, and that is the first thing this table says.** The
 tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and
@@ -74,10 +75,17 @@ how the first version of this sentence came to say *second*.
 **Round 3 is the re-review of that repair, and it approved.** It found the
 fence restored, the two stale numbers turned into conditions, and returned no
 Critical and no Important — three Minors, which this column does not count.
-It ran against `628d0d6`; **no row here reviews `a01aedf`**, which answered
-those Minors and has not been reviewed. A clean round earns a row like any
-other: the rule this file states is one row per dispatch, green ones included,
-and a zero that is absent reads exactly like a dispatch that never happened.
+It ran against `628d0d6`. A clean round earns a row like any other: the rule
+this file states is one row per dispatch, green ones included, and a zero that
+is absent reads exactly like a dispatch that never happened.
+
+**Round 4 closes the branch's own record.** It reviewed `628d0d6..df2453d` —
+`a01aedf`, which answered round 3's Minors, and `df2453d`, which replaced the
+`IR7` ignored-set classifier — and returned no Critical and one Important: a
+shape the plan admitted on a measurement it had not taken. Round 3's single
+blocking finding was fixed, so `0` still open. **Each round here reviews the
+range named in its own dispatch and nothing later**; the row carries no SHA,
+and the commit answering round 4 is not covered by it.
 
 **The `spec` face's three rounds on `review-yield-and-problem-section` carry
 no row, and the reason is the one this file exists to end.** They ran before
