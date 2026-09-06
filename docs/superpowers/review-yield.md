@@ -38,6 +38,7 @@ superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 | 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 3 | 3 | 0 |
 | 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 1 | 5 | — |
 | 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 2 | 1 | 0 |
+| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 3 | 0 | 0 |
 
 **Round 3 was not empty, and that is the first thing this table says.** The
 tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and
@@ -69,6 +70,14 @@ would have predicted empty and that was not: `spec | 2` returned two and
 `plan | 3` returned three. Named rather than counted — an ordinal over a table
 that keeps growing goes stale the next time somebody appends to it, which is
 how the first version of this sentence came to say *second*.
+
+**Round 3 is the re-review of that repair, and it approved.** It found the
+fence restored, the two stale numbers turned into conditions, and returned no
+Critical and no Important — three Minors, which this column does not count.
+It ran against `628d0d6`; **no row here reviews `a01aedf`**, which answered
+those Minors and has not been reviewed. A clean round earns a row like any
+other: the rule this file states is one row per dispatch, green ones included,
+and a zero that is absent reads exactly like a dispatch that never happened.
 
 **The `spec` face's three rounds on `review-yield-and-problem-section` carry
 no row, and the reason is the one this file exists to end.** They ran before

@@ -388,13 +388,25 @@ ALLOWED="$ALLOWED"'|docs/superpowers/plans/2026-09-05-nonbehavioral-verification
 ALLOWED="$ALLOWED"'|docs/superpowers/review-yield\.md)$'
 CARRIER=skills/subagent-driven-development/implementer-prompt.md
 
-# The roots this execution declares for tool output, each named with the tool
-# that writes it. They are an ALLOWLIST over roots, the same shape as the nine
-# paths above: a difference anywhere else is unclassifiable and fails.
-#   .ruff_cache/  — the formatter hook runs `ruff` on every .py written, and
-#                   ruff resolves its cache dir from the cwd
-#   .superpowers/ — the review protocol's own workspace (`review-package`)
-PROCESS_ROOTS='^(\.ruff_cache/|\.superpowers/)'
+# The artifacts the identified tools actually produce, BY SHAPE — never by the
+# directory they sit in. A whole-directory dispensation would admit a manifest
+# or a lockfile written inside that directory, which is precisely what IR7
+# forbids; naming the shapes keeps the allowlist while closing that door.
+# Measured on this tree:
+#   ruff (run by the formatter hook, resolving its cache dir from the cwd)
+#     writes .ruff_cache/.gitignore, .ruff_cache/CACHEDIR.TAG, and
+#     content-addressed entries .ruff_cache/<version>/<digits>
+#   the review protocol writes .superpowers/sdd/.gitignore, per-plan packages
+#     review-<sha>..<sha>.diff, and the workspace's own .md briefs, reports
+#     and progress ledger (`sdd-workspace`, `review-package`)
+# Anything else under either root is NOT demonstrated tool output and fails as
+# unclassified — including a file named like a manifest or a lockfile.
+PROCESS_ARTIFACTS='^\.ruff_cache/\.gitignore$'
+PROCESS_ARTIFACTS="$PROCESS_ARTIFACTS"'|^\.ruff_cache/CACHEDIR\.TAG$'
+PROCESS_ARTIFACTS="$PROCESS_ARTIFACTS"'|^\.ruff_cache/[0-9]+(\.[0-9]+)*/[0-9]+$'
+PROCESS_ARTIFACTS="$PROCESS_ARTIFACTS"'|^\.superpowers/sdd/\.gitignore$'
+PROCESS_ARTIFACTS="$PROCESS_ARTIFACTS"'|^\.superpowers/sdd/[^/]+/review-[0-9a-f]+\.\.[0-9a-f]+\.diff$'
+PROCESS_ARTIFACTS="$PROCESS_ARTIFACTS"'|^\.superpowers/sdd/[^/]+/[A-Za-z0-9._-]+\.md$'
 
 ir7=0
 ir7fail() { printf 'IR7 FAIL: %s\n' "$1"; ir7=1; }
@@ -456,10 +468,10 @@ if [ -n "$SNAP" ]; then
           [ -z "$p" ] && continue
           if printf '%s\n' "$p" | grep -qE '(^|/)scripts/'; then
             ir7fail "IR7 forbidden class — file under scripts/: $p"
-          elif printf '%s\n' "$p" | grep -qE "$PROCESS_ROOTS"; then
-            printf '  process artifact, declared root: %s\n' "$p"
+          elif printf '%s\n' "$p" | grep -qE "$PROCESS_ARTIFACTS"; then
+            printf '  demonstrated tool artifact: %s\n' "$p"
           else
-            ir7fail "unclassifiable ignored difference, under no declared process root: $p"
+            ir7fail "unclassified ignored difference — not a demonstrated artifact of any identified tool: $p"
           fi
         done <<EOF
 $paths
@@ -470,7 +482,7 @@ EOF
   fi
 fi
 
-[ "$ir7" -eq 0 ] && echo "IR7: clean — change set within the nine declared; every ignored difference classified as declared process output, none in a forbidden class"
+[ "$ir7" -eq 0 ] && echo "IR7: clean — change set within the nine declared; every ignored difference matched a demonstrated tool artifact, none in a forbidden class"
 [ "$ir7" -eq 0 ] || rc=1
 
 echo "Step 6 exit: $rc                 (T1.12, T1.13, T1.14 and T1.15 all feed it)"
@@ -989,18 +1001,35 @@ is **classified**, and only two outcomes are clean:
 | Case | Outcome |
 |---|---|
 | Path is under `scripts/`, at any position, in any root | **IR7 forbidden class** — fails |
-| Path is under a declared process-artifact root, and is not the case above | Process output — reported by name, does not fail |
-| Anything else | **Unclassifiable** — fails |
+| Path matches the shape of an artifact an identified tool produces, and is not the case above | Tool artifact — reported by name, does not fail |
+| Anything else | **Unclassified** — fails |
 
-The declared roots are named with the tool that writes them: `.ruff_cache/` for
-the formatter hook, `.superpowers/` for the review protocol. **This is the same
-allowlist shape as half 1**, one level up: half 1 admits nine paths, half 2
-admits two roots, and everything outside either one fails. That is what closes
-the manifest question without a catalogue of manifest names — the round-3
-blocker that a catalogue can never be finished stands, and is not reopened here.
-A `node_modules/`, a `vendor/` or a `.venv/` is under no declared root, so an
-ignored manifest or lockfile appearing in one **fails as unclassifiable**
-without anybody having to have named it.
+**The second row admits shapes, not directories, and that distinction is the
+whole of it.** The rule shipped in `d23f51d` admitted *any* path under
+`.ruff_cache/` or `.superpowers/`, which handed those two directories a
+dispensation IR7 never granted: a `package.json` or a `package-lock.json`
+written inside either one was reported as process output and the row passed.
+**Reproduced before it was replaced** — all four of
+`.ruff_cache/package.json`, `.ruff_cache/package-lock.json` and the same two
+under `.superpowers/sdd/<plan>/` exited **0** under that rule. A limitation
+recorded in a plan is not an authorisation to ship a weaker requirement.
+
+What the row admits now is the set of artifacts the identified tools were
+**measured** to produce: `ruff`'s `.gitignore`, its `CACHEDIR.TAG` and its
+content-addressed `<version>/<digits>` entries; the review protocol's
+`.gitignore`, its `review-<sha>..<sha>.diff` packages, and the `.md` briefs,
+reports and ledger `sdd-workspace` creates. Everything else under either root
+is not demonstrated tool output and **fails as unclassified** — a file named
+like a manifest included, because nothing about being inside a cache directory
+makes a path one of those shapes.
+
+**This is still not a catalogue of manifest names**, and the round-3 blocker
+that such a catalogue can never be finished is not reopened. Nothing here
+enumerates what is forbidden; it enumerates what two named tools were observed
+to write, and everything outside that fails closed. A `node_modules/`, a
+`vendor/` or a `.venv/` matches no shape and is under no root at all, so an
+ignored manifest or lockfile appearing in one fails without anybody having had
+to name it.
 
 **The scope, stated:** the full inventory is preserved — every differing path is
 printed with its classification, none is suppressed — and the baseline is still
@@ -1009,17 +1038,20 @@ still never recomputed after the fact. Collection failure, a missing or foreign
 or post-edit baseline, an unparseable comparison, and any unclassifiable
 difference each fail the row and reach the block's exit code.
 
-**The limit, stated rather than left to be discovered.** Within a declared root
-the classification is by path, so the `scripts/` test catches a script placed
-there — demonstrated — but a file *named* like a dependency manifest, written
-inside `.ruff_cache/` or `.superpowers/`, would be reported as process output
-rather than as a violation. It would still be printed by name in the inventory,
-it is not in any commit, and nothing consults those two roots as a package root.
-That residue is the price of refusing a manifest-name catalogue, and it is
-recorded here rather than left for the next reader to find.
+**What this still does not reach, stated rather than left to be discovered.**
+The shapes are the ones two tools were measured to produce on this tree. A
+third tool writing into an ignored directory, or either of these two changing
+its output format, produces paths that match no shape — so the row **fails**
+rather than passing, and the fix is to measure the new shape and add it, never
+to widen the rule back to a directory. Failing closed on an unrecognised
+artifact is the intended cost; it is what the earlier rule traded away.
 
-**Demonstrated in an isolated scratch clone, thirteen cases, asserting on the
-process exit code and never on printed text:** a `.ruff_cache/` content change
+**Demonstrated in isolated scratch clones, asserting on the process exit code
+and never on printed text.** For the shape rule the demonstration is a RED
+first: the four manifest-and-lockfile paths above exit 0 under the superseded
+rule and exit 1 under this one, while a new `ruff` cache entry, a new review
+package and a workspace `.md` brief all still exit 0. For the half-1 allowlist
+and the failure modes, the earlier demonstration stands:** a `.ruff_cache/` content change
 and a `.superpowers/` addition are clean; an ignored `node_modules/package.json`,
 an ignored `node_modules/package-lock.json`, an ignored file under
 `scripts/__pycache__/`, a script inside a declared root, an untracked root

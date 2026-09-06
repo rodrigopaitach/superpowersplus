@@ -97,7 +97,13 @@ References below name them so a claim here can be traced there.
   `## Open gaps` passou a declarar que ela é do changelog da branch experimental.
   Em [`docs/superpowers/review-yield.md`](docs/superpowers/review-yield.md), a
   célula que atribuía à rodada 3 um bloqueador remanescente de uma rodada que não
-  teve bloqueador algum. **Nenhum dos sete carriers protegidos foi tocado.**
+  teve bloqueador algum. E no plano, o classificador do conjunto ignorado de
+  `IR7`: ele dispensava por diretório, de modo que um manifesto ou lockfile
+  escrito dentro de `.ruff_cache/` ou `.superpowers/` era aceito — reproduzido
+  nas quatro combinações antes de ser trocado. Passa a admitir as **formas** de
+  artefato que as duas ferramentas foram medidas produzindo, e o que não casa
+  reprova como não classificado. **Nenhum dos sete carriers protegidos foi
+  tocado, e nada sob `scripts/` foi alterado.**
 
 ## [1.26.0] - 2026-09-05
 
