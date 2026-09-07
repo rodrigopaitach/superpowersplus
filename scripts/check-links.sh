@@ -68,7 +68,22 @@ TARGETS = ["README.md", "CONTRIBUTING.md", "SECURITY.md",
 # companion document described this pass as covering everything in
 # docs/, which is what made the hole invisible — a gate and its
 # description disagreeing is worse than either being wrong alone.
-TARGETS += sorted(str(p) for p in pathlib.Path("docs").rglob("*.md"))
+# A preserved review report under docs/superpowers/reviews/ is a subagent's
+# VERBATIM text, saved so a later round can be checked against what the earlier
+# one actually said. Two reasons keep it out of the files this gate reads OUT
+# of, and the second is the stronger one:
+#   - a record states what was true on its date, and a gate red on one would
+#     force rewriting the record to stay green — the reason this file already
+#     states at :162-165 for the RESULT-*.md records;
+#   - measured 2026-09-06 on this slice's own round-1 spec review report: four
+#     links across three lines do not resolve from that directory, and a
+#     verbatim record cannot be edited to make them resolve at all, so the
+#     first reason's "would force" is here a "cannot".
+# A report stays a valid link DESTINATION: a ledger row naming one that does
+# not exist still fails.
+REVIEWS_PREFIX = "docs/superpowers/reviews/"
+TARGETS += sorted(str(p) for p in pathlib.Path("docs").rglob("*.md")
+                  if not str(p).startswith(REVIEWS_PREFIX))
 TARGETS += sorted(str(p) for p in pathlib.Path("skills").rglob("*.md"))
 
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
@@ -159,11 +174,14 @@ def section_sources():
     pointing at the real file: a problem in the Open gaps slice is reported
     at its CHANGELOG.md line, not at its offset within the slice.
 
-    Dated records are out: the frozen history and the RESULT-*.md records
-    each state what was true on their date, a heading renamed afterwards does
-    not make them wrong, and a gate red on one would force rewriting a record
-    to stay green. Fixtures stay in — a fixture is an input that must still
-    name something real, and a red there says the recorded run's premise moved.
+    Dated records are out: the frozen history, the RESULT-*.md records and the
+    preserved review reports under docs/superpowers/reviews/ each state what
+    was true on their date, a heading renamed afterwards does not make them
+    wrong, and a gate red on one would force rewriting a record to stay green.
+    For a review report that "would force" is a "cannot": it is a subagent's
+    verbatim text, and editing it to satisfy a gate destroys what it is.
+    Fixtures stay in — a fixture is an input that must still name something
+    real, and a red there says the recorded run's premise moved.
 
     The skip set is what drops the frozen history, which lives under docs/ and
     is therefore collected first. CHANGELOG.md is skipped as a whole file and
@@ -179,7 +197,8 @@ def section_sources():
     sources = [(p, p.read_text(encoding="utf-8"), 0) for p in found
                if p.is_file() and not p.is_symlink()
                and p.name not in skip
-               and not p.name.startswith("RESULT-")]
+               and not p.name.startswith("RESULT-")
+               and not str(p).startswith(REVIEWS_PREFIX)]
     sources.append(open_gaps_source())
     return sources
 

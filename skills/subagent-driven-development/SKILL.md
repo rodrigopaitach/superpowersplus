@@ -337,8 +337,8 @@ review — it enters the fix loop with the other findings.
 
 Template: [task-reviewer-prompt.md](task-reviewer-prompt.md)
 
-**Append one row to the project's `docs/superpowers/review-yield.md`**, face
-`task <N>` — columns and the header to create it with are in
+**First save the returned report, then append one row to the project's
+`docs/superpowers/review-yield.md`**, face `task <N>` — both are defined in
 [review-yield.md](../requesting-code-review/references/review-yield.md).
 
 ### 4. The fix loop
@@ -447,9 +447,9 @@ Adjudicate only at the cap. Adjudicating earlier to end a loop is
 pre-judging with a different name. Every adjudication is a ledger entry —
 a silent discard is forbidden.
 
-**Append one row to the project's `docs/superpowers/review-yield.md`** per
-re-review, face `re-review <N>` — columns and the header to create it with
-are in [review-yield.md](../requesting-code-review/references/review-yield.md).
+**First save the returned report, then append one row per re-review to the
+project's `docs/superpowers/review-yield.md`**, face `re-review <N>` — both are
+defined in [review-yield.md](../requesting-code-review/references/review-yield.md).
 
 ### 5. Complete the task
 

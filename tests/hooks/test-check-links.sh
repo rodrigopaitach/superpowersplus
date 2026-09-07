@@ -466,6 +466,36 @@ printf '# Note\n\nSee https://example.invalid/page for context.\n' > "$T/docs/wi
 assert_run 1 "an off-diet host in a docs/ subdirectory that is not a work record is caught" "$T" \
     'example.invalid'
 
+# --- preserved review reports are records, not live text --------------------
+# A report under docs/superpowers/reviews/ is a subagent's VERBATIM text. It
+# cannot be edited to satisfy a gate without breaking the rule that makes it
+# evidence, so it is excluded from both sets of files this gate reads OUT of —
+# the same boundary RESULT-*.md already has, for the reason stated at
+# scripts/check-links.sh:162-165.
+#
+# The third case is the half that proves the exclusion did not disable the
+# gate: a report is still a valid link DESTINATION, and a ledger row pointing
+# at one that does not exist must still fail.
+T="$(new_tree)"
+mkdir -p "$T/docs/superpowers/reviews"
+printf '# Report\n\nThe reviewer cited [a path](../../../skills/gone/SKILL.md).\n' \
+    > "$T/docs/superpowers/reviews/2026-01-01-b-s-spec-1.md"
+assert_run 0 "reports are not link sources" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/docs/superpowers/reviews" "$T/skills/demo"
+printf '# Demo\n\n## Overview\n' > "$T/skills/demo/SKILL.md"
+printf '# Report\n\nAgainst [demo](../../../skills/demo/SKILL.md), section "Gone Since".\n' \
+    > "$T/docs/superpowers/reviews/2026-01-01-b-s-spec-1.md"
+assert_run 0 "reports are not section sources" "$T"
+
+T="$(new_tree)"
+mkdir -p "$T/docs/superpowers/reviews"
+printf '# Report\n' > "$T/docs/superpowers/reviews/2026-01-01-b-s-spec-1.md"
+printf '# Ledger\n\n| Round | Report |\n|---|---|\n| 1 | [report](reviews/gone.md) |\n' \
+    > "$T/docs/superpowers/review-yield.md"
+assert_run 1 "a missing report still fails" "$T" 'reviews/gone.md'
+
 # The six entries this checks for were this project's own addition (46cf5c4) and
 # pointed at headings that exist only inside fenced example blocks. The link gate
 # passed them for ten weeks because its own fence mask had the same blind spot.

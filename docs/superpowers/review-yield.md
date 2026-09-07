@@ -3,43 +3,52 @@
 One row per review dispatch. Columns are defined by the
 superpowersplus:requesting-code-review skill, in `references/review-yield.md`.
 
-| Date | Branch | Face | Round | Blocking findings | Still open from the previous round |
-|---|---|---|---|---|---|
-| 03/09/2026 | review-yield-and-problem-section | plan | 1 | 3 | — |
-| 03/09/2026 | review-yield-and-problem-section | plan | 2 | 0 | 0 |
-| 03/09/2026 | review-yield-and-problem-section | branch | 1 | 6 | — |
-| 03/09/2026 | review-yield-and-problem-section | branch | 2 | 0 | 0 |
-| 03/09/2026 | review-yield-and-problem-section | branch | 3 | 1 | 0 |
-| 03/09/2026 | main (release-notes footer fix) | branch | 1 | 5 | — |
-| 04/09/2026 | main (evidence-model spec) | spec | 1 | 9 | — |
-| 04/09/2026 | evidence-model (range validation) | spec | 2 | 3 | 0 |
-| 04/09/2026 | evidence-model (evidence model v2) | spec | 1 | 9 | — |
-| 04/09/2026 | evidence-model (range validation) | spec | 3 | 0 | 0 |
-| 04/09/2026 | evidence-model (evidence model v2) | spec | 2 | 6 | 0 |
-| 04/09/2026 | evidence-model (evidence model v2) | spec | 3 | 2 | 0 |
-| 04/09/2026 | evidence-model (evidence model v2) | spec | 4 | 1 | 0 |
-| 04/09/2026 | evidence-model (range validation) | plan | 1 | 2 | — |
-| 04/09/2026 | evidence-model (range validation) | plan | 2 | 4 | 0 |
-| 04/09/2026 | evidence-model (range validation) | plan | 3 | 1 | 0 |
-| 04/09/2026 | evidence-model (evidence model v2) | plan | 1 | 6 | — |
-| 04/09/2026 | evidence-model (evidence model v2) | plan | 2 | 4 | 0 |
-| 04/09/2026 | evidence-model (evidence model v2) | plan | 3 | 8 | 0 |
-| 04/09/2026 | evidence-model (evidence model v2) | plan | 4 | 2 | 0 |
-| 04/09/2026 | evidence-model (range validation impl) | branch | 1 | 0 | — |
-| 04/09/2026 | evidence-model (whole branch) | branch | 1 | 4 | — |
-| 04/09/2026 | evidence-model (whole branch) | branch | 2 | 1 | 1 |
-| 05/09/2026 | evidence-model (whole branch) | branch | 3 | 3 | 0 |
-| 05/09/2026 | evidence-model (whole branch) | branch | 4 | 0 | 0 |
-| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 1 | 0 | — |
-| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 2 | 2 | 0 |
-| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 3 | 0 | 0 |
-| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 1 | 2 | — |
-| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 2 | 0 | 0 |
-| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 3 | 3 | 0 |
-| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 1 | 5 | — |
-| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 2 | 1 | 0 |
-| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 3 | 0 | 0 |
-| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 4 | 1 | 0 |
+| Date | Branch | Face | Round | Blocking findings | Still open from the previous round | Report |
+|---|---|---|---|---|---|---|
+| 03/09/2026 | review-yield-and-problem-section | plan | 1 | 3 | — | — |
+| 03/09/2026 | review-yield-and-problem-section | plan | 2 | 0 | 0 | — |
+| 03/09/2026 | review-yield-and-problem-section | branch | 1 | 6 | — | — |
+| 03/09/2026 | review-yield-and-problem-section | branch | 2 | 0 | 0 | — |
+| 03/09/2026 | review-yield-and-problem-section | branch | 3 | 1 | 0 | — |
+| 03/09/2026 | main (release-notes footer fix) | branch | 1 | 5 | — | — |
+| 04/09/2026 | main (evidence-model spec) | spec | 1 | 9 | — | — |
+| 04/09/2026 | evidence-model (range validation) | spec | 2 | 3 | 0 | — |
+| 04/09/2026 | evidence-model (evidence model v2) | spec | 1 | 9 | — | — |
+| 04/09/2026 | evidence-model (range validation) | spec | 3 | 0 | 0 | — |
+| 04/09/2026 | evidence-model (evidence model v2) | spec | 2 | 6 | 0 | — |
+| 04/09/2026 | evidence-model (evidence model v2) | spec | 3 | 2 | 0 | — |
+| 04/09/2026 | evidence-model (evidence model v2) | spec | 4 | 1 | 0 | — |
+| 04/09/2026 | evidence-model (range validation) | plan | 1 | 2 | — | — |
+| 04/09/2026 | evidence-model (range validation) | plan | 2 | 4 | 0 | — |
+| 04/09/2026 | evidence-model (range validation) | plan | 3 | 1 | 0 | — |
+| 04/09/2026 | evidence-model (evidence model v2) | plan | 1 | 6 | — | — |
+| 04/09/2026 | evidence-model (evidence model v2) | plan | 2 | 4 | 0 | — |
+| 04/09/2026 | evidence-model (evidence model v2) | plan | 3 | 8 | 0 | — |
+| 04/09/2026 | evidence-model (evidence model v2) | plan | 4 | 2 | 0 | — |
+| 04/09/2026 | evidence-model (range validation impl) | branch | 1 | 0 | — | — |
+| 04/09/2026 | evidence-model (whole branch) | branch | 1 | 4 | — | — |
+| 04/09/2026 | evidence-model (whole branch) | branch | 2 | 1 | 1 | — |
+| 05/09/2026 | evidence-model (whole branch) | branch | 3 | 3 | 0 | — |
+| 05/09/2026 | evidence-model (whole branch) | branch | 4 | 0 | 0 | — |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 1 | 0 | — | — |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 2 | 2 | 0 | — |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | spec | 3 | 0 | 0 | — |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 1 | 2 | — | — |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 2 | 0 | 0 | — |
+| 05/09/2026 | worktree-fix+nonbehavioral-verification-evidence | plan | 3 | 3 | 0 | — |
+| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 1 | 5 | — | — |
+| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 2 | 1 | 0 | — |
+| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 3 | 0 | 0 | — |
+| 06/09/2026 | worktree-fix+nonbehavioral-verification-evidence | branch | 4 | 1 | 0 | — |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | spec | 1 | 10 | — | [spec 1](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-spec-1.md) |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | spec | 2 | 4 | 0 | [spec 2](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-spec-2.md) |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | spec | 3 | 1 | 0 | [spec 3](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-spec-3.md) |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | spec | 4 | 0 | 0 | [spec 4](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-spec-4.md) |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | plan | 1 | 12 | — | [plan 1](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-plan-1.md) |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | plan | 2 | 5 | 0 | [plan 2](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-plan-2.md) |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | plan | 3 | 3 | 1 | [plan 3](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-plan-3.md) |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | plan | 4 | 2 | 0 | [plan 4](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-plan-4.md) |
+| 06/09/2026 | worktree-fix+instrument-counterexample (review report preservation) | plan | 5 | 2 | 0 | [plan 5](reviews/2026-09-06-worktree-fix-instrument-counterexample-review-report-preservation-plan-5.md) |
 
 **Round 3 was not empty, and that is the first thing this table says.** The
 tidy story — round 1 pays, round 2 does not, stop at two — is what rounds 1 and

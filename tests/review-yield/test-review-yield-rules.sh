@@ -95,13 +95,13 @@ ledger_columns() {
     # run a review has no such file to read a format from.
     local ref="skills/requesting-code-review/references/review-yield.md" c
     for c in 'Date' 'Branch' 'Face' 'Round' 'Blocking findings' \
-             'Still open from the previous round'; do
+             'Still open from the previous round' 'Report'; do
         assert_in_slice "$ref" '^\| Column \| What goes in it \|' '^$' \
             "^\\| $c \\|" "ledger_columns: $c is defined"
     done
     # And the header a partner project is told to create the file with.
     assert_in_slice "$ref" '^```markdown' '^```$' \
-        '^\| Date \| Branch \| Face \| Round \| Blocking findings \| Still open from the previous round \|' \
+        '^\| Date \| Branch \| Face \| Round \| Blocking findings \| Still open from the previous round \| Report \|' \
         'ledger_columns: the header to create the file with'
 }
 

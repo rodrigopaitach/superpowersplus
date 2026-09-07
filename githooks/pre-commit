@@ -46,3 +46,10 @@ repo_root="$(git rev-parse --show-toplevel)"
 # The third form, and the reason it is whole-tree like the other two: the
 # prompts carrying the no-dispatch clause are edited one at a time.
 "$repo_root/scripts/check-no-dispatch.sh"
+
+# Whole-tree, and for a reason particular to this one rather than the link
+# gate's: a review report is linked from a row written in ONE commit and can be
+# deleted or emptied in any LATER one. So the ledger being unchanged says
+# nothing about whether its links still land on files with bytes in them, and a
+# check scoped to "the ledger is staged" would never look again.
+"$repo_root/scripts/check-review-reports.sh" >/dev/null

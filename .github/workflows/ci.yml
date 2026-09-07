@@ -86,6 +86,12 @@ jobs:
       - name: Tests (no-dispatch gate)
         run: tests/hooks/test-check-no-dispatch.sh
 
+      - name: Tests (review report helper)
+        run: tests/hooks/test-save-review-report.sh
+
+      - name: Tests (review report gate)
+        run: tests/hooks/test-check-review-reports.sh
+
       - name: Tests (cross-reference check)
         run: tests/hooks/test-check-cross-references.sh
 
@@ -221,3 +227,9 @@ jobs:
       - name: The no-dispatch clause is in every review seat
         run: scripts/check-no-dispatch.sh
 
+      # Whole-tree for a reason of its own, not the link checker's: a report is
+      # linked from a row written in one commit and can be deleted or emptied
+      # in any later one, so the ledger being unchanged proves nothing about
+      # its links still landing on files with bytes in them.
+      - name: Every linked review report is there and is not empty
+        run: scripts/check-review-reports.sh

@@ -125,7 +125,7 @@ Then it works through the tasks with a fresh subagent each, reviewing as it goes
 | Spec | `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` |
 | Implementation plan | `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` |
 | Coverage map | A `## Coverage Map` section inside the spec — one row per category with its state and destination, and below it the decision record: each question, the answer, the recommendation given, and its source |
-| Review yield | `docs/superpowers/review-yield.md` — one row per review dispatch: date, branch, which review, which round, how many blocking findings it returned, and how many of the previous round's are still open. It is what answers whether the review rounds are paying for themselves |
+| Review yield | `docs/superpowers/review-yield.md` — one row per review dispatch: date, branch, which review, which round, how many blocking findings it returned, how many of the previous round's are still open, and a link to the report that dispatch returned, preserved verbatim under `docs/superpowers/reviews/`. It is what answers whether the review rounds are paying for themselves, and what lets you read back what a reviewer actually said |
 
 All of it is git-versioned files, readable without any tooling. The decision record is what lets you audit later **what** you agreed to and **on what basis** — including once the conversation is gone.
 

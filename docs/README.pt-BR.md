@@ -93,7 +93,7 @@ Entre cada etapa há um portão. Nenhum deles é o próprio agente se auto-avali
 | Especificação | `docs/superpowers/specs/AAAA-MM-DD-<tópico>-design.md` |
 | Plano de implementação | `docs/superpowers/plans/AAAA-MM-DD-<funcionalidade>.md` |
 | Mapa de cobertura | Seção `## Coverage Map` dentro da própria spec — uma linha por categoria, com estado e destino, e abaixo o registro de decisão: cada pergunta, a resposta, a recomendação dada e a fonte dela |
-| Rendimento das revisões | `docs/superpowers/review-yield.md` — uma linha por despacho de revisão: data, branch, qual revisão, qual rodada, quantos achados bloqueantes ela devolveu e quantos da rodada anterior seguem abertos. É o que responde se as rodadas de revisão estão se pagando |
+| Rendimento das revisões | `docs/superpowers/review-yield.md` — uma linha por despacho de revisão: data, branch, qual revisão, qual rodada, quantos achados bloqueantes ela devolveu, quantos da rodada anterior seguem abertos e um link para o relatório que aquele despacho devolveu, preservado verbatim em `docs/superpowers/reviews/`. É o que responde se as rodadas de revisão estão se pagando, e o que permite reler o que um revisor de fato disse |
 
 Tudo é arquivo versionado em git, legível sem ferramenta nenhuma. O registro de decisão é o que permite auditar depois **no que** você concordou e **com base em quê** — inclusive quando a conversa já não existe mais.
 

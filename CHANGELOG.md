@@ -48,6 +48,75 @@ References below name them so a claim here can be traced there.
   defeito: evidência que não alcança o critério para o qual é oferecida. **Esse
   alcance maior não foi adotado.**
 
+- **O ledger contava QUANTOS achados uma revisão devolveu, e o texto devolvido
+  não era guardado em lugar nenhum.** Um despacho agora preserva o relatório num
+  arquivo que nada sobrescreve, e a linha do ledger aponta para ele. São quatro
+  peças: [`save-review-report.sh`](skills/requesting-code-review/scripts/save-review-report.sh),
+  que faz a escrita; [`check-review-reports.sh`](scripts/check-review-reports.sh),
+  que cobra os destinos ligados; a sétima coluna `Report`, definida em
+  [`review-yield.md`](skills/requesting-code-review/references/review-yield.md)
+  e cobrada por `ledger_columns`; e a exclusão dos relatórios das **duas**
+  passagens de [`check-links.sh`](scripts/check-links.sh) — um relatório é texto
+  **verbatim** de um subagente, e não pode ser editado para deixar um gate verde
+  sem destruir aquilo que ele é.
+
+  **A garantia mora na operação de escrita, não numa regra que o agente precisa
+  lembrar.** O helper escreve o relatório num arquivo temporário no próprio
+  diretório do destino, compara, e só então reivindica o nome com o utilitário
+  `link`. **São duas garantias distintas, e confundi-las custou uma segunda
+  rodada de defeitos.** A da chamada de sistema: o POSIX define `link()` como
+  criação **atômica** de um novo hard link, que falha com `[EEXIST]` quando
+  *"the path2 argument resolves to an existing directory entry **or refers to a
+  symbolic link**"* — qualquer objeto já existente naquele nome, e sem nunca
+  abrir o destino. A do comando: o POSIX dá ao utilitário `link` *"OPTIONS:
+  None"* e o define como executando *"the function call: `link(file1, file2)`"*.
+  **`ln` não faz isso** — de `ln` o POSIX diz que *"the second synopsis form
+  shall be assumed when the final operand names an existing directory"*, então
+  `ln` liga **para dentro** de um destino que é diretório. `ln -T` corrigiria o
+  mesmo no coreutils e **não é usado**, por ser extensão GNU.
+
+  **A primeira versão usava `set -C`, e a premissa estava errada.** O manual do
+  Bash diz que a redireção *"fails if the file whose name results from the
+  expansion of word exists **and is a regular file**"* — só arquivo regular.
+  Medidos contra aquela versão, três defeitos: destino que era link simbólico
+  para `/dev/null` fazia a redireção **ter sucesso**, o relatório sumia, a
+  comparação acusava divergência e a limpeza **apagava um link que o script não
+  criara**; destino FIFO **travava** a execução em `open()`; e link simbólico
+  quebrado era classificado como erro de escrita, sem tentar sufixo.
+
+  **Dois defeitos a mais vieram do primeiro reparo, que usou `ln`.** Medidos em
+  07/09/2026: destino que era um **diretório** chamado `report.md` saía `0`,
+  deixava `report.md/.save-review-report.<sufixo>` dentro dele e imprimia o
+  diretório como se fosse o relatório instalado; **link simbólico para
+  diretório** chegava ao mesmo comportamento por resolução de caminho e
+  escrevia no diretório apontado.
+
+  **Cinco mutações mapeiam cada mecanismo ao caso que o sustenta**, medidas
+  sobre cópias descartáveis com o script entregue intocado: sem a comparação,
+  uma escrita truncada instala 8 bytes e sai `0` em vez de `4`; com o
+  discriminador de estado trocado por `true`, um erro de escrita percorre os 98
+  sufixos e sai `5` em vez de `3`; com a redireção no lugar da reivindicação,
+  voltam os casos do link simbólico e do FIFO; sem o teste `-L`, volta o do link
+  quebrado; e com `ln` no lugar de `link`, voltam os dois de diretório. Cada
+  mutação derruba só os seus casos.
+
+  **O gate admite exatamente duas formas na célula:** o em-dash ou um link
+  markdown. Célula vazia, hífen simples e caminho em crases reprovam — o último
+  é o que importa, porque parece certo para quem lê e não é lido por gate
+  nenhum, já que `check-links.sh` resolve sintaxe de link e mais nada.
+
+  **O que o gate NÃO detecta, dito aqui porque um `exit 0` não diz:** um
+  relatório truncado no meio, desde que não seja vazio e esteja ligado por uma
+  linha só, **passa**. Não há cabeçalho esperado, nem marcador de fim, nem
+  formato imposto a revisor nenhum. E a comparação do helper prova igualdade com
+  a origem que ele recebeu — **não** fidelidade ao texto que o subagente
+  devolveu, que é um passo anterior e fora das entradas dele.
+
+  **Um ledger de seis colunas continua válido.** A coluna chega com a primeira
+  linha escrita sob a regra; as 35 linhas históricas receberam `—`, que diz uma
+  coisa só — *nenhum relatório ligado neste registro* — e não afirma nada sobre
+  arquivo algum. Nada foi reconstruído.
+
 ## [1.27.1] - 2026-09-06
 
 ### Fixed

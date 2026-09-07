@@ -51,8 +51,8 @@ Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md
 
 **3. Act on feedback:**
 
-**First, append one row to the project's `docs/superpowers/review-yield.md`**,
-face `branch` — columns and the header to create it with are in
+**First save the returned report, then append one row to the project's
+`docs/superpowers/review-yield.md`**, face `branch` — both are defined in
 [review-yield.md](references/review-yield.md).
 
 - Fix Critical issues immediately

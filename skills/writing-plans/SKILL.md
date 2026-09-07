@@ -382,9 +382,9 @@ a gap costs a paragraph instead of a re-plan.
 Hand it the plan file path and nothing else: the spec path comes from the
 plan's own header, and confirming it is part of what the reviewer checks.
 
-**When the review returns — clean or not — append one row to the project's
-`docs/superpowers/review-yield.md`**, face `plan` — columns and the header to
-create it with are in
+**When the review returns — clean or not — first save the returned report,
+then append one row to the project's `docs/superpowers/review-yield.md`**, face
+`plan` — both are defined in
 [review-yield.md](../requesting-code-review/references/review-yield.md).
 
 Fix every blocking issue the reviewer returns; recommendations are advisory.
