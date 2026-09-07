@@ -9,6 +9,45 @@ The 34 `plus.N` entries that led to `1.0.0` are preserved verbatim in
 [`docs/PLUS-CHANGELOG-historico.md`](docs/PLUS-CHANGELOG-historico.md) (in Portuguese).
 References below name them so a claim here can be traced there.
 
+## [Unreleased]
+
+### Added
+
+- **O revisor de plano media a grandeza que a frase CITAVA, não a que ela
+  NOMEAVA.** Nove linhas fecham o passo (a) do
+  [`plan-document-reviewer-prompt.md`](skills/writing-plans/plan-document-reviewer-prompt.md),
+  seção "Which Round This Is": onde a reparação trocou o defeito por uma
+  afirmação sobre uma grandeza — contagem, total, tamanho, algo que sobe, desce
+  ou se mantém —, **nomear a grandeza de que a afirmação TRATA antes de medir
+  qualquer coisa**, conferir que o instrumento escolhido produz **aquela**
+  grandeza, e reportar como não verificado em vez de resolver com uma grandeza
+  vizinha. Uma afirmação nomeia um sujeito e cita números, e os dois se separam:
+  um instrumento que reproduz os números medindo outro sujeito concordou com os
+  números, não com a afirmação. **As linhas ficam FORA do Plan Contract**, para
+  que uma observação trivial não ganhe formulário obrigatório.
+
+  **Medido em 2026-09-06 num 2×2 pareado, um sorteio por célula**, registrado em
+  [`tests/skill-behavior/RESULT-referent-swap-in-repair.md`](tests/skill-behavior/RESULT-referent-swap-in-repair.md)
+  com a fixture em
+  [`tests/skill-behavior/FIXTURE-referent-swap-in-repair.md`](tests/skill-behavior/FIXTURE-referent-swap-in-repair.md).
+  A fixture é o `471cdd1` deste próprio repositório, cuja reparação da rodada 1
+  trocou um total hardcoded por uma frase que cita 42 e 44 — números reais — e
+  os atribui ao número de documentos **comparados**, que é 36 nos dois estados.
+  **Sem as linhas, o braço deu `FIXED`**: mediu o caso, obteve `36 of 44` e casou
+  o 44 com a afirmação sobre comparados. **Com elas, o braço cobrou as duas
+  ocorrências** a partir de medição própria, e disse no mesmo relatório que a
+  instrução que a frase falsa defende — asserir a invariante, nunca um total —
+  **continua correta e sobrevive à correção**. Nos dois braços de controle,
+  sobre a fixture com a frase já corrigida, **nenhum acusou a frase certa**.
+
+  **O que o registro NÃO afirma, e o `n=1` é a razão:** nada de eficácia geral,
+  nada de redução de custo comprovada, nada de ausência geral de falsos
+  positivos — nenhum apareceu **nestes quatro braços**, o que é uma observação e
+  não uma propriedade. O achado mais forte das quatro execuções veio de um braço
+  **de controle**, sem as linhas, e aponta uma versão mais larga do mesmo
+  defeito: evidência que não alcança o critério para o qual é oferecida. **Esse
+  alcance maior não foi adotado.**
+
 ## [1.27.1] - 2026-09-06
 
 ### Fixed

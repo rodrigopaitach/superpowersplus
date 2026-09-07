@@ -261,6 +261,50 @@ it** — run 4 dispatched none, and the record carries no C4 verdict for it. The
 mixed-class routing the formal contract also carries is exercised by no run
 here; the record names that gap rather than letting four PASSes imply it.
 
+### A repair that swaps the referent
+
+**Rule under test:** the round-2 plan reviewer names the quantity a claim is
+*about* before measuring anything, confirms the instrument it reaches for
+produces **that** quantity, and reports unverified rather than settling with a
+neighbouring one. It lives in [plan-document-reviewer-prompt.md](../../skills/writing-plans/plan-document-reviewer-prompt.md),
+closing step (a) of "Which Round This Is" — **outside** the Plan Contract, so a
+trivial observation does not acquire a mandatory form. Adopted 2026-09-06, on
+the measurement below and on nothing else.
+
+| File | What it is |
+|------|-----------|
+| `FIXTURE-referent-swap-in-repair.md` | Four throwaway repositories built from this repository's own `471cdd1`, whose round-1 repair replaced a hardcoded total with a sentence quoting two true numbers attached to a subject that does not move. `F-def` is that commit untouched; `F-ok` corrects three lines **inside the commit**, by amend, so the correction arrives in the fix diff rather than announcing itself as a separate hunk |
+| `RESULT-referent-swap-in-repair.md` | The four arms: the 2×2, the verdict per criterion, the detection and non-detection verbatim, and what the design cannot establish |
+
+**Approval requires all three:** the swapped referent is charged where it
+exists; the corrected sentence is not charged where it is right; and charging
+the sentence leaves standing the instruction it justifies, which is correct.
+
+**This is the only 2×2 in this directory**, and the shape is the finding as much
+as the result is. The rule is crossed with a **paired fixture** — the defect
+present and the same defect corrected — because the detection axis and the
+false-positive axis cannot be measured on the same input, and a rule that
+charges a correct sentence fails just as surely as one that misses a wrong one.
+
+**The overall status came back `Issues Found` in all four arms and
+discriminated nothing** — every arm found true defects in a plan that has them.
+Only the separately scored axes told the cells apart. A design that had read
+the status field as the answer would have reported a null result.
+
+**Arm 1, without the rule, returned FIXED on the finding carrying the defect**,
+having measured the case and matched the number that moved to a claim about a
+number that did not. **Arm 2, with it, charged both occurrences** from a
+measurement it chose, and said in the same report that the instruction the
+false sentence supports is correct and survives. **Neither control arm accused
+the corrected sentence.**
+
+**One draw per cell.** No causal attribution is made, and the record says at
+length what four arms of one fixture cannot establish. The strongest finding of
+the four — a counterfactual proving a criterion's evidence does not reach the
+criterion — came from a **control** arm, which is the mechanism appearing
+without the rule and points at a wider version of the same defect. That wider
+reach was deliberately not adopted.
+
 ## What CI does, and does not
 
 CI checks that these records are **well formed** —

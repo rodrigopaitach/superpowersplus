@@ -39,6 +39,15 @@ Subagent (general-purpose):
     a. **Verdict every blocking finding of the previous round**
        ([PREVIOUS_FINDINGS]) against the corrected plan. "Attempted" is not
        fixed: the specific defect must no longer exist.
+       **Where the repair replaced the defect with a claim about a quantity —
+       a count, a total, a size, something that rises, falls or holds — name
+       the quantity the claim is ABOUT before you measure anything, then
+       confirm the instrument you reach for produces THAT quantity.** A claim
+       names a subject and quotes numbers, and the two can come apart: an
+       instrument that reproduces the numbers while measuring a different
+       subject has agreed with the numbers, not with the claim. **Where you
+       cannot reach the quantity the claim names, report it as unverified
+       rather than settling it with a neighbouring one.**
     b. **Read at full bar every task and section the diff touched.**
     c. **Find what the fix broke elsewhere.** Grep every identifier the diff
        changed — a task or section title, an `AC`/`IR`/`T` id, a test name, a
